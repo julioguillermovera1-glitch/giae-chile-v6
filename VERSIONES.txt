@@ -204,3 +204,4 @@ v6.1 - Exportación Profesional
 - Generador de informe base.
 - Panel de validación rápida.
 - Accesos rápidos desde Panel Principal.
+Activar despliegue Cloudflare v6.1
