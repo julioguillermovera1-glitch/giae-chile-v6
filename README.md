@@ -1,64 +1,63 @@
-# GIAE Chile v6.1.1 Cloudflare Clean Deploy
+# GIAE Chile v6.0 Plataforma Profesional
 
 **GIAE Chile**  
 **Gestor Inteligente de Análisis para Empalmes**
 
 Autor: Julio Vera Concha © 2026.
 
-## Objetivo
+## Versión acumulativa
 
-Solucionar definitivamente el problema de despliegue en Cloudflare Workers.
+Esta versión integra en un solo sistema las funciones proyectadas desde v5.14 hasta v6.0.
 
-## Problema anterior
+## Incluye
 
-Cloudflare intentaba subir `node_modules` como si fuera parte del sitio público, generando el error:
+### v5.14 Plantillas Distribuidoras
+- Plantillas preliminares por distribuidora.
+- Checklist de antecedentes por trámite.
+- Descarga de plantilla HTML.
 
-`Asset too large: node_modules/workerd/bin/workerd 119 MiB`
+### v5.15 Base de Datos de Materiales
+- Catálogo local editable.
+- Materiales por categoría.
+- Exportación JSON.
 
-## Solución aplicada
+### v5.16 Presupuestos
+- Presupuestos preliminares.
+- Sugerencia desde proyecto.
+- Exportación Excel compatible.
+- Descarga HTML.
 
-La aplicación ahora queda dentro de la carpeta `public/`.
+### v5.17 Historial Técnico
+- Registro de acciones técnicas.
+- Responsable, fecha, tipo y detalle.
+- Exportación JSON.
 
-Cloudflare solo publicará:
+### v5.18 Comparador Normativo
+- Comparación preliminar de temas técnicos.
+- RIC relacionados por tema.
 
-- `public/index.html`
-- `public/assets/`
-- `public/css/`
-- `public/data/`
-- `public/js/`
+### v5.19 Biblioteca Documental
+- Registro de documentos técnicos.
+- Clasificación por tipo.
+- Exportación JSON.
 
-Los archivos de configuración quedan fuera de `public/`:
+### v6.0 Plataforma Profesional
+- Integración general del sistema.
+- Preparación para usuarios reales, backend, base de datos y licencias.
 
-- `package.json`
-- `wrangler.jsonc`
-- `.assetsignore`
+## Aviso legal
 
-## Configuración Cloudflare recomendada
+GIAE Chile es una herramienta independiente de apoyo técnico. No está afiliada, patrocinada ni certificada por organismos públicos o empresas distribuidoras.
 
-Repositorio: `giae-chile-v6`  
-Rama: `principal`
+Toda información debe ser validada con normativa vigente, empresa distribuidora correspondiente y profesional autorizado.
 
-Comando de compilación:
+## Archivos para subir
 
-`echo GIAE`
-
-Comando de despliegue:
-
-`npx wrangler deploy`
-
-Comando de rama no productiva:
-
-`npx wrangler versions upload`
-
-Directorio raíz:
-
-`/`
-
-## Archivos/carpetas a subir
-
-- `public/`
-- `package.json`
-- `wrangler.jsonc`
-- `.assetsignore`
-- `README.md`
-- `VERSIONES.txt`
+- index.html
+- README.md
+- LICENCIA.txt
+- VERSIONES.txt
+- css/
+- js/
+- data/
+- assets/

@@ -3,7 +3,7 @@
 <head>
   <!-- GIAE Chile · Autor: Julio Vera Concha · © 2026 · Todos los derechos reservados · v4.1 -->
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GIAE Chile v6.1 Exportación Profesional</title>
+  <title>GIAE Chile v6.0 Plataforma Profesional</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -13,7 +13,7 @@
     <img class="giae-logo-img login-logo-img" src="assets/giae-logo.svg" alt="GIAE Chile">
     <h1>GIAE Chile</h1>
     <h2>Gestor Inteligente de Análisis para Empalmes</h2>
-    <div class="version-chip">v6.1 Exportación Profesional</div>
+    <div class="version-chip">v6.0 Plataforma Profesional</div>
     <p>Plataforma pública para análisis, cálculo y documentación preliminar de empalmes eléctricos en Chile.</p>
     <div class="demo-box">
       <b>Acceso demo:</b><br>
@@ -34,15 +34,6 @@
     <button class="nav active" data-view="panel">🏠 Panel Principal</button>
     <button class="nav" data-view="proyecto">📁 Proyecto</button>
     <button class="nav" data-view="centroProyectos">📂 Centro de Proyectos</button>
-    <button class="nav" data-view="exportacionPro">📤 Exportación Pro</button>
-    <button class="nav" data-view="plantillasDist">🏢 Plantillas Distribuidoras</button>
-    <button class="nav" data-view="materialesDB">🧰 Materiales</button>
-    <button class="nav" data-view="presupuestos">💰 Presupuestos</button>
-    <button class="nav" data-view="historialTecnico">🕘 Historial Técnico</button>
-    <button class="nav" data-view="comparadorNormativo">⚖️ Comparador Normativo</button>
-    <button class="nav" data-view="bibliotecaDoc">📚 Biblioteca Documental</button>
-    <button class="nav" data-view="plataformaPro">🚀 Plataforma Profesional</button>
-
     <button class="nav" data-view="cuadro">📊 Cuadro de Carga</button>
     <button class="nav" data-view="sec">📋 Cuadro SEC Pro</button>
     <button class="nav" data-view="empalme">🧲 Motor Empalme</button>
@@ -65,11 +56,18 @@
     <button class="nav" data-view="interes">📊 Panel de Interés</button>
     <button class="nav" data-view="estadisticas">📈 Estadísticas</button>
     <button class="nav" data-view="acerca">ℹ️ Acerca de GIAE</button>
+    <button class="nav" data-view="plantillasDist">🏢 Plantillas Distribuidoras</button>
+    <button class="nav" data-view="materialesDB">🧰 Materiales</button>
+    <button class="nav" data-view="presupuestos">💰 Presupuestos</button>
+    <button class="nav" data-view="historialTecnico">🕘 Historial Técnico</button>
+    <button class="nav" data-view="comparadorNormativo">⚖️ Comparador Normativo</button>
+    <button class="nav" data-view="bibliotecaDoc">📚 Biblioteca Documental</button>
+    <button class="nav" data-view="plataformaPro">🚀 Plataforma Profesional</button>
     <button class="nav" data-view="config">⚙️ Configuración</button>
   </nav>
 </aside>
 <main class="main">
-<header class="top">☰ GIAE Chile · Gestor Inteligente de Análisis para Empalmes <span>v6.1 Exportación Profesional</span></header>
+<header class="top">☰ GIAE Chile · Gestor Inteligente de Análisis para Empalmes <span>v6.0 Plataforma Profesional</span></header>
 
 <div id="sessionBar" class="session-bar">
   <span id="sessionMode">Modo visitante</span>
@@ -92,27 +90,7 @@
     <span class="pill">Informe técnico</span>
     <span class="pill">Presupuestos</span>
     <span class="pill">Documentación</span>
-    <span class="pill">Exportación Pro</span>
   </div>
-</div>
-
-
-<div class="panel accesos-pro-v601">
-  <h3>🚀 Accesos Profesionales v6.1</h3>
-  <button class="btn" onclick="GIAE.app.show('plantillasDist')">Plantillas Distribuidoras</button>
-  <button class="btn" onclick="GIAE.app.show('materialesDB')">Materiales</button>
-  <button class="btn" onclick="GIAE.app.show('presupuestos')">Presupuestos</button>
-  <button class="btn" onclick="GIAE.app.show('historialTecnico')">Historial Técnico</button>
-  <button class="btn" onclick="GIAE.app.show('bibliotecaDoc')">Biblioteca Documental</button>
-</div>
-
-
-<div class="panel">
-  <h3>📤 Accesos Exportación v6.1</h3>
-  <button class="btn primary" onclick="GIAE.app.show('exportacionPro')">Abrir Exportación Pro</button>
-  <button class="btn" onclick="GIAE.exportacionPro.word()">Word</button>
-  <button class="btn" onclick="GIAE.exportacionPro.excel()">Excel</button>
-  <button class="btn" onclick="GIAE.exportacionPro.pdf()">PDF</button>
 </div>
 
 <div class="panel copiloto-quick">
@@ -125,42 +103,10 @@
   <div id="quickCopilotoResp" class="copiloto-resp">Esperando consulta.</div>
 </div>
 
-<div class="cards"><div class="card c"><b>1</b>Total Proyectos<small>GIAE v6.1</small></div><div class="card g"><b id="stCargas">0</b>Total Circuitos<small>Cuadro de carga</small></div><div class="card y"><b>19</b>Pliegos RIC<small>Base normativa</small></div><div class="card r"><b>1</b>DS N°8<small>Reglamento base</small></div></div>
-<div class="panel"><div class="ok">✓ Versión modular profesional. Ya no depende de un HTML gigante.</div><div class="warn">⚠ v6.1 Exportación Profesional: refuerza descarga Word, Excel, HTML, PDF desde navegador y validación de módulos.</div></div>
+<div class="cards"><div class="card c"><b>1</b>Total Proyectos<small>GIAE v6.0</small></div><div class="card g"><b id="stCargas">0</b>Total Circuitos<small>Cuadro de carga</small></div><div class="card y"><b>19</b>Pliegos RIC<small>Base normativa</small></div><div class="card r"><b>1</b>DS N°8<small>Reglamento base</small></div></div>
+<div class="panel"><div class="ok">✓ Versión modular profesional. Ya no depende de un HTML gigante.</div><div class="warn">⚠ v6.0 Plataforma Profesional: administra proyectos y genera documentos compatibles con Word, Excel, HTML y PDF desde el navegador.</div></div>
 </section>
 
-
-
-<section id="exportacionPro" class="view">
-<h2>Exportación Profesional</h2>
-<div class="panel">
-  <div class="ok"><b>v6.1:</b> módulo central para exportar documentos técnicos generados por GIAE Chile.</div>
-</div>
-
-<div class="cards">
-  <div class="card c"><b>DOC</b>Word<small>Informe compatible</small></div>
-  <div class="card g"><b>XLS</b>Excel<small>Datos y presupuesto</small></div>
-  <div class="card y"><b>PDF</b>PDF<small>Desde impresión</small></div>
-  <div class="card r"><b>HTML</b>Respaldo<small>Informe técnico</small></div>
-</div>
-
-<div class="panel">
-  <h3>Informe técnico</h3>
-  <button class="btn primary" onclick="GIAE.exportacionPro.generarBase()">Generar informe base</button>
-  <button class="btn" onclick="GIAE.exportacionPro.word()">Exportar Word</button>
-  <button class="btn" onclick="GIAE.exportacionPro.excel()">Exportar Excel</button>
-  <button class="btn" onclick="GIAE.exportacionPro.html()">Descargar HTML</button>
-  <button class="btn" onclick="GIAE.exportacionPro.pdf()">Imprimir / Guardar PDF</button>
-</div>
-
-<div class="panel">
-  <h3>Validación rápida</h3>
-  <button class="btn" onclick="GIAE.exportacionPro.validar()">Verificar módulos</button>
-  <div id="vistaValidacionPro">Pendiente.</div>
-</div>
-
-<div class="panel" id="vistaExportacionPro">Genera un informe base para comenzar.</div>
-</section>
 
 <section id="centroProyectos" class="view">
 <h2>Centro de Proyectos</h2>
@@ -403,7 +349,7 @@
   </div>
   <div>
     <h3>Versión actual</h3>
-    <p><b>v6.1 Exportación Profesional</b></p>
+    <p><b>v6.0 Plataforma Profesional</b></p>
     <p>Estado: versión pública en desarrollo.</p>
   </div>
 </div>
@@ -433,10 +379,9 @@
 </section>
 
 
-
 <section id="plantillasDist" class="view">
 <h2>Plantillas Distribuidoras</h2>
-<div class="panel"><div class="ok"><b>v6.1:</b> módulo visible y funcional para generar plantillas preliminares por distribuidora.</div></div>
+<div class="panel"><div class="ok"><b>v5.14 integrada:</b> plantillas preliminares por empresa distribuidora para ordenar antecedentes técnicos.</div></div>
 <div class="panel grid">
   <label>Distribuidora<select id="distEmpresa"><option>CGE</option><option>COPELEC</option><option>COELCHA</option><option>FRONTEL</option><option>CHILQUINTA</option><option>ENEL</option></select></label>
   <label>Tipo de trámite<select id="distTramite"><option>Solicitud de factibilidad</option><option>Empalme nuevo</option><option>Aumento de potencia</option><option>Modificación de empalme</option><option>Medición indirecta</option></select></label>
@@ -449,7 +394,7 @@
 
 <section id="materialesDB" class="view">
 <h2>Base de Datos de Materiales</h2>
-<div class="panel"><div class="ok"><b>v6.1:</b> catálogo local editable para materiales eléctricos.</div></div>
+<div class="panel"><div class="ok"><b>v5.15 integrada:</b> catálogo local editable para materiales eléctricos frecuentes.</div></div>
 <div class="panel grid">
   <label>Material<input id="matNombre" placeholder="Ej: Cable Cu 10 mm²"></label>
   <label>Categoría<select id="matCat"><option>Conductores</option><option>Protecciones</option><option>Canalizaciones</option><option>Tableros</option><option>Puesta a tierra</option><option>Otros</option></select></label>
@@ -464,7 +409,7 @@
 
 <section id="presupuestos" class="view">
 <h2>Presupuestos</h2>
-<div class="panel"><div class="ok"><b>v6.1:</b> presupuesto preliminar con exportación Excel compatible.</div></div>
+<div class="panel"><div class="ok"><b>v5.16 integrada:</b> genera presupuestos preliminares desde materiales y cantidades.</div></div>
 <div class="panel grid">
   <label>Ítem<input id="preItem" placeholder="Ej: Cable Cu 10 mm²"></label>
   <label>Cantidad<input id="preCant" type="number" value="1"></label>
@@ -481,7 +426,7 @@
 
 <section id="historialTecnico" class="view">
 <h2>Historial Técnico</h2>
-<div class="panel"><div class="ok"><b>v6.1:</b> registro local de acciones técnicas del proyecto.</div></div>
+<div class="panel"><div class="ok"><b>v5.17 integrada:</b> registra acciones técnicas relevantes del proyecto.</div></div>
 <div class="panel grid">
   <label>Tipo<select id="htTipo"><option>Cálculo</option><option>Informe</option><option>Observación</option><option>Corrección</option><option>Revisión normativa</option></select></label>
   <label>Responsable<input id="htResp" value="Julio Vera Concha"></label>
@@ -495,7 +440,7 @@
 
 <section id="comparadorNormativo" class="view">
 <h2>Comparador Normativo</h2>
-<div class="panel"><div class="ok"><b>v6.1:</b> comparación preliminar de temas técnicos y RIC relacionados.</div></div>
+<div class="panel"><div class="ok"><b>v5.18 integrada:</b> compara temas técnicos y muestra RIC/documentos relacionados.</div></div>
 <div class="panel grid">
   <label>Tema A<input id="normA" placeholder="Ej: empalme"></label>
   <label>Tema B<input id="normB" placeholder="Ej: puesta a tierra"></label>
@@ -506,7 +451,7 @@
 
 <section id="bibliotecaDoc" class="view">
 <h2>Biblioteca Documental</h2>
-<div class="panel"><div class="ok"><b>v6.1:</b> biblioteca local de documentos técnicos del proyecto.</div></div>
+<div class="panel"><div class="ok"><b>v5.19 integrada:</b> organiza documentos, referencias y archivos técnicos del proyecto.</div></div>
 <div class="panel grid">
   <label>Nombre documento<input id="docNombre" placeholder="Ej: Factibilidad CGE"></label>
   <label>Tipo<select id="docTipo"><option>Formulario</option><option>Plano</option><option>Informe</option><option>Normativa</option><option>Evidencia</option><option>Otro</option></select></label>
@@ -519,23 +464,33 @@
 </section>
 
 <section id="plataformaPro" class="view">
-<h2>Plataforma Profesional v6.1</h2>
+<h2>Plataforma Profesional v6.0</h2>
 <div class="panel">
-  <h3>GIAE Chile</h3>
+  <h3>GIAE Chile v6.0</h3>
   <p><b>Gestor Inteligente de Análisis para Empalmes</b></p>
-  <p>Versión profesional acumulativa con módulos visibles, funciones corregidas y exportaciones verificadas.</p>
+  <p>Esta versión integra en una sola plataforma el análisis técnico, normativa, proyectos, informes, materiales, presupuestos, historial y documentación.</p>
 </div>
 <div class="cards">
-  <div class="card c"><b>✓</b>Módulos<small>Visibles</small></div>
-  <div class="card g"><b>✓</b>Botones<small>Corregidos</small></div>
-  <div class="card y"><b>DOC</b>Word<small>Compatible</small></div>
-  <div class="card r"><b>XLS</b>Excel<small>Compatible</small></div>
+  <div class="card c"><b>v5.14</b>Plantillas<small>Distribuidoras</small></div>
+  <div class="card g"><b>v5.15</b>Materiales<small>Base local</small></div>
+  <div class="card y"><b>v5.16</b>Presupuestos<small>Costos preliminares</small></div>
+  <div class="card r"><b>v6.0</b>Profesional<small>Plataforma integrada</small></div>
+</div>
+<div class="panel">
+  <h3>Ruta futura</h3>
+  <ul>
+    <li>Usuarios reales y backend.</li>
+    <li>Base de datos en la nube.</li>
+    <li>Exportación PDF profesional avanzada.</li>
+    <li>Panel administrativo.</li>
+    <li>Licencias Demo / Profesional.</li>
+  </ul>
 </div>
 </section>
 
 <section id="config" class="view"><h2>Configuración</h2><div class="panel">GIAE Chile v5.12 · Centro de Proyectos y Exportación · Julio Vera Concha © 2026<br><button class="btn danger" onclick="GIAE.storage.reset()">Borrar datos locales</button></div></section>
 
-<footer>GIAE Chile © 2026 · v6.1 Exportación Profesional · Word, Excel, HTML y PDF desde navegador · Desarrollado por Julio Vera Concha · Todos los derechos reservados</footer>
+<footer>GIAE Chile © 2026 · Plataforma Profesional integrada · Gestor Inteligente de Análisis para Empalmes · Desarrollado por Julio Vera Concha · Todos los derechos reservados · Versión 6.0</footer>
 </main>
 <script src="js/app.js"></script>
 </body></html>

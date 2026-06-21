@@ -1,7 +1,173 @@
-v6.1.1 - Cloudflare Clean Deploy
-- Se crea estructura limpia con carpeta public/.
-- El sitio completo queda dentro de public/.
-- wrangler.jsonc apunta a assets.directory = ./public.
-- Se agrega .assetsignore para excluir node_modules.
-- Se evita error Asset too large en Cloudflare Workers.
-- Se mantiene GIAE v6.1 Exportación Profesional.
+v4.0 Profesional Modular
+- Proyecto separado por archivos.
+- Motor de empalmes por kW contratado/solicitado.
+- Cuadro SEC Pro.
+- Asistente Técnico RIC local.
+
+
+v4.1 - RUT + Asistente
+- Campo RUT con formato automático 12.345.678-9.
+- Validación básica del dígito verificador.
+- Asistente RIC con respuesta técnica más completa.
+
+
+v4.2 - Motor Experto RIC
+- Motor de empalme más inteligente por kW contratado/solicitado.
+- Reglas iniciales CGE, COELCHA y COPELEC.
+- Asistente RIC con diagnóstico, faltantes y observación SEC.
+- Autocompletar sugerencias técnicas.
+
+
+v5.0 - Demo Pública
+- Modo demo con usuario demo / clave demo123.
+- Entrada como visitante.
+- Instructivo de uso integrado.
+- Página de demo público y plan comercial.
+- Preparación para futuro módulo real de usuarios y contraseñas.
+
+
+v5.3 - Pública Inteligente
+- Login demo restaurado.
+- Usuario demo / clave demo123.
+- Entrada como visitante.
+- Modo visitante con acceso limitado.
+- Barra de sesión y botón para cambiar acceso.
+- Comunidad, sugerencias, lista de espera y panel de interés.
+- Estructura limpia sin archivos de prueba.
+
+
+v5.4 - Acceso Controlado
+- Corrige ingreso automático.
+- La pantalla inicial siempre aparece si no hay sesión activa en la pestaña.
+- Se reemplaza localStorage por sessionStorage para el acceso demo/visitante.
+- Botón Cambiar acceso vuelve al login.
+- Limpieza de textos y versión.
+
+
+v5.5 - Motor Experto RIC
+- Motor de empalme experto.
+- Resultado técnico con corriente, protección, conductor y canalización.
+- Observaciones RIC/SEC automáticas.
+- Alertas técnicas preliminares.
+- Equivalente W automático desde kW.
+
+
+v5.6 - Identidad Corporativa
+- Nombre oficial: GIAE Chile, Gestor Inteligente de Análisis para Empalmes.
+- Nueva sección: Acerca de GIAE.
+- Misión, visión y valores.
+- Pantalla principal con identidad profesional.
+- Footer profesional con significado de GIAE.
+- Preparación para futuras versiones comerciales.
+
+
+v5.7 - Profesional SEC
+- Biblioteca SEC de empalmes.
+- Fichas rápidas por tipo de empalme.
+- Generador de informe técnico preliminar SEC.
+- Historial local de proyectos.
+- Exportación de historial JSON.
+- Integración con Motor Experto RIC y marca GIAE Chile.
+
+
+v5.8 - Comunidad Profesional
+- Nuevo logo corporativo GIAE en SVG.
+- Rebranding visual completo.
+- Estadísticas del sistema.
+- Historial avanzado con buscador.
+- Mejoras de comunidad y sugerencias.
+- Preparación visual para versión comercial.
+
+
+v5.8.1 - Logo Corregido
+- Logo corporativo GIAE movido a assets/giae-logo.svg.
+- Corrección visual en login, sidebar, panel principal y Acerca de GIAE.
+- Se evita que el SVG se rompa por estilos del navegador o CSS heredado.
+
+
+v5.8.2 - Entrada Ajustada
+- Corrección de pantalla de login corrida.
+- Login centrado y compacto.
+- Botones visibles en pantallas pequeñas.
+- Logo corporativo ajustado en la entrada.
+
+
+v5.8.3 - Login Corregido
+- Corrige problema que impedía entrar al sistema.
+- Se fuerza .login-overlay.oculto con display:none!important.
+- Se mantiene logo, entrada ajustada, estadísticas e historial avanzado.
+
+
+v5.9 - Biblioteca SEC Inteligente
+- Biblioteca RIC 1 al 19.
+- Buscador de normativa.
+- Filtro por categoría.
+- Motor de consulta RIC inteligente.
+- Observaciones técnicas automáticas según consulta.
+
+
+v5.10 - Copiloto Técnico
+- Consulta rápida en Panel Principal.
+- Asistente RIC transformado en Copiloto Técnico.
+- Interpretación de consultas técnicas.
+- Recomendación preliminar de empalmes, protecciones, conductores y canalizaciones.
+- Relación automática con RIC aplicables.
+- Checklist SEC preliminar.
+- Estadísticas de consultas técnicas.
+
+
+v5.11 - Generador Automático de Informes
+- Biblioteca SEC renombrada a Biblioteca Normativa.
+- RIC Inteligente renombrado a Motor Normativo.
+- Banner principal mejorado.
+- Nuevo módulo Informe Automático.
+- Genera informe técnico preliminar en pantalla.
+- Permite descargar informe HTML.
+- Permite imprimir o guardar como PDF desde navegador.
+- Integra proyecto, cuadro de carga, empalme, normativa y observaciones.
+- Agrega aviso legal de herramienta independiente.
+
+
+v5.12 - Centro de Proyectos y Exportación
+- Nuevo Centro de Proyectos.
+- Guardar, abrir, duplicar y eliminar proyectos.
+- Exportar e importar proyectos en JSON.
+- Exportar informe a Word compatible (.doc).
+- Exportar datos a Excel compatible (.xls).
+- Descargar informe HTML.
+- Imprimir o guardar PDF desde navegador.
+- Preparación para gestión documental profesional.
+
+
+v5.14 - Plantillas Distribuidoras
+- Plantillas preliminares por distribuidora.
+- Checklist de antecedentes.
+- Descarga HTML.
+
+v5.15 - Base de Datos de Materiales
+- Catálogo local de materiales.
+- Precios referenciales editables.
+- Exportación JSON.
+
+v5.16 - Presupuestos
+- Presupuestos preliminares.
+- Sugerencia desde proyecto.
+- Exportación Excel compatible y HTML.
+
+v5.17 - Historial Técnico
+- Registro de acciones técnicas.
+- Responsable, fecha, tipo y detalle.
+- Exportación JSON.
+
+v5.18 - Comparador Normativo
+- Comparación preliminar de temas técnicos.
+- RIC relacionados.
+
+v5.19 - Biblioteca Documental
+- Registro documental.
+- Clasificación por tipo.
+- Exportación JSON.
+
+v6.0 - Plataforma Profesional
+- Integración completa de módulos técnicos, documentales, normativos y comerciales.
+- Preparación para backend, usuarios reales y licenciamiento profesional.
