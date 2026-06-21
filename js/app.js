@@ -57,13 +57,13 @@ GIAE.motorEmpalme={
 };
 
 GIAE.empalme={traer(){let kw=GIAE.state.proyecto.kw||GIAE.cuadro.totalKW();eKw.value=kw.toFixed(2);eW.value=(kw*1000).toFixed(0);eComp.value=GIAE.state.proyecto.compania||"CGE";eSis.value=GIAE.state.proyecto.sistema||"mono"},sel(comp,s,kw){let d=GIAE.data.empalmes?.[comp]||[];return d.find(x=>x.sistema===s&&kw>=x.kwMin&&kw<=x.kwMax)||{codigo:s==="mono"&&kw>8?"Factibilidad / evaluar trifásico":"Revisar distribuidora",proteccion:"Revisar",conductor:"Revisar"}},calcular(){let kw=GIAE.calc.n(eKw.value),s=eSis.value,comp=eComp.value,fp=GIAE.calc.n(eFP.value,1),icc=GIAE.calc.n(eIcc.value);eW.value=(kw*1000).toFixed(0);let r=GIAE.motorEmpalme.recomendar({kw,sistema:s,compania:comp,fp,icc});GIAE.state.resultados.empalme={kw,w:r.w,sistema:s,compania:comp,corriente:r.I,empalme:r.emp,pdc:r.pdc,proteccion:r.prot,conductor:r.cond,ducto:r.ducto,alertas:r.alertas,observaciones:r.obs};GIAE.storage.save();resEmp.innerHTML=GIAE.motorEmpalme.html(r);if(GIAE.estadisticas)GIAE.estadisticas.inc('empalmes')}};
-GIAE.sec={generar(){let c=GIAE.state.cargas;if(!c.length){vistaSEC.innerHTML='<div class="warn">No hay circuitos cargados.</div>';return}let tw=0,r=0,s=0,t=0;let rows=c.map((x,i)=>{tw+=x.Wd;if(x.fase==="R")r+=x.I;if(x.fase==="S")s+=x.I;if(x.fase==="T")t+=x.I;let dif=(x.tipo==="Alumbrado"||x.tipo==="Enchufes")?"2x25A/30mA":"40A/30mA";return`<tr><td>TG</td><td>${i+1}</td><td>${x.nombre}</td><td>${x.tipo}</td><td>${x.Wd.toFixed(0)}</td><td>${(x.Wd/1000).toFixed(2)}</td><td>${x.fase==="R"?x.I.toFixed(2):""}</td><td>${x.fase==="S"?x.I.toFixed(2):""}</td><td>${x.fase==="T"?x.I.toFixed(2):""}</td><td>${x.proteccion}A</td><td>${dif}</td><td>${x.conductor} mm²</td><td>${x.conductor} mm²</td><td>RZ1/THHN</td><td>${GIAE.calc.ducto(x.I)}</td><td>${x.tipo}</td></tr>`}).join("");let p=GIAE.state.proyecto;let h=`<div class="secwrap"><table class="sectable"><tr><th colspan="16" class="sectitle">CUADRO DE CARGAS PROFESIONAL PRELIMINAR - GIAE CHILE</th></tr><tr><th>TAB.</th><th>CTO</th><th>CIRCUITO</th><th>TIPO</th><th>W</th><th>kW</th><th>R</th><th>S</th><th>T</th><th>DISY.</th><th>DIF.</th><th>DISTRIB.</th><th>DERIV.</th><th>TIPO CABLE</th><th>DUCTO</th><th>DESC.</th></tr>${rows}<tr class="sectotal"><td colspan="4">TOTAL</td><td>${tw.toFixed(0)}</td><td>${(tw/1000).toFixed(2)}</td><td>${r.toFixed(2)}</td><td>${s.toFixed(2)}</td><td>${t.toFixed(2)}</td><td colspan="7">Proyecto: ${p.nombre||"Sin nombre"} · Cliente: ${p.cliente||"Sin cliente"} · Compañía: ${p.compania||"Sin compañía"}</td></tr></table><p>GIAE Chile v6.0 · Julio Vera Concha © 2026 · Validar con RIC/SEC.</p></div>`;vistaSEC.innerHTML=h;GIAE.state.resultados.sec=h;GIAE.storage.save()},descargar(){if(!GIAE.demo.exigirDemo('descargar cuadro SEC'))return;GIAE.informe.download("Cuadro_SEC_GIAE.html",vistaSEC.innerHTML)}};
+GIAE.sec={generar(){let c=GIAE.state.cargas;if(!c.length){vistaSEC.innerHTML='<div class="warn">No hay circuitos cargados.</div>';return}let tw=0,r=0,s=0,t=0;let rows=c.map((x,i)=>{tw+=x.Wd;if(x.fase==="R")r+=x.I;if(x.fase==="S")s+=x.I;if(x.fase==="T")t+=x.I;let dif=(x.tipo==="Alumbrado"||x.tipo==="Enchufes")?"2x25A/30mA":"40A/30mA";return`<tr><td>TG</td><td>${i+1}</td><td>${x.nombre}</td><td>${x.tipo}</td><td>${x.Wd.toFixed(0)}</td><td>${(x.Wd/1000).toFixed(2)}</td><td>${x.fase==="R"?x.I.toFixed(2):""}</td><td>${x.fase==="S"?x.I.toFixed(2):""}</td><td>${x.fase==="T"?x.I.toFixed(2):""}</td><td>${x.proteccion}A</td><td>${dif}</td><td>${x.conductor} mm²</td><td>${x.conductor} mm²</td><td>RZ1/THHN</td><td>${GIAE.calc.ducto(x.I)}</td><td>${x.tipo}</td></tr>`}).join("");let p=GIAE.state.proyecto;let h=`<div class="secwrap"><table class="sectable"><tr><th colspan="16" class="sectitle">CUADRO DE CARGAS PROFESIONAL PRELIMINAR - GIAE CHILE</th></tr><tr><th>TAB.</th><th>CTO</th><th>CIRCUITO</th><th>TIPO</th><th>W</th><th>kW</th><th>R</th><th>S</th><th>T</th><th>DISY.</th><th>DIF.</th><th>DISTRIB.</th><th>DERIV.</th><th>TIPO CABLE</th><th>DUCTO</th><th>DESC.</th></tr>${rows}<tr class="sectotal"><td colspan="4">TOTAL</td><td>${tw.toFixed(0)}</td><td>${(tw/1000).toFixed(2)}</td><td>${r.toFixed(2)}</td><td>${s.toFixed(2)}</td><td>${t.toFixed(2)}</td><td colspan="7">Proyecto: ${p.nombre||"Sin nombre"} · Cliente: ${p.cliente||"Sin cliente"} · Compañía: ${p.compania||"Sin compañía"}</td></tr></table><p>GIAE Chile v6.2 · Julio Vera Concha © 2026 · Validar con RIC/SEC.</p></div>`;vistaSEC.innerHTML=h;GIAE.state.resultados.sec=h;GIAE.storage.save()},descargar(){if(!GIAE.demo.exigirDemo('descargar cuadro SEC'))return;GIAE.informe.download("Cuadro_SEC_GIAE.html",vistaSEC.innerHTML)}};
 GIAE.conductores={traer(){let kw=GIAE.state.proyecto.kw||GIAE.cuadro.totalKW();dKw.value=kw.toFixed(2);dSis.value=GIAE.state.proyecto.sistema||"mono"},calcular(){let kw=GIAE.calc.n(dKw.value),sis=dSis.value,fp=GIAE.calc.n(dFP.value,1),I=GIAE.calc.iKW(kw,sis,fp),rho=dMat.value==="aluminio"?0.0282:0.0175,V=sis==="trifa"?380:220,f=sis==="trifa"?Math.sqrt(3):2,dv=f*I*rho*GIAE.calc.n(dL.value)/GIAE.calc.n(dSec.value),pct=dv/V*100,smin=GIAE.calc.n(dIcc.value)*Math.sqrt(GIAE.calc.n(dT.value,.1))/115;resCond.innerHTML=`<div class="${smin>GIAE.calc.n(dSec.value)?'err':'ok'}">Smin cortocircuito: ${smin.toFixed(2)} mm²</div><div class="${pct>3?'warn':'ok'}">Caída: ${dv.toFixed(2)} V (${pct.toFixed(2)}%)</div><p>Corriente: ${I.toFixed(2)} A</p>`}};
 GIAE.protecciones={calcular(){let ib=GIAE.calc.n(prIb.value),iz=GIAE.calc.n(prIz.value),icc=GIAE.calc.n(prIcc.value),inn=GIAE.calc.prot(ib),cum=ib<=inn&&inn<=iz,pdc=Math.ceil(icc*1.2),com=[6000,10000,15000,25000,36000,50000].find(x=>x>=pdc)||"Revisar";resProt.innerHTML=`<div class="${cum?'ok':'err'}">${cum?'Cumple':'No cumple'}: ${ib} ≤ ${inn} ≤ ${iz}</div><div class="warn">PdC ≥ ${pdc} A. Comercial sugerido: ${com} A</div>`}};
 GIAE.canal={sugerir(){let m=Math.max(0,...GIAE.state.cargas.map(c=>c.I));caN.value=GIAE.state.proyecto.sistema==="trifa"?4:3;caDc.value=m<=16?5:m<=32?7:m<=63?10:13;caDucto.value=m<=16?20:m<=32?25:m<=63?32:40},calcular(){let n=GIAE.calc.n(caN.value),dc=GIAE.calc.n(caDc.value),dd=GIAE.calc.n(caDucto.value),max=GIAE.calc.n(caMax.value,40),pct=(n*Math.PI*(dc/2)**2)/(Math.PI*(dd/2)**2)*100;resCanal.innerHTML=`<div class="${pct<=max?'ok':'err'}">Ocupación: ${pct.toFixed(1)}% ${pct<=max?'cumple':'supera'} máximo ${max}%</div>`}};
 GIAE.unilineal={generar(){let p=GIAE.state.proyecto,emp=GIAE.state.resultados.empalme;let lines=[`COMPAÑÍA: ${p.compania||"Sin compañía"}`,`EMPALME: ${emp?.empalme?.codigo||"Por definir"}`,"","Red distribución","│","├── Medidor","├── Protección general","├── Tablero General",...GIAE.state.cargas.map((c,i)=>`│   ├── C${i+1} ${c.nombre} | ${c.tipo} | ${c.proteccion} A | ${c.conductor} mm²`),"└── Puesta a tierra RIC 06"];vistaUni.textContent=lines.join("\\n");GIAE.state.resultados.unilineal=vistaUni.textContent;GIAE.storage.save()},copiar(){navigator.clipboard.writeText(vistaUni.textContent).then(()=>alert("Copiado"))}};
 GIAE.evidencias={agregar(){let file=evFile.files[0],it={tipo:evTipo.value,desc:evDesc.value,img:null,fecha:new Date().toLocaleString("es-CL")};if(file){let r=new FileReader();r.onload=()=>{it.img=r.result;GIAE.state.evidencias.push(it);GIAE.storage.save();this.render()};r.readAsDataURL(file)}else{GIAE.state.evidencias.push(it);GIAE.storage.save();this.render()}},limpiar(){if(confirm("¿Limpiar evidencias?")){GIAE.state.evidencias=[];GIAE.storage.save();this.render()}},render(){let e=GIAE.state.evidencias;if(!e.length){listaEv.innerHTML="No hay evidencias.";return}listaEv.innerHTML=e.map(x=>`<div class="ev"><b>${x.tipo}</b><br>${x.desc||""}<br><small>${x.fecha}</small>${x.img?`<br><img src="${x.img}">`:""}</div>`).join("")}};
-GIAE.asistente={resumen(){let d=GIAE.experto.diagnosticar();return{p:d.p,kw:d.kw,I:d.I,emp:d.emp,prot:d.prot,cond:d.cond,alertas:d.alertas,ok:d.ok}},analizar(){let r=this.resumen();resAsis.innerHTML=`<div class="ok"><b>Análisis técnico preliminar v6.0</b><br>Proyecto: ${r.p.nombre||'Sin nombre'}<br>Cliente: ${r.p.cliente||'Sin cliente'}<br>RUT: ${GIAE.rut.formatear(r.p.rut||'No informado')}<br>Potencia contratada/solicitada: ${r.kw.toFixed(2)} kW<br>Corriente aproximada: ${r.I.toFixed(2)} A<br>Empalme sugerido: ${r.emp.codigo}<br>Protección preliminar: ${r.prot} A<br>Conductor preliminar: ${r.cond} mm² Cu<br><br><b>Estado:</b><br>${r.ok.map(x=>'✓ '+x).join('<br>')}<br>${r.alertas.map(x=>'⚠ '+x).join('<br>')}<br><br><b>Nota:</b> validar siempre con RIC/SEC y distribuidora.</div>`},recomendacionSEC(){resAsis.innerHTML=`<div class="ok"><b>Observación SEC preliminar</b><br>${GIAE.experto.observacionSEC()}</div>`},autoCompletar(){let d=GIAE.experto.diagnosticar();eKw.value=d.kw.toFixed(2);eW.value=(d.kw*1000).toFixed(0);eComp.value=d.comp;eSis.value=d.sis;prIb.value=d.I.toFixed(2);prIz.value=d.cond==='Revisar'?40:Math.max(40,Number(d.cond)*6);dKw.value=d.kw.toFixed(2);dSis.value=d.sis;resAsis.innerHTML='<div class="ok">Sugerencias cargadas en Motor Empalme, Protecciones y Conductores.</div>'},faltantes(){let p=GIAE.state.proyecto,f=[];if(!p.nombre||!p.cliente||!p.direccion)f.push("Completar proyecto");if(!GIAE.state.cargas.length)f.push("Agregar cuadro de carga");if(!GIAE.state.resultados.empalme)f.push("Calcular empalme por kW");if(!GIAE.state.resultados.unilineal)f.push("Generar unilineal");if(!GIAE.state.evidencias.length)f.push("Agregar evidencias");resAsis.innerHTML=f.length?`<div class="warn"><b>Faltantes:</b><br>${f.map(x=>"• "+x).join("<br>")}</div>`:`<div class="ok">Sin faltantes básicos.</div>`},responder(){if(GIAE.copiloto&&window.aPreg&&aPreg.value.trim()){GIAE.copiloto.responder();return}let q=aPreg.value.toLowerCase(),r=this.resumen();if(q.includes("empalme"))resAsis.innerHTML=`<div class="ok">Empalme sugerido: <b>${r.emp.codigo}</b> por ${r.kw.toFixed(2)} kW contratado/solicitado.</div>`;else if(q.includes("prote"))resAsis.innerHTML=`<div class="ok">Protección preliminar: ${r.prot} A.</div>`;else if(q.includes("conductor")||q.includes("cable"))resAsis.innerHTML=`<div class="ok">Conductor preliminar: ${r.cond} mm² Cu.</div>`;else if(q.includes("falta"))this.faltantes();else this.analizar()}};
+GIAE.asistente={resumen(){let d=GIAE.experto.diagnosticar();return{p:d.p,kw:d.kw,I:d.I,emp:d.emp,prot:d.prot,cond:d.cond,alertas:d.alertas,ok:d.ok}},analizar(){let r=this.resumen();resAsis.innerHTML=`<div class="ok"><b>Análisis técnico preliminar v6.2</b><br>Proyecto: ${r.p.nombre||'Sin nombre'}<br>Cliente: ${r.p.cliente||'Sin cliente'}<br>RUT: ${GIAE.rut.formatear(r.p.rut||'No informado')}<br>Potencia contratada/solicitada: ${r.kw.toFixed(2)} kW<br>Corriente aproximada: ${r.I.toFixed(2)} A<br>Empalme sugerido: ${r.emp.codigo}<br>Protección preliminar: ${r.prot} A<br>Conductor preliminar: ${r.cond} mm² Cu<br><br><b>Estado:</b><br>${r.ok.map(x=>'✓ '+x).join('<br>')}<br>${r.alertas.map(x=>'⚠ '+x).join('<br>')}<br><br><b>Nota:</b> validar siempre con RIC/SEC y distribuidora.</div>`},recomendacionSEC(){resAsis.innerHTML=`<div class="ok"><b>Observación SEC preliminar</b><br>${GIAE.experto.observacionSEC()}</div>`},autoCompletar(){let d=GIAE.experto.diagnosticar();eKw.value=d.kw.toFixed(2);eW.value=(d.kw*1000).toFixed(0);eComp.value=d.comp;eSis.value=d.sis;prIb.value=d.I.toFixed(2);prIz.value=d.cond==='Revisar'?40:Math.max(40,Number(d.cond)*6);dKw.value=d.kw.toFixed(2);dSis.value=d.sis;resAsis.innerHTML='<div class="ok">Sugerencias cargadas en Motor Empalme, Protecciones y Conductores.</div>'},faltantes(){let p=GIAE.state.proyecto,f=[];if(!p.nombre||!p.cliente||!p.direccion)f.push("Completar proyecto");if(!GIAE.state.cargas.length)f.push("Agregar cuadro de carga");if(!GIAE.state.resultados.empalme)f.push("Calcular empalme por kW");if(!GIAE.state.resultados.unilineal)f.push("Generar unilineal");if(!GIAE.state.evidencias.length)f.push("Agregar evidencias");resAsis.innerHTML=f.length?`<div class="warn"><b>Faltantes:</b><br>${f.map(x=>"• "+x).join("<br>")}</div>`:`<div class="ok">Sin faltantes básicos.</div>`},responder(){if(GIAE.copiloto&&window.aPreg&&aPreg.value.trim()){GIAE.copiloto.responder();return}let q=aPreg.value.toLowerCase(),r=this.resumen();if(q.includes("empalme"))resAsis.innerHTML=`<div class="ok">Empalme sugerido: <b>${r.emp.codigo}</b> por ${r.kw.toFixed(2)} kW contratado/solicitado.</div>`;else if(q.includes("prote"))resAsis.innerHTML=`<div class="ok">Protección preliminar: ${r.prot} A.</div>`;else if(q.includes("conductor")||q.includes("cable"))resAsis.innerHTML=`<div class="ok">Conductor preliminar: ${r.cond} mm² Cu.</div>`;else if(q.includes("falta"))this.faltantes();else this.analizar()}};
 GIAE.informe={generar(){let p=GIAE.state.proyecto,emp=GIAE.state.resultados.empalme,sec=GIAE.state.resultados.sec||"Cuadro SEC no generado",uni=GIAE.state.resultados.unilineal||"Unilineal no generado",ev=GIAE.state.evidencias.map(x=>`<div class="ev"><b>${x.tipo}</b><br>${x.desc||""}${x.img?`<br><img src="${x.img}">`:""}</div>`).join("")||"Sin evidencias";vistaInforme.innerHTML=`<h2>Informe Técnico Preliminar GIAE Chile</h2><p><b>Autor sistema:</b> Julio Vera Concha © 2026</p><h3>Proyecto</h3><p>${p.nombre||""}<br>${p.cliente||""}<br>${p.direccion||""}<br>${p.compania||""}</p><h3>Empalme</h3><p>${emp?.empalme?.codigo||"No calculado"}</p><h3>Cuadro SEC</h3>${sec}<h3>Unilineal</h3><pre class="code">${uni}</pre><h3>Evidencias</h3>${ev}<p>Validar con RIC/SEC y distribuidora.</p>`},download(n,c){let b=new Blob([`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${n}</title><link rel="stylesheet" href="css/styles.css"></head><body>${c}</body></html>`],{type:"text/html"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=n;a.click();URL.revokeObjectURL(u)},descargar(){if(!GIAE.demo.exigirDemo('descargar informes'))return;this.download("Informe_GIAE_Chile.html",vistaInforme.innerHTML)}};
 
 GIAE.rut={
@@ -162,7 +162,7 @@ GIAE.demo={
     document.getElementById("demoLogin")?.classList.add("oculto");
   },
   revisar(){
-    // v6.0: nunca recuerda localStorage ni entra solo.
+    // v6.2: nunca recuerda localStorage ni entra solo.
     localStorage.removeItem(this.sessionKey);
     const x=document.getElementById("demoLogin");
     if(!x) return;
@@ -579,7 +579,7 @@ GIAE.informeAuto={
         <h3>Informe Técnico Preliminar</h3>
         <p><b>Proyecto:</b> ${p.nombre||"No informado"}</p>
         <p><b>Fecha:</b> ${this.fecha()}</p>
-        <p><b>Versión:</b> v6.0 Generador Automático de Informes</p>
+        <p><b>Versión:</b> v6.2 Generador Automático de Informes</p>
       </div>
       <hr>
       <h2>1. Descripción del Proyecto</h2>
@@ -606,7 +606,7 @@ GIAE.informeAuto={
   },
   descargar(){
     if(!this.ultimo)this.generar();
-    const full=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Informe GIAE v6.0</title><style>body{font-family:Arial;padding:30px;color:#111}table{width:100%;border-collapse:collapse;margin:12px 0}td,th{border:1px solid #ccc;padding:8px;text-align:left}.report-logo{width:90px}.portada-giae{text-align:center}.legal-note{background:#fff3cd;padding:12px;border-radius:8px}</style></head><body>${this.ultimo}</body></html>`;
+    const full=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Informe GIAE v6.2</title><style>body{font-family:Arial;padding:30px;color:#111}table{width:100%;border-collapse:collapse;margin:12px 0}td,th{border:1px solid #ccc;padding:8px;text-align:left}.report-logo{width:90px}.portada-giae{text-align:center}.legal-note{background:#fff3cd;padding:12px;border-radius:8px}</style></head><body>${this.ultimo}</body></html>`;
     const blob=new Blob([full],{type:"text/html;charset=utf-8"});
     const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="informe_giae_v5_11.html";a.click();URL.revokeObjectURL(a.href);
   },
@@ -620,7 +620,7 @@ GIAE.centroProyectos={
   save(a){localStorage.setItem(this.key,JSON.stringify(a));this.render()},
   snapshot(){
     return {
-      version:"v6.0",
+      version:"v6.2",
       fecha:new Date().toLocaleString("es-CL"),
       proyecto:GIAE.state.proyecto||{},
       cargas:GIAE.state.cargas||[],
@@ -828,3 +828,321 @@ GIAE.bibliotecaDoc={
 
 GIAE.app={init(){document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.view).classList.add("active")});GIAE.demo.revisar();GIAE.storage.load();GIAE.proyecto.cargar();GIAE.rut.instalar();GIAE.cuadro.render();GIAE.evidencias.render();GIAE.comunidad.render();GIAE.bibliotecaSEC.render();GIAE.historial.render();GIAE.estadisticas.actualizar();if(GIAE.centroProyectos)GIAE.centroProyectos.render();if(GIAE.materiales)GIAE.materiales.render();if(GIAE.presupuestos)GIAE.presupuestos.render();if(GIAE.historialTecnico)GIAE.historialTecnico.render();if(GIAE.bibliotecaDoc)GIAE.bibliotecaDoc.render();if(GIAE.ricInteligente)GIAE.ricInteligente.buscar();if(window.eKw)eKw.addEventListener('input',()=>{eW.value=(GIAE.calc.n(eKw.value)*1000).toFixed(0)});if(!sessionStorage.getItem('giae_visit_counted_v58')){sessionStorage.setItem('giae_visit_counted_v58','1');if(GIAE.estadisticas)GIAE.estadisticas.inc('visitas');}GIAE.demo.aplicarModo();this.stats()},stats(){if(window.stCargas)stCargas.textContent=GIAE.state.cargas.length}};
 window.addEventListener("DOMContentLoaded",async()=>{try{GIAE.data.empalmes=await fetch("data/empalmes.json").then(r=>r.json())}catch(e){GIAE.data.empalmes={CGE:[],COELCHA:[],COPELEC:[]}}if(GIAE.ricInteligente)await GIAE.ricInteligente.cargar();GIAE.app.init()});
+
+
+
+/* v6.2 Corrección de Publicación - módulos profesionales forzados */
+GIAE.utilDescarga=GIAE.utilDescarga||{
+  bajar(nombre, contenido, tipo="text/html;charset=utf-8"){
+    const blob=new Blob([contenido],{type:tipo});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download=nombre;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),500);
+  }
+};
+
+GIAE.plantillasDist={
+  ultimo:"",
+  generar(){
+    const p=GIAE.state.proyecto||{};
+    const empresa=window.distEmpresa?.value||"CGE";
+    const tramite=window.distTramite?.value||"Solicitud de factibilidad";
+    const obs=window.distObs?.value||"Sin observaciones.";
+    this.ultimo=`<div class="report"><h1>Plantilla Distribuidora ${empresa}</h1><h2>${tramite}</h2><table><tr><td>Proyecto</td><td>${p.nombre||""}</td></tr><tr><td>Cliente</td><td>${p.cliente||""}</td></tr><tr><td>RUT</td><td>${p.rut||""}</td></tr><tr><td>Potencia</td><td>${p.kw||""} kW</td></tr></table><h3>Checklist</h3><ul><li>Datos del cliente</li><li>Dirección</li><li>Potencia solicitada</li><li>Cuadro de carga</li><li>Unilineal</li><li>Fotografías</li><li>Puesta a tierra</li></ul><p>${obs}</p></div>`;
+    if(window.vistaPlantillaDist)vistaPlantillaDist.innerHTML=this.ultimo;
+  },
+  descargar(){if(!this.ultimo)this.generar();GIAE.utilDescarga.bajar("plantilla_distribuidora_giae.html",this.ultimo)}
+};
+
+GIAE.materiales={
+  key:"giae_materiales_v601",
+  arr(){try{return JSON.parse(localStorage.getItem(this.key)||"[]")}catch(e){return[]}},
+  save(a){localStorage.setItem(this.key,JSON.stringify(a));this.render()},
+  agregar(){const item={nombre:matNombre.value,categoria:matCat.value,unidad:matUnidad.value,precio:Number(matPrecio.value||0)};if(!item.nombre){alert("Ingresa material.");return}const a=this.arr();a.unshift(item);this.save(a);matNombre.value="";},
+  cargarBase(){const base=[["Cable Cu 2,5 mm²","Conductores","m",850],["Cable Cu 6 mm²","Conductores","m",1900],["Cable Cu 10 mm²","Conductores","m",3200],["Automático 1x16A","Protecciones","unidad",4500],["Automático 3x40A","Protecciones","unidad",18000],["Ducto PVC 25 mm","Canalizaciones","m",900],["Tablero 12 módulos","Tableros","unidad",16000]].map(x=>({nombre:x[0],categoria:x[1],unidad:x[2],precio:x[3]}));this.save([...base,...this.arr()]);},
+  exportar(){GIAE.utilDescarga.bajar("materiales_giae_v601.json",JSON.stringify(this.arr(),null,2),"application/json;charset=utf-8")},
+  render(){if(!window.listaMateriales)return;const a=this.arr();listaMateriales.innerHTML=a.length?`<table><tr><th>Material</th><th>Categoría</th><th>Unidad</th><th>Precio</th></tr>${a.map(x=>`<tr><td>${x.nombre}</td><td>${x.categoria}</td><td>${x.unidad}</td><td>$${Number(x.precio||0).toLocaleString("es-CL")}</td></tr>`).join("")}</table>`:"Sin materiales."}
+};
+
+GIAE.presupuestos={
+  key:"giae_presupuesto_v601",
+  arr(){try{return JSON.parse(localStorage.getItem(this.key)||"[]")}catch(e){return[]}},
+  save(a){localStorage.setItem(this.key,JSON.stringify(a));this.render()},
+  agregar(){const item={item:preItem.value,cantidad:Number(preCant.value||0),unidad:preUnidad.value,precio:Number(prePrecio.value||0)};if(!item.item){alert("Ingresa ítem.");return}const a=this.arr();a.push(item);this.save(a);preItem.value="";preCant.value=1;prePrecio.value=0;},
+  sugerirDesdeProyecto(){const e=GIAE.state.resultados?.empalme||{};const sug=[{item:"Tablero general",cantidad:1,unidad:"unidad",precio:35000},{item:`Conductor preliminar ${e.conductor||""}`,cantidad:30,unidad:"m",precio:2500},{item:`Protección ${e.proteccion||""}`,cantidad:1,unidad:"unidad",precio:18000},{item:"Canalización PVC/EMT",cantidad:20,unidad:"m",precio:1500}];this.save([...this.arr(),...sug]);},
+  total(){return this.arr().reduce((s,x)=>s+(x.cantidad*x.precio),0)},
+  render(){if(!window.vistaPresupuesto)return;const a=this.arr();vistaPresupuesto.innerHTML=a.length?`<table><tr><th>Ítem</th><th>Cantidad</th><th>Unidad</th><th>Precio</th><th>Total</th></tr>${a.map(x=>`<tr><td>${x.item}</td><td>${x.cantidad}</td><td>${x.unidad}</td><td>$${Number(x.precio).toLocaleString("es-CL")}</td><td>$${(x.cantidad*x.precio).toLocaleString("es-CL")}</td></tr>`).join("")}<tr><th colspan="4">Total</th><th>$${this.total().toLocaleString("es-CL")}</th></tr></table>`:"Sin presupuesto."},
+  exportarExcel(){const html=`<html><head><meta charset="utf-8"></head><body>${window.vistaPresupuesto?.innerHTML||""}</body></html>`;GIAE.utilDescarga.bajar("presupuesto_giae_v601.xls",html,"application/vnd.ms-excel;charset=utf-8")},
+  descargarHTML(){GIAE.utilDescarga.bajar("presupuesto_giae_v601.html",window.vistaPresupuesto?.innerHTML||"")},
+  limpiar(){localStorage.removeItem(this.key);this.render()}
+};
+
+GIAE.historialTecnico={
+  key:"giae_historial_tecnico_v601",
+  arr(){try{return JSON.parse(localStorage.getItem(this.key)||"[]")}catch(e){return[]}},
+  save(a){localStorage.setItem(this.key,JSON.stringify(a));this.render()},
+  agregar(){const item={fecha:new Date().toLocaleString("es-CL"),tipo:htTipo.value,responsable:htResp.value,detalle:htDetalle.value};if(!item.detalle){alert("Ingresa detalle.");return}const a=this.arr();a.unshift(item);this.save(a);htDetalle.value="";},
+  exportar(){GIAE.utilDescarga.bajar("historial_tecnico_giae_v601.json",JSON.stringify(this.arr(),null,2),"application/json;charset=utf-8")},
+  limpiar(){if(confirm("¿Limpiar historial técnico?")){localStorage.removeItem(this.key);this.render()}},
+  render(){if(!window.listaHistorialTecnico)return;const a=this.arr();listaHistorialTecnico.innerHTML=a.length?`<table><tr><th>Fecha</th><th>Tipo</th><th>Responsable</th><th>Detalle</th></tr>${a.map(x=>`<tr><td>${x.fecha}</td><td>${x.tipo}</td><td>${x.responsable}</td><td>${x.detalle}</td></tr>`).join("")}</table>`:"Sin registros."}
+};
+
+GIAE.comparadorNormativo={
+  buscar(t){t=(t||"").toLowerCase();let r=[];if(t.includes("empalme"))r.push("RIC 01");if(t.includes("tablero"))r.push("RIC 02");if(t.includes("conductor")||t.includes("canal"))r.push("RIC 04");if(t.includes("prote"))r.push("RIC 05");if(t.includes("tierra"))r.push("RIC 06");if(t.includes("te1")||t.includes("document"))r.push("RIC 18","RIC 19");return r.length?r:["RIC 01","RIC 04","RIC 06"]},
+  comparar(){const a=normA.value,b=normB.value;const ra=this.buscar(a),rb=this.buscar(b);vistaComparador.innerHTML=`<table><tr><th>Tema</th><th>Normativa relacionada</th></tr><tr><td>${a}</td><td>${ra.join(", ")}</td></tr><tr><td>${b}</td><td>${rb.join(", ")}</td></tr></table><div class="warn">Comparación preliminar. Validar con normativa vigente.</div>`}
+};
+
+GIAE.bibliotecaDoc={
+  key:"giae_biblioteca_doc_v601",
+  arr(){try{return JSON.parse(localStorage.getItem(this.key)||"[]")}catch(e){return[]}},
+  save(a){localStorage.setItem(this.key,JSON.stringify(a));this.render()},
+  agregar(){const item={fecha:new Date().toLocaleString("es-CL"),nombre:docNombre.value,tipo:docTipo.value,desc:docDesc.value};if(!item.nombre){alert("Ingresa nombre del documento.");return}const a=this.arr();a.unshift(item);this.save(a);docNombre.value="";docDesc.value="";},
+  exportar(){GIAE.utilDescarga.bajar("biblioteca_documental_giae_v601.json",JSON.stringify(this.arr(),null,2),"application/json;charset=utf-8")},
+  limpiar(){if(confirm("¿Limpiar biblioteca documental?")){localStorage.removeItem(this.key);this.render()}},
+  render(){if(!window.listaBibliotecaDoc)return;const a=this.arr();listaBibliotecaDoc.innerHTML=a.length?`<table><tr><th>Fecha</th><th>Nombre</th><th>Tipo</th><th>Descripción</th></tr>${a.map(x=>`<tr><td>${x.fecha}</td><td>${x.nombre}</td><td>${x.tipo}</td><td>${x.desc}</td></tr>`).join("")}</table>`:"Sin documentos."}
+};
+
+if(GIAE.informeAuto){
+  GIAE.informeAuto.exportarWord=function(){
+    if(!this.ultimo)this.generar();
+    const content=`<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Informe GIAE Word</title></head><body>${this.ultimo}</body></html>`;
+    GIAE.utilDescarga.bajar("informe_giae_v601.doc",content,"application/msword;charset=utf-8");
+  };
+  GIAE.informeAuto.exportarExcel=function(){
+    const p=GIAE.state.proyecto||{}, e=GIAE.state.resultados?.empalme||{}, cargas=GIAE.state.cargas||[];
+    let html="<table><tr><th colspan='2'>Proyecto</th></tr>";
+    html+=`<tr><td>Nombre</td><td>${p.nombre||""}</td></tr><tr><td>Cliente</td><td>${p.cliente||""}</td></tr><tr><td>RUT</td><td>${p.rut||""}</td></tr><tr><td>Potencia kW</td><td>${p.kw||e.kw||""}</td></tr>`;
+    html+="<tr><th colspan='6'>Cuadro de Carga</th></tr><tr><th>Circuito</th><th>Tipo</th><th>Sistema</th><th>Fase</th><th>W</th><th>Corriente A</th></tr>";
+    html+=cargas.map(x=>`<tr><td>${x.nombre||""}</td><td>${x.tipo||""}</td><td>${x.sistema||""}</td><td>${x.fase||""}</td><td>${x.w||""}</td><td>${Number(x.I||0).toFixed(2)}</td></tr>`).join("");
+    html+=`<tr><th colspan='2'>Empalme</th></tr><tr><td>Empalme recomendado</td><td>${e.empalme?.codigo||""}</td></tr><tr><td>Corriente</td><td>${e.corriente||""}</td></tr><tr><td>Protección</td><td>${e.proteccion||e.empalme?.proteccion||""}</td></tr></table>`;
+    GIAE.utilDescarga.bajar("datos_giae_v601.xls",`<html><head><meta charset='utf-8'></head><body>${html}</body></html>`,"application/vnd.ms-excel;charset=utf-8");
+  };
+}
+
+window.addEventListener("DOMContentLoaded",()=>setTimeout(()=>{
+  if(GIAE.centroProyectos)GIAE.centroProyectos.render();
+  if(GIAE.materiales)GIAE.materiales.render();
+  if(GIAE.presupuestos)GIAE.presupuestos.render();
+  if(GIAE.historialTecnico)GIAE.historialTecnico.render();
+  if(GIAE.bibliotecaDoc)GIAE.bibliotecaDoc.render();
+},400));
+
+
+
+/* v6.2 Exportación Profesional */
+GIAE.exportacionPro={
+  ultimo:"",
+  nombreSeguro(t){return (t||"giae").toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^\w\-]+/g,"_").replace(/_+/g,"_").slice(0,60)},
+  bajar(nombre, contenido, tipo){
+    const blob=new Blob([contenido],{type:tipo});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download=nombre;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),600);
+  },
+  datosProyecto(){
+    const p=GIAE.state.proyecto||{};
+    return {
+      nombre:p.nombre||"Proyecto GIAE",
+      cliente:p.cliente||"",
+      rut:p.rut||"",
+      direccion:p.direccion||"",
+      comuna:p.comuna||"",
+      compania:p.compania||"",
+      sistema:p.sistema==="trifa"?"Trifásico 380 V":"Monofásico 220 V",
+      kw:p.kw||""
+    };
+  },
+  generarBase(){
+    const p=this.datosProyecto();
+    const cargas=GIAE.state.cargas||[];
+    const e=GIAE.state.resultados?.empalme||{};
+    const fecha=new Date().toLocaleString("es-CL");
+    this.ultimo=`<div class="report informe-pro">
+      <div class="portada-giae">
+        <img src="assets/giae-logo.svg" class="report-logo" alt="GIAE Chile">
+        <h1>GIAE Chile</h1>
+        <h2>Gestor Inteligente de Análisis para Empalmes</h2>
+        <h3>Informe Técnico Profesional</h3>
+        <p><b>Versión:</b> v6.2 Exportación Profesional</p>
+        <p><b>Fecha:</b> ${fecha}</p>
+      </div>
+
+      <h2>1. Datos del Proyecto</h2>
+      <table>
+        <tr><td>Proyecto</td><td>${p.nombre}</td></tr>
+        <tr><td>Cliente</td><td>${p.cliente}</td></tr>
+        <tr><td>RUT</td><td>${p.rut}</td></tr>
+        <tr><td>Dirección</td><td>${p.direccion}</td></tr>
+        <tr><td>Comuna</td><td>${p.comuna}</td></tr>
+        <tr><td>Compañía</td><td>${p.compania}</td></tr>
+        <tr><td>Sistema</td><td>${p.sistema}</td></tr>
+        <tr><td>Potencia</td><td>${p.kw} kW</td></tr>
+      </table>
+
+      <h2>2. Cuadro de Carga</h2>
+      ${cargas.length?`<table><tr><th>Circuito</th><th>Tipo</th><th>Sistema</th><th>Fase</th><th>W</th><th>Corriente A</th></tr>${cargas.map(x=>`<tr><td>${x.nombre||""}</td><td>${x.tipo||""}</td><td>${x.sistema||""}</td><td>${x.fase||""}</td><td>${x.w||""}</td><td>${Number(x.I||0).toFixed(2)}</td></tr>`).join("")}</table>`:"<p>No hay cargas registradas.</p>"}
+
+      <h2>3. Resultado de Empalme</h2>
+      <table>
+        <tr><td>Empalme recomendado</td><td>${e.empalme?.codigo||"Pendiente"}</td></tr>
+        <tr><td>Corriente estimada</td><td>${e.corriente?Number(e.corriente).toFixed(2)+" A":"Pendiente"}</td></tr>
+        <tr><td>Protección</td><td>${e.proteccion||e.empalme?.proteccion||"Pendiente"}</td></tr>
+        <tr><td>Conductor</td><td>${e.conductor||e.empalme?.conductor||"Pendiente"}</td></tr>
+        <tr><td>Canalización</td><td>${e.ducto||"Pendiente"}</td></tr>
+      </table>
+
+      <h2>4. Normativa y Observaciones</h2>
+      <ul>
+        <li>RIC 01: Empalmes.</li>
+        <li>RIC 02: Tableros eléctricos.</li>
+        <li>RIC 04: Conductores y canalizaciones.</li>
+        <li>RIC 05: Protecciones.</li>
+        <li>RIC 06: Puesta a tierra.</li>
+        <li>RIC 18 y 19: Documentación y puesta en servicio.</li>
+      </ul>
+
+      <h2>5. Conclusión</h2>
+      <p>Informe preliminar generado por GIAE Chile. La información debe ser validada con normativa vigente, empresa distribuidora y profesional autorizado.</p>
+      <p><b>Desarrollado por:</b> Julio Vera Concha</p>
+    </div>`;
+    if(window.vistaExportacionPro)vistaExportacionPro.innerHTML=this.ultimo;
+    if(window.vistaInforme)vistaInforme.innerHTML=this.ultimo;
+    return this.ultimo;
+  },
+  word(){
+    if(!this.ultimo)this.generarBase();
+    const p=this.datosProyecto();
+    const content=`<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Informe GIAE</title><style>body{font-family:Arial}table{width:100%;border-collapse:collapse}td,th{border:1px solid #999;padding:6px}.portada-giae{text-align:center}.report-logo{width:85px}</style></head><body>${this.ultimo}</body></html>`;
+    this.bajar(`${this.nombreSeguro(p.nombre)}_Informe_GIAE_v6_1.doc`,content,"application/msword;charset=utf-8");
+  },
+  excel(){
+    const p=this.datosProyecto();
+    const cargas=GIAE.state.cargas||[];
+    const e=GIAE.state.resultados?.empalme||{};
+    let html=`<table><tr><th colspan="2">GIAE Chile v6.2 - Datos del Proyecto</th></tr>
+      <tr><td>Proyecto</td><td>${p.nombre}</td></tr><tr><td>Cliente</td><td>${p.cliente}</td></tr><tr><td>RUT</td><td>${p.rut}</td></tr><tr><td>Potencia kW</td><td>${p.kw}</td></tr>
+      <tr><th colspan="6">Cuadro de Carga</th></tr><tr><th>Circuito</th><th>Tipo</th><th>Sistema</th><th>Fase</th><th>W</th><th>Corriente A</th></tr>`;
+    html+=cargas.map(x=>`<tr><td>${x.nombre||""}</td><td>${x.tipo||""}</td><td>${x.sistema||""}</td><td>${x.fase||""}</td><td>${x.w||""}</td><td>${Number(x.I||0).toFixed(2)}</td></tr>`).join("");
+    html+=`<tr><th colspan="2">Empalme</th></tr><tr><td>Empalme recomendado</td><td>${e.empalme?.codigo||""}</td></tr><tr><td>Corriente</td><td>${e.corriente||""}</td></tr><tr><td>Protección</td><td>${e.proteccion||e.empalme?.proteccion||""}</td></tr></table>`;
+    this.bajar(`${this.nombreSeguro(p.nombre)}_Datos_GIAE_v6_1.xls`,`<html><head><meta charset="utf-8"></head><body>${html}</body></html>`,"application/vnd.ms-excel;charset=utf-8");
+  },
+  html(){
+    if(!this.ultimo)this.generarBase();
+    const p=this.datosProyecto();
+    this.bajar(`${this.nombreSeguro(p.nombre)}_Informe_GIAE_v6_1.html`,`<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Informe GIAE</title></head><body>${this.ultimo}</body></html>`,"text/html;charset=utf-8");
+  },
+  pdf(){
+    if(!this.ultimo)this.generarBase();
+    if(window.vistaExportacionPro)vistaExportacionPro.innerHTML=this.ultimo;
+    setTimeout(()=>window.print(),250);
+  },
+  validar(){
+    const tests=[
+      ["Centro de Proyectos", !!GIAE.centroProyectos],
+      ["Informe Automático", !!GIAE.informeAuto],
+      ["Exportación Pro", !!GIAE.exportacionPro],
+      ["Word compatible", typeof GIAE.exportacionPro.word==="function"],
+      ["Excel compatible", typeof GIAE.exportacionPro.excel==="function"],
+      ["PDF navegador", typeof GIAE.exportacionPro.pdf==="function"],
+      ["Cuadro de carga", Array.isArray(GIAE.state.cargas)],
+      ["Proyecto", !!GIAE.state.proyecto]
+    ];
+    const html=`<table><tr><th>Módulo</th><th>Estado</th></tr>${tests.map(x=>`<tr><td>${x[0]}</td><td>${x[1]?"✅ OK":"❌ Revisar"}</td></tr>`).join("")}</table>`;
+    if(window.vistaValidacionPro)vistaValidacionPro.innerHTML=html;
+  }
+};
+
+if(GIAE.informeAuto){
+  GIAE.informeAuto.exportarWord=()=>GIAE.exportacionPro.word();
+  GIAE.informeAuto.exportarExcel=()=>GIAE.exportacionPro.excel();
+}
+
+
+
+/* v6.2 Mobile Pro */
+GIAE.mobile={
+  groups:{
+    proyectos:[
+      ["proyecto","📁 Proyecto"],
+      ["centroProyectos","📂 Centro de Proyectos"],
+      ["evidencias","📷 Evidencias"],
+      ["historial","📁 Historial"]
+    ],
+    calculos:[
+      ["empalme","🧲 Motor Empalme"],
+      ["conductores","🔌 Conductores / Icc"],
+      ["protecciones","🛡️ Protecciones"],
+      ["canalizaciones","🧱 Canalizaciones"]
+    ],
+    documentos:[
+      ["cuadro","📊 Cuadro de Carga"],
+      ["sec","📋 Cuadro SEC Pro"],
+      ["unilineal","📐 Unilineal"],
+      ["informe","📄 Informe"],
+      ["exportacionPro","📤 Exportación Pro"],
+      ["presupuestos","💰 Presupuestos"]
+    ],
+    normativa:[
+      ["bibliotecaSEC","📚 Biblioteca Normativa"],
+      ["ricInteligente","🧠 Motor Normativo"],
+      ["comparadorNormativo","⚖️ Comparador Normativo"]
+    ],
+    herramientas:[
+      ["materialesDB","🧰 Materiales"],
+      ["historialTecnico","🕘 Historial Técnico"],
+      ["bibliotecaDoc","📚 Biblioteca Documental"],
+      ["sugerencias","💡 Sugerencias"]
+    ],
+    sistema:[
+      ["panel","🏠 Panel Principal"],
+      ["instructivo","📘 Instructivo"],
+      ["acerca","ℹ️ Acerca de GIAE"],
+      ["config","⚙️ Configuración"]
+    ]
+  },
+  titles:{
+    proyectos:"📁 Proyectos",
+    calculos:"⚡ Cálculos",
+    documentos:"📄 Documentos",
+    normativa:"📚 Normativa",
+    herramientas:"🧰 Herramientas",
+    sistema:"⚙️ Sistema"
+  },
+  toggleMenu(){document.body.classList.toggle("mobile-menu-open")},
+  closeMenu(){document.body.classList.remove("mobile-menu-open")},
+  go(view){
+    if(GIAE.app&&GIAE.app.show){GIAE.app.show(view)}
+    else{
+      document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+      const el=document.getElementById(view); if(el)el.classList.add("active");
+    }
+    this.closeMenu(); this.closeGroup();
+    setTimeout(()=>window.scrollTo({top:0,behavior:"smooth"}),80);
+  },
+  openGroup(name){
+    const box=document.getElementById("mobileGroupBox");
+    const title=document.getElementById("mobileGroupTitle");
+    const links=document.getElementById("mobileGroupLinks");
+    if(!box||!links)return;
+    title.textContent=this.titles[name]||"Accesos rápidos";
+    links.innerHTML=(this.groups[name]||[]).map(x=>`<button onclick="GIAE.mobile.go('${x[0]}')">${x[1]}</button>`).join("");
+    box.classList.add("active"); this.closeMenu();
+  },
+  closeGroup(){
+    const box=document.getElementById("mobileGroupBox");
+    if(box)box.classList.remove("active");
+  }
+};
+
+document.addEventListener("click",e=>{
+  const btn=e.target.closest(".nav");
+  if(btn&&window.innerWidth<=900){
+    setTimeout(()=>GIAE.mobile.closeMenu(),60);
+    setTimeout(()=>window.scrollTo({top:0,behavior:"smooth"}),120);
+  }
+});
+window.addEventListener("resize",()=>{if(window.innerWidth>900)document.body.classList.remove("mobile-menu-open")});
