@@ -1,0 +1,12 @@
+{
+  "name": "giae-chile",
+  "version": "6.1.0",
+  "private": true,
+  "description": "GIAE Chile - Gestor Inteligente de Analisis para Empalmes",
+  "scripts": {
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.103.0"
+  }
+}
