@@ -1,4 +1,4 @@
-# GIAE Chile v6.1 Exportación Profesional
+# GIAE Chile v6.1.1 Cloudflare Clean Deploy
 
 **GIAE Chile**  
 **Gestor Inteligente de Análisis para Empalmes**
@@ -7,42 +7,58 @@ Autor: Julio Vera Concha © 2026.
 
 ## Objetivo
 
-Reforzar la exportación documental de GIAE Chile.
+Solucionar definitivamente el problema de despliegue en Cloudflare Workers.
 
-## Nuevas funciones
+## Problema anterior
 
-- Nuevo módulo Exportación Pro.
-- Exportación Word compatible (.doc).
-- Exportación Excel compatible (.xls).
-- Descarga HTML.
-- Impresión / Guardar como PDF desde navegador.
-- Generador de informe base.
-- Panel de validación rápida de módulos.
-- Accesos rápidos de exportación en Panel Principal.
+Cloudflare intentaba subir `node_modules` como si fuera parte del sitio público, generando el error:
 
-## Nota técnica
+`Asset too large: node_modules/workerd/bin/workerd 119 MiB`
 
-La exportación Word y Excel se realiza mediante formatos HTML compatibles con Microsoft Word y Excel.  
-El PDF se genera desde la opción imprimir / guardar como PDF del navegador.
+## Solución aplicada
 
-## Cloudflare
+La aplicación ahora queda dentro de la carpeta `public/`.
 
-Se mantiene configuración para Cloudflare Workers con:
+Cloudflare solo publicará:
 
-- wrangler.jsonc
-- package.json
-- .assetsignore
+- `public/index.html`
+- `public/assets/`
+- `public/css/`
+- `public/data/`
+- `public/js/`
 
-## Archivos para subir
+Los archivos de configuración quedan fuera de `public/`:
 
-- .assetsignore
-- index.html
-- LICENCIA.txt
-- package.json
-- README.md
-- VERSIONES.txt
-- wrangler.jsonc
-- assets/
-- css/
-- data/
-- js/
+- `package.json`
+- `wrangler.jsonc`
+- `.assetsignore`
+
+## Configuración Cloudflare recomendada
+
+Repositorio: `giae-chile-v6`  
+Rama: `principal`
+
+Comando de compilación:
+
+`echo GIAE`
+
+Comando de despliegue:
+
+`npx wrangler deploy`
+
+Comando de rama no productiva:
+
+`npx wrangler versions upload`
+
+Directorio raíz:
+
+`/`
+
+## Archivos/carpetas a subir
+
+- `public/`
+- `package.json`
+- `wrangler.jsonc`
+- `.assetsignore`
+- `README.md`
+- `VERSIONES.txt`
