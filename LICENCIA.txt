@@ -1,6 +1,20 @@
-GIAE CHILE
-Copyright © 2026 Julio Vera Concha
+GIAE CHILE v1.0 · PROYECTO COMPLETO
 
+Copyright © 2026 Julio Vera Concha.
 Todos los derechos reservados.
 
-Prohibida la copia, distribución, modificación o explotación comercial sin autorización escrita del autor.
+Autor, creador y titular:
+Julio Vera Concha.
+
+Queda prohibida la copia, distribución, modificación, publicación,
+reventa o explotación comercial total o parcial de este proyecto sin
+autorización escrita del autor.
+
+GIAE Chile es una herramienta de apoyo técnico para análisis preliminar
+de proyectos eléctricos, empalmes, cuadro de carga, unilineal,
+presupuestos, documentación SEC/distribuidora e informes técnicos.
+
+Todo cálculo, recomendación, plano, informe o antecedente generado por
+GIAE Chile debe ser revisado y validado por un instalador eléctrico
+autorizado, normativa RIC/SEC vigente y la empresa distribuidora
+correspondiente.
