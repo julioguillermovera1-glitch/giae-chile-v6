@@ -1,19 +1,10 @@
-GIAE Chile v11.0 Proyecto Completo
+GIAE Chile v6.2 Mobile Pro
 
-- Versión preparada para subir.
-- Basada en la arquitectura profesional v10.
-- Proyecto Eléctrico queda como flujo principal.
-- Menú simplificado para evitar módulos duplicados.
-- Protecciones, empalme y unilineal se integran al flujo principal.
-- Cálculo trifásico corregido por fase más cargada.
-- Cuadro de carga con totales en W y A.
-- Factor de simultaneidad incluido en cálculos.
-- Presupuesto integrado: solo mano de obra o con materiales.
-- Botón Nuevo Proyecto y Finalizar proyecto.
-- HTML autocontenido para despliegue simple.
-
-Historial relevante:
-- v8.10.0: símbolo de automático corregido con rayita frontal.
-- v9.x: módulo Proyecto Eléctrico paso a paso.
-- v10.x: arquitectura profesional y cálculo por fase.
-- v11.0: paquete completo listo para subir.
+- Mejora completa de navegación móvil.
+- Menú lateral usable en teléfono.
+- Barra inferior tipo aplicación.
+- Botón flotante Nuevo Proyecto.
+- Accesos rápidos agrupados.
+- Corrección de problema de desplazamiento excesivo.
+- Formularios y botones optimizados para celular.
+- Mantiene estructura estática limpia.

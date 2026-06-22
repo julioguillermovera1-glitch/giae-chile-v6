@@ -1,46 +1,35 @@
-# GIAE Chile v11.0 Proyecto Completo
+# GIAE Chile v6.2 Mobile Pro
 
 **GIAE Chile**  
-**Gestor Inteligente de Análisis para Empalmes y Proyectos Eléctricos**
+**Gestor Inteligente de Análisis para Empalmes**
 
-Versión preparada como archivo estático listo para subir.
+Versión enfocada en mejorar la experiencia en teléfono.
 
-## Archivo principal
+## Mejoras principales
 
-- `index.html`
+- Menú móvil lateral.
+- Botón fijo "Menú".
+- Barra inferior móvil.
+- Botón flotante Nuevo Proyecto.
+- Accesos rápidos tipo aplicación.
+- Grupos de navegación: Proyectos, Cálculos, Documentos, Normativa, Herramientas y Sistema.
+- Al tocar un módulo, se abre directamente sin obligar a bajar toda la página.
+- Formularios más cómodos en celular.
+- Botones más grandes para uso en terreno.
+- Tablas con desplazamiento horizontal.
 
-Esta entrega es autocontenida: incluye estilos y JavaScript dentro del mismo HTML para evitar problemas al subirla a Cloudflare Pages, GitHub Pages, hosting simple o abrirla localmente.
+## Estructura limpia
 
-## Flujo principal
+- index.html
+- assets/
+- css/
+- data/
+- js/
+- README.md
+- VERSIONES.txt
+- LICENCIA.txt
 
-La aplicación queda orientada al flujo real de un instalador:
-
-1. Proyecto eléctrico
-2. Cargas
-3. Cuadro de carga + unilineal
-4. Cálculo técnico e Icc
-5. Puesta a tierra
-6. Empalme / compañía eléctrica
-7. Documentos SEC / distribuidora
-8. Presupuesto
-9. Informe y exportación
-
-## Mejoras integradas
-
-- Proyecto Eléctrico como flujo principal.
-- Cálculo por fase en sistemas trifásicos con cargas monofásicas.
-- Protección general calculada usando la fase más cargada.
-- Totales en W y A en cuadro de carga.
-- Factor de demanda y factor de simultaneidad visibles.
-- Unilineal con símbolo de automático corregido.
-- Diferencial con texto lateral legible.
-- Presupuesto por mano de obra o con materiales.
-- Botón Nuevo Proyecto.
-- Módulos antiguos mantenidos como herramientas internas o respaldo.
-
-## Advertencia técnica
-
-GIAE Chile es una herramienta de apoyo técnico. No reemplaza la revisión de un instalador autorizado ni la validación oficial SEC/distribuidora.
+No usa package.json, wrangler.jsonc, node_modules ni public.
 
 ## Autor
 
