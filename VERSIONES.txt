@@ -1,16 +1,7 @@
 GIAE Chile v1.0 · Proyecto Completo
 
-Autor: Julio Vera Concha.
-Copyright © 2026 Julio Vera Concha.
-
-Cambios de esta entrega:
-- Se conserva la estructura modular real del servidor.
-- Se actualiza título visible a GIAE Chile v1.0 Proyecto Completo.
-- Se agrega autoría visible de Julio Vera Concha.
-- Se agrega bloque con datos que debe completar el instalador.
-- Se actualizan README, LEAME, VERSIONES y LICENCIA.
-- Se mantiene compatibilidad con css/styles.css, js/app.js, data/ y datos/.
-- Se mantienen módulos existentes sin romper botones actuales.
-
-Nota:
-Esta es la primera versión completa para subir, aunque todavía falta depurar cálculos, documentación SEC/distribuidora y validación normativa.
+- Base correcta de hoy.
+- No usa la versión antigua v6.2 como base principal.
+- Mantiene Proyecto Eléctrico, cálculo por fase, unilineal, presupuesto y nuevo proyecto.
+- Se agrega título visible y datos que debe completar el instalador.
+- Autoría visible: Julio Vera Concha.
