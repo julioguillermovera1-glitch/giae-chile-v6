@@ -1,8 +1,1 @@
-GIAE CHILE v1.0 · PROYECTO COMPLETO
-
-Copyright © 2026 Julio Vera Concha.
-Todos los derechos reservados.
-
-Autor, creador y titular: Julio Vera Concha.
-
-Prohibida la copia, distribución, modificación o explotación comercial sin autorización escrita del autor.
+GIAE Chile v1.0.2 · Julio Vera Concha © 2026 · Todos los derechos reservados.

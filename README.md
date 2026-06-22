@@ -1,37 +1,18 @@
-# GIAE Chile v1.0 · Proyecto Completo
+# GIAE Chile v1.0.2 · Proyecto Completo
 
-Autor, creador y titular: Julio Vera Concha  
-Copyright © 2026 Julio Vera Concha. Todos los derechos reservados.
+Cambio aplicado:
+- Nuevo flujo:
+  1 Proyecto
+  2 Cargas
+  3 Cuadro de carga
+  4 Unilineal
+  5 Tierra
+  6 Empalme
+  7 Documentación
+  8 Presupuesto
+  9 Exportar
+- Icc queda integrado dentro del cálculo técnico, no como paso visible.
+- Se quitó el bloque “Datos que debe completar el instalador”.
+- Se reparó botón Nuevo Proyecto / Finalizar y nuevo proyecto.
 
-## Importante
-
-Este paquete fue reconstruido desde la versión correcta trabajada hoy, no desde la versión modular antigua v6.2.
-
-## Incluye
-
-- Proyecto Eléctrico como flujo principal.
-- Cargas.
-- Cuadro de carga + unilineal.
-- Cálculo por fase.
-- Totales W y A.
-- Factor de simultaneidad.
-- Protección general por fase más cargada.
-- Puesta a tierra.
-- Documentos distribuidora/SEC preliminares.
-- Presupuesto.
-- Nuevo proyecto.
-
-## Archivos
-
-- index.html
-- indice.html
-- css/
-- js/
-- data/
-- datos/
-- assets/
-- activos/
-- README.md
-- LEAME.md
-- VERSIONES.txt
-- LICENCIA.txt
+Autor: Julio Vera Concha © 2026.
