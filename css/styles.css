@@ -206,3 +206,33 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
   padding:9px 12px;
   font-size:12px;
 }
+
+
+/* Teléfono Chile v2.1.2.3 */
+.phone-wrap{
+  display:flex;
+  align-items:center;
+  border:1px solid #245366;
+  background:#071017;
+  border-radius:10px;
+  overflow:hidden;
+}
+.phone-wrap span{
+  background:#0b1f2b;
+  color:#8cffad;
+  padding:12px 13px;
+  border-right:1px solid #245366;
+  font-weight:900;
+}
+.phone-wrap input{
+  border:0 !important;
+  border-radius:0 !important;
+  flex:1;
+}
+.phone-msg{
+  font-size:11px;
+  color:#8db0bb;
+  font-weight:700;
+}
+.phone-msg.ok{color:#8cffad}
+.phone-msg.bad{color:#ff8f9a}

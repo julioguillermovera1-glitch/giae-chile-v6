@@ -1,15 +1,14 @@
-# GIAE Chile v2.1.2.2 - RUT válido
+# GIAE Chile v2.1.2.3 - Teléfono Chile
 
 Creado por Julio Vera Concha.
 
 ## Cambios
-- Formato automático de RUT chileno.
-- Validación de dígito verificador.
-- RUT cliente e instalador muestran estado válido/inválido.
-- Guarda RUT limpio, RUT formateado y estado de validez.
-- Botón "Usar datos Julio Vera" en Instalador SEC.
-- Mantiene Proyecto compacto por pasos.
+- Campo teléfono cliente con prefijo fijo +56.
+- Formato automático tipo 9 1234 5678.
+- Validación de celular chileno.
+- Mejora para móviles con teclado numérico.
+- Mantiene RUT automático y Proyecto compacto.
 
 ## Ejemplo
-Entrada: 151803377
-Salida visual: 15.180.337-7 ✅
+Entrada: 956955555
+Salida visual: +56 9 5695 5555

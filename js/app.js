@@ -1,4 +1,4 @@
-const APP_VERSION = "2.1.2.2";
+const APP_VERSION = "2.1.2.3";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -103,7 +103,7 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.2.2</span>
+    <span class="badge ready">Módulo funcional v2.1.2.3</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
 
@@ -138,7 +138,13 @@ function renderProyecto(){
         <legend>Cliente</legend>
         <label>Nombre cliente<input name="cliente" placeholder="Nombre o razón social"></label>
         <label>RUT cliente<input name="rutCliente" class="rut-input" placeholder="Ej: 15.180.337-7"><small class="rut-msg" data-rut-msg="rutCliente">Ingrese RUT chileno</small></label>
-        <label>Teléfono<input name="telefonoCliente" placeholder="+56 9 ..."></label>
+        <label>Teléfono
+          <div class="phone-wrap">
+            <span>+56</span>
+            <input name="telefonoCliente" class="phone-input" inputmode="numeric" placeholder="9 1234 5678">
+          </div>
+          <small class="phone-msg" data-phone-msg="telefonoCliente">Formato celular Chile</small>
+        </label>
         <label>Correo<input name="correoCliente" type="email" placeholder="correo@dominio.cl"></label>
       </fieldset>
 
@@ -260,6 +266,7 @@ function bindProyecto(){
   const datosJulio = document.getElementById("usarDatosJulio");
   if(datosJulio) datosJulio.onclick = usarDatosJulio;
   bindRutInputs();
+  bindPhoneInputs();
 }
 
 function formToObject(){
@@ -279,7 +286,8 @@ function formToObject(){
       rut: limpiarRut(data.rutCliente || ""),
       rutFormateado: formatearRut(data.rutCliente || ""),
       rutValido: validarRut(data.rutCliente || ""),
-      telefono: data.telefonoCliente || "",
+      telefono: normalizarTelefonoChile(data.telefonoCliente || ""),
+      telefonoFormateado: formatearTelefonoChile(data.telefonoCliente || ""),
       correo: data.correoCliente || ""
     },
     ubicacion:{
@@ -303,6 +311,60 @@ function formToObject(){
       correo: data.correoInstalador || ""
     }
   };
+}
+
+
+
+function bindPhoneInputs(){
+  document.querySelectorAll(".phone-input").forEach(input=>{
+    input.addEventListener("input", ()=>{
+      input.value = formatearTelefonoChile(input.value);
+      pintarEstadoTelefono(input.name, input.value);
+    });
+    input.addEventListener("blur", ()=>{
+      input.value = formatearTelefonoChile(input.value);
+      pintarEstadoTelefono(input.name, input.value);
+    });
+    pintarEstadoTelefono(input.name, input.value);
+  });
+}
+
+function normalizarTelefonoChile(valor){
+  let n = String(valor || "").replace(/\D/g,"");
+  if(n.startsWith("56")) n = n.slice(2);
+  if(n.startsWith("0")) n = n.slice(1);
+  return n.slice(0,9);
+}
+
+function formatearTelefonoChile(valor){
+  const n = normalizarTelefonoChile(valor);
+  if(!n) return "";
+  if(n.length <= 1) return n;
+  if(n.length <= 5) return `${n.slice(0,1)} ${n.slice(1)}`;
+  return `${n.slice(0,1)} ${n.slice(1,5)} ${n.slice(5,9)}`.trim();
+}
+
+function validarTelefonoChile(valor){
+  const n = normalizarTelefonoChile(valor);
+  return /^9\d{8}$/.test(n);
+}
+
+function pintarEstadoTelefono(name, value){
+  const msg = document.querySelector(`[data-phone-msg="${name}"]`);
+  if(!msg) return;
+  const n = normalizarTelefonoChile(value);
+  if(!n){
+    msg.textContent = "Formato celular Chile";
+    msg.className = "phone-msg";
+    return;
+  }
+  if(validarTelefonoChile(n)){
+    msg.textContent = "Teléfono válido ✅";
+    msg.className = "phone-msg ok";
+  }else{
+    msg.textContent = "Debe ser celular chileno: +56 9 XXXX XXXX";
+    msg.className = "phone-msg bad";
+  }
 }
 
 
@@ -387,7 +449,7 @@ function objectToForm(obj){
     tipoProyecto: obj.proyecto?.tipoProyecto,
     cliente: obj.cliente?.nombre,
     rutCliente: obj.cliente?.rutFormateado || formatearRut(obj.cliente?.rut || ""),
-    telefonoCliente: obj.cliente?.telefono,
+    telefonoCliente: obj.cliente?.telefonoFormateado || formatearTelefonoChile(obj.cliente?.telefono || ""),
     correoCliente: obj.cliente?.correo,
     direccion: obj.ubicacion?.direccion,
     comuna: obj.ubicacion?.comuna,
@@ -408,6 +470,7 @@ function objectToForm(obj){
   });
   pintarEstadoRut("rutCliente", form.elements.rutCliente?.value || "");
   pintarEstadoRut("rutInstalador", form.elements.rutInstalador?.value || "");
+  pintarEstadoTelefono("telefonoCliente", form.elements.telefonoCliente?.value || "");
 }
 
 function guardarProyecto(){
@@ -419,6 +482,7 @@ function guardarProyecto(){
   if(!obj.ubicacion.distribuidora) faltantes.push("distribuidora");
   if(!obj.electrico.suministro) faltantes.push("tipo de suministro");
   if(obj.cliente.rut && !obj.cliente.rutValido) faltantes.push("RUT cliente inválido");
+  if(obj.cliente.telefono && !validarTelefonoChile(obj.cliente.telefono)) faltantes.push("teléfono cliente inválido");
   if(obj.instalador.rut && !obj.instalador.rutValido) faltantes.push("RUT instalador inválido");
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
@@ -449,7 +513,7 @@ function cargarDemoProyecto(){
     version: APP_VERSION,
     actualizado: new Date().toISOString(),
     proyecto:{nombre:"Vivienda San Pedro", numeroOT:"OT-001", fecha:hoy, tipoProyecto:"Vivienda"},
-    cliente:{nombre:"Cliente de prueba", rut:"111111111", telefono:"+56 9 1234 5678", correo:"cliente@ejemplo.cl"},
+    cliente:{nombre:"Cliente de prueba", rut:"111111111", telefono:"912345678", telefonoFormateado:"9 1234 5678", correo:"cliente@ejemplo.cl"},
     ubicacion:{direccion:"Av. Ejemplo 123", comuna:"Coronel", region:"Biobío", distribuidora:"CGE"},
     electrico:{suministro:"Monofásico 220 V", estadoEmpalme:"Nuevo empalme", potenciaEstimadaKW:10, observacion:"Proyecto de demostración local."},
     instalador:{nombre:"Julio Vera Concha", rut:"", claseSEC:"Clase D", correo:""}
@@ -478,7 +542,7 @@ function renderResumen(obj, faltantes){
     <div class="summary-head">${estado}<small>Actualizado: ${new Date(obj.actualizado).toLocaleString("es-CL")}</small></div>
     <div class="summary-grid">
       <p><b>Proyecto:</b> ${obj.proyecto.nombre || "Sin nombre"} / ${obj.proyecto.tipoProyecto || "Sin tipo"}</p>
-      <p><b>Cliente:</b> ${obj.cliente.nombre || "Sin cliente"} / RUT ${obj.cliente.rutFormateado || "sin RUT"} ${obj.cliente.rut ? (obj.cliente.rutValido ? "✅" : "❌") : ""}</p>
+      <p><b>Cliente:</b> ${obj.cliente.nombre || "Sin cliente"} / RUT ${obj.cliente.rutFormateado || "sin RUT"} ${obj.cliente.rut ? (obj.cliente.rutValido ? "✅" : "❌") : ""} / Tel. ${obj.cliente.telefonoFormateado ? "+56 " + obj.cliente.telefonoFormateado : "sin teléfono"}</p>
       <p><b>Dirección:</b> ${obj.ubicacion.direccion || "Sin dirección"}, ${obj.ubicacion.comuna || ""}</p>
       <p><b>Distribuidora:</b> ${obj.ubicacion.distribuidora || "Sin distribuidora"}</p>
       <p><b>Suministro:</b> ${obj.electrico.suministro || "Sin definir"}</p>
