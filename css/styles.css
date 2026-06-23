@@ -544,3 +544,5 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
     min-width:960px;
   }
 }
+
+/* v2.1.9.1: reparación de render Unilineal y SVG profesional. */
