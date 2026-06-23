@@ -1,18 +1,40 @@
-# GIAE Chile v1.0.2 · Proyecto Completo
+# GIAE Chile v1.1 · Proyecto Combinado
 
-Cambio aplicado:
-- Nuevo flujo:
-  1 Proyecto
-  2 Cargas
-  3 Cuadro de carga
-  4 Unilineal
-  5 Tierra
-  6 Empalme
-  7 Documentación
-  8 Presupuesto
-  9 Exportar
-- Icc queda integrado dentro del cálculo técnico, no como paso visible.
-- Se quitó el bloque “Datos que debe completar el instalador”.
-- Se reparó botón Nuevo Proyecto / Finalizar y nuevo proyecto.
+**Gestor Inteligente de Análisis para Empalmes y Proyectos Eléctricos**
 
-Autor: Julio Vera Concha © 2026.
+**Creado, desarrollado y dirigido por: Julio Vera Concha**  
+Copyright © 2026 Julio Vera Concha. Todos los derechos reservados.
+
+## Qué se combinó
+
+- Se integró el HTML corregido `GIAE_v1_0_CORRECCION_FLUJO_index(1).html` como `index.html` principal.
+- Se conservó la carpeta modular original v6.2 Mobile Pro en `legacy/`.
+- Se mantuvieron `data/ric.json` y `data/empalmes.json`.
+- Se agregó estructura futura para `ai-engine`, `frontend`, `backend` y `storage`.
+- Se agregó `manifest.json` para dejar base PWA compatible con celulares.
+
+## Correcciones aplicadas
+
+- Flujo visual de 9 pasos.
+- Wizard con 9 columnas en escritorio.
+- RUT del cliente sin puntos ni guion.
+- Autoría visible de Julio Vera Concha.
+- Base de compatibilidad móvil conservada.
+
+## Pendiente para inteligencia normativa real
+
+Subir y estructurar los PDF/documentos completos:
+
+- RIC 01 al RIC 19.
+- Documentos SEC / TE1.
+- Formularios CGE, COPELEC y otras distribuidoras.
+- Tablas oficiales de empalmes normalizados.
+
+Esos archivos deben ir preferentemente en:
+
+```text
+ai-engine/data/ric/
+ai-engine/data/sec/
+ai-engine/data/distribuidoras/
+ai-engine/data/empalmes/
+```

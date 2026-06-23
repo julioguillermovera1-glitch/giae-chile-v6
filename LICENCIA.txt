@@ -1,1 +1,8 @@
-GIAE Chile v1.0.2 · Julio Vera Concha © 2026 · Todos los derechos reservados.
+GIAE Chile
+Gestor Inteligente de Análisis para Empalmes y Proyectos Eléctricos
+
+Creado, desarrollado y dirigido por Julio Vera Concha.
+Copyright © 2026 Julio Vera Concha.
+Todos los derechos reservados.
+
+Queda prohibida la copia, distribución, modificación o comercialización no autorizada del software, estructura, diseño, nombre, documentación y código asociado.

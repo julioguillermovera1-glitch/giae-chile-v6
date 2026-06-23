@@ -1,0 +1,17 @@
+{
+  "name": "GIAE Chile",
+  "short_name": "GIAE",
+  "description": "Gestor Inteligente de Análisis para Empalmes y Proyectos Eléctricos. Creado por Julio Vera Concha.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#eef3f8",
+  "theme_color": "#0f8f7c",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/giae-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

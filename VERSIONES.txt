@@ -1,18 +1,11 @@
-# GIAE Chile v1.0.2 · Proyecto Completo
+GIAE Chile v1.1 · Proyecto Combinado
 
-Cambio aplicado:
-- Nuevo flujo:
-  1 Proyecto
-  2 Cargas
-  3 Cuadro de carga
-  4 Unilineal
-  5 Tierra
-  6 Empalme
-  7 Documentación
-  8 Presupuesto
-  9 Exportar
-- Icc queda integrado dentro del cálculo técnico, no como paso visible.
-- Se quitó el bloque “Datos que debe completar el instalador”.
-- Se reparó botón Nuevo Proyecto / Finalizar y nuevo proyecto.
+- HTML corregido integrado como index.html principal.
+- Carpeta modular v6.2 Mobile Pro conservada.
+- Autoría Julio Vera Concha visible.
+- Ajuste móvil/PWA base.
+- Flujo principal de 9 pasos.
+- RUT sin puntos ni guion.
+- Estructura ai-engine/frontend/backend/storage preparada.
 
-Autor: Julio Vera Concha © 2026.
+Pendiente: cargar RIC 1-19 completos y documentos SEC/distribuidoras.
