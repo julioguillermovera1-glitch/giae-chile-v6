@@ -17,7 +17,7 @@ Versión combinada con carpeta modular v6.2 Mobile Pro.
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f8f7c">
 
-<title>GIAE Chile v1.1.1 · Proyecto Completo</title>
+<title>GIAE Chile v1.1.2 · Proyecto Completo</title>
 <style>
 :root{--bg:#eef3f8;--card:#fff;--ink:#07172d;--muted:#65758b;--line:#d9e2ec;--nav:#07101d;--nav2:#101a2c;--ok:#d9fbe7;--okb:#59c986;--warn:#fff4d6;--warnb:#f0b429;--bad:#ffe0e0;--badb:#e05252;--info:#e7f0ff;--infob:#4b7bec;--pri:#0f8f7c}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px}
@@ -170,12 +170,12 @@ table{width:100%;border-collapse:collapse;background:white;border-radius:14px;ov
 <section id="proyectoElectrico" class="view printme active">
 
 <div class="giae-title-v1">
-  <h1>GIAE Chile v1.1.1 · Proyecto Completo</h1>
+  <h1>GIAE Chile v1.1.2 · Proyecto Completo</h1>
   <h2>Gestor Inteligente de Análisis para Empalmes y Proyectos Eléctricos</h2>
   <small>Creado, desarrollado y dirigido por Julio Vera Concha · © 2026 · Todos los derechos reservados.</small>
 </div>
 
-<div class="box ok"><b>GIAE Chile v1.1.1 · Proyecto Completo listo para subir</b><br>Versión combinada desde HTML corregido + carpeta modular v6.2 Mobile Pro: cálculo por fase, totales W/A, presupuesto y flujo principal.</div>
+<div class="box ok"><b>GIAE Chile v1.1.2 · Proyecto Completo listo para subir</b><br>Versión combinada desde HTML corregido + carpeta modular v6.2 Mobile Pro: cálculo por fase, totales W/A, presupuesto y flujo principal.</div>
   <div class="card wizard">
     
 
@@ -545,7 +545,7 @@ function validarProteccion(){const q=`protección automático termomagnético ${
 function comparar(){const a=cA.value,b=cB.value,kw=kwFromText(a)||kwFromText(b)||20;const ra=evaluate(a),rb=evaluate(`${kw} kW ${sysFromText(b)==='mono'?'monofásico':'trifásico'} empalme protección conductor`);compResult.innerHTML=`<table><tr><th>Criterio</th><th>A</th><th>B</th></tr><tr><td>Estado</td><td>${badge(ra.status)}</td><td>${badge(rb.status)}</td></tr><tr><td>Corriente</td><td>${ra.ib?ra.ib.toFixed(1)+' A':'-'}</td><td>${rb.ib?rb.ib.toFixed(1)+' A':'-'}</td></tr><tr><td>Reglas</td><td>${ra.hits.map(h=>h.id).join(', ')}</td><td>${rb.hits.map(h=>h.id).join(', ')}</td></tr></table><div class="box info"><b>Recomendación:</b> elegir la opción con respaldo normativo y menor alerta técnica, siempre validando con distribuidora.</div>`}
 function addItem(){state.items.push({nombre:itNombre.value,cant:Number(itCant.value||1),precio:Number(itPrecio.value||0)});generarPresupuesto()}
 function generarPresupuesto(){const fecha=bFecha.value||new Date().toISOString().slice(0,10);let subtotal=state.items.reduce((s,i)=>s+i.cant*i.precio,0),iva=subtotal*0.19,total=subtotal+iva;let rows=state.items.map((i,n)=>`<tr><td>${n+1}</td><td>${i.nombre}</td><td class="right">${i.cant}</td><td class="right">${money(i.precio)}</td><td class="right">${money(i.cant*i.precio)}</td></tr>`).join('');presupuestoVista.innerHTML=`<div style="display:flex;justify-content:space-between;gap:20px;align-items:flex-start"><div><h2 style="margin-bottom:4px">Presupuesto eléctrico</h2><b>${bEmpresa.value}</b><p class="small">Generado por GIAE Chile</p></div><div class="box info"><b>Fecha</b><br>${fecha}</div></div><table><tr><th>Cliente</th><td>${bCliente.value}</td></tr><tr><th>Dirección</th><td>${bDireccion.value}</td></tr><tr><th>Servicio</th><td>${bDesc.value}</td></tr></table><h3>Detalle de costos</h3><table><tr><th>N°</th><th>Descripción</th><th class="right">Cant.</th><th class="right">Precio unit.</th><th class="right">Total</th></tr>${rows}<tr><th colspan="4" class="right">Subtotal</th><th class="right">${money(subtotal)}</th></tr><tr><th colspan="4" class="right">IVA 19%</th><th class="right">${money(iva)}</th></tr><tr><th colspan="4" class="right">TOTAL</th><th class="right">${money(total)}</th></tr></table><div class="box warn"><b>Condiciones:</b> presupuesto referencial. Valores sujetos a visita técnica, materiales reales, factibilidad de distribuidora y normativa vigente.</div>`}
-function descargarPresupuesto(){generarPresupuesto();const blob=new Blob([`<!doctype html><meta charset="utf-8"><title>GIAE Chile v1.1.1 · Proyecto Completo</title><body>${presupuestoVista.innerHTML}</body>`],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Presupuesto_GIAE_Chile.html';a.click()}
+function descargarPresupuesto(){generarPresupuesto();const blob=new Blob([`<!doctype html><meta charset="utf-8"><title>GIAE Chile v1.1.2 · Proyecto Completo</title><body>${presupuestoVista.innerHTML}</body>`],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Presupuesto_GIAE_Chile.html';a.click()}
 function generarInforme(){let rows=state.analisis.map(a=>`<tr><td>${a.fecha}</td><td>${a.tipo}</td><td>${a.q}</td><td>${badge(a.status)}</td><td>${a.reglas.join(', ')}</td></tr>`).join('');infResult.innerHTML=`<h2>Informe técnico preliminar GIAE</h2><p>Flujo usado: Administrador Normativo → RIC/SEC/Distribuidora → cálculo → respuesta.</p><table><tr><th>Fecha</th><th>Módulo</th><th>Consulta</th><th>Estado</th><th>Reglas</th></tr>${rows||'<tr><td colspan="5">Sin análisis registrados.</td></tr>'}</table><div class="box warn"><b>Advertencia:</b> validar con pliegos RIC completos, SEC, distribuidora y profesional autorizado.</div>`}
 function renderRules(){rulesView.innerHTML=RIC_BASE.map(r=>`<div class="box info"><b>${r.id} · ${r.fuente} · ${r.tema}</b><p>${r.criterio}</p><small>Acción: ${r.accion}</small></div>`).join('')}
 function exportarReglas(){const blob=new Blob([JSON.stringify(RIC_BASE,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='GIAE_BASE_NORMATIVA_v8_3.json';a.click()}
@@ -796,7 +796,7 @@ const PE={
   el.innerHTML=`<table><tr><th>N°</th><th>Tipo</th><th>Descripción</th><th>Cant.</th><th>W c/u</th><th>W inst.</th><th>FD</th><th>W dem.</th><th>FP</th><th>Sistema</th><th>Fase</th><th></th></tr>${rows||'<tr><td colspan="12">Sin cargas.</td></tr>'}</table>`;
  },
  brk(x,y,label){
-  // v1.1.1: símbolo con zona segura. Los textos quedan más lejos del dibujo.
+  // v1.1.2: símbolo con zona segura. Texto separado del dibujo.
   const safeLabel = String(label||'').replaceAll('&','&amp;').replaceAll('<','&lt;');
   const tx = x + 62;
   return `<line x1="${x}" y1="${y-42}" x2="${x}" y2="${y-22}" stroke="#111" stroke-width="2.2"/>
@@ -809,7 +809,7 @@ const PE={
   <text x="${tx}" y="${y+15}" font-size="12.8" text-anchor="start" font-family="Arial" font-weight="900" fill="#111">${safeLabel}</text>`;
  },
  dif(x,y){
-  // v1.1.1: diferencial con texto desplazado para no tocar el rectángulo.
+  // v1.1.2: diferencial con texto desplazado para no tocar el rectángulo.
   const tx = x + 62;
   return `<rect x="${x-26}" y="${y}" width="52" height="46" fill="white" stroke="#111" stroke-width="1.8"/>
   <line x1="${x-26}" y1="${y+46}" x2="${x+26}" y2="${y}" stroke="#111" stroke-width="1.4"/>
@@ -839,11 +839,11 @@ const PE={
   const c=this.calc(), n=Math.max(this.cargas.length,1);
   // v9.2: el dibujo ya no queda corrido. El ancho se calcula según la cantidad real de circuitos.
   // El automático general queda al centro real del grupo de circuitos y la barra horizontal termina junto al cuadro.
-  const gap=190, left=130;
+  const gap=240, left=150;
   const firstX=left, lastX=left+(n-1)*gap;
   const busStart=firstX-25, busEnd=lastX+25;
   const center=(busStart+busEnd)/2;
-  const w=Math.max(900,busEnd+130);
+  const w=Math.max(1050,busEnd+180);
   const h=720, busY=175, outY=535;
   let svg=`<div class="wizMiniTitle">${this.esc(this.v('wProyecto'))} · Unilineal + cuadro de carga</div>`;
   svg+=`<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 ${w} ${h}" style="background:white;border:1px solid #cbd8e6;border-radius:14px">`;
@@ -854,16 +854,21 @@ const PE={
   svg+=`<line x1="${center}" y1="45" x2="${center}" y2="53" stroke="#111" stroke-width="2"/>`;
   svg+=this.brk(center,95,c.rotuloGeneral);
   svg+=`<line x1="${center}" y1="159" x2="${center}" y2="${busY}" stroke="#111" stroke-width="2"/>`;
-  // Datos técnicos ubicados fuera del símbolo para evitar choques visuales.
-  svg+=`<text x="${center+72}" y="78" font-size="10" font-family="Arial" font-weight="700">Ib máx=${c.ib.toFixed(1)} A</text>`;
-  svg+=`<text x="${center}" y="${busY-45}" font-size="11" text-anchor="middle" font-family="Arial" font-weight="700">Barra repartidora tetrapolar</text>`;
-  svg+=`<text x="${center}" y="${busY-30}" font-size="11" text-anchor="middle" font-family="Arial" font-weight="700">4x100A 10kA</text>`;
+  // v1.1.2: zona segura del automático general y barra. Nada queda encima del símbolo ni de la bajada vertical.
+  const infoX = center + 135;
+  svg+=`<rect x="${infoX-8}" y="64" width="120" height="20" fill="white" opacity="0.92"/>`;
+  svg+=`<text x="${infoX}" y="78" font-size="10" text-anchor="start" font-family="Arial" font-weight="700">Ib máx=${c.ib.toFixed(1)} A</text>`;
+  const barraX = Math.min(center + 125, busEnd - 150);
+  svg+=`<rect x="${barraX-8}" y="${busY-66}" width="190" height="36" fill="white" opacity="0.92"/>`;
+  svg+=`<text x="${barraX}" y="${busY-51}" font-size="11" text-anchor="start" font-family="Arial" font-weight="700">Barra repartidora tetrapolar</text>`;
+  svg+=`<text x="${barraX}" y="${busY-36}" font-size="11" text-anchor="start" font-family="Arial" font-weight="700">4x100A 10kA</text>`;
   svg+=`<line x1="${busStart}" y1="${busY}" x2="${busEnd}" y2="${busY}" stroke="#111" stroke-width="3"/>`;
   this.cargas.forEach((load,i)=>{
    const x=left+i*gap, watts=load.cant*load.w*load.fd, ib=watts/(220*(load.fp||0.95)), a=ib<=10?10:ib<=16?16:ib<=20?20:25;
    const fase=c.sistema==='mono'?'R':(load.fase&&load.fase!=='Auto'?load.fase:['R','S','T'][i%3]);
-   // Letra de fase separada de la barra y de la bajada vertical.
-   svg+=`<text x="${x-18}" y="${busY+28}" font-size="18" text-anchor="middle" font-family="Arial" font-weight="900">${fase}</text>`;
+   // Letra de fase con zona segura: separada de barra, bajada vertical y automático.
+   svg+=`<rect x="${x-38}" y="${busY+12}" width="22" height="24" fill="white" opacity="0.9"/>`;
+   svg+=`<text x="${x-27}" y="${busY+31}" font-size="18" text-anchor="middle" font-family="Arial" font-weight="900">${fase}</text>`;
    svg+=`<line x1="${x}" y1="${busY}" x2="${x}" y2="${busY+72}" stroke="#111" stroke-width="2"/>`;
    svg+=this.brk(x,busY+96,'1x'+a+'A');
    svg+=this.dif(x,busY+215);
@@ -1058,13 +1063,13 @@ const PE={
  guardar(alertar=true){try{localStorage.setItem('GIAE_PE_V951',JSON.stringify(this.data()));if(alertar)alert('Proyecto guardado en este navegador.')}catch(e){}},
  load(){try{const d=JSON.parse(localStorage.getItem('GIAE_PE_V951')||'null');if(!d)return;Object.entries(d.campos||{}).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.value=v});this.cargas=d.cargas||this.cargas;this.presupuesto=d.presupuesto||this.presupuesto;this.presModo=d.presModo||this.presModo;this.step=d.step||0;this.firma=d.firma||'';if(this.firma&&document.getElementById('wFirmaPreview'))document.getElementById('wFirmaPreview').innerHTML=`<img src="${this.firma}" alt="Firma">`;}catch(e){}},
  imprimir(){this.render();window.print()},
- descargarHTML(){this.render();const body=document.getElementById('peResumen')?.innerHTML||'';const blob=new Blob([`<!doctype html><html lang="es"><meta charset="utf-8"><title>GIAE Chile v1.1.1 · Proyecto Completo</title><body style="font-family:Arial">${body}</body></html>`],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Informe_GIAE_Proyecto_Electrico.html';a.click()},
+ descargarHTML(){this.render();const body=document.getElementById('peResumen')?.innerHTML||'';const blob=new Blob([`<!doctype html><html lang="es"><meta charset="utf-8"><title>GIAE Chile v1.1.2 · Proyecto Completo</title><body style="font-family:Arial">${body}</body></html>`],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Informe_GIAE_Proyecto_Electrico.html';a.click()},
  exportarJSON(){const blob=new Blob([JSON.stringify(this.data(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Proyecto_Electrico_GIAE.json';a.click()}
 };
 
 document.getElementById('kRules').textContent=RIC_BASE.length;document.getElementById('bFecha').value=new Date().toISOString().slice(0,10);generarPresupuesto();renderUnilineal();PE.init();
 </script>
-<div class="author-fixed-v11">GIAE Chile v1.1.1 · Creado por Julio Vera Concha · © 2026</div>
+<div class="author-fixed-v11">GIAE Chile v1.1.2 · Creado por Julio Vera Concha · © 2026</div>
 
 </body>
 </html>
