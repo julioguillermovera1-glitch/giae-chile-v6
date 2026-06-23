@@ -1,0 +1,8 @@
+Subir aquí los documentos completos RIC 01 al RIC 19.
+Formato recomendado:
+RIC01.pdf
+RIC02.pdf
+...
+RIC19.pdf
+
+Luego se deben convertir a reglas JSON con: norma, sección, tema, criterio, condición, respuesta y fuente.

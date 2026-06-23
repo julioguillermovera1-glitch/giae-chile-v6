@@ -1,0 +1,154 @@
+[
+  {
+    "ric": "RIC 01",
+    "titulo": "Empalmes",
+    "categoria": "Empalmes",
+    "resumen": "Criterios generales para empalmes, acometidas, medición y conexión a red.",
+    "aplica": "Empalmes monofásicos, trifásicos, concentrados, subterráneos y factibilidad.",
+    "keywords": "empalme acometida medidor factibilidad distribuidora suministro conexion"
+  },
+  {
+    "ric": "RIC 02",
+    "titulo": "Tableros eléctricos",
+    "categoria": "Tableros",
+    "resumen": "Diseño, identificación, protección, distribución y montaje de tableros.",
+    "aplica": "Tablero general, distribución, protecciones, barras, neutro, tierra y rotulación.",
+    "keywords": "tablero proteccion diferencial termomagnetico barras neutro tierra rotulacion"
+  },
+  {
+    "ric": "RIC 03",
+    "titulo": "Alimentadores y demanda",
+    "categoria": "Cálculo",
+    "resumen": "Alimentadores, capacidad de carga y demanda eléctrica de la instalación.",
+    "aplica": "Cálculo de alimentadores, cargas, demanda máxima y coordinación con empalme.",
+    "keywords": "alimentador demanda carga potencia corriente kw w"
+  },
+  {
+    "ric": "RIC 04",
+    "titulo": "Conductores y canalizaciones",
+    "categoria": "Conductores",
+    "resumen": "Selección de conductores, canalizaciones, sección y condiciones de montaje.",
+    "aplica": "Cables, ductos, canalización PVC/EMT/subterránea, sección y caída de tensión.",
+    "keywords": "conductor cable canalizacion ducto seccion caida tension pvc emt subterraneo"
+  },
+  {
+    "ric": "RIC 05",
+    "titulo": "Protecciones eléctricas",
+    "categoria": "Protecciones",
+    "resumen": "Protecciones contra sobrecarga, cortocircuito, diferencial y coordinación.",
+    "aplica": "Interruptores automáticos, diferenciales, poder de corte, curva y coordinación.",
+    "keywords": "proteccion interruptor diferencial termomagnetico cortocircuito sobrecarga poder corte curva"
+  },
+  {
+    "ric": "RIC 06",
+    "titulo": "Puesta a tierra y enlaces equipotenciales",
+    "categoria": "Tierra",
+    "resumen": "Puesta a tierra, continuidad, enlaces equipotenciales y seguridad de personas.",
+    "aplica": "Malla, barra de tierra, conductor de protección, resistencia de tierra y equipotencialidad.",
+    "keywords": "tierra puesta tierra malla equipotencial barra proteccion pe resistencia"
+  },
+  {
+    "ric": "RIC 07",
+    "titulo": "Instalaciones de alumbrado",
+    "categoria": "Alumbrado",
+    "resumen": "Circuitos de alumbrado, luminarias, canalización y protección asociada.",
+    "aplica": "Alumbrado interior, exterior, circuitos de iluminación y protecciones.",
+    "keywords": "alumbrado iluminacion luminaria luces circuito"
+  },
+  {
+    "ric": "RIC 08",
+    "titulo": "Enchufes y circuitos terminales",
+    "categoria": "Circuitos",
+    "resumen": "Circuitos terminales, enchufes, tomas y uso final de la instalación.",
+    "aplica": "Circuitos de enchufes, tomacorrientes, capacidad y protección diferencial.",
+    "keywords": "enchufe tomacorriente circuito terminal diferencial"
+  },
+  {
+    "ric": "RIC 09",
+    "titulo": "Locales especiales",
+    "categoria": "Especial",
+    "resumen": "Instalaciones en lugares con condiciones especiales o riesgos particulares.",
+    "aplica": "Zonas húmedas, locales especiales, ambiente y protección adicional.",
+    "keywords": "local especial humedad riesgo ambiente exterior"
+  },
+  {
+    "ric": "RIC 10",
+    "titulo": "Recintos de reunión de personas",
+    "categoria": "Seguridad",
+    "resumen": "Seguridad para recintos con afluencia de público y continuidad de servicio.",
+    "aplica": "Locales comerciales, colegios, salas, oficinas, emergencia y seguridad.",
+    "keywords": "reunion personas publico emergencia colegio local comercial"
+  },
+  {
+    "ric": "RIC 11",
+    "titulo": "Instalaciones de emergencia",
+    "categoria": "Emergencia",
+    "resumen": "Circuitos y sistemas de emergencia, respaldo y continuidad operacional.",
+    "aplica": "Alumbrado de emergencia, respaldo, señalización y circuitos críticos.",
+    "keywords": "emergencia respaldo ups generador alumbrado emergencia"
+  },
+  {
+    "ric": "RIC 12",
+    "titulo": "Instalaciones de fuerza",
+    "categoria": "Fuerza",
+    "resumen": "Cargas de fuerza, motores, equipos especiales y alimentación dedicada.",
+    "aplica": "Motores, bombas, climatización, fuerza y equipos de consumo elevado.",
+    "keywords": "fuerza motor bomba climatizacion equipo especial"
+  },
+  {
+    "ric": "RIC 13",
+    "titulo": "Canalizaciones especiales",
+    "categoria": "Canalizaciones",
+    "resumen": "Canalizaciones en condiciones especiales o recorridos complejos.",
+    "aplica": "Bandejas, ductos, shafts, canalización subterránea y rutas técnicas.",
+    "keywords": "bandeja ducto shaft canalizacion subterranea ruta"
+  },
+  {
+    "ric": "RIC 14",
+    "titulo": "Protección contra sobretensiones",
+    "categoria": "Protecciones",
+    "resumen": "Protección contra sobretensiones transitorias y permanentes.",
+    "aplica": "DPS, equipos sensibles, tableros y acometidas.",
+    "keywords": "sobretension dps transitorio descarga atmosferica proteccion"
+  },
+  {
+    "ric": "RIC 15",
+    "titulo": "Instalaciones especiales y tecnología",
+    "categoria": "Especial",
+    "resumen": "Instalaciones con tecnología específica o condiciones no habituales.",
+    "aplica": "Sistemas especiales, control, automatización y equipos particulares.",
+    "keywords": "especial tecnologia control automatizacion"
+  },
+  {
+    "ric": "RIC 16",
+    "titulo": "Eficiencia y calidad de energía",
+    "categoria": "Calidad",
+    "resumen": "Calidad de energía, eficiencia, factor de potencia y operación.",
+    "aplica": "Factor de potencia, armónicos, eficiencia y calidad del suministro.",
+    "keywords": "factor potencia armonicos eficiencia calidad energia"
+  },
+  {
+    "ric": "RIC 17",
+    "titulo": "Inspección y verificación",
+    "categoria": "Verificación",
+    "resumen": "Revisión, pruebas, inspección y verificación de instalaciones eléctricas.",
+    "aplica": "Checklist, pruebas, continuidad, aislación, tierra y revisión final.",
+    "keywords": "inspeccion prueba verificacion checklist continuidad aislacion"
+  },
+  {
+    "ric": "RIC 18",
+    "titulo": "Documentación de proyectos",
+    "categoria": "Proyecto",
+    "resumen": "Antecedentes técnicos, planos, memoria y documentación del proyecto eléctrico.",
+    "aplica": "Memoria de cálculo, planos, cuadro de carga, unilineal e informe técnico.",
+    "keywords": "documentacion proyecto plano memoria calculo informe cuadro carga unilineal"
+  },
+  {
+    "ric": "RIC 19",
+    "titulo": "Puesta en servicio y declaración",
+    "categoria": "SEC",
+    "resumen": "Puesta en servicio, antecedentes finales y declaración ante SEC.",
+    "aplica": "TE1, puesta en servicio, revisión final, antecedentes y declaración SEC.",
+    "keywords": "sec te1 declaracion puesta servicio certificado antecedentes"
+  }
+]
