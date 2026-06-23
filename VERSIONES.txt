@@ -1,4 +1,4 @@
-VERSIÓN 1.1.9
+VERSIÓN 1.2.0
 
 MEJORAS:
 - Corrección de exportación Word del diagrama unilineal.
@@ -20,3 +20,8 @@ GIAE Chile v1.1 · Proyecto Combinado
 - Estructura ai-engine/frontend/backend/storage preparada.
 
 Pendiente: cargar RIC 1-19 completos y documentos SEC/distribuidoras.
+
+VERSIÓN 1.2.0
+- Reparación definitiva del Word: MHTML multipart con imagen PNG del unilineal.
+- Evita depender de data:image base64 dentro del HTML, que Word puede bloquear.
+- Mantiene análisis técnico, caída de tensión, tierra, empalme y presupuesto.
