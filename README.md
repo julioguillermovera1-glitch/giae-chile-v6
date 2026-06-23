@@ -1,14 +1,12 @@
-# GIAE Chile v2.1.2.4 - Privacidad y limpiar proyecto
+# GIAE Chile v2.1.2.5 - RUT ejemplo genérico
 
 Creado por Julio Vera Concha.
 
 ## Cambios
-- Se eliminan datos personales del código público.
-- Se elimina el botón de carga de datos personales del instalador.
-- El proyecto de ejemplo usa datos genéricos.
-- El botón Limpiar proyecto borra datos guardados y visibles.
-- Se desactiva autocomplete del formulario para reducir datos antiguos visibles.
-- Se agrega aviso de privacidad local.
+- Se reemplaza el ejemplo de RUT por 11.111.111-1.
+- Se eliminan referencias visibles a RUT reales en placeholders.
+- Se mantiene intacto el motor de RUT, teléfono, guardar, cargar y limpiar proyecto.
+- Corrección menor de privacidad antes de continuar con el módulo Cargas.
 
-## Importante
-Los datos del usuario se guardan sólo en localStorage del navegador hasta conectar base de datos real.
+## Nota
+Esta versión no cambia la arquitectura ni la lógica principal del módulo Proyecto.

@@ -1,4 +1,4 @@
-const APP_VERSION = "2.1.2.4";
+const APP_VERSION = "2.1.2.5";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -103,7 +103,7 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.2.4</span>
+    <span class="badge ready">Módulo funcional v2.1.2.5</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
     <p class="privacy-note">🔒 Privacidad: los datos ingresados quedan sólo en este navegador hasta conectar una base de datos real.</p>
@@ -138,7 +138,7 @@ function renderProyecto(){
       <fieldset class="form-section" data-section="cliente">
         <legend>Cliente</legend>
         <label>Nombre cliente<input name="cliente" placeholder="Nombre o razón social"></label>
-        <label>RUT cliente<input name="rutCliente" class="rut-input" placeholder="Ej: 15.180.337-7"><small class="rut-msg" data-rut-msg="rutCliente">Ingrese RUT chileno</small></label>
+        <label>RUT cliente<input name="rutCliente" class="rut-input" placeholder="11.111.111-1"><small class="rut-msg" data-rut-msg="rutCliente">Formato: 11.111.111-1</small></label>
         <label>Teléfono
           <div class="phone-wrap">
             <span>+56</span>
@@ -201,7 +201,7 @@ function renderProyecto(){
       <fieldset class="form-section" data-section="instalador">
         <legend>Instalador SEC</legend>
         <label>Nombre instalador<input name="instalador" placeholder="Nombre completo"></label>
-        <label>RUT instalador<input name="rutInstalador" class="rut-input" placeholder="Ej: 15.180.337-7"><small class="rut-msg" data-rut-msg="rutInstalador">Ingrese RUT chileno</small></label>
+        <label>RUT instalador<input name="rutInstalador" class="rut-input" placeholder="11.111.111-1"><small class="rut-msg" data-rut-msg="rutInstalador">Formato: 11.111.111-1</small></label>
         <label>Clase SEC
           <select name="claseSEC">
             <option value="">Seleccionar</option>
@@ -383,7 +383,7 @@ function pintarEstadoRut(name, value){
   if(!msg) return;
   const limpio = limpiarRut(value);
   if(!limpio){
-    msg.textContent = "Ingrese RUT chileno";
+    msg.textContent = "Formato: 11.111.111-1";
     msg.className = "rut-msg";
     return;
   }
@@ -425,9 +425,9 @@ function usarDatosJulio(){
   const form = document.getElementById("proyectoForm");
   if(!form) return;
   form.elements.instalador.value = "Julio Vera Concha";
-  form.elements.rutInstalador.value = "15.180.337-7";
+  form.elements.rutInstalador.value = "11.111.111-1";
   form.elements.claseSEC.value = "Clase A";
-  pintarEstadoRut("rutInstalador", "15.180.337-7");
+  pintarEstadoRut("rutInstalador", "11.111.111-1");
   toast("Datos de Julio Vera cargados.");
 }
 
