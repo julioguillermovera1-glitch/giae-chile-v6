@@ -1,14 +1,16 @@
-# GIAE Chile v2.1.9.3 - Unilineal Blindado
+# GIAE Chile v2.1.9.4 - Unilineal Visual SEC
 
 Creado por Julio Vera Concha.
 
-## Reparación
-- El botón Unilineal ahora llama directamente al render antes de caer al módulo Inicio.
-- El render del unilineal queda blindado con try/catch.
-- Si falta información, muestra mensaje útil en vez de quedarse en Inicio.
-- Mantiene monofásico con barra repartidora bipolar 2x100A 10kA.
-- Mantiene trifásico con barra repartidora tetrapolar 4x100A 10kA.
-- Mantiene símbolo de automático SEC con semicírculo y línea vertical central.
+## Corrección visual
+- La barra horizontal ya no se sale del marco del proyecto.
+- Se reduce la escala del dibujo para parecerse más a la versión 9.5.1.
+- Se compactan automáticos, diferenciales, numeración y cargas.
+- Se reposiciona automático general sobre la barra.
+- Se mantiene monofásico sólo R.
+- Se mantiene barra monofásica: bipolar 2x100A 10kA.
+- Se mantiene barra trifásica: tetrapolar 4x100A 10kA.
+- Se corrige símbolo de automático con semicírculo lateral y línea vertical central.
 
 ## Nota
-Esta versión corrige conexión y ejecución. No modifica Proyecto, Cargas, Cuadro, Empalme ni Carpeta Técnica.
+No se modifican cálculos ni otros módulos. Sólo se corrige la presentación del SVG.

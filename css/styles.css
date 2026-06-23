@@ -556,3 +556,7 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .unilineal-pro .professional-sheet{background:#fff;color:#111}
 .professional-scroll{background:#f8fafc;border:1px solid #cbd5e1;padding:12px}
 .professional-svg{min-width:1040px}
+
+/* v2.1.9.4: corrección visual SVG: barra dentro del marco, símbolos compactos, estilo similar v9.5.1 */
+.professional-scroll{max-width:100%;overflow:auto;background:#eef3f8;border:1px solid #cbd5e1;padding:10px}
+.professional-svg{min-width:980px;width:100%;height:auto;background:white}

@@ -1,4 +1,4 @@
-const APP_VERSION = "2.1.9.3";
+const APP_VERSION = "2.1.9.4";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -327,7 +327,7 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.9.3</span>
+    <span class="badge ready">Módulo funcional v2.1.9.4</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
     <p class="privacy-note">🔒 Privacidad: los datos quedan sólo en este navegador. Al completar el proyecto puedes continuar a Cargas sin perder información.</p>
@@ -830,7 +830,7 @@ function renderCargas(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cargas-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.9.3</span>
+    <span class="badge ready">Módulo funcional v2.1.9.4</span>
     <h2>⚡ Cargas por circuitos</h2>
     <p>Ingresa los circuitos del proyecto. GIAE calcula potencia instalada, demanda estimada y una recomendación preliminar de empalme.</p>
     <p class="privacy-note">📌 Regla técnica: la distribuidora define la protección/limitador del medidor según potencia contratada y factibilidad. GIAE sólo recomienda y advierte.</p>
@@ -1130,7 +1130,7 @@ function renderCarpetaTecnica(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready carpeta-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.9.3</span>
+    <span class="badge ready">Módulo funcional v2.1.9.4</span>
     <h2>📂 Carpeta Técnica</h2>
     <p>Revisa documentos según la distribuidora seleccionada. Puedes usar GIAE sólo para revisar o para preparar un envío posterior.</p>
     <p class="privacy-note">🔒 Modo actual: revisión local. El envío por correo y respaldo en servidor se implementarán después.</p>
@@ -1159,7 +1159,7 @@ function revisarCarpeta(){const data=cargarCarpeta(), dist=document.getElementBy
 function detectarDocumento(doc,archivos){const texto=archivos.map(a=>a.name.toLowerCase()).join(" "), id=doc.id.toLowerCase(); const claves={te1:["te1","declaracion","declaración","sec"],te1qr:["te1","qr","sec"],anexo_te1:["anexo","te1","sec"],fotos:["foto","fotos","imagen","jpg","jpeg","png"],poste:["poste","placa","punto_red","punto-red"],croquis:["croquis","ubicacion","ubicación","coordenada"],rol:["rol","sii"],numero:["numero","número","municipal","dom"],medidor:["medidor","calibracion","calibración","pruebas"],empresa:["sociedad","empresa","rut","vigencia","personeria"],dominio:["dominio","cbr","conservador"],contrato:["contrato","suministro"],jurada:["jurada","notarial"],factibilidad:["factibilidad"],poder:["poder","notarial","autorizacion","autorización"],vecino:["vecino","cuenta","cliente"],construccion:["construccion","construcción","vivienda","caseta"],distancia:["distancia","30m","30_m"],camarilla:["camarilla","160"],tierra:["tierra","puesta","malla"],ubicacion:["ubicacion","ubicación","croquis","coordenada"]}; return (claves[id]||[id]).some(k=>texto.includes(k));}
 function verDetalleDistribuidora(dist,id){const doc=DISTRIBUIDORAS[dist]?.documentos.find(d=>d.id===id); if(!doc)return; document.getElementById("distModalTitle").textContent=`📚 ${dist} · ${doc.nombre}`; document.getElementById("distModalBody").innerHTML=`<p><b>Tipo:</b> ${doc.obligatorio?"Obligatorio":"Condicional"}</p><p><b>Detalle:</b> ${doc.detalle}</p><p><b>Acción GIAE:</b> cargar documento asociado. Si falta, la carpeta queda observada antes de envío.</p>`; document.getElementById("distModal").classList.add("show");}
 function cerrarDistModal(){document.getElementById("distModal")?.classList.remove("show");}
-function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.1.9.3</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
+function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.1.9.4</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
 function responderAsistente(){const dist=document.getElementById("assistantDist")?.value||"CGE", data=DISTRIBUIDORAS[dist], box=document.getElementById("assistantAnswer"); if(!box)return; box.innerHTML=`<h3>Documentación requerida para ${dist}</h3><p>${data.descripcion}</p><h4>Documentos obligatorios</h4><ul>${data.documentos.filter(d=>d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")}</ul><h4>Documentos condicionales</h4><ul>${data.documentos.filter(d=>!d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")||"<li>No hay condicionales registrados.</li>"}</ul><p><b>Recomendación GIAE:</b> crear proyecto, subir carpeta técnica y ejecutar revisión antes de enviar a la distribuidora.</p>`;}
 
 
@@ -1259,7 +1259,7 @@ function renderCuadroInteligente(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cuadro-inteligente";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.9.3</span>
+    <span class="badge ready">Módulo funcional v2.1.9.4</span>
     <h2>▣ Cuadro de Carga Inteligente</h2>
     <p>Genera protecciones preliminares, conductores, canalizaciones y balance de fases desde las cargas ingresadas.</p>
     <p class="privacy-note">📌 Uso técnico preliminar: debe verificarse con RIC, cálculo de caída de tensión, ICC y criterio del instalador autorizado SEC.</p>
@@ -1323,7 +1323,7 @@ function renderEmpalmeInteligente(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready empalme-view empalme-217";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.9.3</span>
+    <span class="badge ready">Módulo funcional v2.1.9.4</span>
     <h2>🔌 Motor de Empalmes Inteligente</h2>
     <p>Analiza demanda, suministro, potencia normalizada y requisitos documentales por distribuidora.</p>
 
@@ -1487,8 +1487,8 @@ function renderUnilinealAutomatico(){
   if(!view){ return; }
   view.className = "module-view show ready unilineal-view unilineal-pro";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.9.3</span>
-    <h2>⌁ Unilineal Blindado SEC</h2>
+    <span class="badge ready">Módulo funcional v2.1.9.4</span>
+    <h2>⌁ Unilineal Visual SEC SEC</h2>
     <p>Generando unilineal automático...</p>
   `;
   try{
@@ -1516,8 +1516,8 @@ function renderUnilinealAutomatico(){
     let general = sugerirGeneralUnilineal2193(corriente, tri);
 
     view.innerHTML = `
-      <span class="badge ready">Módulo funcional v2.1.9.3</span>
-      <h2>⌁ Unilineal Blindado SEC</h2>
+      <span class="badge ready">Módulo funcional v2.1.9.4</span>
+      <h2>⌁ Unilineal Visual SEC SEC</h2>
       <p>Diagrama automático con símbolo de automático SEC, barra repartidora correcta y render protegido contra errores.</p>
       <p class="privacy-note">📐 Vista técnica preliminar. Para presentación oficial, el instalador autorizado puede usar este esquema como apoyo y desarrollar el plano definitivo en AutoCAD.</p>
       <section class="folder-head">
@@ -1551,8 +1551,8 @@ function renderUnilinealFallback(e){
   if(!view) return;
   view.className = "module-view show ready unilineal-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.9.3</span>
-    <h2>⌁ Unilineal Blindado SEC</h2>
+    <span class="badge ready">Módulo funcional v2.1.9.4</span>
+    <h2>⌁ Unilineal Visual SEC SEC</h2>
     <section class="load-warning error">
       <h3>⚠️ El unilineal no pudo leer los datos anteriores</h3>
       <p>El módulo sí está conectado. Falta completar o reparar los datos de Cargas/Cuadro para generar el dibujo.</p>
@@ -1595,81 +1595,129 @@ function sugerirGeneralUnilineal2193(ib, tri){
   return typeof v === "number" ? (tri ? `3x${v}A` : `1x${v}A`) : "Requiere estudio";
 }
 
+
 function generarSVGUnilineal2193(cargas, tri, general, barra, proyecto, resumen){
   const circuits = cargas.length ? cargas : [{nombre:"Sin circuitos", automatico:"-", fase: tri ? "R-S-T" : "R", conductor:"-", demandaW:0}];
+
   const n = circuits.length;
-  const colW = 122, left = 90, right = 100;
-  const width = Math.max(1040, left + right + n*colW);
-  const height = 520, busY = 178, circuitTop = busY + 14;
+  const width = 1060;
+  const height = 420;
+  const frameX = 38, frameY = 28, frameW = width - 76, frameH = height - 58;
+
+  const busLeft = 110;
+  const busRight = width - 120;   // evita que la barra se salga del recuadro
+  const busY = 142;
+  const colGap = (busRight - busLeft) / Math.max(n - 1, 1);
+
   const title = escapeHtml2193(proyecto?.proyecto?.nombre || "Proyecto GIAE");
   const cliente = escapeHtml2193(proyecto?.cliente?.nombre || "Cliente");
   const demanda = (((resumen?.demandaW)||0)/1000).toFixed(2);
   const generalX = width/2;
-  const verticalFromGeneralY = tri ? busY-18 : busY;
+
+  const generalTop = 74;
+  const generalSymY = 104;
+  const generalDownY = tri ? busY-16 : busY;
 
   const phaseLabels = tri
-    ? `<text x="${left-42}" y="${busY-12}" class="phase">R</text><text x="${left-42}" y="${busY+8}" class="phase">S</text><text x="${left-42}" y="${busY+28}" class="phase">T</text>`
-    : `<text x="${left-42}" y="${busY+4}" class="phase">R</text>`;
+    ? `<text x="${busLeft-38}" y="${busY-20}" class="phase">R</text><text x="${busLeft-38}" y="${busY}" class="phase">S</text><text x="${busLeft-38}" y="${busY+20}" class="phase">T</text>`
+    : `<text x="${busLeft-38}" y="${busY+5}" class="phase">R</text>`;
 
   const busLines = tri
-    ? `<line x1="${left}" y1="${busY-18}" x2="${width-right}" y2="${busY-18}" class="bus"/><line x1="${left}" y1="${busY+2}" x2="${width-right}" y2="${busY+2}" class="bus"/><line x1="${left}" y1="${busY+22}" x2="${width-right}" y2="${busY+22}" class="bus"/>`
-    : `<line x1="${left}" y1="${busY}" x2="${width-right}" y2="${busY}" class="bus"/>`;
+    ? `<line x1="${busLeft}" y1="${busY-16}" x2="${busRight}" y2="${busY-16}" class="bus"/>
+       <line x1="${busLeft}" y1="${busY+4}" x2="${busRight}" y2="${busY+4}" class="bus"/>
+       <line x1="${busLeft}" y1="${busY+24}" x2="${busRight}" y2="${busY+24}" class="bus"/>`
+    : `<line x1="${busLeft}" y1="${busY}" x2="${busRight}" y2="${busY}" class="bus"/>`;
 
   const circuitSVG = circuits.map((c,i)=>{
-    const x = left + colW*i + colW/2;
-    const phase = tri ? (c.fase === "R-S-T" ? "RST" : (c.fase || ["R","S","T"][i%3])) : "R";
-    const tapY = tri ? (phase === "S" ? busY+2 : phase === "T" ? busY+22 : busY-18) : busY;
-    const aut = escapeHtml2193(c.automatico || "AUT.");
+    const x = n === 1 ? (busLeft + busRight)/2 : busLeft + colGap*i;
+    const phase = tri ? (c.fase === "R-S-T" ? ["R","S","T"][i%3] : (c.fase || ["R","S","T"][i%3])) : "R";
+    const tapY = tri ? (phase === "S" ? busY+4 : phase === "T" ? busY+24 : busY-16) : busY;
+
+    let autTxt = String(c.automatico || "AUT.").replace("A","A ");
+    if(!/AUT/i.test(autTxt)) autTxt = "AUT. " + autTxt;
     const name = escapeHtml2193(c.nombre || c.tipo || `Circuito ${i+1}`);
     const conductor = escapeHtml2193(c.conductor || "");
-    const kw = ((Number(c.demandaW || c.totalW || 0))/1000).toFixed(2);
+    const sistema = tri || c.fase === "R-S-T" ? "3P+N+T" : "1P+N+T";
+
     return `
       <g class="uni-circuit-pro">
-        <text x="${x-6}" y="${tapY-9}" class="phaseSmall">${phase}</text>
-        <line x1="${x}" y1="${tapY}" x2="${x}" y2="${circuitTop+30}" class="wire"/>
-        ${simboloAutomaticoSEC2193(x, circuitTop+42, 15)}
-        <text x="${x+20}" y="${circuitTop+47}" class="tiny">${aut}</text>
-        <line x1="${x}" y1="${circuitTop+56}" x2="${x}" y2="${circuitTop+84}" class="wire"/>
-        <rect x="${x-20}" y="${circuitTop+84}" width="40" height="27" class="pdBox"/>
-        <text x="${x}" y="${circuitTop+102}" text-anchor="middle" class="pdTxt">P/D</text>
-        <text x="${x+24}" y="${circuitTop+102}" class="tiny">30mA</text>
-        <line x1="${x}" y1="${circuitTop+111}" x2="${x}" y2="${circuitTop+146}" class="wire"/>
-        <circle cx="${x}" cy="${circuitTop+163}" r="13" class="cNum"/>
-        <text x="${x}" y="${circuitTop+168}" text-anchor="middle" class="num">${i+1}</text>
-        <line x1="${x}" y1="${circuitTop+176}" x2="${x}" y2="${circuitTop+202}" class="wire"/>
-        <rect x="${x-45}" y="${circuitTop+202}" width="90" height="50" class="loadBox"/>
-        <text x="${x}" y="${circuitTop+221}" text-anchor="middle" class="loadName">${name.slice(0,15)}</text>
-        <text x="${x}" y="${circuitTop+238}" text-anchor="middle" class="tiny">${conductor}</text>
-        <text x="${x}" y="${circuitTop+252}" text-anchor="middle" class="tiny">${kw} kW</text>
+        <text x="${x-5}" y="${tapY-7}" class="phaseSmall">${phase}</text>
+        <line x1="${x}" y1="${tapY}" x2="${x}" y2="${busY+46}" class="wire"/>
+        ${simboloAutomaticoSEC2194(x, busY+58, 13)}
+        <text x="${x+17}" y="${busY+52}" class="tiny bold">AUT.</text>
+        <text x="${x+17}" y="${busY+64}" class="tiny">${escapeHtml2193(c.automatico || "1x16A")}</text>
+        <text x="${x+17}" y="${busY+76}" class="tiny">10 kA C</text>
+        <line x1="${x}" y1="${busY+70}" x2="${x}" y2="${busY+105}" class="wire"/>
+        <rect x="${x-19}" y="${busY+105}" width="38" height="25" class="pdBox"/>
+        <line x1="${x-15}" y1="${busY+126}" x2="${x+15}" y2="${busY+109}" class="thin"/>
+        <text x="${x}" y="${busY+121}" text-anchor="middle" class="pdTxt">P/D</text>
+        <text x="${x+24}" y="${busY+121}" class="tiny">30 mA</text>
+        <line x1="${x}" y1="${busY+130}" x2="${x}" y2="${busY+162}" class="wire"/>
+        <circle cx="${x}" cy="${busY+177}" r="12" class="cNum"/>
+        <text x="${x}" y="${busY+182}" text-anchor="middle" class="num">${i+1}</text>
+        <line x1="${x}" y1="${busY+189}" x2="${x}" y2="${busY+210}" class="wire"/>
+        <rect x="${x-42}" y="${busY+210}" width="84" height="43" class="loadBox"/>
+        <text x="${x}" y="${busY+227}" text-anchor="middle" class="loadName">${name.slice(0,14)}</text>
+        <text x="${x}" y="${busY+242}" text-anchor="middle" class="tiny">${sistema}</text>
+        <text x="${x}" y="${busY+256}" text-anchor="middle" class="tiny">${conductor}</text>
       </g>`;
   }).join("");
 
   return `<div class="svg-scroll professional-scroll">
     <svg id="unilinealSvg218" class="unilineal-svg professional-svg" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
       <defs><style>
-        .sheet{fill:#fff;stroke:#111;stroke-width:1.4}.title{font:bold 22px Arial;fill:#111}.sub{font:12px Arial;fill:#111}.label{font:bold 12px Arial;fill:#111}.tiny{font:10px Arial;fill:#111}.phase{font:bold 18px Arial;fill:#111}.phaseSmall{font:bold 11px Arial;fill:#111}.num{font:bold 13px Arial;fill:#111}.pdTxt{font:bold 11px Arial;fill:#111}.loadName{font:bold 11px Arial;fill:#111}.bus{stroke:#111;stroke-width:3.2;fill:none}.wire{stroke:#111;stroke-width:2.1;fill:none}.pdBox,.loadBox,.cNum{stroke:#111;stroke-width:1.8;fill:white}.breakerArc{stroke:#111;stroke-width:2.3;fill:none}.breakerMid{stroke:#111;stroke-width:2.1;fill:none}.dash{stroke:#999;stroke-width:1.2;stroke-dasharray:8 5;fill:none}
+        .sheet{fill:#fff;stroke:#111;stroke-width:1.4}
+        .title{font:bold 16px Arial;fill:#111}
+        .sub{font:10px Arial;fill:#111}
+        .label{font:bold 10px Arial;fill:#111}
+        .tiny{font:8px Arial;fill:#111}
+        .bold{font-weight:bold}
+        .phase{font:bold 15px Arial;fill:#111}
+        .phaseSmall{font:bold 9px Arial;fill:#111}
+        .num{font:bold 11px Arial;fill:#111}
+        .pdTxt{font:bold 9px Arial;fill:#111}
+        .loadName{font:bold 9px Arial;fill:#111}
+        .bus{stroke:#111;stroke-width:2.7;fill:none}
+        .wire{stroke:#111;stroke-width:1.8;fill:none}
+        .thin{stroke:#111;stroke-width:1.1;fill:none}
+        .pdBox,.loadBox,.cNum{stroke:#111;stroke-width:1.5;fill:white}
+        .breakerArc{stroke:#111;stroke-width:2;fill:none}
+        .breakerMid{stroke:#111;stroke-width:1.9;fill:none}
+        .dash{stroke:#999;stroke-width:1.1;stroke-dasharray:7 5;fill:none}
       </style></defs>
-      <rect x="24" y="24" width="${width-48}" height="${height-48}" class="sheet"/>
-      <rect x="44" y="42" width="${width-88}" height="${height-82}" class="dash"/>
-      <text x="${width/2}" y="69" text-anchor="middle" class="title">TABLERO GENERAL</text>
-      <text x="72" y="93" class="sub">Proyecto: ${title}</text>
-      <text x="72" y="111" class="sub">Cliente: ${cliente}</text>
-      <text x="72" y="129" class="sub">Demanda: ${demanda} kW · ${tri ? "Trifásico" : "Monofásico"}</text>
-      <line x1="${generalX}" y1="92" x2="${generalX}" y2="127" class="wire"/>
-      ${simboloAutomaticoSEC2193(generalX, 145, 21)}
-      <text x="${generalX+32}" y="151" class="label">AUT. GENERAL ${general}</text>
-      <line x1="${generalX}" y1="166" x2="${generalX}" y2="${verticalFromGeneralY}" class="wire"/>
-      ${phaseLabels}${busLines}
-      <text x="${width-right-270}" y="${tri ? busY+52 : busY+34}" class="tiny">${escapeHtml2193(barra)}</text>
+
+      <rect x="20" y="16" width="${width-40}" height="${height-32}" class="sheet"/>
+      <rect x="${frameX}" y="${frameY}" width="${frameW}" height="${frameH}" class="dash"/>
+
+      <text x="${width/2}" y="54" text-anchor="middle" class="title">Tablero general</text>
+      <text x="68" y="62" class="sub">Tablero de alumbrado y fuerza 1</text>
+      <text x="68" y="82" class="sub">Proyecto: ${title}</text>
+      <text x="68" y="96" class="sub">Cliente: ${cliente}</text>
+      <text x="68" y="110" class="sub">Demanda: ${demanda} kW · ${tri ? "Trifásico" : "Monofásico"}</text>
+
+      <line x1="${generalX}" y1="${generalTop}" x2="${generalX}" y2="${generalSymY-18}" class="wire"/>
+      ${simboloAutomaticoSEC2194(generalX, generalSymY, 16)}
+      <line x1="${generalX}" y1="${generalSymY+20}" x2="${generalX}" y2="${generalDownY}" class="wire"/>
+      <text x="${generalX+24}" y="${generalSymY-6}" class="label">AUT.</text>
+      <text x="${generalX+24}" y="${generalSymY+6}" class="tiny">${escapeHtml2193(general)}</text>
+      <text x="${generalX+24}" y="${generalSymY+18}" class="tiny">10 kA Curva C</text>
+
+      ${phaseLabels}
+      ${busLines}
+      <text x="${busRight-285}" y="${tri ? busY+50 : busY+34}" class="tiny bold">${escapeHtml2193(barra)}</text>
       ${circuitSVG}
-      <text x="${width-245}" y="${height-54}" class="tiny">GIAE Chile v2.1.9.3 · Unilineal automático</text>
+
+      <text x="${width-174}" y="${height-42}" class="tiny">R S · T.P.</text>
+      <text x="${width-255}" y="${height-30}" class="tiny">GIAE Chile v2.1.9.4 · Unilineal automático</text>
     </svg>
   </div>`;
 }
 
-function simboloAutomaticoSEC2193(x, y, r){
-  return `<path d="M ${x-r} ${y} A ${r} ${r} 0 0 1 ${x+r} ${y}" class="breakerArc"/>
-          <line x1="${x}" y1="${y-r-8}" x2="${x}" y2="${y+r+8}" class="breakerMid"/>`;
+
+function simboloAutomaticoSEC2194(x, y, r){
+  // Símbolo tipo plano: semicírculo lateral con línea vertical central que atraviesa.
+  return `<path d="M ${x} ${y-r} A ${r} ${r} 0 0 1 ${x} ${y+r}" class="breakerArc"/>
+          <line x1="${x}" y1="${y-r-7}" x2="${x}" y2="${y+r+7}" class="breakerMid"/>`;
 }
 
 function escapeHtml2193(v){
