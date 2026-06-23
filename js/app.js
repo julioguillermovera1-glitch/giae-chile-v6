@@ -1,4 +1,4 @@
-const APP_VERSION = "2.1.2.1";
+const APP_VERSION = "2.1.2.2";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -103,7 +103,7 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.2.1</span>
+    <span class="badge ready">Módulo funcional v2.1.2.2</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
 
@@ -137,7 +137,7 @@ function renderProyecto(){
       <fieldset class="form-section" data-section="cliente">
         <legend>Cliente</legend>
         <label>Nombre cliente<input name="cliente" placeholder="Nombre o razón social"></label>
-        <label>RUT cliente<input name="rutCliente" placeholder="Sin puntos ni guion"></label>
+        <label>RUT cliente<input name="rutCliente" class="rut-input" placeholder="Ej: 15.180.337-7"><small class="rut-msg" data-rut-msg="rutCliente">Ingrese RUT chileno</small></label>
         <label>Teléfono<input name="telefonoCliente" placeholder="+56 9 ..."></label>
         <label>Correo<input name="correoCliente" type="email" placeholder="correo@dominio.cl"></label>
       </fieldset>
@@ -194,7 +194,7 @@ function renderProyecto(){
       <fieldset class="form-section" data-section="instalador">
         <legend>Instalador SEC</legend>
         <label>Nombre instalador<input name="instalador" placeholder="Nombre completo"></label>
-        <label>RUT instalador<input name="rutInstalador" placeholder="Sin puntos ni guion"></label>
+        <label>RUT instalador<input name="rutInstalador" class="rut-input" placeholder="Ej: 15.180.337-7"><small class="rut-msg" data-rut-msg="rutInstalador">Ingrese RUT chileno</small></label>
         <label>Clase SEC
           <select name="claseSEC">
             <option value="">Seleccionar</option>
@@ -205,6 +205,10 @@ function renderProyecto(){
           </select>
         </label>
         <label>Correo instalador<input name="correoInstalador" type="email" placeholder="correo@dominio.cl"></label>
+        <div class="sec-data-card">
+          <b>Datos rápidos</b>
+          <button type="button" class="btn small" id="usarDatosJulio">Usar datos Julio Vera</button>
+        </div>
       </fieldset>
 
       <div class="form-actions">
@@ -253,6 +257,9 @@ function bindProyecto(){
   document.getElementById("cargarProyecto").onclick = ()=>cargarProyecto(true);
   document.getElementById("limpiarProyecto").onclick = limpiarProyecto;
   document.getElementById("continuarCargas").onclick = ()=>openModule("cargas");
+  const datosJulio = document.getElementById("usarDatosJulio");
+  if(datosJulio) datosJulio.onclick = usarDatosJulio;
+  bindRutInputs();
 }
 
 function formToObject(){
@@ -270,6 +277,8 @@ function formToObject(){
     cliente:{
       nombre: data.cliente || "",
       rut: limpiarRut(data.rutCliente || ""),
+      rutFormateado: formatearRut(data.rutCliente || ""),
+      rutValido: validarRut(data.rutCliente || ""),
       telefono: data.telefonoCliente || "",
       correo: data.correoCliente || ""
     },
@@ -288,11 +297,83 @@ function formToObject(){
     instalador:{
       nombre: data.instalador || "",
       rut: limpiarRut(data.rutInstalador || ""),
+      rutFormateado: formatearRut(data.rutInstalador || ""),
+      rutValido: validarRut(data.rutInstalador || ""),
       claseSEC: data.claseSEC || "",
       correo: data.correoInstalador || ""
     }
   };
 }
+
+
+function bindRutInputs(){
+  document.querySelectorAll(".rut-input").forEach(input=>{
+    input.addEventListener("input", ()=>{
+      const formatted = formatearRut(input.value);
+      input.value = formatted;
+      pintarEstadoRut(input.name, formatted);
+    });
+    input.addEventListener("blur", ()=>{
+      input.value = formatearRut(input.value);
+      pintarEstadoRut(input.name, input.value);
+    });
+    pintarEstadoRut(input.name, input.value);
+  });
+}
+
+function pintarEstadoRut(name, value){
+  const msg = document.querySelector(`[data-rut-msg="${name}"]`);
+  if(!msg) return;
+  const limpio = limpiarRut(value);
+  if(!limpio){
+    msg.textContent = "Ingrese RUT chileno";
+    msg.className = "rut-msg";
+    return;
+  }
+  if(validarRut(value)){
+    msg.textContent = "RUT válido ✅";
+    msg.className = "rut-msg ok";
+  }else{
+    msg.textContent = "RUT inválido ❌";
+    msg.className = "rut-msg bad";
+  }
+}
+
+function formatearRut(valor){
+  let limpio = limpiarRut(valor);
+  if(limpio.length < 2) return limpio;
+  let cuerpo = limpio.slice(0, -1);
+  let dv = limpio.slice(-1);
+  cuerpo = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return `${cuerpo}-${dv}`;
+}
+
+function validarRut(valor){
+  const rut = limpiarRut(valor);
+  if(!/^\d{7,8}[0-9K]$/.test(rut)) return false;
+  const cuerpo = rut.slice(0, -1);
+  const dv = rut.slice(-1);
+  let suma = 0;
+  let multiplo = 2;
+  for(let i = cuerpo.length - 1; i >= 0; i--){
+    suma += parseInt(cuerpo.charAt(i), 10) * multiplo;
+    multiplo = multiplo < 7 ? multiplo + 1 : 2;
+  }
+  const resto = 11 - (suma % 11);
+  const dvEsperado = resto === 11 ? "0" : resto === 10 ? "K" : String(resto);
+  return dv === dvEsperado;
+}
+
+function usarDatosJulio(){
+  const form = document.getElementById("proyectoForm");
+  if(!form) return;
+  form.elements.instalador.value = "Julio Vera Concha";
+  form.elements.rutInstalador.value = "15.180.337-7";
+  form.elements.claseSEC.value = "Clase A";
+  pintarEstadoRut("rutInstalador", "15.180.337-7");
+  toast("Datos de Julio Vera cargados.");
+}
+
 
 function limpiarRut(v){ return String(v).replace(/[^0-9kK]/g,"").toUpperCase(); }
 
@@ -305,7 +386,7 @@ function objectToForm(obj){
     fecha: obj.proyecto?.fecha,
     tipoProyecto: obj.proyecto?.tipoProyecto,
     cliente: obj.cliente?.nombre,
-    rutCliente: obj.cliente?.rut,
+    rutCliente: obj.cliente?.rutFormateado || formatearRut(obj.cliente?.rut || ""),
     telefonoCliente: obj.cliente?.telefono,
     correoCliente: obj.cliente?.correo,
     direccion: obj.ubicacion?.direccion,
@@ -317,7 +398,7 @@ function objectToForm(obj){
     potenciaEstimada: obj.electrico?.potenciaEstimadaKW,
     observacion: obj.electrico?.observacion,
     instalador: obj.instalador?.nombre,
-    rutInstalador: obj.instalador?.rut,
+    rutInstalador: obj.instalador?.rutFormateado || formatearRut(obj.instalador?.rut || ""),
     claseSEC: obj.instalador?.claseSEC,
     correoInstalador: obj.instalador?.correo
   };
@@ -325,6 +406,8 @@ function objectToForm(obj){
     const el = form.elements[name];
     if(el) el.value = value ?? "";
   });
+  pintarEstadoRut("rutCliente", form.elements.rutCliente?.value || "");
+  pintarEstadoRut("rutInstalador", form.elements.rutInstalador?.value || "");
 }
 
 function guardarProyecto(){
@@ -335,6 +418,8 @@ function guardarProyecto(){
   if(!obj.ubicacion.direccion) faltantes.push("dirección");
   if(!obj.ubicacion.distribuidora) faltantes.push("distribuidora");
   if(!obj.electrico.suministro) faltantes.push("tipo de suministro");
+  if(obj.cliente.rut && !obj.cliente.rutValido) faltantes.push("RUT cliente inválido");
+  if(obj.instalador.rut && !obj.instalador.rutValido) faltantes.push("RUT instalador inválido");
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
   renderResumen(obj, faltantes);
@@ -393,12 +478,12 @@ function renderResumen(obj, faltantes){
     <div class="summary-head">${estado}<small>Actualizado: ${new Date(obj.actualizado).toLocaleString("es-CL")}</small></div>
     <div class="summary-grid">
       <p><b>Proyecto:</b> ${obj.proyecto.nombre || "Sin nombre"} / ${obj.proyecto.tipoProyecto || "Sin tipo"}</p>
-      <p><b>Cliente:</b> ${obj.cliente.nombre || "Sin cliente"} / RUT ${obj.cliente.rut || "sin RUT"}</p>
+      <p><b>Cliente:</b> ${obj.cliente.nombre || "Sin cliente"} / RUT ${obj.cliente.rutFormateado || "sin RUT"} ${obj.cliente.rut ? (obj.cliente.rutValido ? "✅" : "❌") : ""}</p>
       <p><b>Dirección:</b> ${obj.ubicacion.direccion || "Sin dirección"}, ${obj.ubicacion.comuna || ""}</p>
       <p><b>Distribuidora:</b> ${obj.ubicacion.distribuidora || "Sin distribuidora"}</p>
       <p><b>Suministro:</b> ${obj.electrico.suministro || "Sin definir"}</p>
       <p><b>Potencia estimada:</b> ${obj.electrico.potenciaEstimadaKW || 0} kW</p>
-      <p><b>Instalador:</b> ${obj.instalador.nombre || "Sin instalador"} / ${obj.instalador.claseSEC || "Sin clase SEC"}</p>
+      <p><b>Instalador:</b> ${obj.instalador.nombre || "Sin instalador"} / ${obj.instalador.claseSEC || "Sin clase SEC"} / RUT ${obj.instalador.rutFormateado || "sin RUT"} ${obj.instalador.rut ? (obj.instalador.rutValido ? "✅" : "❌") : ""}</p>
     </div>
   `;
 }

@@ -181,3 +181,28 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
     bottom:auto;
   }
 }
+
+
+/* RUT automático v2.1.2.2 */
+.rut-msg{
+  font-size:11px;
+  color:#8db0bb;
+  font-weight:700;
+  margin-top:-2px;
+}
+.rut-msg.ok{color:#8cffad}
+.rut-msg.bad{color:#ff8f9a}
+.sec-data-card{
+  border:1px solid #245366;
+  background:#071923;
+  border-radius:12px;
+  padding:12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.btn.small{
+  padding:9px 12px;
+  font-size:12px;
+}

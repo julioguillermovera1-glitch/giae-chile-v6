@@ -1,13 +1,15 @@
-# GIAE Chile v2.1.2.1 - Proyecto compacto
+# GIAE Chile v2.1.2.2 - RUT válido
 
 Creado por Julio Vera Concha.
 
-## Corrección
-- El módulo Proyecto ahora se divide en pasos visibles.
-- Se evita que el cliente tenga que bajar por toda la pantalla.
-- Navegación por secciones: Datos, Cliente, Ubicación, Eléctrico, Instalador y Resumen.
-- Botones de acción quedan visibles dentro del módulo.
-- Se mantiene guardar, cargar, limpiar y proyecto de ejemplo.
+## Cambios
+- Formato automático de RUT chileno.
+- Validación de dígito verificador.
+- RUT cliente e instalador muestran estado válido/inválido.
+- Guarda RUT limpio, RUT formateado y estado de validez.
+- Botón "Usar datos Julio Vera" en Instalador SEC.
+- Mantiene Proyecto compacto por pasos.
 
-## Regla
-Avanzar módulo por módulo, sin marcar funciones como terminadas hasta que realmente funcionen.
+## Ejemplo
+Entrada: 151803377
+Salida visual: 15.180.337-7 ✅
