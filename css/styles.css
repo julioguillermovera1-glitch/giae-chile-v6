@@ -45,3 +45,58 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 @media(max-width:1050px){
  body{display:block}.sidebar{position:relative;width:100%;inset:auto}.workspace{margin-left:0;width:100%}.topbar{overflow:auto}.hero{margin:16px;min-height:520px;align-items:flex-end;padding:25px}.hero h2{font-size:48px}.g-mark{top:80px;right:40px;font-size:110px}.codebox{display:none}.kpis{margin:16px;grid-template-columns:1fr}.grid{margin:16px;grid-template-columns:1fr}.quick-actions,.engine-grid{grid-template-columns:1fr}.statusbar{position:relative;left:0;flex-wrap:wrap;height:auto;padding:12px}.module-view{margin:16px}
 }
+
+
+/* Estados reales v2.1 */
+.nav-btn.ready:after{content:"base";margin-left:auto;color:#8cffad;font-size:11px;border:1px solid #22c55e66;border-radius:999px;padding:2px 7px}
+.nav-btn.next:after{content:"siguiente";margin-left:auto;color:#ffe08a;font-size:11px;border:1px solid #ffd16688;border-radius:999px;padding:2px 7px}
+.nav-btn.draft:after{content:"base";margin-left:auto;color:#7fd7ff;font-size:11px;border:1px solid #1fb6ff66;border-radius:999px;padding:2px 7px}
+.nav-btn.missing:after{content:"pendiente";margin-left:auto;color:#ff8792;font-size:11px;border:1px solid #ff4d5d66;border-radius:999px;padding:2px 7px}
+.engine.ready{border-color:#22c55e;background:#0b2618}
+.engine.ready .status{color:#8cffad}
+.engine.next{border-color:#ffd166;background:#2a240e}
+.engine.next .status{color:#ffe08a}
+.engine.draft{border-color:#1fb6ff;background:#082232}
+.engine.draft .status{color:#7fd7ff}
+.engine.missing{border-color:#85303a;background:#35141a}
+.engine.missing .status{color:#ff8f9a}
+.quick.ready{border-color:#22c55e;background:#0b2618}
+.quick.next{border-color:#ffd166;background:#2a240e}
+.quick.draft{border-color:#1fb6ff;background:#082232}
+.quick.missing{border-color:#85303a;background:#35141a}
+.module-view.ready{border-color:#22c55e;background:#071b12}
+.module-view.next{border-color:#ffd166;background:#211b09}
+.module-view.draft{border-color:#1fb6ff;background:#071722}
+.module-view.missing{border-color:#ff4d5d;background:#210b10}
+.badge.ready{background:#0d3d23;color:#8cffad}
+.badge.next{background:#40360f;color:#ffe08a}
+.badge.draft{background:#0b2b3d;color:#7fd7ff}
+.badge.missing{background:#47151d;color:#ff9da6}
+
+
+/* Módulo Proyecto v2.1.2 */
+.project-form{display:grid;gap:18px;margin-top:20px}
+.project-form fieldset{border:1px solid #1d4656;background:#071923c7;border-radius:16px;padding:18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.project-form legend{padding:0 10px;color:#8cffad;font-weight:800}
+.project-form label{display:flex;flex-direction:column;gap:7px;color:#d9f5ed;font-weight:700;font-size:13px}
+.project-form input,.project-form select,.project-form textarea{width:100%;border:1px solid #245366;background:#071017;color:#eefcff;border-radius:10px;padding:12px;font:inherit;outline:none}
+.project-form input:focus,.project-form select:focus,.project-form textarea:focus{border-color:#22c55e;box-shadow:0 0 0 3px #22c55e22}
+.project-form textarea{min-height:44px;resize:vertical}
+.form-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn{border:1px solid #315361;background:#0b1a24;color:#eefcff;border-radius:12px;padding:13px 18px;font-weight:800;cursor:pointer}
+.btn:hover{filter:brightness(1.18)}
+.btn.primary{background:#10a859;border-color:#22c55e}
+.btn.danger{background:#35141a;border-color:#ff4d5d;color:#ffb3ba}
+.btn.next{background:#2a240e;border-color:#ffd166;color:#ffe08a}
+.project-summary{margin-top:22px;border:1px solid #1d4656;background:#071923c7;border-radius:16px;padding:18px}
+.summary-head{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid #1d4656;padding-bottom:12px;margin-bottom:12px}
+.summary-ok{color:#8cffad;font-weight:900}.summary-warn{color:#ffe08a;font-weight:900}
+.summary-head small{color:#8db0bb}
+.summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px}.summary-grid p{margin:4px 0}
+.toast{position:fixed;right:24px;bottom:72px;background:#071923;border:1px solid #22c55e;color:#eefcff;border-radius:12px;padding:14px 18px;z-index:999;opacity:0;transform:translateY(10px);transition:.25s;box-shadow:0 10px 30px #0008}
+.toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:1050px){
+  .project-form fieldset{grid-template-columns:1fr}
+  .summary-grid{grid-template-columns:1fr}
+  .summary-head{display:block}
+}

@@ -1,16 +1,21 @@
-# GIAE Chile v2.1 - Portada realista
+# GIAE Chile v2.1.2 - Módulo Proyecto
 
 Creado por Julio Vera Concha.
 
-## Cambios aplicados
-- Estadísticas falsas reemplazadas por datos realistas.
-- Base de datos marcada como no conectada.
-- Módulos con estados:
-  - Verde: base lista
-  - Amarillo: siguiente módulo
-  - Azul: base inicial
-  - Rojo: no implementado
-- Portada oscura con estética PCB, electricidad digital y software.
+## Cambios
+- Se agrega Módulo Proyecto funcional.
+- Guarda datos en localStorage.
+- Permite cargar proyecto guardado.
+- Permite limpiar proyecto.
+- Incluye proyecto de ejemplo.
+- Proyecto queda separado de Presupuesto, Cargas, Unilineal y Empalme.
+- Los demás módulos quedan marcados como no implementados.
 
-## Recomendación
-Subir esta versión completa cuando se confirme visualmente. El siguiente módulo recomendado es Proyecto.
+## Regla de arquitectura
+Cada módulo debe funcionar de forma independiente y leer datos desde el objeto base del proyecto.
+
+## Archivos principales
+- index.html
+- indice.html
+- css/styles.css
+- js/app.js

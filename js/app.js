@@ -1,40 +1,60 @@
+const APP_VERSION = "2.1.2";
+
 const modules = [
-  {id:"inicio", icon:"🏠", label:"Inicio", ready:true, desc:"Portada profesional del sistema GIAE Chile."},
-  {id:"proyecto", icon:"📁", label:"Proyecto", ready:true, desc:"Motor de datos del cliente, dirección, tipo de instalación y distribuidora."},
-  {id:"cargas", icon:"⚡", label:"Cargas", ready:true, desc:"Motor de cargas, demanda y simultaneidad."},
-  {id:"cuadro", icon:"▣", label:"Cuadro de Carga", ready:true, desc:"Motor de Ib, Iz, protecciones y estado de cumplimiento."},
-  {id:"unilineal", icon:"⎇", label:"Unilineal", ready:true, desc:"Motor de dibujo técnico del diagrama unilineal."},
-  {id:"tierra", icon:"⏚", label:"Tierra", ready:true, desc:"Motor de puesta a tierra y equipotencialidad."},
-  {id:"empalme", icon:"🔌", label:"Empalme", ready:true, desc:"Motor de validación de empalmes normalizados."},
-  {id:"documentacion", icon:"📄", label:"Documentación", ready:false, desc:"Pendiente: TE1, formularios nativos de distribuidoras y memorias técnicas."},
-  {id:"presupuesto", icon:"💰", label:"Presupuesto", ready:false, desc:"Pendiente: módulo separado de materiales, mano de obra, IVA y utilidad."},
-  {id:"motorric", icon:"⚙", label:"Motor RIC", ready:true, desc:"Base normativa RIC 1-19 para validaciones."},
-  {id:"auditoria", icon:"🧩", label:"Auditoría", ready:false, desc:"Pendiente: trazabilidad, historial de consultas y registro de errores."},
-  {id:"administracion", icon:"🔐", label:"Administración", ready:false, desc:"Pendiente: centro de monitoreo exclusivo del administrador."}
+  {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
+  {id:"proyecto", icon:"📁", label:"Proyecto", status:"ready", desc:"Módulo funcional: datos del proyecto, cliente, ubicación, suministro, distribuidora e instalador SEC."},
+  {id:"cargas", icon:"⚡", label:"Cargas", status:"missing", desc:"Pendiente: ingreso de alumbrado, enchufes, fuerza, simultaneidad y demanda."},
+  {id:"cuadro", icon:"▣", label:"Cuadro de Carga", status:"missing", desc:"Pendiente: Ib, Iz, protecciones, diferenciales y cumplimiento."},
+  {id:"unilineal", icon:"⎇", label:"Unilineal", status:"missing", desc:"Pendiente: diagrama profesional generado desde el cuadro de carga."},
+  {id:"tierra", icon:"⏚", label:"Tierra", status:"missing", desc:"Pendiente: puesta a tierra y equipotencialidad según RIC 6."},
+  {id:"empalme", icon:"🔌", label:"Empalme", status:"missing", desc:"Pendiente: validación de empalmes normalizados y distribuidoras."},
+  {id:"documentacion", icon:"📄", label:"Documentación", status:"missing", desc:"Pendiente: TE1, formularios nativos de distribuidoras y memorias técnicas."},
+  {id:"presupuesto", icon:"💰", label:"Presupuesto", status:"missing", desc:"Pendiente: módulo separado de materiales, mano de obra, IVA y utilidad."},
+  {id:"motorric", icon:"⚙", label:"Motor RIC", status:"missing", desc:"Pendiente: motor normativo con reglas RIC detalladas y verificables."},
+  {id:"auditoria", icon:"🧩", label:"Auditoría", status:"missing", desc:"Pendiente: trazabilidad, historial de consultas y registro de errores."},
+  {id:"administracion", icon:"🔐", label:"Administración", status:"hidden", desc:"Pendiente: centro de monitoreo exclusivo del administrador."}
 ];
 
 const quicks = [
-  {label:"Nuevo Proyecto", icon:"📁", ready:true, target:"proyecto", text:"Crear un proyecto desde cero"},
-  {label:"Abrir Proyecto", icon:"🗂", ready:false, target:"proyecto", text:"Requiere base de datos o almacenamiento"},
-  {label:"Proyecto de Ejemplo", icon:"📘", ready:true, target:"proyecto", text:"Cargar datos de demostración"},
-  {label:"Importar Archivo", icon:"⬇", ready:false, target:"administracion", text:"Pendiente para versión con archivos"},
-  {label:"Centro de Ayuda", icon:"?", ready:false, target:"documentacion", text:"Manuales, guías y tutoriales"},
-  {label:"Soporte Técnico", icon:"🎧", ready:false, target:"administracion", text:"Contacto y reporte de problemas"}
+  {label:"Nuevo Proyecto", icon:"📁", status:"ready", target:"proyecto", text:"Crear o editar datos base del proyecto"},
+  {label:"Proyecto de Ejemplo", icon:"📘", status:"ready", target:"demo", text:"Cargar datos de demostración"},
+  {label:"Cargas", icon:"⚡", status:"missing", target:"cargas", text:"Pendiente para v2.1.3"},
+  {label:"Cuadro de Carga", icon:"▣", status:"missing", target:"cuadro", text:"Pendiente para v2.1.4"},
+  {label:"Unilineal", icon:"⎇", status:"missing", target:"unilineal", text:"Pendiente para v2.1.5"},
+  {label:"Presupuesto", icon:"💰", status:"missing", target:"presupuesto", text:"Pendiente para versión posterior"}
 ];
+
+const STORAGE_KEY = "giae_chile_proyecto_v212";
+
+function stateLabel(status){
+  if(status==="base") return "Base lista ✓";
+  if(status==="ready") return "Funcional ✓";
+  if(status==="next") return "Siguiente módulo";
+  if(status==="draft") return "Base inicial";
+  if(status==="hidden") return "Privado pendiente";
+  return "No implementado";
+}
+function stateClass(status){
+  if(status==="base") return "ready";
+  if(status==="ready") return "ready";
+  if(status==="next") return "next";
+  if(status==="draft") return "draft";
+  return "missing";
+}
 
 function renderMenu(){
   const nav = document.getElementById("mainMenu");
-  nav.innerHTML = modules.map((m,i)=>`<button class="nav-btn ${i===0?'active':''} ${m.ready?'':'missing'}" data-id="${m.id}"><span>${m.icon}</span>${m.label}</button>`).join("");
+  nav.innerHTML = modules.map((m,i)=>`<button class="nav-btn ${i===0?'active':''} ${stateClass(m.status)}" data-id="${m.id}"><span>${m.icon}</span>${m.label}</button>`).join("");
   nav.querySelectorAll("button").forEach(btn=>btn.onclick=()=>openModule(btn.dataset.id));
 }
 
 function renderEngines(){
   const grid = document.getElementById("engineGrid");
   grid.innerHTML = modules.filter(m=>m.id!=="inicio" && m.id!=="administracion").slice(0,9).map(m=>`
-    <div class="engine ${m.ready?'':'missing'}">
+    <div class="engine ${stateClass(m.status)}">
       <span>${m.icon}</span>
       <b>${m.label}</b>
-      <small class="status">${m.ready?'Operativo ✓':'No creado / pendiente ✕'}</small>
+      <small class="status">${stateLabel(m.status)}</small>
     </div>
   `).join("");
 }
@@ -52,26 +72,314 @@ function renderRIC(){
 function renderQuick(){
   const box = document.getElementById("quickActions");
   box.innerHTML = quicks.map(q=>`
-    <div class="quick ${q.ready?'':'missing'}" data-target="${q.target}">
+    <div class="quick ${stateClass(q.status)}" data-target="${q.target}">
       <b>${q.icon} ${q.label}</b>
-      <small>${q.ready?q.text:"PENDIENTE: "+q.text}</small>
+      <small>${stateLabel(q.status)}: ${q.text}</small>
     </div>
   `).join("");
-  box.querySelectorAll(".quick").forEach(q=>q.onclick=()=>openModule(q.dataset.target));
+  box.querySelectorAll(".quick").forEach(q=>q.onclick=()=>{
+    if(q.dataset.target==="demo"){ openModule("proyecto"); setTimeout(cargarDemoProyecto,100); }
+    else openModule(q.dataset.target);
+  });
 }
 
 function openModule(id){
   document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active", b.dataset.id===id));
+  if(id==="proyecto"){ renderProyecto(); return; }
   const m = modules.find(x=>x.id===id) || modules[0];
   const view = document.getElementById("moduleView");
-  view.className = "module-view show " + (m.ready ? "" : "missing");
+  const cls = stateClass(m.status);
+  view.className = "module-view show " + cls;
   view.innerHTML = `
-    <span class="badge ${m.ready?'ok':'no'}">${m.ready?'Módulo operativo':'Módulo no creado aún'}</span>
+    <span class="badge ${cls}">${stateLabel(m.status)}</span>
     <h2>${m.icon} ${m.label}</h2>
     <p>${m.desc}</p>
-    ${m.ready ? `<p>Este módulo queda disponible para el siguiente desarrollo independiente.</p>` : `<p><b>Estado:</b> Queda marcado en rojo para no confundirlo con funciones disponibles.</p>`}
+    <p><b>Regla:</b> nada se marca como funcional hasta que realmente guarde, lea o ejecute una acción útil.</p>
   `;
   view.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function renderProyecto(){
+  const view = document.getElementById("moduleView");
+  view.className = "module-view show ready proyecto-view";
+  view.innerHTML = `
+    <span class="badge ready">Módulo funcional v2.1.2</span>
+    <h2>📁 Proyecto</h2>
+    <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
+
+    <form id="proyectoForm" class="project-form">
+      <fieldset>
+        <legend>Datos generales</legend>
+        <label>Nombre del proyecto<input name="nombreProyecto" placeholder="Ej: Vivienda San Pedro"></label>
+        <label>N° OT<input name="numeroOT" placeholder="Ej: OT-001"></label>
+        <label>Fecha<input name="fecha" type="date"></label>
+        <label>Tipo de proyecto
+          <select name="tipoProyecto">
+            <option value="">Seleccionar</option>
+            <option>Vivienda</option>
+            <option>Local comercial</option>
+            <option>Oficina</option>
+            <option>Industrial</option>
+            <option>Condominio</option>
+          </select>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Cliente</legend>
+        <label>Nombre cliente<input name="cliente" placeholder="Nombre o razón social"></label>
+        <label>RUT cliente<input name="rutCliente" placeholder="Sin puntos ni guion"></label>
+        <label>Teléfono<input name="telefonoCliente" placeholder="+56 9 ..."></label>
+        <label>Correo<input name="correoCliente" type="email" placeholder="correo@dominio.cl"></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Ubicación</legend>
+        <label>Dirección<input name="direccion" placeholder="Calle, número, sector"></label>
+        <label>Comuna<input name="comuna" placeholder="Ej: Coronel"></label>
+        <label>Región
+          <select name="region">
+            <option value="">Seleccionar</option>
+            <option>Arica y Parinacota</option><option>Tarapacá</option><option>Antofagasta</option><option>Atacama</option>
+            <option>Coquimbo</option><option>Valparaíso</option><option>Metropolitana</option><option>O'Higgins</option>
+            <option>Maule</option><option>Ñuble</option><option>Biobío</option><option>La Araucanía</option>
+            <option>Los Ríos</option><option>Los Lagos</option><option>Aysén</option><option>Magallanes</option>
+          </select>
+        </label>
+        <label>Distribuidora
+          <select name="distribuidora">
+            <option value="">Seleccionar</option>
+            <option>CGE</option>
+            <option>COPELEC</option>
+            <option>FRONTEL</option>
+            <option>SAESA</option>
+            <option>COOPELAN</option>
+            <option>Otra</option>
+          </select>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Datos eléctricos base</legend>
+        <label>Tipo de suministro
+          <select name="suministro">
+            <option value="">Seleccionar</option>
+            <option>Monofásico 220 V</option>
+            <option>Trifásico 380 V</option>
+          </select>
+        </label>
+        <label>Estado del empalme
+          <select name="estadoEmpalme">
+            <option value="">Seleccionar</option>
+            <option>Nuevo empalme</option>
+            <option>Aumento de capacidad</option>
+            <option>Regularización</option>
+            <option>Modificación</option>
+            <option>Existente</option>
+          </select>
+        </label>
+        <label>Potencia estimada inicial kW<input name="potenciaEstimada" type="number" min="0" step="0.1" placeholder="Ej: 10"></label>
+        <label>Observación técnica<textarea name="observacion" placeholder="Notas preliminares del proyecto"></textarea></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Instalador SEC</legend>
+        <label>Nombre instalador<input name="instalador" placeholder="Nombre completo"></label>
+        <label>RUT instalador<input name="rutInstalador" placeholder="Sin puntos ni guion"></label>
+        <label>Clase SEC
+          <select name="claseSEC">
+            <option value="">Seleccionar</option>
+            <option>Clase A</option>
+            <option>Clase B</option>
+            <option>Clase C</option>
+            <option>Clase D</option>
+          </select>
+        </label>
+        <label>Correo instalador<input name="correoInstalador" type="email" placeholder="correo@dominio.cl"></label>
+      </fieldset>
+
+      <div class="form-actions">
+        <button type="button" class="btn primary" id="guardarProyecto">Guardar proyecto</button>
+        <button type="button" class="btn" id="cargarProyecto">Cargar guardado</button>
+        <button type="button" class="btn danger" id="limpiarProyecto">Limpiar proyecto</button>
+        <button type="button" class="btn next" id="continuarCargas">Continuar a Cargas</button>
+      </div>
+    </form>
+
+    <section class="project-summary" id="projectSummary">
+      <h3>Resumen del proyecto</h3>
+      <p>No hay proyecto guardado todavía.</p>
+    </section>
+  `;
+  view.scrollIntoView({behavior:"smooth", block:"start"});
+  bindProyecto();
+  cargarProyecto(false);
+}
+
+function bindProyecto(){
+  document.getElementById("guardarProyecto").onclick = guardarProyecto;
+  document.getElementById("cargarProyecto").onclick = ()=>cargarProyecto(true);
+  document.getElementById("limpiarProyecto").onclick = limpiarProyecto;
+  document.getElementById("continuarCargas").onclick = ()=>openModule("cargas");
+}
+
+function formToObject(){
+  const form = document.getElementById("proyectoForm");
+  const data = Object.fromEntries(new FormData(form).entries());
+  return {
+    version: APP_VERSION,
+    actualizado: new Date().toISOString(),
+    proyecto:{
+      nombre: data.nombreProyecto || "",
+      numeroOT: data.numeroOT || "",
+      fecha: data.fecha || "",
+      tipoProyecto: data.tipoProyecto || ""
+    },
+    cliente:{
+      nombre: data.cliente || "",
+      rut: limpiarRut(data.rutCliente || ""),
+      telefono: data.telefonoCliente || "",
+      correo: data.correoCliente || ""
+    },
+    ubicacion:{
+      direccion: data.direccion || "",
+      comuna: data.comuna || "",
+      region: data.region || "",
+      distribuidora: data.distribuidora || ""
+    },
+    electrico:{
+      suministro: data.suministro || "",
+      estadoEmpalme: data.estadoEmpalme || "",
+      potenciaEstimadaKW: Number(data.potenciaEstimada || 0),
+      observacion: data.observacion || ""
+    },
+    instalador:{
+      nombre: data.instalador || "",
+      rut: limpiarRut(data.rutInstalador || ""),
+      claseSEC: data.claseSEC || "",
+      correo: data.correoInstalador || ""
+    }
+  };
+}
+
+function limpiarRut(v){ return String(v).replace(/[^0-9kK]/g,"").toUpperCase(); }
+
+function objectToForm(obj){
+  const form = document.getElementById("proyectoForm");
+  if(!form || !obj) return;
+  const map = {
+    nombreProyecto: obj.proyecto?.nombre,
+    numeroOT: obj.proyecto?.numeroOT,
+    fecha: obj.proyecto?.fecha,
+    tipoProyecto: obj.proyecto?.tipoProyecto,
+    cliente: obj.cliente?.nombre,
+    rutCliente: obj.cliente?.rut,
+    telefonoCliente: obj.cliente?.telefono,
+    correoCliente: obj.cliente?.correo,
+    direccion: obj.ubicacion?.direccion,
+    comuna: obj.ubicacion?.comuna,
+    region: obj.ubicacion?.region,
+    distribuidora: obj.ubicacion?.distribuidora,
+    suministro: obj.electrico?.suministro,
+    estadoEmpalme: obj.electrico?.estadoEmpalme,
+    potenciaEstimada: obj.electrico?.potenciaEstimadaKW,
+    observacion: obj.electrico?.observacion,
+    instalador: obj.instalador?.nombre,
+    rutInstalador: obj.instalador?.rut,
+    claseSEC: obj.instalador?.claseSEC,
+    correoInstalador: obj.instalador?.correo
+  };
+  Object.entries(map).forEach(([name,value])=>{
+    const el = form.elements[name];
+    if(el) el.value = value ?? "";
+  });
+}
+
+function guardarProyecto(){
+  const obj = formToObject();
+  const faltantes = [];
+  if(!obj.proyecto.nombre) faltantes.push("nombre del proyecto");
+  if(!obj.cliente.nombre) faltantes.push("cliente");
+  if(!obj.ubicacion.direccion) faltantes.push("dirección");
+  if(!obj.ubicacion.distribuidora) faltantes.push("distribuidora");
+  if(!obj.electrico.suministro) faltantes.push("tipo de suministro");
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+  renderResumen(obj, faltantes);
+  toast(faltantes.length ? "Proyecto guardado con datos pendientes." : "Proyecto guardado correctamente.");
+}
+
+function cargarProyecto(showToast){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw){
+    if(showToast) toast("No hay proyecto guardado.");
+    return;
+  }
+  try{
+    const obj = JSON.parse(raw);
+    objectToForm(obj);
+    renderResumen(obj, []);
+    if(showToast) toast("Proyecto cargado.");
+  }catch(e){
+    toast("Error al leer proyecto guardado.");
+  }
+}
+
+function cargarDemoProyecto(){
+  const hoy = new Date().toISOString().slice(0,10);
+  const demo = {
+    version: APP_VERSION,
+    actualizado: new Date().toISOString(),
+    proyecto:{nombre:"Vivienda San Pedro", numeroOT:"OT-001", fecha:hoy, tipoProyecto:"Vivienda"},
+    cliente:{nombre:"Cliente de prueba", rut:"111111111", telefono:"+56 9 1234 5678", correo:"cliente@ejemplo.cl"},
+    ubicacion:{direccion:"Av. Ejemplo 123", comuna:"Coronel", region:"Biobío", distribuidora:"CGE"},
+    electrico:{suministro:"Monofásico 220 V", estadoEmpalme:"Nuevo empalme", potenciaEstimadaKW:10, observacion:"Proyecto de demostración local."},
+    instalador:{nombre:"Julio Vera Concha", rut:"", claseSEC:"Clase D", correo:""}
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(demo));
+  objectToForm(demo);
+  renderResumen(demo, []);
+  toast("Proyecto de ejemplo cargado.");
+}
+
+function limpiarProyecto(){
+  if(!confirm("¿Limpiar los datos del proyecto guardado?")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  const form = document.getElementById("proyectoForm");
+  if(form) form.reset();
+  document.getElementById("projectSummary").innerHTML = "<h3>Resumen del proyecto</h3><p>No hay proyecto guardado todavía.</p>";
+  toast("Proyecto limpiado.");
+}
+
+function renderResumen(obj, faltantes){
+  const box = document.getElementById("projectSummary");
+  if(!box) return;
+  const estado = faltantes.length ? `<span class="summary-warn">Datos pendientes: ${faltantes.join(", ")}</span>` : `<span class="summary-ok">Proyecto base completo</span>`;
+  box.innerHTML = `
+    <h3>Resumen del proyecto</h3>
+    <div class="summary-head">${estado}<small>Actualizado: ${new Date(obj.actualizado).toLocaleString("es-CL")}</small></div>
+    <div class="summary-grid">
+      <p><b>Proyecto:</b> ${obj.proyecto.nombre || "Sin nombre"} / ${obj.proyecto.tipoProyecto || "Sin tipo"}</p>
+      <p><b>Cliente:</b> ${obj.cliente.nombre || "Sin cliente"} / RUT ${obj.cliente.rut || "sin RUT"}</p>
+      <p><b>Dirección:</b> ${obj.ubicacion.direccion || "Sin dirección"}, ${obj.ubicacion.comuna || ""}</p>
+      <p><b>Distribuidora:</b> ${obj.ubicacion.distribuidora || "Sin distribuidora"}</p>
+      <p><b>Suministro:</b> ${obj.electrico.suministro || "Sin definir"}</p>
+      <p><b>Potencia estimada:</b> ${obj.electrico.potenciaEstimadaKW || 0} kW</p>
+      <p><b>Instalador:</b> ${obj.instalador.nombre || "Sin instalador"} / ${obj.instalador.claseSEC || "Sin clase SEC"}</p>
+    </div>
+  `;
+}
+
+function toast(msg){
+  let t = document.getElementById("toast");
+  if(!t){
+    t = document.createElement("div");
+    t.id = "toast";
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.className = "toast show";
+  setTimeout(()=>t.className="toast", 2600);
 }
 
 function tick(){
@@ -82,4 +390,5 @@ function tick(){
   document.getElementById("clock").textContent = `${hh}:${mm}`;
   document.getElementById("dateTime").textContent = `Hora del sistema: ${d.toLocaleDateString("es-CL")} ${hh}:${mm}:${ss}`;
 }
+
 renderMenu(); renderEngines(); renderRIC(); renderQuick(); tick(); setInterval(tick,1000);
