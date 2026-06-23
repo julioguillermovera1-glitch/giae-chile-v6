@@ -522,3 +522,25 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
   .uni-card{border:0!important}
   .unilineal-svg{min-width:0;width:100%}
 }
+
+/* v2.1.9 Unilineal Profesional SEC */
+.unilineal-pro .professional-sheet{
+  background:#ffffff;
+  color:#111;
+}
+.professional-scroll{
+  background:#f8fafc;
+  border:1px solid #cbd5e1;
+  padding:12px;
+}
+.professional-svg{
+  min-width:1040px;
+}
+.unilineal-pro .uni-header h3{
+  letter-spacing:.08em;
+}
+@media(max-width:1050px){
+  .professional-svg{
+    min-width:960px;
+  }
+}
