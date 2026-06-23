@@ -100,3 +100,84 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
   .summary-grid{grid-template-columns:1fr}
   .summary-head{display:block}
 }
+
+
+/* Proyecto compacto v2.1.2.1 */
+.project-toolbar{
+  position:sticky;
+  top:78px;
+  z-index:4;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+  background:#061017ee;
+  border:1px solid #1d4656;
+  border-radius:14px;
+  padding:10px;
+  margin:16px 0;
+  backdrop-filter:blur(10px);
+}
+.step-chip{
+  border:1px solid #245366;
+  background:#071923;
+  color:#dffdf2;
+  border-radius:10px;
+  padding:11px 8px;
+  font-weight:900;
+  cursor:pointer;
+}
+.step-chip.active{
+  background:linear-gradient(90deg,#12a84f,#0b743c);
+  border-color:#22c55e;
+  box-shadow:0 0 18px #22c55e33;
+}
+.project-form.compact{
+  display:block;
+}
+.project-form.compact .form-section,
+.project-summary.form-section{
+  display:none;
+  animation:fadeInProject .18s ease-out;
+}
+.project-form.compact .form-section.active,
+.project-summary.form-section.active{
+  display:grid;
+}
+.project-form.compact fieldset.active{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  min-height:210px;
+}
+.project-form.compact fieldset.active label:nth-last-child(1):has(textarea){
+  grid-column:1/-1;
+}
+.form-actions{
+  position:sticky;
+  bottom:48px;
+  z-index:4;
+  background:#061017ee;
+  border:1px solid #1d4656;
+  border-radius:14px;
+  padding:12px;
+  backdrop-filter:blur(10px);
+}
+.project-summary.form-section.active{
+  display:block;
+}
+@keyframes fadeInProject{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:none}
+}
+@media(max-width:1050px){
+  .project-toolbar{
+    top:0;
+    grid-template-columns:repeat(2,1fr);
+    position:relative;
+  }
+  .project-form.compact fieldset.active{
+    grid-template-columns:1fr;
+  }
+  .form-actions{
+    position:relative;
+    bottom:auto;
+  }
+}

@@ -1,4 +1,4 @@
-const APP_VERSION = "2.1.2";
+const APP_VERSION = "2.1.2.1";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -103,12 +103,21 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.2</span>
+    <span class="badge ready">Módulo funcional v2.1.2.1</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
 
-    <form id="proyectoForm" class="project-form">
-      <fieldset>
+    <div class="project-toolbar">
+      <button class="step-chip active" data-section="datos">1. Datos</button>
+      <button class="step-chip" data-section="cliente">2. Cliente</button>
+      <button class="step-chip" data-section="ubicacion">3. Ubicación</button>
+      <button class="step-chip" data-section="electrico">4. Eléctrico</button>
+      <button class="step-chip" data-section="instalador">5. Instalador</button>
+      <button class="step-chip" data-section="resumen">6. Resumen</button>
+    </div>
+
+    <form id="proyectoForm" class="project-form compact">
+      <fieldset class="form-section active" data-section="datos">
         <legend>Datos generales</legend>
         <label>Nombre del proyecto<input name="nombreProyecto" placeholder="Ej: Vivienda San Pedro"></label>
         <label>N° OT<input name="numeroOT" placeholder="Ej: OT-001"></label>
@@ -125,7 +134,7 @@ function renderProyecto(){
         </label>
       </fieldset>
 
-      <fieldset>
+      <fieldset class="form-section" data-section="cliente">
         <legend>Cliente</legend>
         <label>Nombre cliente<input name="cliente" placeholder="Nombre o razón social"></label>
         <label>RUT cliente<input name="rutCliente" placeholder="Sin puntos ni guion"></label>
@@ -133,7 +142,7 @@ function renderProyecto(){
         <label>Correo<input name="correoCliente" type="email" placeholder="correo@dominio.cl"></label>
       </fieldset>
 
-      <fieldset>
+      <fieldset class="form-section" data-section="ubicacion">
         <legend>Ubicación</legend>
         <label>Dirección<input name="direccion" placeholder="Calle, número, sector"></label>
         <label>Comuna<input name="comuna" placeholder="Ej: Coronel"></label>
@@ -159,7 +168,7 @@ function renderProyecto(){
         </label>
       </fieldset>
 
-      <fieldset>
+      <fieldset class="form-section" data-section="electrico">
         <legend>Datos eléctricos base</legend>
         <label>Tipo de suministro
           <select name="suministro">
@@ -182,7 +191,7 @@ function renderProyecto(){
         <label>Observación técnica<textarea name="observacion" placeholder="Notas preliminares del proyecto"></textarea></label>
       </fieldset>
 
-      <fieldset>
+      <fieldset class="form-section" data-section="instalador">
         <legend>Instalador SEC</legend>
         <label>Nombre instalador<input name="instalador" placeholder="Nombre completo"></label>
         <label>RUT instalador<input name="rutInstalador" placeholder="Sin puntos ni guion"></label>
@@ -206,14 +215,37 @@ function renderProyecto(){
       </div>
     </form>
 
-    <section class="project-summary" id="projectSummary">
+    <section class="project-summary form-section" data-section="resumen" id="projectSummary">
       <h3>Resumen del proyecto</h3>
       <p>No hay proyecto guardado todavía.</p>
     </section>
   `;
   view.scrollIntoView({behavior:"smooth", block:"start"});
   bindProyecto();
+  bindProjectSections();
   cargarProyecto(false);
+}
+
+
+function bindProjectSections(){
+  document.querySelectorAll(".step-chip").forEach(btn=>{
+    btn.onclick = ()=>{
+      const sec = btn.dataset.section;
+      document.querySelectorAll(".step-chip").forEach(b=>b.classList.toggle("active", b.dataset.section===sec));
+      document.querySelectorAll(".form-section").forEach(s=>s.classList.toggle("active", s.dataset.section===sec));
+      if(sec==="resumen"){
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if(saved){
+          try{ renderResumen(JSON.parse(saved), []); }catch(e){}
+        }
+      }
+    };
+  });
+}
+
+function goProjectSection(sec){
+  document.querySelectorAll(".step-chip").forEach(b=>b.classList.toggle("active", b.dataset.section===sec));
+  document.querySelectorAll(".form-section").forEach(s=>s.classList.toggle("active", s.dataset.section===sec));
 }
 
 function bindProyecto(){
@@ -307,6 +339,7 @@ function guardarProyecto(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
   renderResumen(obj, faltantes);
   toast(faltantes.length ? "Proyecto guardado con datos pendientes." : "Proyecto guardado correctamente.");
+  goProjectSection("resumen");
 }
 
 function cargarProyecto(showToast){

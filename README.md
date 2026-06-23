@@ -1,21 +1,13 @@
-# GIAE Chile v2.1.2 - Módulo Proyecto
+# GIAE Chile v2.1.2.1 - Proyecto compacto
 
 Creado por Julio Vera Concha.
 
-## Cambios
-- Se agrega Módulo Proyecto funcional.
-- Guarda datos en localStorage.
-- Permite cargar proyecto guardado.
-- Permite limpiar proyecto.
-- Incluye proyecto de ejemplo.
-- Proyecto queda separado de Presupuesto, Cargas, Unilineal y Empalme.
-- Los demás módulos quedan marcados como no implementados.
+## Corrección
+- El módulo Proyecto ahora se divide en pasos visibles.
+- Se evita que el cliente tenga que bajar por toda la pantalla.
+- Navegación por secciones: Datos, Cliente, Ubicación, Eléctrico, Instalador y Resumen.
+- Botones de acción quedan visibles dentro del módulo.
+- Se mantiene guardar, cargar, limpiar y proyecto de ejemplo.
 
-## Regla de arquitectura
-Cada módulo debe funcionar de forma independiente y leer datos desde el objeto base del proyecto.
-
-## Archivos principales
-- index.html
-- indice.html
-- css/styles.css
-- js/app.js
+## Regla
+Avanzar módulo por módulo, sin marcar funciones como terminadas hasta que realmente funcionen.
