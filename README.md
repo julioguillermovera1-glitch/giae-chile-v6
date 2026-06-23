@@ -1,15 +1,19 @@
-# GIAE Chile v2.1.5 - Carpeta Técnica y Asistente Documental
+# GIAE Chile v2.1.6 - Cuadro Inteligente y Motor de Empalmes
 
 Creado por Julio Vera Concha.
 
 ## Cambios
-- Módulo Carpeta Técnica.
-- Motor de Distribuidoras: CGE, ENEL, CHILQUINTA, COPELEC, SAESA / FRONTEL.
-- Modo Sólo revisar documentos.
-- Modo Revisar y preparar envío.
-- Detección preliminar por nombres y tipos de archivo.
-- Estado de carpeta: incompleta, observada, revisada o lista.
-- Asistente Documental para responder qué documentos pide cada compañía eléctrica.
+- Cuadro de Carga Inteligente funcional.
+- Cálculo preliminar de Ib por circuito.
+- Recomendación preliminar de automático, diferencial, conductor, canalización y fase.
+- Balance de fases R-S-T.
+- Verificación RIC preliminar con ventana interna.
+- Motor de Empalmes preliminar:
+  - demanda calculada,
+  - tipo monofásico/trifásico sugerido,
+  - potencia normalizada preliminar,
+  - advertencias.
+- Preparación para Unilineal automático.
 
 ## Nota
-La revisión actual es local y preliminar. La lectura inteligente de contenido, envío por correo, respaldo en servidor e historial se integrarán después.
+La compañía eléctrica define la protección/limitador del medidor según potencia contratada y factibilidad. GIAE entrega recomendación técnica preliminar.

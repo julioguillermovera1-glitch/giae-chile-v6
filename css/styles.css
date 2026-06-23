@@ -416,3 +416,11 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .assistant-card{display:grid;grid-template-columns:1fr 2fr auto;gap:14px;align-items:end}
 .assistant-answer ul{line-height:1.7}
 @media(max-width:1050px){.folder-head,.folder-grid,.assistant-card{grid-template-columns:1fr}.folder-metrics{grid-template-columns:1fr}}
+
+/* Cuadro Inteligente y Empalmes v2.1.6 */
+.cuadro-inteligente .ric-table-card,.empalme-view .folder-panel{border:1px solid #1d4656;background:#071923c7;border-radius:16px;padding:18px;margin-top:16px}
+.smart-table th{white-space:nowrap}
+.cuadro-actions{display:flex;gap:12px;flex-wrap:wrap;border:1px solid #1d4656;background:#061017dd;border-radius:14px;padding:12px;margin-top:16px}
+.empalme-view ol{line-height:1.8}
+@media(max-width:1050px){.cuadro-actions{display:grid;grid-template-columns:1fr}}
+@media print{.sidebar,.topbar,.statusbar,.cuadro-actions,.ric-modal{display:none!important}.workspace{margin:0}.module-view{background:#fff!important;color:#000!important}}
