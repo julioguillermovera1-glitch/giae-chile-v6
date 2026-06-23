@@ -460,3 +460,65 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
   border-radius:10px;
   padding:12px;
 }
+
+/* Unilineal Automático v2.1.8 */
+.unilineal-view .uni-card{
+  border:1px solid #1d4656;
+  background:#f7fafc;
+  color:#111;
+  border-radius:16px;
+  padding:18px;
+  margin-top:16px;
+}
+.uni-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  border-bottom:1px solid #cbd5e1;
+  margin-bottom:14px;
+}
+.uni-header h3{color:#111}
+.uni-header p{color:#334155;font-weight:800}
+.uni-toolbar{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  border:1px solid #1d4656;
+  background:#061017dd;
+  border-radius:14px;
+  padding:12px;
+  margin-top:16px;
+}
+.uni-mini{
+  border:1px solid #245366;
+  background:#071923;
+  border-radius:12px;
+  padding:12px;
+}
+.uni-mini b{display:block;color:#8cffad;font-size:18px}
+.uni-mini small{color:#8db0bb}
+.svg-scroll{
+  overflow:auto;
+  background:white;
+  border:1px solid #cbd5e1;
+  border-radius:12px;
+  padding:10px;
+}
+.unilineal-svg{
+  min-width:980px;
+  width:100%;
+  height:auto;
+  display:block;
+}
+@media(max-width:1050px){
+  .uni-toolbar{display:grid;grid-template-columns:1fr 1fr}
+  .unilineal-svg{min-width:900px}
+}
+@media print{
+  .sidebar,.topbar,.statusbar,.uni-toolbar,.folder-grid,.privacy-note{display:none!important}
+  .workspace{margin:0!important}
+  .module-view{background:#fff!important;color:#000!important}
+  .uni-card{border:0!important}
+  .unilineal-svg{min-width:0;width:100%}
+}
