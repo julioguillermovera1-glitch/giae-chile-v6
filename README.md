@@ -1,16 +1,24 @@
-# GIAE Chile v1.3.0 PWA Professional
+# GIAE Chile v1.3.1 PWA limpio
 
-Gestor Inteligente de Análisis para Empalmes y Proyectos Eléctricos.
+Versión limpia para reemplazar la raíz del repositorio completo.
 
-Creado, desarrollado y dirigido por **Julio Vera Concha**.
+## Correcciones principales
+- Service Worker robusto: no falla si un archivo secundario no responde.
+- Offline HTML incluido y cacheado con respaldo interno.
+- Manifest PWA corregido con rutas absolutas.
+- `index.html` e `indice.html` quedan sincronizados.
+- Mantiene assets, funciones API, Motor RIC, Auditoría Inteligente, Exportación y estructura PWA.
 
-## Cambios principales v1.3.0
+## Cómo subir
+1. Entrar a GitHub en la rama `principal`.
+2. Subir el contenido completo de esta carpeta, reemplazando archivos existentes.
+3. Confirmar cambios.
+4. Esperar despliegue de Cloudflare.
+5. Probar:
+   - `/`
+   - `/manifest.json`
+   - `/service-worker.js`
+   - `/offline.html`
+   - `/assets/giae-logo.svg`
 
-- Conversión a PWA real: `manifest.json`, `service-worker.js`, modo offline e iconos PNG.
-- Preparación para publicación en Play Store mediante TWA.
-- Corrección de criterio inteligente de empalmes: el instalador dimensiona tablero interior; la distribuidora define medidor/limitador/protección de empalme por factibilidad y potencia contratada.
-- Advertencias automáticas cuando una demanda monofásica supera 30 A.
-- API inicial de Cloudflare Pages Functions en `functions/api/proyectos.js`.
-- Mantiene exportación PDF, HTML y Word.
-
-© 2026 Julio Vera Concha. Todos los derechos reservados.
+Creado y desarrollado por Julio Vera Concha · © 2026

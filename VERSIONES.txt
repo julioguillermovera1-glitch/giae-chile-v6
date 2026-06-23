@@ -1,25 +1,20 @@
-VERSIÓN 1.3.0 PWA PROFESSIONAL
+GIAE Chile v1.3.1 PWA limpio
 
-Fecha: 23-06-2026
+Corrección completa para reemplazo total del repositorio.
+
+Cambios:
+- Se corrige service-worker.js para no depender rígidamente de offline.html.
+- Se crea offline.html completo y autónomo.
+- Se corrige manifest.json con rutas limpias.
+- Se sincroniza index.html con indice.html.
+- Se mantiene estructura PWA, assets, API, Motor RIC y carpetas de proyecto.
+
+Estado esperado:
+- / funciona.
+- /manifest.json funciona.
+- /service-worker.js funciona.
+- /offline.html funciona.
+- /assets/giae-logo.svg funciona.
+
 Autor: Julio Vera Concha
-
-MEJORAS:
-- GIAE pasa a estructura PWA instalable.
-- Agregado service-worker.js.
-- Agregado offline.html.
-- Agregados iconos PNG 192x192 y 512x512.
-- Manifest mejorado para Android/iPhone.
-- Preparación para Play Store mediante TWA.
-- Agregado assetlinks.json de plantilla.
-- Agregada API inicial Cloudflare Pages Functions: /api/proyectos.
-- Corregido criterio normativo de empalme: la distribuidora define protección/limitador de empalme.
-- Separación explícita entre protección interior del tablero y protección de empalme.
-- Advertencia inteligente para demanda monofásica sobre 30 A.
-
-PENDIENTE:
-- Conectar Cloudflare D1.
-- Login de instaladores SEC.
-- Auditoría RIC real con búsqueda documental.
-- Publicación TWA con firma real y Play Console.
-
-© 2026 Julio Vera Concha.
+Año: 2026

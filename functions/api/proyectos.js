@@ -2,7 +2,7 @@ export async function onRequestGet() {
   return Response.json({
     ok: true,
     sistema: 'GIAE Chile',
-    version: '1.3.0',
+    version: '1.3.1',
     autor: 'Julio Vera Concha',
     estado: 'API Cloudflare Pages Functions operativa'
   });
