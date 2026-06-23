@@ -1,3 +1,14 @@
+VERSIÓN 1.1.9
+
+MEJORAS:
+- Corrección de exportación Word del diagrama unilineal.
+- Conversión automática SVG → PNG para insertar el unilineal en Word.
+- Se mantiene tabla técnica con Ib, conductor, Iz, longitud y caída de tensión.
+- HTML conserva el SVG directo para mejor visualización.
+
+Autor: Julio Vera Concha
+© 2026
+
 GIAE Chile v1.1 · Proyecto Combinado
 
 - HTML corregido integrado como index.html principal.
