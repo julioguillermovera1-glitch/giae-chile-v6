@@ -1,3 +1,85 @@
-const steps=['Proyecto','Cargas','Cuadro de carga','Unilineal','Tierra','Empalme','Documentación','Presupuesto','Exportar'];function nav(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(v).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.view===v));if(v==='proyecto')renderStep();if(v==='ric')document.getElementById('ricBox').innerHTML='<div class="alert ok">Motor RIC cargado. Reglas iniciales: RIC 1, RIC 6 y validación de empalme.</div>';if(v==='auditoria')document.getElementById('auditoriaBox').innerHTML=validarSistema().map(a=>`<div class="alert ${a.tipo}">${a.txt}</div>`).join('');if(v==='presupuesto')document.getElementById('presupuestoBox').innerHTML='<p>Presupuesto base pendiente de integración con materiales.</p>';}
-document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>nav(b.dataset.view));document.getElementById('btnNuevo').onclick=()=>{localStorage.removeItem('giae-v2');location.reload()};function renderStep(updateInputs=true){document.getElementById('steps').innerHTML=steps.map((s,i)=>`<button class="step ${GIAE.step===i?'active':''}" onclick="GIAE.step=${i};renderStep()">${i+1}. ${s}</button>`).join('');let p=document.getElementById('panel');const c=generarCuadro();if(GIAE.step===0)p.innerHTML=`<h3>1. Proyecto</h3><div class="grid"><label>Cliente<input value="${GIAE.project.cliente}" oninput="GIAE.project.cliente=this.value"></label><label>Dirección<input value="${GIAE.project.direccion}" oninput="GIAE.project.direccion=this.value"></label><label>RUT sin puntos ni guion<input value="${GIAE.project.rut}" oninput="GIAE.project.rut=this.value.replace(/[^0-9kK]/g,'')"></label><label>Sistema<select onchange="GIAE.project.sistema=this.value;renderStep()"><option value="monofasico" ${GIAE.project.sistema==='monofasico'?'selected':''}>Monofásico 220 V</option><option value="trifasico" ${GIAE.project.sistema==='trifasico'?'selected':''}>Trifásico 380/220 V</option></select></label></div><div class="row"><button class="primary" onclick="GIAE.step=1;renderStep()">Siguiente</button></div>`;if(GIAE.step===1)p.innerHTML=`<h3>2. Cargas</h3>${GIAE.cargas.map((x,i)=>`<div class="grid"><label>Tipo<select onchange="actualizarCarga(${i},'tipo',this.value)"><option ${x.tipo==='Alumbrado'?'selected':''}>Alumbrado</option><option ${x.tipo==='Enchufes'?'selected':''}>Enchufes</option><option ${x.tipo==='Fuerza'?'selected':''}>Fuerza</option></select></label><label>Potencia W<input type="number" value="${x.potencia}" oninput="actualizarCarga(${i},'potencia',this.value)"></label><label>Cantidad<input type="number" value="${x.cantidad}" oninput="actualizarCarga(${i},'cantidad',this.value)"></label></div>`).join('')}<div class="alert ok">Total: ${c.total.kw.toFixed(2)} kW · Ib: ${c.ib.toFixed(1)} A</div><div class="row"><button class="secondary" onclick="agregarCarga()">Agregar carga</button><button class="primary" onclick="GIAE.step=2;renderStep()">Siguiente</button></div>`;if(GIAE.step===2)p.innerHTML=`<h3>3. Cuadro de carga</h3>${validarSistema().map(a=>`<div class="alert ${a.tipo}">${a.txt}</div>`).join('')}<p><b>Potencia:</b> ${c.total.kw.toFixed(2)} kW</p><p><b>Ib:</b> ${c.ib.toFixed(1)} A</p><p><b>Automático:</b> ${c.aut?c.aut+' A':'Bloqueado'}</p><p><b>Barra:</b> ${c.barra}</p><button class="primary" onclick="GIAE.step=3;renderStep()">Generar unilineal</button>`;if(GIAE.step===3)p.innerHTML=`<h3>4. Unilineal</h3>${dibujarUnilineal()}`;if(GIAE.step===4)p.innerHTML=`<h3>5. Tierra</h3><div class="grid"><label>Tipo<input value="${GIAE.tierra.tipo}" oninput="GIAE.tierra.tipo=this.value"></label><label>Resistencia Ω<input type="number" value="${GIAE.tierra.resistencia}" oninput="GIAE.tierra.resistencia=this.value"></label><label>Conductor PE<input value="${GIAE.tierra.pe}" oninput="GIAE.tierra.pe=this.value"></label></div><div class="alert ok">Validar continuidad PE, equipotencialidad y medición en terreno.</div>`;if(GIAE.step===5)p.innerHTML=`<h3>6. Empalme</h3>${validarSistema().map(a=>`<div class="alert ${a.tipo}">${a.txt}</div>`).join('')}<div class="alert warn">${recomendarEmpalme()}</div>`;if(GIAE.step===6)p.innerHTML='<h3>7. Documentación</h3><div class="alert warn">TE1 / SEC: módulo preparado para datos de instalador y firma.</div>';if(GIAE.step===7)p.innerHTML='<h3>8. Presupuesto</h3><p>Materiales y mano de obra configurables.</p>';if(GIAE.step===8)p.innerHTML='<h3>9. Exportar</h3><button class="primary" onclick="exportarInforme()">Exportar Word</button>';localStorage.setItem('giae-v2',JSON.stringify(GIAE));}
-try{const s=localStorage.getItem('giae-v2');if(s)Object.assign(GIAE,JSON.parse(s));}catch(e){}renderStep();
+const modules = [
+  {id:"inicio", icon:"🏠", label:"Inicio", ready:true, desc:"Portada profesional del sistema GIAE Chile."},
+  {id:"proyecto", icon:"📁", label:"Proyecto", ready:true, desc:"Motor de datos del cliente, dirección, tipo de instalación y distribuidora."},
+  {id:"cargas", icon:"⚡", label:"Cargas", ready:true, desc:"Motor de cargas, demanda y simultaneidad."},
+  {id:"cuadro", icon:"▣", label:"Cuadro de Carga", ready:true, desc:"Motor de Ib, Iz, protecciones y estado de cumplimiento."},
+  {id:"unilineal", icon:"⎇", label:"Unilineal", ready:true, desc:"Motor de dibujo técnico del diagrama unilineal."},
+  {id:"tierra", icon:"⏚", label:"Tierra", ready:true, desc:"Motor de puesta a tierra y equipotencialidad."},
+  {id:"empalme", icon:"🔌", label:"Empalme", ready:true, desc:"Motor de validación de empalmes normalizados."},
+  {id:"documentacion", icon:"📄", label:"Documentación", ready:false, desc:"Pendiente: TE1, formularios nativos de distribuidoras y memorias técnicas."},
+  {id:"presupuesto", icon:"💰", label:"Presupuesto", ready:false, desc:"Pendiente: módulo separado de materiales, mano de obra, IVA y utilidad."},
+  {id:"motorric", icon:"⚙", label:"Motor RIC", ready:true, desc:"Base normativa RIC 1-19 para validaciones."},
+  {id:"auditoria", icon:"🧩", label:"Auditoría", ready:false, desc:"Pendiente: trazabilidad, historial de consultas y registro de errores."},
+  {id:"administracion", icon:"🔐", label:"Administración", ready:false, desc:"Pendiente: centro de monitoreo exclusivo del administrador."}
+];
+
+const quicks = [
+  {label:"Nuevo Proyecto", icon:"📁", ready:true, target:"proyecto", text:"Crear un proyecto desde cero"},
+  {label:"Abrir Proyecto", icon:"🗂", ready:false, target:"proyecto", text:"Requiere base de datos o almacenamiento"},
+  {label:"Proyecto de Ejemplo", icon:"📘", ready:true, target:"proyecto", text:"Cargar datos de demostración"},
+  {label:"Importar Archivo", icon:"⬇", ready:false, target:"administracion", text:"Pendiente para versión con archivos"},
+  {label:"Centro de Ayuda", icon:"?", ready:false, target:"documentacion", text:"Manuales, guías y tutoriales"},
+  {label:"Soporte Técnico", icon:"🎧", ready:false, target:"administracion", text:"Contacto y reporte de problemas"}
+];
+
+function renderMenu(){
+  const nav = document.getElementById("mainMenu");
+  nav.innerHTML = modules.map((m,i)=>`<button class="nav-btn ${i===0?'active':''} ${m.ready?'':'missing'}" data-id="${m.id}"><span>${m.icon}</span>${m.label}</button>`).join("");
+  nav.querySelectorAll("button").forEach(btn=>btn.onclick=()=>openModule(btn.dataset.id));
+}
+
+function renderEngines(){
+  const grid = document.getElementById("engineGrid");
+  grid.innerHTML = modules.filter(m=>m.id!=="inicio" && m.id!=="administracion").slice(0,9).map(m=>`
+    <div class="engine ${m.ready?'':'missing'}">
+      <span>${m.icon}</span>
+      <b>${m.label}</b>
+      <small class="status">${m.ready?'Operativo ✓':'No creado / pendiente ✕'}</small>
+    </div>
+  `).join("");
+}
+
+function renderRIC(){
+  const names = [
+    "RIC 1 Disposiciones Generales","RIC 2 Alimentadores y Conductores","RIC 3 Conductores Puesta a Tierra","RIC 4 Protecciones","RIC 5 Selección e Instalación de Equipos",
+    "RIC 6 Verificación","RIC 7 Locales Especiales","RIC 8 Eficiencia Energética","RIC 9 Instalaciones de Consumo","RIC 10 Suministro Provisional",
+    "RIC 11 Conexiones","RIC 12 Empalmes","RIC 13 Medidores","RIC 14 Sistemas de Distribución","RIC 15 Calidad de Servicio",
+    "RIC 16 Seguridad","RIC 17 Inspecciones","RIC 18 Modificaciones","RIC 19 Puesta en Servicio"
+  ];
+  document.getElementById("ricGrid").innerHTML = names.map(n=>`<div><span>✓</span>${n}</div>`).join("");
+}
+
+function renderQuick(){
+  const box = document.getElementById("quickActions");
+  box.innerHTML = quicks.map(q=>`
+    <div class="quick ${q.ready?'':'missing'}" data-target="${q.target}">
+      <b>${q.icon} ${q.label}</b>
+      <small>${q.ready?q.text:"PENDIENTE: "+q.text}</small>
+    </div>
+  `).join("");
+  box.querySelectorAll(".quick").forEach(q=>q.onclick=()=>openModule(q.dataset.target));
+}
+
+function openModule(id){
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active", b.dataset.id===id));
+  const m = modules.find(x=>x.id===id) || modules[0];
+  const view = document.getElementById("moduleView");
+  view.className = "module-view show " + (m.ready ? "" : "missing");
+  view.innerHTML = `
+    <span class="badge ${m.ready?'ok':'no'}">${m.ready?'Módulo operativo':'Módulo no creado aún'}</span>
+    <h2>${m.icon} ${m.label}</h2>
+    <p>${m.desc}</p>
+    ${m.ready ? `<p>Este módulo queda disponible para el siguiente desarrollo independiente.</p>` : `<p><b>Estado:</b> Queda marcado en rojo para no confundirlo con funciones disponibles.</p>`}
+  `;
+  view.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function tick(){
+  const d = new Date();
+  const hh = String(d.getHours()).padStart(2,"0");
+  const mm = String(d.getMinutes()).padStart(2,"0");
+  const ss = String(d.getSeconds()).padStart(2,"0");
+  document.getElementById("clock").textContent = `${hh}:${mm}`;
+  document.getElementById("dateTime").textContent = `Hora del sistema: ${d.toLocaleDateString("es-CL")} ${hh}:${mm}:${ss}`;
+}
+renderMenu(); renderEngines(); renderRIC(); renderQuick(); tick(); setInterval(tick,1000);
