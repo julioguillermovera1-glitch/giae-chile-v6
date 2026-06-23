@@ -1,10 +1,10 @@
-const APP_VERSION = "2.1.2.6";
+const APP_VERSION = "2.1.3";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
   {id:"proyecto", icon:"📁", label:"Proyecto", status:"ready", desc:"Módulo funcional: datos del proyecto, cliente, ubicación, suministro, distribuidora e instalador SEC."},
-  {id:"cargas", icon:"⚡", label:"Cargas", status:"missing", desc:"Pendiente: ingreso de alumbrado, enchufes, fuerza, simultaneidad y demanda."},
-  {id:"cuadro", icon:"▣", label:"Cuadro de Carga", status:"missing", desc:"Pendiente: Ib, Iz, protecciones, diferenciales y cumplimiento."},
+  {id:"cargas", icon:"⚡", label:"Cargas", status:"ready", desc:"Módulo funcional: ingreso de circuitos, potencia instalada, demanda y recomendación preliminar de empalme."},
+  {id:"cuadro", icon:"▣", label:"Cuadro de Carga", status:"missing", desc:"Pendiente: toma los circuitos calculados en Cargas y define protecciones, fases y tabla final."},
   {id:"unilineal", icon:"⎇", label:"Unilineal", status:"missing", desc:"Pendiente: diagrama profesional generado desde el cuadro de carga."},
   {id:"tierra", icon:"⏚", label:"Tierra", status:"missing", desc:"Pendiente: puesta a tierra y equipotencialidad según RIC 6."},
   {id:"empalme", icon:"🔌", label:"Empalme", status:"missing", desc:"Pendiente: validación de empalmes normalizados y distribuidoras."},
@@ -18,13 +18,14 @@ const modules = [
 const quicks = [
   {label:"Nuevo Proyecto", icon:"📁", status:"ready", target:"proyecto", text:"Crear o editar datos base del proyecto"},
   {label:"Proyecto de Ejemplo", icon:"📘", status:"ready", target:"demo", text:"Cargar datos de demostración"},
-  {label:"Cargas", icon:"⚡", status:"missing", target:"cargas", text:"Pendiente para v2.1.3"},
+  {label:"Cargas", icon:"⚡", status:"ready", target:"cargas", text:"Ingresar circuitos y calcular demanda"},
   {label:"Cuadro de Carga", icon:"▣", status:"missing", target:"cuadro", text:"Pendiente para v2.1.4"},
   {label:"Unilineal", icon:"⎇", status:"missing", target:"unilineal", text:"Pendiente para v2.1.5"},
   {label:"Presupuesto", icon:"💰", status:"missing", target:"presupuesto", text:"Pendiente para versión posterior"}
 ];
 
 const STORAGE_KEY = "giae_chile_proyecto_v212";
+const CARGAS_KEY = "giae_chile_cargas_v213";
 
 function stateLabel(status){
   if(status==="base") return "Base lista ✓";
@@ -86,6 +87,7 @@ function renderQuick(){
 function openModule(id){
   document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active", b.dataset.id===id));
   if(id==="proyecto"){ renderProyecto(); return; }
+  if(id==="cargas"){ renderCargas(); return; }
   const m = modules.find(x=>x.id===id) || modules[0];
   const view = document.getElementById("moduleView");
   const cls = stateClass(m.status);
@@ -104,7 +106,7 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.2.6</span>
+    <span class="badge ready">Módulo funcional v2.1.3</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
     <p class="privacy-note">🔒 Privacidad: los datos quedan sólo en este navegador. Al completar el proyecto puedes continuar a Cargas sin perder información.</p>
@@ -600,6 +602,302 @@ function toast(msg){
   t.className = "toast show";
   setTimeout(()=>t.className="toast", 2600);
 }
+
+
+function renderCargas(){
+  const proyecto = getProyectoGuardado();
+  const view = document.getElementById("moduleView");
+  view.className = "module-view show ready cargas-view";
+  view.innerHTML = `
+    <span class="badge ready">Módulo funcional v2.1.3</span>
+    <h2>⚡ Cargas por circuitos</h2>
+    <p>Ingresa los circuitos del proyecto. GIAE calcula potencia instalada, demanda estimada y una recomendación preliminar de empalme.</p>
+    <p class="privacy-note">📌 Regla técnica: la distribuidora define la protección/limitador del medidor según potencia contratada y factibilidad. GIAE sólo recomienda y advierte.</p>
+
+    <section class="load-project-card">
+      <h3>Proyecto base</h3>
+      <p><b>Proyecto:</b> ${proyecto?.proyecto?.nombre || "Sin proyecto guardado"} · <b>Suministro:</b> ${proyecto?.electrico?.suministro || "Sin definir"} · <b>Distribuidora:</b> ${proyecto?.ubicacion?.distribuidora || "Sin definir"}</p>
+      ${!proyecto ? `<small class="summary-warn">Recomendación: completar primero el módulo Proyecto.</small>` : ""}
+    </section>
+
+    <section class="load-form-card">
+      <h3>Agregar circuito</h3>
+      <form id="cargaForm" class="load-form" autocomplete="off">
+        <label>N° circuito<input name="numero" type="number" min="1" step="1" readonly></label>
+        <label>Tipo de circuito
+          <select name="tipo" id="tipoCarga">
+            <option>Alumbrado</option>
+            <option>Enchufes</option>
+            <option>Baño</option>
+            <option>Cocina</option>
+            <option>Luz exterior</option>
+            <option>Motor</option>
+            <option>Bomba</option>
+            <option>Enchufe trifásico</option>
+            <option>Termo de agua</option>
+            <option>Climatización</option>
+            <option>Otro</option>
+          </select>
+        </label>
+        <label id="otroWrap" class="hidden">Nombre personalizado<input name="otro" placeholder="Ej: Portón eléctrico"></label>
+        <label>Cantidad<input name="cantidad" type="number" min="1" step="1" value="1"></label>
+        <label>Potencia unidad W<input name="potencia" type="number" min="0" step="1" placeholder="Ej: 100"></label>
+        <label>Tipo alimentación
+          <select name="alimentacion">
+            <option>Monofásico</option>
+            <option>Trifásico</option>
+          </select>
+        </label>
+        <label>Fase sugerida
+          <select name="fase">
+            <option>R</option><option>S</option><option>T</option><option>R-S-T</option>
+          </select>
+        </label>
+        <label>Factor simultaneidad %
+          <input name="simultaneidad" type="number" min="1" max="100" step="1" value="100">
+        </label>
+        <label>Observación<input name="observacion" placeholder="Opcional"></label>
+      </form>
+      <div class="form-actions">
+        <button type="button" class="btn primary" id="agregarCircuito">Agregar circuito</button>
+        <button type="button" class="btn" id="guardarCargas">Guardar cargas</button>
+        <button type="button" class="btn danger" id="limpiarCargas">Limpiar cargas</button>
+        <button type="button" class="btn next" id="continuarCuadro">Continuar a Cuadro</button>
+      </div>
+    </section>
+
+    <section class="load-summary-grid">
+      <article>
+        <b id="totalInstalado">0.00 kW</b>
+        <small>Potencia instalada</small>
+      </article>
+      <article>
+        <b id="totalDemanda">0.00 kW</b>
+        <small>Demanda estimada</small>
+      </article>
+      <article>
+        <b id="corrienteEstimada">0.0 A</b>
+        <small>Corriente estimada</small>
+      </article>
+      <article>
+        <b id="empalmeSugerido">Sin datos</b>
+        <small>Empalme sugerido</small>
+      </article>
+    </section>
+
+    <section class="load-warning" id="loadWarning"></section>
+
+    <section class="load-table-card">
+      <h3>Listado de circuitos</h3>
+      <div class="table-scroll">
+        <table class="load-table">
+          <thead>
+            <tr>
+              <th>N°</th><th>Circuito</th><th>Cant.</th><th>W unidad</th><th>Total W</th><th>Demanda W</th><th>Alim.</th><th>Fase</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="cargasBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="ric-modal" id="ricModal" aria-hidden="true">
+      <div class="ric-modal-box">
+        <h3>📚 RIC aplicado · Cargas y empalme</h3>
+        <p><b>Criterio:</b> la potencia solicitada debe ser coherente con la demanda calculada, valores normalizados, factibilidad y criterios de la distribuidora.</p>
+        <p><b>Importante:</b> la protección o limitador del medidor no la define libremente el instalador. La distribuidora la determina según potencia contratada y condiciones técnicas.</p>
+        <p><b>Cómo corregir:</b> revise potencia instalada, simultaneidad, tipo de suministro y solicite una potencia normalizada compatible.</p>
+        <button type="button" class="btn primary" id="cerrarRic">Cerrar y volver a Cargas</button>
+      </div>
+    </div>
+  `;
+  view.scrollIntoView({behavior:"smooth", block:"start"});
+  bindCargas();
+  cargarCargas();
+}
+
+function getProyectoGuardado(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ return null; }
+}
+
+function bindCargas(){
+  const form = document.getElementById("cargaForm");
+  const tipo = document.getElementById("tipoCarga");
+  tipo.onchange = ()=>{
+    document.getElementById("otroWrap").classList.toggle("hidden", tipo.value !== "Otro");
+    if(tipo.value === "Enchufe trifásico"){
+      form.elements.alimentacion.value = "Trifásico";
+      form.elements.fase.value = "R-S-T";
+    }
+  };
+  document.getElementById("agregarCircuito").onclick = agregarCircuito;
+  document.getElementById("guardarCargas").onclick = ()=>{ guardarCargas(); toast("Cargas guardadas."); };
+  document.getElementById("limpiarCargas").onclick = limpiarCargas;
+  document.getElementById("continuarCuadro").onclick = ()=>{
+    guardarCargas();
+    openModule("cuadro");
+  };
+  document.getElementById("cerrarRic").onclick = cerrarRicModal;
+}
+
+function getCargas(){
+  try{
+    return JSON.parse(localStorage.getItem(CARGAS_KEY) || "[]");
+  }catch(e){ return []; }
+}
+
+function setCargas(cargas){
+  localStorage.setItem(CARGAS_KEY, JSON.stringify(cargas));
+}
+
+function cargarCargas(){
+  renderCargasTabla();
+  prepararSiguienteCircuito();
+}
+
+function guardarCargas(){
+  const cargas = getCargas();
+  setCargas(cargas);
+  renderCargasTabla();
+}
+
+function agregarCircuito(){
+  const form = document.getElementById("cargaForm");
+  const data = Object.fromEntries(new FormData(form).entries());
+  const cargas = getCargas();
+  const numero = cargas.length + 1;
+  const cantidad = Math.max(1, Number(data.cantidad || 1));
+  const potenciaUnidad = Math.max(0, Number(data.potencia || 0));
+  const simultaneidad = Math.min(100, Math.max(1, Number(data.simultaneidad || 100)));
+  const nombre = data.tipo === "Otro" ? (data.otro || "Otro personalizado") : data.tipo;
+  if(!potenciaUnidad){
+    toast("Ingrese potencia unitaria en W.");
+    return;
+  }
+  const totalW = cantidad * potenciaUnidad;
+  const demandaW = totalW * (simultaneidad / 100);
+  cargas.push({
+    numero, nombre, tipo:data.tipo, cantidad, potenciaUnidad, totalW, demandaW,
+    alimentacion:data.alimentacion || "Monofásico",
+    fase:data.alimentacion === "Trifásico" ? "R-S-T" : (data.fase || "R"),
+    simultaneidad,
+    observacion:data.observacion || ""
+  });
+  setCargas(cargas);
+  form.reset();
+  form.elements.cantidad.value = 1;
+  form.elements.simultaneidad.value = 100;
+  document.getElementById("otroWrap").classList.add("hidden");
+  renderCargasTabla();
+  prepararSiguienteCircuito();
+  toast("Circuito agregado.");
+}
+
+function prepararSiguienteCircuito(){
+  const form = document.getElementById("cargaForm");
+  if(!form) return;
+  form.elements.numero.value = getCargas().length + 1;
+}
+
+function eliminarCircuito(index){
+  const cargas = getCargas();
+  cargas.splice(index, 1);
+  cargas.forEach((c,i)=>c.numero = i + 1);
+  setCargas(cargas);
+  renderCargasTabla();
+  prepararSiguienteCircuito();
+}
+
+function limpiarCargas(){
+  if(!confirm("¿Limpiar todos los circuitos ingresados?")) return;
+  localStorage.removeItem(CARGAS_KEY);
+  renderCargasTabla();
+  prepararSiguienteCircuito();
+  toast("Cargas limpiadas.");
+}
+
+function renderCargasTabla(){
+  const cargas = getCargas();
+  const body = document.getElementById("cargasBody");
+  if(!body) return;
+  body.innerHTML = cargas.length ? cargas.map((c,i)=>`
+    <tr>
+      <td>${c.numero}</td>
+      <td>${c.nombre}</td>
+      <td>${c.cantidad}</td>
+      <td>${c.potenciaUnidad}</td>
+      <td>${Math.round(c.totalW)}</td>
+      <td>${Math.round(c.demandaW)}</td>
+      <td>${c.alimentacion}</td>
+      <td>${c.fase}</td>
+      <td><button class="mini-danger" onclick="eliminarCircuito(${i})">Borrar</button></td>
+    </tr>
+  `).join("") : `<tr><td colspan="9">Sin circuitos ingresados.</td></tr>`;
+  actualizarResumenCargas(cargas);
+}
+
+function actualizarResumenCargas(cargas){
+  const instaladoW = cargas.reduce((s,c)=>s + Number(c.totalW || 0), 0);
+  const demandaW = cargas.reduce((s,c)=>s + Number(c.demandaW || 0), 0);
+  const proyecto = getProyectoGuardado();
+  const suministro = proyecto?.electrico?.suministro || "Monofásico 220 V";
+  const esTrifasico = suministro.includes("Trifásico") || cargas.some(c=>c.alimentacion === "Trifásico");
+  const tension = esTrifasico ? 380 : 220;
+  const fp = 0.92;
+  const corriente = esTrifasico ? demandaW / (Math.sqrt(3) * tension * fp) : demandaW / (tension * fp);
+
+  const empalme = sugerirEmpalme(demandaW, esTrifasico);
+  document.getElementById("totalInstalado").textContent = `${(instaladoW/1000).toFixed(2)} kW`;
+  document.getElementById("totalDemanda").textContent = `${(demandaW/1000).toFixed(2)} kW`;
+  document.getElementById("corrienteEstimada").textContent = `${corriente.toFixed(1)} A`;
+  document.getElementById("empalmeSugerido").textContent = empalme.texto;
+
+  const warn = document.getElementById("loadWarning");
+  if(!warn) return;
+  if(!cargas.length){
+    warn.innerHTML = "";
+    return;
+  }
+  const severidad = empalme.error ? "error" : "ok";
+  warn.className = `load-warning ${severidad}`;
+  warn.innerHTML = `
+    <h3>${empalme.error ? "❌ Advertencia técnica" : "✅ Recomendación preliminar"}</h3>
+    <p>${empalme.mensaje}</p>
+    <p><b>Nota:</b> GIAE no define el automático del medidor. La distribuidora define la protección/limitador según potencia contratada y factibilidad.</p>
+    <button type="button" class="btn" onclick="abrirRicModal()">📚 Ver RIC aplicado</button>
+  `;
+}
+
+function sugerirEmpalme(demandaW, esTrifasico){
+  const kw = demandaW / 1000;
+  if(kw <= 0) return {texto:"Sin datos", mensaje:"Ingrese circuitos para calcular demanda.", error:false};
+  if(!esTrifasico && kw > 10){
+    return {
+      texto:"Evaluar trifásico",
+      mensaje:`La demanda estimada es ${kw.toFixed(2)} kW. Para cargas altas en monofásico, GIAE recomienda evaluar suministro trifásico o factibilidad con la distribuidora.`,
+      error:true
+    };
+  }
+  if(kw <= 3.6) return {texto:"3,6 kW aprox.", mensaje:"Demanda baja. Validar potencia normalizada y factibilidad con distribuidora.", error:false};
+  if(kw <= 6) return {texto:"6 kW aprox.", mensaje:"Demanda compatible con evaluación de empalme residencial/comercial menor. Validar potencia normalizada.", error:false};
+  if(kw <= 10) return {texto:"10 kW aprox.", mensaje:"Demanda media. Validar empalme, canalización, protecciones interiores y factibilidad.", error:false};
+  if(kw <= 20) return {texto:"Trifásico 20 kW aprox.", mensaje:"Demanda alta. Recomendación preliminar: evaluar suministro trifásico y potencia normalizada.", error:false};
+  return {texto:"Requiere estudio", mensaje:"Demanda elevada. Requiere análisis detallado, factibilidad de distribuidora y revisión normativa.", error:true};
+}
+
+function abrirRicModal(){
+  const modal = document.getElementById("ricModal");
+  if(modal) modal.classList.add("show");
+}
+
+function cerrarRicModal(){
+  const modal = document.getElementById("ricModal");
+  if(modal) modal.classList.remove("show");
+}
+
 
 function tick(){
   const d = new Date();

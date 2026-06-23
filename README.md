@@ -1,17 +1,17 @@
-# GIAE Chile v2.1.2.6 - Guardar y continuar
+# GIAE Chile v2.1.3 - Módulo Cargas
 
 Creado por Julio Vera Concha.
 
 ## Cambios
-- Se separan los botones:
-  - Guardar avance
-  - Guardar y continuar a Cargas
-  - Cargar guardado
-  - Limpiar proyecto
-- Si faltan datos obligatorios, guarda pero no avanza.
-- Si el proyecto está completo, avanza automáticamente al módulo Cargas.
-- Cargas queda marcado como siguiente módulo pendiente.
-- No se modifica el motor de RUT ni teléfono.
+- Se agrega módulo Cargas funcional por circuitos.
+- Circuitos base: Alumbrado, Enchufes, Baño, Cocina, Luz exterior, Motor, Bomba, Enchufe trifásico, Termo de agua, Climatización y Otro.
+- Calcula potencia instalada.
+- Calcula demanda estimada con simultaneidad.
+- Calcula corriente estimada.
+- Entrega recomendación preliminar de empalme.
+- Incluye ventana interna "Ver RIC aplicado" sin salir del módulo.
+- Guarda y limpia cargas en localStorage.
+- El unilineal queda para módulo independiente posterior y se generará automáticamente desde Cuadro de Carga.
 
 ## Regla
-El sistema sólo avanza automáticamente cuando los datos base del proyecto están completos.
+GIAE no define el automático del medidor. La distribuidora define la protección/limitador según potencia contratada y factibilidad.
