@@ -1,14 +1,14 @@
-# GIAE Chile v2.1.2.3 - Teléfono Chile
+# GIAE Chile v2.1.2.4 - Privacidad y limpiar proyecto
 
 Creado por Julio Vera Concha.
 
 ## Cambios
-- Campo teléfono cliente con prefijo fijo +56.
-- Formato automático tipo 9 1234 5678.
-- Validación de celular chileno.
-- Mejora para móviles con teclado numérico.
-- Mantiene RUT automático y Proyecto compacto.
+- Se eliminan datos personales del código público.
+- Se elimina el botón de carga de datos personales del instalador.
+- El proyecto de ejemplo usa datos genéricos.
+- El botón Limpiar proyecto borra datos guardados y visibles.
+- Se desactiva autocomplete del formulario para reducir datos antiguos visibles.
+- Se agrega aviso de privacidad local.
 
-## Ejemplo
-Entrada: 956955555
-Salida visual: +56 9 5695 5555
+## Importante
+Los datos del usuario se guardan sólo en localStorage del navegador hasta conectar base de datos real.

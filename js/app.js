@@ -1,4 +1,4 @@
-const APP_VERSION = "2.1.2.3";
+const APP_VERSION = "2.1.2.4";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -103,9 +103,10 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.2.3</span>
+    <span class="badge ready">Módulo funcional v2.1.2.4</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
+    <p class="privacy-note">🔒 Privacidad: los datos ingresados quedan sólo en este navegador hasta conectar una base de datos real.</p>
 
     <div class="project-toolbar">
       <button class="step-chip active" data-section="datos">1. Datos</button>
@@ -116,7 +117,7 @@ function renderProyecto(){
       <button class="step-chip" data-section="resumen">6. Resumen</button>
     </div>
 
-    <form id="proyectoForm" class="project-form compact">
+    <form id="proyectoForm" class="project-form compact" autocomplete="off">
       <fieldset class="form-section active" data-section="datos">
         <legend>Datos generales</legend>
         <label>Nombre del proyecto<input name="nombreProyecto" placeholder="Ej: Vivienda San Pedro"></label>
@@ -211,10 +212,6 @@ function renderProyecto(){
           </select>
         </label>
         <label>Correo instalador<input name="correoInstalador" type="email" placeholder="correo@dominio.cl"></label>
-        <div class="sec-data-card">
-          <b>Datos rápidos</b>
-          <button type="button" class="btn small" id="usarDatosJulio">Usar datos Julio Vera</button>
-        </div>
       </fieldset>
 
       <div class="form-actions">
@@ -263,8 +260,6 @@ function bindProyecto(){
   document.getElementById("cargarProyecto").onclick = ()=>cargarProyecto(true);
   document.getElementById("limpiarProyecto").onclick = limpiarProyecto;
   document.getElementById("continuarCargas").onclick = ()=>openModule("cargas");
-  const datosJulio = document.getElementById("usarDatosJulio");
-  if(datosJulio) datosJulio.onclick = usarDatosJulio;
   bindRutInputs();
   bindPhoneInputs();
 }
@@ -516,7 +511,7 @@ function cargarDemoProyecto(){
     cliente:{nombre:"Cliente de prueba", rut:"111111111", telefono:"912345678", telefonoFormateado:"9 1234 5678", correo:"cliente@ejemplo.cl"},
     ubicacion:{direccion:"Av. Ejemplo 123", comuna:"Coronel", region:"Biobío", distribuidora:"CGE"},
     electrico:{suministro:"Monofásico 220 V", estadoEmpalme:"Nuevo empalme", potenciaEstimadaKW:10, observacion:"Proyecto de demostración local."},
-    instalador:{nombre:"Julio Vera Concha", rut:"", claseSEC:"Clase D", correo:""}
+    instalador:{nombre:"Instalador de prueba", rut:"", rutFormateado:"", rutValido:false, claseSEC:"Clase D", correo:""}
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(demo));
   objectToForm(demo);
@@ -525,12 +520,33 @@ function cargarDemoProyecto(){
 }
 
 function limpiarProyecto(){
-  if(!confirm("¿Limpiar los datos del proyecto guardado?")) return;
+  if(!confirm("¿Limpiar todos los datos visibles y guardados del proyecto?")) return;
   localStorage.removeItem(STORAGE_KEY);
+
   const form = document.getElementById("proyectoForm");
-  if(form) form.reset();
-  document.getElementById("projectSummary").innerHTML = "<h3>Resumen del proyecto</h3><p>No hay proyecto guardado todavía.</p>";
-  toast("Proyecto limpiado.");
+  if(form){
+    form.reset();
+    form.querySelectorAll("input, textarea").forEach(el => {
+      el.value = "";
+      el.defaultValue = "";
+      el.setAttribute("autocomplete", "off");
+    });
+    form.querySelectorAll("select").forEach(el => {
+      el.selectedIndex = 0;
+    });
+  }
+
+  pintarEstadoRut("rutCliente", "");
+  pintarEstadoRut("rutInstalador", "");
+  pintarEstadoTelefono("telefonoCliente", "");
+
+  const summary = document.getElementById("projectSummary");
+  if(summary){
+    summary.innerHTML = "<h3>Resumen del proyecto</h3><p>No hay proyecto guardado todavía.</p>";
+  }
+
+  goProjectSection("datos");
+  toast("Proyecto limpiado completamente.");
 }
 
 function renderResumen(obj, faltantes){

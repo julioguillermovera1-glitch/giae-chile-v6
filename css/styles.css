@@ -236,3 +236,16 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 }
 .phone-msg.ok{color:#8cffad}
 .phone-msg.bad{color:#ff8f9a}
+
+
+/* Privacidad y limpieza v2.1.2.4 */
+.privacy-note{
+  display:inline-block;
+  border:1px solid #1d4656;
+  background:#071923;
+  color:#8cffad;
+  border-radius:12px;
+  padding:10px 12px;
+  margin:6px 0 10px;
+  font-weight:800;
+}
