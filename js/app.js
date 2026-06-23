@@ -1,4 +1,4 @@
-const APP_VERSION = "2.1.2.5";
+const APP_VERSION = "2.1.2.6";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -94,6 +94,7 @@ function openModule(id){
     <span class="badge ${cls}">${stateLabel(m.status)}</span>
     <h2>${m.icon} ${m.label}</h2>
     <p>${m.desc}</p>
+    ${id==="cargas" ? `<div class="next-module-note"><b>Siguiente paso:</b> aquí construiremos el módulo Cargas v2.1.3. El proyecto guardado queda disponible para alimentar este módulo.</div>` : ""}
     <p><b>Regla:</b> nada se marca como funcional hasta que realmente guarde, lea o ejecute una acción útil.</p>
   `;
   view.scrollIntoView({behavior:"smooth", block:"start"});
@@ -103,10 +104,10 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.2.5</span>
+    <span class="badge ready">Módulo funcional v2.1.2.6</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
-    <p class="privacy-note">🔒 Privacidad: los datos ingresados quedan sólo en este navegador hasta conectar una base de datos real.</p>
+    <p class="privacy-note">🔒 Privacidad: los datos quedan sólo en este navegador. Al completar el proyecto puedes continuar a Cargas sin perder información.</p>
 
     <div class="project-toolbar">
       <button class="step-chip active" data-section="datos">1. Datos</button>
@@ -215,10 +216,10 @@ function renderProyecto(){
       </fieldset>
 
       <div class="form-actions">
-        <button type="button" class="btn primary" id="guardarProyecto">Guardar proyecto</button>
+        <button type="button" class="btn primary" id="guardarProyecto">Guardar avance</button>
+        <button type="button" class="btn next" id="guardarContinuar">Guardar y continuar a Cargas</button>
         <button type="button" class="btn" id="cargarProyecto">Cargar guardado</button>
         <button type="button" class="btn danger" id="limpiarProyecto">Limpiar proyecto</button>
-        <button type="button" class="btn next" id="continuarCargas">Continuar a Cargas</button>
       </div>
     </form>
 
@@ -256,10 +257,10 @@ function goProjectSection(sec){
 }
 
 function bindProyecto(){
-  document.getElementById("guardarProyecto").onclick = guardarProyecto;
+  document.getElementById("guardarProyecto").onclick = ()=>guardarProyecto(false);
+  document.getElementById("guardarContinuar").onclick = ()=>guardarProyecto(true);
   document.getElementById("cargarProyecto").onclick = ()=>cargarProyecto(true);
   document.getElementById("limpiarProyecto").onclick = limpiarProyecto;
-  document.getElementById("continuarCargas").onclick = ()=>openModule("cargas");
   bindRutInputs();
   bindPhoneInputs();
 }
@@ -468,22 +469,42 @@ function objectToForm(obj){
   pintarEstadoTelefono("telefonoCliente", form.elements.telefonoCliente?.value || "");
 }
 
-function guardarProyecto(){
+function guardarProyecto(continuar=false){
   const obj = formToObject();
-  const faltantes = [];
-  if(!obj.proyecto.nombre) faltantes.push("nombre del proyecto");
-  if(!obj.cliente.nombre) faltantes.push("cliente");
-  if(!obj.ubicacion.direccion) faltantes.push("dirección");
-  if(!obj.ubicacion.distribuidora) faltantes.push("distribuidora");
-  if(!obj.electrico.suministro) faltantes.push("tipo de suministro");
-  if(obj.cliente.rut && !obj.cliente.rutValido) faltantes.push("RUT cliente inválido");
-  if(obj.cliente.telefono && !validarTelefonoChile(obj.cliente.telefono)) faltantes.push("teléfono cliente inválido");
-  if(obj.instalador.rut && !obj.instalador.rutValido) faltantes.push("RUT instalador inválido");
+  const faltantes = validarProyectoBase(obj);
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
   renderResumen(obj, faltantes);
-  toast(faltantes.length ? "Proyecto guardado con datos pendientes." : "Proyecto guardado correctamente.");
-  goProjectSection("resumen");
+
+  if(faltantes.length){
+    toast("Proyecto guardado, pero falta corregir datos.");
+    goProjectSection("resumen");
+    return;
+  }
+
+  toast(continuar ? "Proyecto completo. Pasando a Cargas..." : "Proyecto guardado correctamente.");
+  if(continuar){
+    setTimeout(()=>openModule("cargas"), 650);
+  }else{
+    goProjectSection("resumen");
+  }
+}
+
+function validarProyectoBase(obj){
+  const faltantes = [];
+  if(!obj.proyecto.nombre) faltantes.push("nombre del proyecto");
+  if(!obj.proyecto.tipoProyecto) faltantes.push("tipo de proyecto");
+  if(!obj.cliente.nombre) faltantes.push("cliente");
+  if(!obj.ubicacion.direccion) faltantes.push("dirección");
+  if(!obj.ubicacion.comuna) faltantes.push("comuna");
+  if(!obj.ubicacion.region) faltantes.push("región");
+  if(!obj.ubicacion.distribuidora) faltantes.push("distribuidora");
+  if(!obj.electrico.suministro) faltantes.push("tipo de suministro");
+  if(!obj.electrico.estadoEmpalme) faltantes.push("estado del empalme");
+  if(obj.cliente.rut && !obj.cliente.rutValido) faltantes.push("RUT cliente inválido");
+  if(obj.cliente.telefono && !validarTelefonoChile(obj.cliente.telefono)) faltantes.push("teléfono cliente inválido");
+  if(obj.instalador.rut && !obj.instalador.rutValido) faltantes.push("RUT instalador inválido");
+  return faltantes;
 }
 
 function cargarProyecto(showToast){

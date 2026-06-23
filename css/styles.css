@@ -251,3 +251,31 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 }
 
 /* v2.1.2.5: RUT de ejemplo genérico, sin datos personales reales. */
+
+
+/* Flujo guardar y continuar v2.1.2.6 */
+.next-module-note{
+  border:1px solid #ffd166;
+  background:#2a240e;
+  color:#ffe08a;
+  border-radius:12px;
+  padding:14px;
+  margin:14px 0;
+  font-weight:800;
+}
+.form-actions .btn.next{
+  background:linear-gradient(90deg,#0b743c,#12a84f);
+  border-color:#22c55e;
+  color:#eefcff;
+}
+@media(max-width:1050px){
+  .form-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .form-actions .btn{
+    padding:11px 10px;
+    font-size:13px;
+  }
+}
