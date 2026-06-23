@@ -424,3 +424,39 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .empalme-view ol{line-height:1.8}
 @media(max-width:1050px){.cuadro-actions{display:grid;grid-template-columns:1fr}}
 @media print{.sidebar,.topbar,.statusbar,.cuadro-actions,.ric-modal{display:none!important}.workspace{margin:0}.module-view{background:#fff!important;color:#000!important}}
+
+/* Motor Empalmes Inteligente v2.1.7 */
+.empalme-217 .empalme-result{
+  border:1px solid #22c55e;
+  background:#071b12;
+  border-radius:16px;
+  padding:18px;
+  margin-top:16px;
+}
+.empalme-217 .empalme-result.warn{
+  border-color:#ffd166;
+  background:#2a240e;
+}
+.empalme-217 .empalme-result.error{
+  border-color:#ff4d5d;
+  background:#210b10;
+}
+.inline-check,.inline-error{
+  margin-top:14px;
+  border:1px solid #245366;
+  border-radius:12px;
+  background:#061017;
+  padding:12px;
+}
+.norm-list{
+  display:grid;
+  gap:10px;
+  line-height:1.8;
+}
+.empalme-217 input{
+  border:1px solid #245366;
+  background:#071017;
+  color:#eefcff;
+  border-radius:10px;
+  padding:12px;
+}

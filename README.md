@@ -1,19 +1,19 @@
-# GIAE Chile v2.1.6 - Cuadro Inteligente y Motor de Empalmes
+# GIAE Chile v2.1.7 - Motor de Empalmes Inteligente
 
 Creado por Julio Vera Concha.
 
 ## Cambios
-- Cuadro de Carga Inteligente funcional.
-- Cálculo preliminar de Ib por circuito.
-- Recomendación preliminar de automático, diferencial, conductor, canalización y fase.
-- Balance de fases R-S-T.
-- Verificación RIC preliminar con ventana interna.
-- Motor de Empalmes preliminar:
-  - demanda calculada,
-  - tipo monofásico/trifásico sugerido,
-  - potencia normalizada preliminar,
-  - advertencias.
-- Preparación para Unilineal automático.
+- Motor de Empalmes Inteligente.
+- Recomendación automática de suministro monofásico o trifásico.
+- Comparación de demanda con potencias normalizadas preliminares.
+- Validación de potencia solicitada por el usuario.
+- Detección de errores:
+  - potencia no normalizada,
+  - potencia menor a demanda,
+  - necesidad de estudio especial.
+- Fundamento normativo en ventana interna.
+- Requisitos documentales por distribuidora dentro del módulo empalme.
+- Preparación para Unilineal Automático v2.1.8.
 
-## Nota
-La compañía eléctrica define la protección/limitador del medidor según potencia contratada y factibilidad. GIAE entrega recomendación técnica preliminar.
+## Regla
+GIAE recomienda potencia y detecta errores. La distribuidora define protección/limitador del medidor según contrato y factibilidad.
