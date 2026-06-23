@@ -1,19 +1,16 @@
-# GIAE Chile v2.1 - Portada funcional
+# GIAE Chile v2.1 - Portada realista
 
 Creado por Julio Vera Concha.
 
-## Objetivo
-Portada profesional oscura basada en PCB, electricidad digital y software, manteniendo una arquitectura modular.
+## Cambios aplicados
+- Estadísticas falsas reemplazadas por datos realistas.
+- Base de datos marcada como no conectada.
+- Módulos con estados:
+  - Verde: base lista
+  - Amarillo: siguiente módulo
+  - Azul: base inicial
+  - Rojo: no implementado
+- Portada oscura con estética PCB, electricidad digital y software.
 
-## Regla aplicada
-Todo lo que aparece en la portada pero todavía no está creado queda marcado en rojo como pendiente.
-
-## Archivos
-- index.html
-- indice.html
-- css/styles.css
-- js/app.js
-- data/modulos.json
-
-## Subida recomendada
-Subir carpeta completa a GitHub y desplegar por Cloudflare desde la rama principal.
+## Recomendación
+Subir esta versión completa cuando se confirme visualmente. El siguiente módulo recomendado es Proyecto.
