@@ -38,3 +38,8 @@ ai-engine/data/sec/
 ai-engine/data/distribuidoras/
 ai-engine/data/empalmes/
 ```
+
+
+## Autoría y móvil
+
+GIAE Chile v1.1 Professional fue creado, desarrollado y dirigido por Julio Vera Concha. La interfaz debe mantenerse compatible con PC, notebook, tablet, Android e iPhone bajo enfoque Mobile First.
