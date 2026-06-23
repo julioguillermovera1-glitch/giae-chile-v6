@@ -396,3 +396,23 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
   .load-summary-grid{grid-template-columns:1fr 1fr}
   .cargas-view .form-actions{grid-template-columns:1fr 1fr}
 }
+
+/* Carpeta Técnica y Asistente v2.1.5 */
+.folder-head,.folder-upload,.folder-panel,.folder-result,.assistant-card,.assistant-answer{border:1px solid #1d4656;background:#071923c7;border-radius:16px;padding:18px;margin-top:16px}
+.folder-head{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;align-items:end}
+.folder-head label,.assistant-card label{display:flex;flex-direction:column;gap:7px;color:#d9f5ed;font-weight:800}
+.folder-head select,.assistant-card select,.assistant-card input{border:1px solid #245366;background:#071017;color:#eefcff;border-radius:10px;padding:12px}
+.folder-buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.folder-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+.checklist-list,.file-list{display:grid;gap:10px}
+.check-item,.file-item{border:1px solid #245366;background:#061017;border-radius:12px;padding:12px;display:flex;gap:12px;align-items:center}
+.check-item div{flex:1}.check-item small,.file-item small{display:block;color:#8db0bb;margin-top:4px}
+.mini-info{border:1px solid #1fb6ff;background:#082232;color:#7fd7ff;border-radius:9px;padding:8px 10px;cursor:pointer}
+.folder-result.incompleta,.folder-result.observada{border-color:#ff4d5d;background:#210b10}
+.folder-result.revisada,.folder-result.lista{border-color:#22c55e;background:#071b12}
+.folder-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.folder-metrics div{border:1px solid #245366;border-radius:12px;padding:12px;background:#061017}
+.folder-metrics b{display:block;font-size:26px;color:#8cffad}
+.assistant-card{display:grid;grid-template-columns:1fr 2fr auto;gap:14px;align-items:end}
+.assistant-answer ul{line-height:1.7}
+@media(max-width:1050px){.folder-head,.folder-grid,.assistant-card{grid-template-columns:1fr}.folder-metrics{grid-template-columns:1fr}}

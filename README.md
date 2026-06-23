@@ -1,17 +1,15 @@
-# GIAE Chile v2.1.3 - Módulo Cargas
+# GIAE Chile v2.1.5 - Carpeta Técnica y Asistente Documental
 
 Creado por Julio Vera Concha.
 
 ## Cambios
-- Se agrega módulo Cargas funcional por circuitos.
-- Circuitos base: Alumbrado, Enchufes, Baño, Cocina, Luz exterior, Motor, Bomba, Enchufe trifásico, Termo de agua, Climatización y Otro.
-- Calcula potencia instalada.
-- Calcula demanda estimada con simultaneidad.
-- Calcula corriente estimada.
-- Entrega recomendación preliminar de empalme.
-- Incluye ventana interna "Ver RIC aplicado" sin salir del módulo.
-- Guarda y limpia cargas en localStorage.
-- El unilineal queda para módulo independiente posterior y se generará automáticamente desde Cuadro de Carga.
+- Módulo Carpeta Técnica.
+- Motor de Distribuidoras: CGE, ENEL, CHILQUINTA, COPELEC, SAESA / FRONTEL.
+- Modo Sólo revisar documentos.
+- Modo Revisar y preparar envío.
+- Detección preliminar por nombres y tipos de archivo.
+- Estado de carpeta: incompleta, observada, revisada o lista.
+- Asistente Documental para responder qué documentos pide cada compañía eléctrica.
 
-## Regla
-GIAE no define el automático del medidor. La distribuidora define la protección/limitador según potencia contratada y factibilidad.
+## Nota
+La revisión actual es local y preliminar. La lectura inteligente de contenido, envío por correo, respaldo en servidor e historial se integrarán después.

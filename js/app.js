@@ -1,4 +1,4 @@
-const APP_VERSION = "2.1.3";
+const APP_VERSION = "2.1.5";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -8,9 +8,9 @@ const modules = [
   {id:"unilineal", icon:"⎇", label:"Unilineal", status:"missing", desc:"Pendiente: diagrama profesional generado desde el cuadro de carga."},
   {id:"tierra", icon:"⏚", label:"Tierra", status:"missing", desc:"Pendiente: puesta a tierra y equipotencialidad según RIC 6."},
   {id:"empalme", icon:"🔌", label:"Empalme", status:"missing", desc:"Pendiente: validación de empalmes normalizados y distribuidoras."},
-  {id:"documentacion", icon:"📄", label:"Documentación", status:"missing", desc:"Pendiente: TE1, formularios nativos de distribuidoras y memorias técnicas."},
+  {id:"carpeta", icon:"📂", label:"Carpeta Técnica", status:"ready", desc:"Módulo funcional: revisión documental por distribuidora, checklist, archivos y estado de carpeta."},
   {id:"presupuesto", icon:"💰", label:"Presupuesto", status:"missing", desc:"Pendiente: módulo separado de materiales, mano de obra, IVA y utilidad."},
-  {id:"motorric", icon:"⚙", label:"Motor RIC", status:"missing", desc:"Pendiente: motor normativo con reglas RIC detalladas y verificables."},
+  {id:"asistente", icon:"🤖", label:"Asistente Documental", status:"ready", desc:"Módulo funcional: responde qué documentos exige cada distribuidora y muestra checklist."},
   {id:"auditoria", icon:"🧩", label:"Auditoría", status:"missing", desc:"Pendiente: trazabilidad, historial de consultas y registro de errores."},
   {id:"administracion", icon:"🔐", label:"Administración", status:"hidden", desc:"Pendiente: centro de monitoreo exclusivo del administrador."}
 ];
@@ -21,11 +21,226 @@ const quicks = [
   {label:"Cargas", icon:"⚡", status:"ready", target:"cargas", text:"Ingresar circuitos y calcular demanda"},
   {label:"Cuadro de Carga", icon:"▣", status:"missing", target:"cuadro", text:"Pendiente para v2.1.4"},
   {label:"Unilineal", icon:"⎇", status:"missing", target:"unilineal", text:"Pendiente para v2.1.5"},
-  {label:"Presupuesto", icon:"💰", status:"missing", target:"presupuesto", text:"Pendiente para versión posterior"}
+  {label:"Carpeta Técnica", icon:"📂", status:"ready", target:"carpeta", text:"Revisar documentos por distribuidora"},
+  {label:"Asistente", icon:"🤖", status:"ready", target:"asistente", text:"Consultar documentos requeridos"}
 ];
 
 const STORAGE_KEY = "giae_chile_proyecto_v212";
 const CARGAS_KEY = "giae_chile_cargas_v213";
+const CARPETA_KEY = "giae_chile_carpeta_tecnica_v215";
+const DISTRIBUIDORAS = {
+  "CGE": {
+    "descripcion": "Expediente orientado a TE1, evidencias fotográficas, punto de red y antecedentes del inmueble.",
+    "documentos": [
+      {
+        "id": "te1",
+        "nombre": "Certificado TE1 SEC aprobado",
+        "obligatorio": true,
+        "detalle": "Debe coincidir dirección y potencia con lo solicitado."
+      },
+      {
+        "id": "fotos",
+        "nombre": "Set fotográfico obligatorio",
+        "obligatorio": true,
+        "detalle": "Caja de empalme, poste, puesta a tierra, camarilla, unión al tablero y vista panorámica."
+      },
+      {
+        "id": "poste",
+        "nombre": "Identificación de punto de red",
+        "obligatorio": true,
+        "detalle": "Número de poste o cámara subterránea cercana."
+      },
+      {
+        "id": "croquis",
+        "nombre": "Croquis de ubicación",
+        "obligatorio": true,
+        "detalle": "Coordenadas o referencias claras."
+      },
+      {
+        "id": "rol",
+        "nombre": "Certificado de Rol SII",
+        "obligatorio": false,
+        "detalle": "Obligatorio en parcelaciones o loteos recientes."
+      },
+      {
+        "id": "numero",
+        "nombre": "Certificado de número municipal",
+        "obligatorio": false,
+        "detalle": "Si el dominio no especifica numeración exacta."
+      },
+      {
+        "id": "medidor",
+        "nombre": "Factura y certificado del medidor",
+        "obligatorio": false,
+        "detalle": "Si el cliente aporta el medidor."
+      },
+      {
+        "id": "empresa",
+        "nombre": "Antecedentes persona jurídica",
+        "obligatorio": false,
+        "detalle": "RUT sociedad, representante legal, vigencias y constitución."
+      }
+    ]
+  },
+  "ENEL": {
+    "descripcion": "Proceso digital con documentos legales, contrato y factibilidad según potencia o red.",
+    "documentos": [
+      {
+        "id": "te1qr",
+        "nombre": "Declaración TE1 SEC con QR",
+        "obligatorio": true,
+        "detalle": "Documento digital verificable."
+      },
+      {
+        "id": "dominio",
+        "nombre": "Certificado de dominio vigente",
+        "obligatorio": true,
+        "detalle": "Antigüedad no mayor a 90 días."
+      },
+      {
+        "id": "numero",
+        "nombre": "Certificado de número municipal",
+        "obligatorio": true,
+        "detalle": "Emitido por DOM."
+      },
+      {
+        "id": "contrato",
+        "nombre": "Contrato de suministro firmado",
+        "obligatorio": true,
+        "detalle": "Firmado por propietario."
+      },
+      {
+        "id": "jurada",
+        "nombre": "Declaración jurada notarial",
+        "obligatorio": false,
+        "detalle": "Si no cuenta temporalmente con dominio inscrito."
+      },
+      {
+        "id": "factibilidad",
+        "nombre": "Formulario de factibilidad técnica",
+        "obligatorio": false,
+        "detalle": "Para potencias altas o red subterránea."
+      },
+      {
+        "id": "fotos",
+        "nombre": "Evidencia fotográfica",
+        "obligatorio": true,
+        "detalle": "Nicho/poste, tubo de bajada y término de obra."
+      }
+    ]
+  },
+  "CHILQUINTA": {
+    "descripcion": "Trámite con fuerte control de representación legal del propietario.",
+    "documentos": [
+      {
+        "id": "anexo_te1",
+        "nombre": "Anexo TE1 SEC",
+        "obligatorio": true,
+        "detalle": "Instalador autorizado vigente."
+      },
+      {
+        "id": "contrato",
+        "nombre": "Contrato de suministro Chilquinta",
+        "obligatorio": true,
+        "detalle": "Firmado por dueño del inmueble."
+      },
+      {
+        "id": "dominio",
+        "nombre": "Certificado de dominio vigente",
+        "obligatorio": true,
+        "detalle": "Copia autorizada CBR."
+      },
+      {
+        "id": "poder",
+        "nombre": "Poder notarial",
+        "obligatorio": false,
+        "detalle": "Si instalador o tercero postula en nombre del propietario."
+      }
+    ]
+  },
+  "COPELEC": {
+    "descripcion": "Requisitos orientados a terreno rural, constructividad local y factibilidad por red cercana.",
+    "documentos": [
+      {
+        "id": "vecino",
+        "nombre": "Número de cuenta de vecino cercano",
+        "obligatorio": true,
+        "detalle": "Referencia para identificar transformador o red cercana."
+      },
+      {
+        "id": "te1",
+        "nombre": "Certificado TE1 SEC",
+        "obligatorio": true,
+        "detalle": "Definitivo o de faena según corresponda."
+      },
+      {
+        "id": "construccion",
+        "nombre": "Acreditación de construcción existente",
+        "obligatorio": true,
+        "detalle": "Para definitivo debe existir construcción/caseta habitable."
+      },
+      {
+        "id": "distancia",
+        "nombre": "Distancia poste-medidor ≤ 30 m",
+        "obligatorio": true,
+        "detalle": "Si supera, requiere revisión especial."
+      },
+      {
+        "id": "camarilla",
+        "nombre": "Camarilla de tierra 160 mm",
+        "obligatorio": true,
+        "detalle": "Requisito constructivo local señalado."
+      },
+      {
+        "id": "tierra",
+        "nombre": "Cañería tierra 20 mm y bajada 25 mm",
+        "obligatorio": true,
+        "detalle": "Requisito constructivo indicado."
+      },
+      {
+        "id": "rol",
+        "nombre": "Certificado de Rol",
+        "obligatorio": true,
+        "detalle": "Especialmente en parcelas/subdivisiones."
+      }
+    ]
+  },
+  "SAESA / FRONTEL": {
+    "descripcion": "Gestión orientada a factibilidad rural, ubicación, fotografías y respaldo de propiedad.",
+    "documentos": [
+      {
+        "id": "te1",
+        "nombre": "TE1 SEC aprobado",
+        "obligatorio": true,
+        "detalle": "Declaración eléctrica autorizada."
+      },
+      {
+        "id": "dominio",
+        "nombre": "Dominio vigente o acreditación de propiedad",
+        "obligatorio": true,
+        "detalle": "Según tipo de solicitud."
+      },
+      {
+        "id": "ubicacion",
+        "nombre": "Croquis / ubicación del empalme",
+        "obligatorio": true,
+        "detalle": "Referencia clara para terreno rural."
+      },
+      {
+        "id": "fotos",
+        "nombre": "Fotografías de obra y punto de conexión",
+        "obligatorio": true,
+        "detalle": "Permite revisión previa."
+      },
+      {
+        "id": "factibilidad",
+        "nombre": "Factibilidad técnica",
+        "obligatorio": false,
+        "detalle": "Según potencia, distancia y condiciones de red."
+      }
+    ]
+  }
+};
 
 function stateLabel(status){
   if(status==="base") return "Base lista ✓";
@@ -88,6 +303,8 @@ function openModule(id){
   document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active", b.dataset.id===id));
   if(id==="proyecto"){ renderProyecto(); return; }
   if(id==="cargas"){ renderCargas(); return; }
+  if(id==="carpeta"){ renderCarpetaTecnica(); return; }
+  if(id==="asistente"){ renderAsistenteDocumental(); return; }
   const m = modules.find(x=>x.id===id) || modules[0];
   const view = document.getElementById("moduleView");
   const cls = stateClass(m.status);
@@ -106,7 +323,7 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.3</span>
+    <span class="badge ready">Módulo funcional v2.1.5</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
     <p class="privacy-note">🔒 Privacidad: los datos quedan sólo en este navegador. Al completar el proyecto puedes continuar a Cargas sin perder información.</p>
@@ -609,7 +826,7 @@ function renderCargas(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cargas-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.3</span>
+    <span class="badge ready">Módulo funcional v2.1.5</span>
     <h2>⚡ Cargas por circuitos</h2>
     <p>Ingresa los circuitos del proyecto. GIAE calcula potencia instalada, demanda estimada y una recomendación preliminar de empalme.</p>
     <p class="privacy-note">📌 Regla técnica: la distribuidora define la protección/limitador del medidor según potencia contratada y factibilidad. GIAE sólo recomienda y advierte.</p>
@@ -898,6 +1115,48 @@ function cerrarRicModal(){
   if(modal) modal.classList.remove("show");
 }
 
+
+
+function renderCarpetaTecnica(){
+  const proyecto = getProyectoGuardado ? getProyectoGuardado() : null;
+  const distProyecto = proyecto?.ubicacion?.distribuidora || "CGE";
+  const distribuidora = normalizarDistribuidora(distProyecto);
+  const data = cargarCarpeta();
+  const seleccion = data.distribuidora || distribuidora;
+  const view = document.getElementById("moduleView");
+  view.className = "module-view show ready carpeta-view";
+  view.innerHTML = `
+    <span class="badge ready">Módulo funcional v2.1.5</span>
+    <h2>📂 Carpeta Técnica</h2>
+    <p>Revisa documentos según la distribuidora seleccionada. Puedes usar GIAE sólo para revisar o para preparar un envío posterior.</p>
+    <p class="privacy-note">🔒 Modo actual: revisión local. El envío por correo y respaldo en servidor se implementarán después.</p>
+    <section class="folder-head">
+      <div><h3>Proyecto vinculado</h3><p><b>Proyecto:</b> ${proyecto?.proyecto?.nombre || "Sin proyecto"} · <b>Cliente:</b> ${proyecto?.cliente?.nombre || "Sin cliente"} · <b>Distribuidora:</b> ${seleccion}</p></div>
+      <label>Modo de trabajo<select id="modoCarpeta"><option value="revisar">Sólo revisar documentos</option><option value="preparar">Revisar y preparar envío</option></select></label>
+      <label>Distribuidora<select id="distCarpeta">${Object.keys(DISTRIBUIDORAS).map(d=>`<option ${d===seleccion?'selected':''}>${d}</option>`).join("")}</select></label>
+    </section>
+    <section class="folder-upload"><h3>Subir documentos</h3><p>Selecciona archivos o ZIP. Esta versión revisa nombres y tipos de archivo de forma local.</p><input id="fileInputCarpeta" type="file" multiple accept=".pdf,.dwg,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx,.zip"><div class="folder-buttons"><button class="btn primary" id="btnGuardarCarpeta">Guardar revisión</button><button class="btn danger" id="btnLimpiarCarpeta">Limpiar carpeta</button><button class="btn" id="btnRevisarCarpeta">Revisar documentos</button></div></section>
+    <section class="folder-grid"><article class="folder-panel"><h3>Checklist ${seleccion}</h3><div id="checklistDistribuidora"></div></article><article class="folder-panel"><h3>Archivos detectados</h3><div id="archivosDetectados"></div></article></section>
+    <section class="folder-result" id="resultadoCarpeta"></section>
+    <div class="ric-modal" id="distModal" aria-hidden="true"><div class="ric-modal-box"><h3 id="distModalTitle">Requisito aplicado</h3><div id="distModalBody"></div><button type="button" class="btn primary" onclick="cerrarDistModal()">Cerrar y volver a Carpeta</button></div></div>`;
+  document.getElementById("modoCarpeta").value = data.modo || "revisar";
+  bindCarpeta(); renderChecklistCarpeta(); renderArchivosCarpeta(); revisarCarpeta();
+  view.scrollIntoView({behavior:"smooth", block:"start"});
+}
+function normalizarDistribuidora(d){const up=String(d||"").toUpperCase(); if(up.includes("ENEL"))return"ENEL"; if(up.includes("CHIL"))return"CHILQUINTA"; if(up.includes("COPELEC"))return"COPELEC"; if(up.includes("FRONTEL")||up.includes("SAESA"))return"SAESA / FRONTEL"; return"CGE";}
+function cargarCarpeta(){try{return JSON.parse(localStorage.getItem(CARPETA_KEY)||"{}");}catch(e){return{};}}
+function guardarCarpeta(data){localStorage.setItem(CARPETA_KEY,JSON.stringify(data));}
+function bindCarpeta(){const dist=document.getElementById("distCarpeta"), modo=document.getElementById("modoCarpeta"), input=document.getElementById("fileInputCarpeta"); dist.onchange=()=>{const data=cargarCarpeta(); data.distribuidora=dist.value; guardarCarpeta(data); renderCarpetaTecnica();}; modo.onchange=()=>{const data=cargarCarpeta(); data.modo=modo.value; guardarCarpeta(data); revisarCarpeta();}; input.onchange=()=>{const archivos=Array.from(input.files||[]).map(f=>({name:f.name,type:f.type,size:f.size,updated:new Date().toISOString()})); const data=cargarCarpeta(); data.archivos=archivos; data.distribuidora=dist.value; data.modo=modo.value; guardarCarpeta(data); renderArchivosCarpeta(); revisarCarpeta();}; document.getElementById("btnGuardarCarpeta").onclick=()=>{const data=cargarCarpeta(); data.actualizado=new Date().toISOString(); guardarCarpeta(data); toast("Carpeta técnica guardada.");}; document.getElementById("btnLimpiarCarpeta").onclick=()=>{if(!confirm("¿Limpiar archivos detectados y revisión de carpeta?"))return; localStorage.removeItem(CARPETA_KEY); renderCarpetaTecnica(); toast("Carpeta técnica limpiada.");}; document.getElementById("btnRevisarCarpeta").onclick=revisarCarpeta;}
+function renderChecklistCarpeta(){const dist=document.getElementById("distCarpeta")?.value||"CGE", box=document.getElementById("checklistDistribuidora"); if(!box)return; const req=DISTRIBUIDORAS[dist]; box.innerHTML=`<p>${req.descripcion}</p><div class="checklist-list">${req.documentos.map(doc=>`<div class="check-item"><span>${doc.obligatorio?"🔴":"🟡"}</span><div><b>${doc.nombre}</b><small>${doc.obligatorio?"Obligatorio":"Condicional"} · ${doc.detalle}</small></div><button class="mini-info" onclick="verDetalleDistribuidora('${dist}','${doc.id}')">Ver</button></div>`).join("")}</div>`;}
+function renderArchivosCarpeta(){const data=cargarCarpeta(), archivos=data.archivos||[], box=document.getElementById("archivosDetectados"); if(!box)return; box.innerHTML=archivos.length?`<div class="file-list">${archivos.map(a=>`<div class="file-item"><b>${iconoArchivo(a.name)} ${a.name}</b><small>${formatoPeso(a.size)}</small></div>`).join("")}</div>`:`<p>No hay archivos cargados todavía.</p>`;}
+function iconoArchivo(name){const n=name.toLowerCase(); if(n.endsWith(".pdf"))return"📄"; if(n.endsWith(".dwg"))return"📐"; if(n.match(/\.(jpg|jpeg|png)$/))return"🖼"; if(n.endsWith(".zip"))return"🗜"; if(n.match(/\.(doc|docx)$/))return"📝"; if(n.match(/\.(xls|xlsx)$/))return"📊"; return"📎";}
+function formatoPeso(bytes){if(!bytes)return"0 KB"; if(bytes<1024*1024)return`${(bytes/1024).toFixed(1)} KB`; return`${(bytes/1024/1024).toFixed(2)} MB`;}
+function revisarCarpeta(){const data=cargarCarpeta(), dist=document.getElementById("distCarpeta")?.value||data.distribuidora||"CGE", modo=document.getElementById("modoCarpeta")?.value||data.modo||"revisar", archivos=data.archivos||[], req=DISTRIBUIDORAS[dist]; const resultado=req.documentos.map(doc=>({...doc,encontrado:detectarDocumento(doc,archivos)})), obligatorios=resultado.filter(x=>x.obligatorio), faltantes=obligatorios.filter(x=>!x.encontrado), presentes=resultado.filter(x=>x.encontrado), box=document.getElementById("resultadoCarpeta"); if(!box)return; let estado="incompleta"; if(archivos.length&&faltantes.length===0)estado=modo==="preparar"?"lista":"revisada"; else if(archivos.length)estado="observada"; const estadoTxt={incompleta:"🔴 Carpeta incompleta",observada:"🟡 Carpeta con observaciones",revisada:"🟢 Documentos mínimos presentes",lista:"🟢 Lista para preparar envío"}[estado]; box.className=`folder-result ${estado}`; box.innerHTML=`<h3>${estadoTxt}</h3><p><b>Distribuidora:</b> ${dist} · <b>Modo:</b> ${modo==="revisar"?"Sólo revisar":"Revisar y preparar envío"}</p><div class="folder-metrics"><div><b>${archivos.length}</b><small>Archivos cargados</small></div><div><b>${presentes.length}</b><small>Requisitos detectados</small></div><div><b>${faltantes.length}</b><small>Obligatorios faltantes</small></div></div>${faltantes.length?`<h4>Faltan documentos obligatorios</h4><ul>${faltantes.map(f=>`<li>❌ ${f.nombre}</li>`).join("")}</ul>`:`<p>✅ No se detectan faltantes obligatorios según el checklist configurado.</p>`}<p><b>Nota:</b> revisión preliminar por nombres/tipos de archivo. Lectura inteligente se agregará con servidor documental.</p>`;}
+function detectarDocumento(doc,archivos){const texto=archivos.map(a=>a.name.toLowerCase()).join(" "), id=doc.id.toLowerCase(); const claves={te1:["te1","declaracion","declaración","sec"],te1qr:["te1","qr","sec"],anexo_te1:["anexo","te1","sec"],fotos:["foto","fotos","imagen","jpg","jpeg","png"],poste:["poste","placa","punto_red","punto-red"],croquis:["croquis","ubicacion","ubicación","coordenada"],rol:["rol","sii"],numero:["numero","número","municipal","dom"],medidor:["medidor","calibracion","calibración","pruebas"],empresa:["sociedad","empresa","rut","vigencia","personeria"],dominio:["dominio","cbr","conservador"],contrato:["contrato","suministro"],jurada:["jurada","notarial"],factibilidad:["factibilidad"],poder:["poder","notarial","autorizacion","autorización"],vecino:["vecino","cuenta","cliente"],construccion:["construccion","construcción","vivienda","caseta"],distancia:["distancia","30m","30_m"],camarilla:["camarilla","160"],tierra:["tierra","puesta","malla"],ubicacion:["ubicacion","ubicación","croquis","coordenada"]}; return (claves[id]||[id]).some(k=>texto.includes(k));}
+function verDetalleDistribuidora(dist,id){const doc=DISTRIBUIDORAS[dist]?.documentos.find(d=>d.id===id); if(!doc)return; document.getElementById("distModalTitle").textContent=`📚 ${dist} · ${doc.nombre}`; document.getElementById("distModalBody").innerHTML=`<p><b>Tipo:</b> ${doc.obligatorio?"Obligatorio":"Condicional"}</p><p><b>Detalle:</b> ${doc.detalle}</p><p><b>Acción GIAE:</b> cargar documento asociado. Si falta, la carpeta queda observada antes de envío.</p>`; document.getElementById("distModal").classList.add("show");}
+function cerrarDistModal(){document.getElementById("distModal")?.classList.remove("show");}
+function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.1.5</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
+function responderAsistente(){const dist=document.getElementById("assistantDist")?.value||"CGE", data=DISTRIBUIDORAS[dist], box=document.getElementById("assistantAnswer"); if(!box)return; box.innerHTML=`<h3>Documentación requerida para ${dist}</h3><p>${data.descripcion}</p><h4>Documentos obligatorios</h4><ul>${data.documentos.filter(d=>d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")}</ul><h4>Documentos condicionales</h4><ul>${data.documentos.filter(d=>!d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")||"<li>No hay condicionales registrados.</li>"}</ul><p><b>Recomendación GIAE:</b> crear proyecto, subir carpeta técnica y ejecutar revisión antes de enviar a la distribuidora.</p>`;}
 
 function tick(){
   const d = new Date();
