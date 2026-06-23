@@ -1,14 +1,15 @@
-# GIAE Chile v2.1.9.1 - Unilineal Reparado
+# GIAE Chile v2.1.9.2 - Unilineal Activado
 
 Creado por Julio Vera Concha.
 
 ## Corrección
-- Repara el módulo Unilineal que dejó de abrir en v2.1.9.
-- Mantiene el diseño profesional.
+- Activa el módulo Unilineal en menú, estado real y accesos rápidos.
+- Conecta openModule('unilineal') con renderUnilinealAutomatico().
+- Cambia Unilineal de pendiente/no implementado a funcional.
+- Mantiene el diseño profesional SEC.
+- Monofásico: Barra repartidora bipolar 2x100A 10kA.
+- Trifásico: Barra repartidora tetrapolar 4x100A 10kA.
 - Mantiene símbolo de automático SEC: semicírculo con línea vertical central.
-- Monofásico: barra repartidora bipolar 2x100A 10kA.
-- Trifásico: barra repartidora tetrapolar 4x100A 10kA.
-- Código del render SVG reescrito para evitar errores de ejecución.
 
 ## Nota
-Esta es una versión de reparación pequeña. No cambia otros módulos.
+No cambia Proyecto, Cargas, Cuadro, Empalme ni Carpeta Técnica.
