@@ -648,3 +648,8 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .norm-audit.ok{border-color:#22c55e;background:#071b12}.norm-audit.warn{border-color:#ffd166;background:#2a240e}
 .norm-audit small{display:block;color:#8db0bb;margin-top:5px}
 @media(max-width:900px){.norm-card-grid,.ric-grid-250,.norm-audit-grid{grid-template-columns:1fr}}
+
+/* v2.5.1 · Exportación de Expediente */
+.export-251{border-color:#22c55e!important;background:#071b12!important}
+.export-grid-251{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+@media(max-width:900px){.export-grid-251{grid-template-columns:1fr}}
