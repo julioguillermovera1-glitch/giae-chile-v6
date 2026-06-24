@@ -1,28 +1,20 @@
-# GIAE Chile v2.1.9.5.1 - Unilineal v9.5.1 sobre base actual
+# GIAE Chile v2.1.9.5.2 - Unilineal ajustado a circuitos
 
 Creado por Julio Vera Concha.
 
 ## Base usada
-Esta versión toma la base actual subida por Julio: v2.1.9.4.2.
+GIAE Chile v2.1.9.5.1, construida sobre la base actual v2.1.9.4.2.
 
-## Cambio aplicado
-Se reemplaza únicamente el motor gráfico del Unilineal por el motor estable de GIAE v9.5.1.
+## Corrección aplicada
+- El dibujo se adapta a la cantidad de circuitos que ingrese el instalador o estudiante.
+- El automático general superior queda centrado con el conjunto del cuadro unilineal.
+- La barra horizontal principal comienza en el primer circuito y termina en el último circuito.
+- Se mantiene el motor gráfico v9.5.1:
+  - automático con círculos, media luna y rayita central;
+  - diferencial P/D alineado;
+  - salida numerada.
+- No se modifican Proyecto, Cargas, Cuadro, Carpeta Técnica ni Asistente Documental.
 
-## Conserva
-- Portada modular actual.
-- Proyecto.
-- Cargas.
-- Cuadro de carga.
-- Carpeta Técnica.
-- Asistente Documental.
-- Archivos data/distribuidoras.json y data/modulos.json.
-
-## Unilineal restaurado
-- Símbolo de automático con círculos, media luna y rayita central.
-- Diferencial P/D alineado.
-- Salida numerada y carga final.
-- Monofásico: barra repartidora bipolar 2x100A 10kA.
-- Trifásico: barra repartidora tetrapolar 4x100A 10kA.
-
-## Nota
-La carpeta assets puede quedar vacía por ahora. No afecta el funcionamiento si no se usan imágenes locales.
+## Barras
+- Monofásico: Barra repartidora bipolar 2x100A 10kA.
+- Trifásico: Barra repartidora tetrapolar 4x100A 10kA.

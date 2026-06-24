@@ -566,3 +566,6 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .v951-scroll{overflow:auto;background:#f8fbff;border:1px solid #cbd8e6;border-radius:14px;padding:10px}
 .v951-scroll svg{min-width:1100px;display:block}
 @media(max-width:1050px){.v951-scroll svg{min-width:1200px}}
+
+/* v2.1.9.5.2 · La barra se adapta al número de circuitos y el automático general queda centrado al conjunto */
+.v951-scroll svg{height:auto}
