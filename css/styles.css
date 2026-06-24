@@ -569,3 +569,14 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 
 /* v2.1.9.5.2 · La barra se adapta al número de circuitos y el automático general queda centrado al conjunto */
 .v951-scroll svg{height:auto}
+
+/* v2.2.0 · Empalme Inteligente */
+.empalme-220 .empalme-result{border:1px solid #22c55e;background:#071b12;border-radius:16px;padding:18px;margin-top:16px}
+.empalme-220 .empalme-result.warn{border-color:#ffd166;background:#2a240e}
+.empalme-220 .empalme-result.error{border-color:#ff4d5d;background:#210b10}
+.empalme-kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+.empalme-kv p{border:1px solid #245366;border-radius:12px;padding:10px;margin:0;background:#061017}
+.emp-docs{list-style:none;padding:0;margin:10px 0;display:grid;gap:10px}
+.emp-docs li{display:flex;gap:10px;border:1px solid #245366;border-radius:12px;padding:10px;background:#061017}
+.emp-docs small{display:block;color:#8db0bb;margin-top:4px}.inline-check.ok{border-color:#22c55e;background:#071b12}.inline-check.error{border-color:#ff4d5d;background:#210b10}
+@media(max-width:800px){.empalme-kv{grid-template-columns:1fr}}

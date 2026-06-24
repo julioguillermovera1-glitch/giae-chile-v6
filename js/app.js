@@ -1,4 +1,4 @@
-const APP_VERSION = "2.1.9.5.2";
+const APP_VERSION = "2.2.0";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -7,7 +7,7 @@ const modules = [
   {id:"cuadro", icon:"▣", label:"Cuadro de Carga", status:"ready", desc:"Módulo funcional: calcula Ib, protecciones preliminares, conductores, fases y resumen de carga."},
   {id:"unilineal", icon:"⌁", label:"Unilineal", status:"ready", desc:"Módulo funcional: motor gráfico restaurado desde v9.5.1, adaptado a Cargas, Cuadro y Empalme."},
   {id:"tierra", icon:"⏚", label:"Tierra", status:"missing", desc:"Pendiente: puesta a tierra y equipotencialidad según RIC 6."},
-  {id:"empalme", icon:"🔌", label:"Empalme", status:"missing", desc:"Pendiente: validación de empalmes normalizados y distribuidoras."},
+  {id:"empalme", icon:"🔌", label:"Empalme", status:"ready", desc:"Módulo funcional: empalme inteligente con RIC 1, potencia normalizada, distribuidora y checklist documental."},
   {id:"carpeta", icon:"📂", label:"Carpeta Técnica", status:"ready", desc:"Módulo funcional: revisión documental por distribuidora, checklist, archivos y estado de carpeta."},
   {id:"presupuesto", icon:"💰", label:"Presupuesto", status:"missing", desc:"Pendiente: módulo separado de materiales, mano de obra, IVA y utilidad."},
   {id:"asistente", icon:"🤖", label:"Asistente Documental", status:"ready", desc:"Módulo funcional: responde qué documentos exige cada distribuidora y muestra checklist."},
@@ -21,6 +21,7 @@ const quicks = [
   {label:"Cargas", icon:"⚡", status:"ready", target:"cargas", text:"Ingresar circuitos y calcular demanda"},
   {label:"Cuadro de Carga", icon:"▣", status:"ready", target:"cuadro", text:"Calcular protecciones y fases"},
   {label:"Unilineal", icon:"⌁", status:"ready", target:"unilineal", text:"Funcional ✓ Motor gráfico v9.5.1"},
+  {label:"Empalme", icon:"🔌", status:"ready", target:"empalme", text:"Validar RIC 1 y distribuidora"},
   {label:"Carpeta Técnica", icon:"📂", status:"ready", target:"carpeta", text:"Revisar documentos por distribuidora"},
   {label:"Asistente", icon:"🤖", status:"ready", target:"asistente", text:"Consultar documentos requeridos"}
 ];
@@ -327,7 +328,7 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.9.5.2</span>
+    <span class="badge ready">Módulo funcional v2.2.0</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
     <p class="privacy-note">🔒 Privacidad: los datos quedan sólo en este navegador. Al completar el proyecto puedes continuar a Cargas sin perder información.</p>
@@ -830,7 +831,7 @@ function renderCargas(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cargas-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.9.5.2</span>
+    <span class="badge ready">Módulo funcional v2.2.0</span>
     <h2>⚡ Cargas por circuitos</h2>
     <p>Ingresa los circuitos del proyecto. GIAE calcula potencia instalada, demanda estimada y una recomendación preliminar de empalme.</p>
     <p class="privacy-note">📌 Regla técnica: la distribuidora define la protección/limitador del medidor según potencia contratada y factibilidad. GIAE sólo recomienda y advierte.</p>
@@ -1130,7 +1131,7 @@ function renderCarpetaTecnica(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready carpeta-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.9.5.2</span>
+    <span class="badge ready">Módulo funcional v2.2.0</span>
     <h2>📂 Carpeta Técnica</h2>
     <p>Revisa documentos según la distribuidora seleccionada. Puedes usar GIAE sólo para revisar o para preparar un envío posterior.</p>
     <p class="privacy-note">🔒 Modo actual: revisión local. El envío por correo y respaldo en servidor se implementarán después.</p>
@@ -1159,7 +1160,7 @@ function revisarCarpeta(){const data=cargarCarpeta(), dist=document.getElementBy
 function detectarDocumento(doc,archivos){const texto=archivos.map(a=>a.name.toLowerCase()).join(" "), id=doc.id.toLowerCase(); const claves={te1:["te1","declaracion","declaración","sec"],te1qr:["te1","qr","sec"],anexo_te1:["anexo","te1","sec"],fotos:["foto","fotos","imagen","jpg","jpeg","png"],poste:["poste","placa","punto_red","punto-red"],croquis:["croquis","ubicacion","ubicación","coordenada"],rol:["rol","sii"],numero:["numero","número","municipal","dom"],medidor:["medidor","calibracion","calibración","pruebas"],empresa:["sociedad","empresa","rut","vigencia","personeria"],dominio:["dominio","cbr","conservador"],contrato:["contrato","suministro"],jurada:["jurada","notarial"],factibilidad:["factibilidad"],poder:["poder","notarial","autorizacion","autorización"],vecino:["vecino","cuenta","cliente"],construccion:["construccion","construcción","vivienda","caseta"],distancia:["distancia","30m","30_m"],camarilla:["camarilla","160"],tierra:["tierra","puesta","malla"],ubicacion:["ubicacion","ubicación","croquis","coordenada"]}; return (claves[id]||[id]).some(k=>texto.includes(k));}
 function verDetalleDistribuidora(dist,id){const doc=DISTRIBUIDORAS[dist]?.documentos.find(d=>d.id===id); if(!doc)return; document.getElementById("distModalTitle").textContent=`📚 ${dist} · ${doc.nombre}`; document.getElementById("distModalBody").innerHTML=`<p><b>Tipo:</b> ${doc.obligatorio?"Obligatorio":"Condicional"}</p><p><b>Detalle:</b> ${doc.detalle}</p><p><b>Acción GIAE:</b> cargar documento asociado. Si falta, la carpeta queda observada antes de envío.</p>`; document.getElementById("distModal").classList.add("show");}
 function cerrarDistModal(){document.getElementById("distModal")?.classList.remove("show");}
-function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.1.9.5.2</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
+function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.2.0</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
 function responderAsistente(){const dist=document.getElementById("assistantDist")?.value||"CGE", data=DISTRIBUIDORAS[dist], box=document.getElementById("assistantAnswer"); if(!box)return; box.innerHTML=`<h3>Documentación requerida para ${dist}</h3><p>${data.descripcion}</p><h4>Documentos obligatorios</h4><ul>${data.documentos.filter(d=>d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")}</ul><h4>Documentos condicionales</h4><ul>${data.documentos.filter(d=>!d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")||"<li>No hay condicionales registrados.</li>"}</ul><p><b>Recomendación GIAE:</b> crear proyecto, subir carpeta técnica y ejecutar revisión antes de enviar a la distribuidora.</p>`;}
 
 
@@ -1259,7 +1260,7 @@ function renderCuadroInteligente(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cuadro-inteligente";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.9.5.2</span>
+    <span class="badge ready">Módulo funcional v2.2.0</span>
     <h2>▣ Cuadro de Carga Inteligente</h2>
     <p>Genera protecciones preliminares, conductores, canalizaciones y balance de fases desde las cargas ingresadas.</p>
     <p class="privacy-note">📌 Uso técnico preliminar: debe verificarse con RIC, cálculo de caída de tensión, ICC y criterio del instalador autorizado SEC.</p>
@@ -1314,84 +1315,99 @@ function renderErroresRic(cargas){
   if(!errores.length) return "<p>✅ No se detectan errores preliminares en los circuitos ingresados.</p>";
   return `<ul>${errores.map(e=>`<li>❌ ${e}</li>`).join("")}</ul>`;
 }
+
 function renderEmpalmeInteligente(){
-  const r = resumenIngenieria();
-  const proyecto = r.proyecto || getProyectoSeguro();
-  const carpeta = cargarCarpeta ? cargarCarpeta() : {};
-  const dist = carpeta.distribuidora || normalizarDistribuidora(proyecto?.ubicacion?.distribuidora || "CGE");
-  const e = evaluarEmpalme217(r, dist);
-  const view = document.getElementById("moduleView");
-  view.className = "module-view show ready empalme-view empalme-217";
-  view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.1.9.5.2</span>
-    <h2>🔌 Motor de Empalmes Inteligente</h2>
-    <p>Analiza demanda, suministro, potencia normalizada y requisitos documentales por distribuidora.</p>
-
+  const view=document.getElementById("moduleView");
+  const proyecto=getProyectoSeguro220();
+  const resumen=getResumenEmpalme220();
+  const carpeta=(typeof cargarCarpeta==="function")?cargarCarpeta():{};
+  const dist=normalizarDistribuidora220(carpeta?.distribuidora||proyecto?.ubicacion?.distribuidora||"CGE");
+  const ev=evaluarEmpalme220(resumen,dist);
+  view.className="module-view show ready empalme-view empalme-220";
+  view.innerHTML=`
+    <span class="badge ready">Módulo funcional v2.2.0</span>
+    <h2>🔌 Empalme Inteligente</h2>
+    <p>Valida demanda, suministro, potencia normalizada, distribuidora y fundamento RIC 1 sin tocar módulos operativos.</p>
+    <p class="privacy-note">📌 GIAE recomienda y advierte. La distribuidora define condiciones finales, medidor, limitador y factibilidad.</p>
     <section class="folder-head">
-      <div>
-        <h3>Proyecto analizado</h3>
-        <p><b>Proyecto:</b> ${proyecto?.proyecto?.nombre || "Sin proyecto"} · <b>Cliente:</b> ${proyecto?.cliente?.nombre || "Sin cliente"}</p>
-      </div>
-      <label>Distribuidora
-        <select id="empalmeDistribuidora">
-          ${Object.keys(DISTRIBUIDORAS || {"CGE":{}}).map(d=>`<option ${d===dist?'selected':''}>${d}</option>`).join("")}
-        </select>
-      </label>
-      <label>Potencia solicitada kW
-        <input id="potenciaSolicitadaKw" type="number" min="0" step="0.1" value="${e.normalSugeridaNumero || ""}" placeholder="Ej: 10">
-      </label>
+      <div><h3>Proyecto analizado</h3><p><b>Proyecto:</b> ${esc220(proyecto?.proyecto?.nombre||"Sin proyecto")} · <b>Cliente:</b> ${esc220(proyecto?.cliente?.nombre||"Sin cliente")} · <b>Suministro:</b> ${esc220(proyecto?.electrico?.suministro||"Sin definir")}</p></div>
+      <label>Distribuidora<select id="empDist220">${getDistribuidoras220().map(d=>`<option ${d===dist?"selected":""}>${d}</option>`).join("")}</select></label>
+      <label>Potencia solicitada kW<input id="empKw220" type="number" min="0" step="0.1" value="${ev.potenciaSugeridaNumero||""}"></label>
     </section>
-
     <section class="load-summary-grid">
-      <article><b>${(r.totalW/1000).toFixed(2)} kW</b><small>Potencia instalada</small></article>
-      <article><b>${(r.demandaW/1000).toFixed(2)} kW</b><small>Demanda calculada</small></article>
-      <article><b>${e.tipoRecomendado}</b><small>Tipo recomendado</small></article>
-      <article><b>${e.normalSugerida}</b><small>Potencia normalizada sugerida</small></article>
+      <article><b>${(resumen.totalW/1000).toFixed(2)} kW</b><small>Potencia instalada</small></article>
+      <article><b>${(resumen.demandaW/1000).toFixed(2)} kW</b><small>Potencia demandada</small></article>
+      <article><b>${ev.tipoSuministro}</b><small>Suministro recomendado</small></article>
+      <article><b>${ev.corriente.toFixed(1)} A</b><small>Corriente estimada</small></article>
     </section>
-
-    <section class="empalme-result ${e.estadoClase}" id="empalmeResultado">
-      <h3>${e.titulo}</h3>
-      <p>${e.mensaje}</p>
-      <p><b>Corriente estimada:</b> ${e.corriente.toFixed(1)} A</p>
-      <p><b>Importante:</b> la distribuidora define protección/limitador del medidor según potencia contratada y factibilidad. GIAE recomienda, advierte y documenta.</p>
+    <section class="empalme-result ${ev.clase}">
+      <h3>${ev.titulo}</h3><p>${ev.mensaje}</p>
+      <div class="empalme-kv">
+        <p><b>Empalme recomendado:</b> ${ev.tipoEmpalme}</p>
+        <p><b>Potencia normalizada:</b> ${ev.potenciaSugerida}</p>
+        <p><b>Automático/limitador preliminar:</b> ${ev.limitador}</p>
+        <p><b>Distribuidora:</b> ${dist}</p>
+      </div>
       <div class="folder-buttons">
-        <button class="btn primary" id="btnValidarEmpalme">Validar potencia solicitada</button>
-        <button class="btn" onclick="abrirModalRic217()">📚 Ver fundamento normativo</button>
-        <button class="btn next" onclick="openModule('carpeta')">Ver Carpeta Técnica</button>
+        <button class="btn primary" id="btnValidarEmp220">Validar RIC 1</button>
+        <button class="btn" onclick="abrirModalRic220()">📚 Ver fundamento RIC 1</button>
+        <button class="btn next" id="btnContinuarTierra220">Guardar y continuar a Tierra</button>
       </div>
+      <div id="empValidacion220" class="inline-check">${renderValidacionEmpalme220(ev)}</div>
     </section>
-
     <section class="folder-grid">
-      <article class="folder-panel">
-        <h3>Orden técnica GIAE</h3>
-        <ol>
-          <li>Demanda calculada: ${(r.demandaW/1000).toFixed(2)} kW.</li>
-          <li>Tipo recomendado: ${e.tipoRecomendado}.</li>
-          <li>Potencia normalizada sugerida: ${e.normalSugerida}.</li>
-          <li>Validar factibilidad con ${dist}.</li>
-          <li>No declarar automático de medidor como si lo definiera el instalador.</li>
-        </ol>
-      </article>
-      <article class="folder-panel">
-        <h3>Documentos base ${dist}</h3>
-        ${renderDocsEmpalme217(dist)}
-      </article>
+      <article class="folder-panel"><h3>Orden técnica GIAE</h3><ol><li>Demanda: ${(resumen.demandaW/1000).toFixed(2)} kW.</li><li>Suministro: ${ev.tipoSuministro}.</li><li>Potencia normalizada: ${ev.potenciaSugerida}.</li><li>Validar factibilidad con ${dist}.</li><li>Continuar a Tierra: TP, TS y equipotencialidad.</li></ol></article>
+      <article class="folder-panel"><h3>Checklist ${dist}</h3>${renderDocsEmpalme220(dist)}</article>
     </section>
-
-    <section class="folder-panel">
-      <h3>Potencias normalizadas preliminares</h3>
-      <div class="norm-list">
-        <div><b>Monofásico:</b> ${potenciasMono217().join(" kW · ")} kW</div>
-        <div><b>Trifásico:</b> ${potenciasTri217().join(" kW · ")} kW</div>
-      </div>
-    </section>
-
-    ${modalRic217()}
+    <section class="folder-panel"><h3>Potencias normalizadas preliminares</h3><div class="norm-list"><div><b>Monofásico:</b> ${potenciasMono220().join(" kW · ")} kW</div><div><b>Trifásico:</b> ${potenciasTri220().join(" kW · ")} kW</div></div></section>
+    ${modalRic220(ev)}
   `;
-  document.getElementById("empalmeDistribuidora").onchange = ()=>renderEmpalmeInteligente();
-  document.getElementById("btnValidarEmpalme").onclick = validarPotenciaSolicitada217;
-  view.scrollIntoView({behavior:"smooth", block:"start"});
+  document.getElementById("empDist220").onchange=()=>renderEmpalmeInteligente();
+  document.getElementById("btnValidarEmp220").onclick=validarEmpalmeSolicitado220;
+  document.getElementById("btnContinuarTierra220").onclick=guardarEmpalmeContinuarTierra220;
+  view.scrollIntoView({behavior:"smooth",block:"start"});
 }
+function getProyectoSeguro220(){try{return typeof getProyectoSeguro==="function"?getProyectoSeguro():JSON.parse(localStorage.getItem(STORAGE_KEY)||"null")}catch(e){return null}}
+function getResumenEmpalme220(){
+  let r=null; try{if(typeof resumenIngenieria==="function")r=resumenIngenieria()}catch(e){}
+  if(r&&typeof r.demandaW==="number")return{totalW:Number(r.totalW||0),demandaW:Number(r.demandaW||0),tri:!!r.tri,corriente:Number(r.corriente||0),cargas:Array.isArray(r.cargas)?r.cargas:[]};
+  let cargas=[]; try{cargas=typeof getCargasSeguras==="function"?getCargasSeguras():JSON.parse(localStorage.getItem(CARGAS_KEY)||"[]")}catch(e){}
+  const totalW=(Array.isArray(cargas)?cargas:[]).reduce((s,c)=>s+Number(c.totalW||(Number(c.cantidad||1)*Number(c.potenciaUnidad||c.potencia||0))||0),0);
+  const demandaW=(Array.isArray(cargas)?cargas:[]).reduce((s,c)=>s+Number(c.demandaW||c.totalW||(Number(c.cantidad||1)*Number(c.potenciaUnidad||c.potencia||0))||0),0);
+  const tri=cargas.some(c=>c.alimentacion==="Trifásico"||c.fase==="R-S-T");
+  const corriente=tri?demandaW/(Math.sqrt(3)*380*0.92):demandaW/(220*0.92);
+  return{totalW,demandaW,tri,corriente,cargas};
+}
+function normalizarDistribuidora220(d){const s=String(d||"CGE").toUpperCase();if(s.includes("COPELEC"))return"COPELEC";if(s.includes("FRONTEL")||s.includes("SAESA"))return"SAESA / FRONTEL";if(s.includes("ENEL"))return"ENEL";if(s.includes("CHIL"))return"CHILQUINTA";return"CGE"}
+function getDistribuidoras220(){const b=(typeof DISTRIBUIDORAS!=="undefined")?Object.keys(DISTRIBUIDORAS):[];return[...new Set([...b,"CGE","COPELEC","SAESA / FRONTEL","ENEL","CHILQUINTA"])]}
+function potenciasMono220(){return[1.5,2.2,3.6,5,6,9,10]}
+function potenciasTri220(){return[3.6,6,10,15,20,25,30,40,50,75,100]}
+function evaluarEmpalme220(resumen,dist){
+  const kw=Math.max(0,resumen.demandaW/1000), tipo=(kw>10||resumen.tri)?"Trifásico":"Monofásico", lista=tipo==="Trifásico"?potenciasTri220():potenciasMono220(), normal=lista.find(x=>x>=kw);
+  const corriente=tipo==="Trifásico"?resumen.demandaW/(Math.sqrt(3)*380*0.92):resumen.demandaW/(220*0.92);
+  const mono=[{kw:1.5,a:10},{kw:2.2,a:10},{kw:3.6,a:16},{kw:5,a:25},{kw:6,a:32},{kw:9,a:40},{kw:10,a:50}], tri=[{kw:3.6,a:6},{kw:6,a:10},{kw:10,a:16},{kw:15,a:25},{kw:20,a:32},{kw:25,a:40},{kw:30,a:50},{kw:40,a:63},{kw:50,a:80},{kw:75,a:125},{kw:100,a:160}];
+  const lim=normal?((tipo==="Trifásico"?tri:mono).find(x=>x.kw>=normal)?.a||"Estudio"):"Estudio";
+  let clase="ok",titulo="✅ Empalme compatible preliminar",mensaje="La demanda puede asociarse a una potencia normalizada preliminar.";
+  if(!normal){clase="error";titulo="❌ Requiere estudio especial";mensaje="La demanda supera la tabla preliminar integrada. Se requiere factibilidad formal."}
+  else if(tipo==="Monofásico"&&kw>9){clase="warn";titulo="🟡 Límite monofásico cercano";mensaje="Evaluar trifásico si existe observación de la distribuidora."}
+  return{kw,tipoSuministro:tipo,corriente,potenciaSugerida:normal?`${normal} kW`:"Estudio especial",potenciaSugeridaNumero:normal||"",tipoEmpalme:tipo==="Trifásico"?(kw>50?"BT Trifásico indirecto / estudio":"BT Trifásico"):"BT Monofásico",limitador:typeof lim==="number"?`${tipo==="Trifásico"?"3x":"1x"}${lim}A`:"Requiere estudio",clase,titulo,mensaje,dist}
+}
+function renderValidacionEmpalme220(e){return e.clase==="ok"?`<b>✅ Validación RIC 1 preliminar:</b> compatible con potencia normalizada sugerida.`:e.clase==="warn"?`<b>⚠️ Observación RIC 1:</b> ${e.mensaje}`:`<b>❌ No compatible preliminar:</b> ${e.mensaje}`}
+function validarEmpalmeSolicitado220(){
+  const r=getResumenEmpalme220(), dist=document.getElementById("empDist220")?.value||"CGE", sol=Number(document.getElementById("empKw220")?.value||0), base=evaluarEmpalme220(r,dist), lista=base.tipoSuministro==="Trifásico"?potenciasTri220():potenciasMono220(), box=document.getElementById("empValidacion220");
+  if(!box)return; if(!sol){box.className="inline-check error";box.innerHTML="<b>❌ Falta potencia solicitada.</b>";return}
+  const demanda=r.demandaW/1000;
+  if(!lista.includes(sol)){box.className="inline-check error";box.innerHTML=`<b>❌ Error RIC 1:</b> ${sol} kW no está en tabla preliminar para ${base.tipoSuministro}. Cercanas: ${potenciasCercanas220(sol,lista).join(" kW / ")} kW.`}
+  else if(sol<demanda){box.className="inline-check error";box.innerHTML=`<b>❌ Error técnico:</b> potencia solicitada (${sol} kW) menor que demanda (${demanda.toFixed(2)} kW).`}
+  else{box.className="inline-check ok";box.innerHTML=`<b>✅ Compatible preliminar:</b> ${sol} kW cubre la demanda (${demanda.toFixed(2)} kW). Validar factibilidad con ${dist}.`}
+}
+function potenciasCercanas220(valor,lista){return[...lista].sort((a,b)=>Math.abs(a-valor)-Math.abs(b-valor)).slice(0,2)}
+function renderDocsEmpalme220(dist){const d=(typeof DISTRIBUIDORAS!=="undefined"&&DISTRIBUIDORAS[dist])?DISTRIBUIDORAS[dist]:null;if(!d)return`<p>No hay checklist configurado.</p>`;return`<p>${esc220(d.descripcion||"")}</p><ul class="emp-docs">${d.documentos.map(x=>`<li><span>${x.obligatorio?"🔴":"🟡"}</span><div><b>${esc220(x.nombre)}</b><small>${esc220(x.detalle||"")}</small></div></li>`).join("")}</ul>`}
+function guardarEmpalmeContinuarTierra220(){const r=getResumenEmpalme220(),dist=document.getElementById("empDist220")?.value||"CGE",ev=evaluarEmpalme220(r,dist);localStorage.setItem("giae_chile_empalme_v220",JSON.stringify({version:APP_VERSION,actualizado:new Date().toISOString(),distribuidora:dist,evaluacion:ev,resumen:{totalW:r.totalW,demandaW:r.demandaW,tri:r.tri,corriente:r.corriente}}));toast("Empalme guardado. Pasando a Tierra...");setTimeout(()=>openModule("tierra"),650)}
+function modalRic220(e){return`<div class="ric-modal" id="ric220Modal"><div class="ric-modal-box"><h3>📚 Fundamento RIC 1 aplicado</h3><p><b>Aplicación GIAE:</b> compara demanda con suministro, potencia normalizada preliminar y factibilidad.</p><p><b>Resultado:</b> ${esc220(e.titulo)} · ${esc220(e.potenciaSugerida)} · ${esc220(e.tipoEmpalme)}.</p><p><b>Importante:</b> la distribuidora define condiciones finales del empalme, medidor, limitador y factibilidad.</p><button class="btn primary" onclick="cerrarModalRic220()">Cerrar y volver al empalme</button></div></div>`}
+function abrirModalRic220(){document.getElementById("ric220Modal")?.classList.add("show")}
+function cerrarModalRic220(){document.getElementById("ric220Modal")?.classList.remove("show")}
+function esc220(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 
 function potenciasMono217(){ return [1.5,2.2,3.6,5,6,9,10]; }
 function potenciasTri217(){ return [3.6,6,10,15,20,25,30,40,50,75,100]; }
@@ -1495,7 +1511,7 @@ function renderUnilinealAutomatico(){
 
     view.className = "module-view show ready unilineal-view unilineal-v951";
     view.innerHTML = `
-      <span class="badge ready">Módulo funcional v2.1.9.5.2</span>
+      <span class="badge ready">Módulo funcional v2.2.0</span>
       <h2>⌁ Unilineal v9.5.1 Restaurado</h2>
       <p>Motor gráfico restaurado desde v9.5.1: automático con media luna, círculos, rayita central, diferencial alineado y diseño tipo plano.</p>
       <p class="privacy-note">📐 Vista técnica preliminar. El instalador autorizado SEC debe validar el plano final.</p>
@@ -1622,7 +1638,7 @@ function renderSVG951(cargas, proyecto, esTri, general, barra){
   const cs = cargas.length ? cargas : [];
   const n = Math.max(cs.length,1);
 
-  // Ajuste v2.1.9.5.2:
+  // Ajuste v2.2.0:
   // El dibujo se adapta a la cantidad real de circuitos.
   // La barra horizontal nace en el primer circuito y termina en el último circuito.
   // El automático general se centra sobre el conjunto de circuitos, no sobre la hoja completa.

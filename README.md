@@ -1,20 +1,18 @@
-# GIAE Chile v2.1.9.5.2 - Unilineal ajustado a circuitos
+# GIAE Chile v2.2.0 - Empalme Inteligente
 
 Creado por Julio Vera Concha.
 
-## Base usada
-GIAE Chile v2.1.9.5.1, construida sobre la base actual v2.1.9.4.2.
+Base: v2.1.9.5.2.
 
-## Corrección aplicada
-- El dibujo se adapta a la cantidad de circuitos que ingrese el instalador o estudiante.
-- El automático general superior queda centrado con el conjunto del cuadro unilineal.
-- La barra horizontal principal comienza en el primer circuito y termina en el último circuito.
-- Se mantiene el motor gráfico v9.5.1:
-  - automático con círculos, media luna y rayita central;
-  - diferencial P/D alineado;
-  - salida numerada.
-- No se modifican Proyecto, Cargas, Cuadro, Carpeta Técnica ni Asistente Documental.
+Regla: no se modifican Proyecto, Cargas, Cuadro de Carga, Unilineal, Carpeta Técnica ni Asistente Documental.
 
-## Barras
-- Monofásico: Barra repartidora bipolar 2x100A 10kA.
-- Trifásico: Barra repartidora tetrapolar 4x100A 10kA.
+Funciones:
+- Lee Proyecto y Cargas automáticamente.
+- Calcula potencia instalada, demanda y corriente.
+- Recomienda monofásico/trifásico.
+- Recomienda empalme BT monofásico o trifásico.
+- Sugiere potencia normalizada preliminar.
+- Sugiere automático/limitador preliminar.
+- Valida RIC 1.
+- Muestra checklist por distribuidora.
+- Guarda empalme y continúa a Tierra.
