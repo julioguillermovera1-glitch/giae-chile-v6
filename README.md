@@ -1,16 +1,28 @@
-# GIAE Chile v2.1.9.4 - Unilineal Visual SEC
+# GIAE Chile v2.1.9.5.1 - Unilineal v9.5.1 sobre base actual
 
 Creado por Julio Vera Concha.
 
-## Corrección visual
-- La barra horizontal ya no se sale del marco del proyecto.
-- Se reduce la escala del dibujo para parecerse más a la versión 9.5.1.
-- Se compactan automáticos, diferenciales, numeración y cargas.
-- Se reposiciona automático general sobre la barra.
-- Se mantiene monofásico sólo R.
-- Se mantiene barra monofásica: bipolar 2x100A 10kA.
-- Se mantiene barra trifásica: tetrapolar 4x100A 10kA.
-- Se corrige símbolo de automático con semicírculo lateral y línea vertical central.
+## Base usada
+Esta versión toma la base actual subida por Julio: v2.1.9.4.2.
+
+## Cambio aplicado
+Se reemplaza únicamente el motor gráfico del Unilineal por el motor estable de GIAE v9.5.1.
+
+## Conserva
+- Portada modular actual.
+- Proyecto.
+- Cargas.
+- Cuadro de carga.
+- Carpeta Técnica.
+- Asistente Documental.
+- Archivos data/distribuidoras.json y data/modulos.json.
+
+## Unilineal restaurado
+- Símbolo de automático con círculos, media luna y rayita central.
+- Diferencial P/D alineado.
+- Salida numerada y carga final.
+- Monofásico: barra repartidora bipolar 2x100A 10kA.
+- Trifásico: barra repartidora tetrapolar 4x100A 10kA.
 
 ## Nota
-No se modifican cálculos ni otros módulos. Sólo se corrige la presentación del SVG.
+La carpeta assets puede quedar vacía por ahora. No afecta el funcionamiento si no se usan imágenes locales.
