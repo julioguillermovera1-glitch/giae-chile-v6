@@ -1,24 +1,20 @@
-# GIAE Chile v2.5.1 - Exportación de Expediente
+# GIAE Chile v2.5.2 - Guía SEC Inteligente
 
 Creado por Julio Vera Concha.
 
-## Base
-GIAE Chile v2.5.0 Motor Normativo SEC.
+Base: GIAE Chile v2.5.1 Exportación de Expediente.
 
 ## Mejora
-Se agrega exportación desde Carpeta Técnica.
+Nuevo módulo Guía SEC Inteligente para TE1, TE2 y TE3.
 
-## Descargas
-- Proyecto.
-- Cuadro de Carga.
-- Unilineal.
-- Empalme.
-- Tierra.
-- Expediente Completo.
-
-## Formato
-HTML imprimible desde el navegador, compatible con guardar en PC o imprimir como PDF.
+## Funciones
+- Selección TE1 / TE2 / TE3.
+- Guía paso a paso para plataforma SEC / E-Declarador.
+- Datos que GIAE ya tiene.
+- Antecedentes que debe aportar el instalador.
+- Qué copiar desde GIAE.
+- Descarga de guía HTML.
+- Marcar guía como revisada.
 
 ## Regla
-No modifica Proyecto, Cargas, Cuadro, Unilineal, Empalme, Tierra, Carpeta Técnica ni Motor Normativo.
-Sólo agrega botones y funciones de exportación local.
+No modifica módulos existentes. Sólo agrega el módulo Guía SEC.

@@ -653,3 +653,14 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .export-251{border-color:#22c55e!important;background:#071b12!important}
 .export-grid-251{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
 @media(max-width:900px){.export-grid-251{grid-template-columns:1fr}}
+
+/* v2.5.2 · Guía SEC Inteligente */
+.guia-sec-252 .guia-sec-hero{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.guia-sec-hero article{border:1px solid #245366;background:#061017;border-radius:16px;padding:16px}
+.guia-data-list,.pendientes-sec-252,.checklist-252{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.guia-data-list li,.pendientes-sec-252 li,.checklist-252 li{border:1px solid #245366;background:#07131c;border-radius:10px;padding:9px}
+.guia-data-list li.ok,.checklist-252 li.ok{border-color:#22c55e;background:#071b12}
+.guia-data-list li.warn,.checklist-252 li.warn{border-color:#ffd166;background:#2a240e}
+.sec-steps-252{display:grid;gap:10px}.sec-steps-252 li{border-left:4px solid #22c55e;background:#061017;border-radius:10px;padding:10px}
+.copy-table-252{width:100%;border-collapse:collapse}.copy-table-252 th,.copy-table-252 td{border:1px solid #245366;padding:9px;text-align:left}.copy-table-252 th{width:42%;color:#8cffad}
+@media(max-width:900px){.guia-sec-252 .guia-sec-hero{grid-template-columns:1fr}}
