@@ -1,27 +1,23 @@
-# GIAE Chile v2.5.5 - Revisión de Expediente
+# GIAE Chile v2.5.6 - Presupuesto Inteligente
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.5.4 Documentación Inteligente.
+Base: GIAE Chile v2.5.5 Revisión de Expediente.
 
 ## Mejora
-Nuevo módulo independiente de Revisión de Expediente.
+Nuevo módulo independiente de Presupuesto Inteligente.
 
 ## Funciones
-- Revisa Proyecto.
-- Revisa Clasificación SEC.
-- Revisa Cargas y Cuadro.
-- Revisa Unilineal.
-- Revisa Empalme.
-- Revisa Tierra.
-- Revisa Carpeta Técnica.
-- Revisa Guía SEC.
-- Revisa Documentación.
-- Revisa Motor Normativo.
-- Genera porcentaje de cumplimiento.
-- Genera observaciones críticas y pendientes.
-- Guarda revisión.
-- Descarga revisión HTML.
+- Lee Proyecto, Cargas, Empalme, Tierra, Documentación y Revisión.
+- Sugiere materiales preliminares.
+- Calcula mano de obra.
+- Calcula gastos generales.
+- Calcula utilidad.
+- Calcula IVA.
+- Genera total estimado.
+- Permite parámetros editables.
+- Guarda presupuesto.
+- Descarga presupuesto HTML.
 
 ## Regla
-No modifica módulos operativos. Sólo lee información existente y genera una auditoría independiente.
+No modifica módulos operativos. Sólo lee información existente y genera presupuesto independiente.

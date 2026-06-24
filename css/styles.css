@@ -688,3 +688,12 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .revision-list-255{list-style:none;padding:0;margin:0;display:grid;gap:8px}.revision-list-255 li{border:1px solid #245366;border-radius:10px;padding:10px;background:#061017}.revision-list-255.critica li{border-color:#ff6b6b;background:#2a1010}.revision-list-255.pendiente li{border-color:#ffd166;background:#2a240e}.revision-list-255.ok li{border-color:#22c55e;background:#071b12}
 .revision-preview-255{background:#f8fafc;color:#111;border-radius:14px;padding:20px;max-height:520px;overflow:auto}.revision-preview-255 h1{border-bottom:3px solid #111;padding-bottom:8px}.revision-preview-255 h2{border-bottom:1px solid #ccc;padding-bottom:5px}.revision-preview-255 table{width:100%;border-collapse:collapse;margin:12px 0}.revision-preview-255 th,.revision-preview-255 td{border:1px solid #999;padding:8px;text-align:left}
 @media(max-width:900px){.revision-grid-255{grid-template-columns:1fr}}
+
+/* v2.5.6 · Presupuesto Inteligente */
+.budget-kpis-256{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:16px 0}
+.budget-kpis-256 article{border:1px solid #22c55e;background:#071b12;border-radius:14px;padding:14px;text-align:center}
+.budget-kpis-256 b{display:block;font-size:1.15rem;color:#8cffad}.budget-kpis-256 small{color:#8db0bb}
+.budget-table-256{width:100%;border-collapse:collapse;margin:10px 0}.budget-table-256 th,.budget-table-256 td{border:1px solid #245366;padding:8px;text-align:left}.budget-table-256 th{color:#8cffad}.budget-table-256 input{width:95%;background:#061017;color:#fff;border:1px solid #245366;border-radius:8px;padding:6px}.budget-table-256 .total{font-weight:700;background:#071b12}
+.budget-param-grid-256{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.budget-param-grid-256 label{display:grid;gap:6px}.budget-param-grid-256 input{background:#061017;color:#fff;border:1px solid #245366;border-radius:10px;padding:10px}
+.presupuesto-preview-256{background:#f8fafc;color:#111;border-radius:14px;padding:20px;max-height:520px;overflow:auto}.presupuesto-preview-256 h1{border-bottom:3px solid #111;padding-bottom:8px}.presupuesto-preview-256 h2{border-bottom:1px solid #ccc;padding-bottom:5px}.presupuesto-preview-256 table{width:100%;border-collapse:collapse;margin:12px 0}.presupuesto-preview-256 th,.presupuesto-preview-256 td{border:1px solid #999;padding:8px;text-align:left}
+@media(max-width:900px){.budget-kpis-256,.budget-param-grid-256{grid-template-columns:1fr}}
