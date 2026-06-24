@@ -670,3 +670,13 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .sec-class-card-253 label{display:grid;gap:6px;margin-top:10px}
 .sec-class-card-253 select{width:100%;border:1px solid #245366;border-radius:10px;padding:10px;background:#061017;color:#fff}
 .sec-desc-253{margin-top:10px;border:1px solid #245366;background:#061017;border-radius:12px;padding:12px;color:#c7f9d4}
+
+/* v2.5.4 · Documentación Inteligente */
+.docs-254 .doc-status-grid-254{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.doc-status-grid-254 article{border:1px solid #245366;background:#061017;border-radius:12px;padding:12px}
+.doc-status-grid-254 article.ok{border-color:#22c55e;background:#071b12}.doc-status-grid-254 article.warn{border-color:#ffd166;background:#2a240e}
+.doc-status-grid-254 small{display:block;color:#8db0bb;margin-top:5px}
+.doc-card-254 button{margin:4px 6px 4px 0}
+.doc-preview-254{background:#f8fafc;color:#111;border-radius:14px;padding:20px;max-height:520px;overflow:auto}
+.doc-preview-254 h1{border-bottom:3px solid #111;padding-bottom:8px}.doc-preview-254 h2{border-bottom:1px solid #ccc;padding-bottom:5px}.doc-preview-254 table{width:100%;border-collapse:collapse;margin:12px 0}.doc-preview-254 th,.doc-preview-254 td{border:1px solid #999;padding:8px;text-align:left}
+@media(max-width:900px){.docs-254 .doc-status-grid-254{grid-template-columns:1fr}}
