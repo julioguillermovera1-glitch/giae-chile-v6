@@ -626,3 +626,12 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 @media(max-width:1000px){
   .tierra-auto-box,.auto-rec-grid{grid-template-columns:1fr}
 }
+
+/* v2.4.0 · Carpeta Técnica Inteligente */
+.carpeta-240 .exp-progress{border:1px solid #245366;background:#061017;border-radius:16px;padding:16px;margin:16px 0}
+.exp-progress-bar{height:18px;background:#0b1f2c;border-radius:999px;overflow:hidden;border:1px solid #1d4656}.exp-progress-bar span{display:block;height:100%;background:linear-gradient(90deg,#22c55e,#8cffad)}
+.exp-dl{display:grid;grid-template-columns:1fr 1.5fr;gap:10px}.exp-dl dd{text-align:left}
+.mod-state-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mod-state{border:1px solid #245366;border-radius:12px;padding:12px;background:#061017}.mod-state.ok{border-color:#22c55e;background:#071b12}.mod-state.warn{border-color:#ffd166;background:#2a240e}.mod-state small{display:block;color:#8db0bb;margin-top:5px}
+.doc-gen-list,.checklist-240{list-style:none;padding:0;margin:0;display:grid;gap:8px}.doc-gen-list li,.checklist-240 li{border:1px solid #245366;border-radius:10px;padding:10px;background:#061017;display:flex;gap:9px;align-items:center}.doc-gen-list li.ok,.checklist-240 li.ok{border-color:#22c55e;background:#071b12}.doc-gen-list li.warn,.checklist-240 li.warn{border-color:#ffd166;background:#2a240e}.doc-gen-list small,.checklist-240 small{margin-left:auto;color:#8db0bb}
+.obs-warn,.obs-ok{border-radius:14px;padding:14px}.obs-warn{border:1px solid #ffd166;background:#2a240e}.obs-ok{border:1px solid #22c55e;background:#071b12}
+@media(max-width:900px){.mod-state-grid{grid-template-columns:1fr}.exp-dl{grid-template-columns:1fr}}

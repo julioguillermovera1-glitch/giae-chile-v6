@@ -1,4 +1,4 @@
-const APP_VERSION = "2.3.1";
+const APP_VERSION = "2.4.0";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -8,7 +8,7 @@ const modules = [
   {id:"unilineal", icon:"⌁", label:"Unilineal", status:"ready", desc:"Módulo funcional: motor gráfico restaurado desde v9.5.1, adaptado a Cargas, Cuadro y Empalme."},
   {id:"tierra", icon:"⏚", label:"Tierra", status:"ready", desc:"Módulo funcional: Tierra Automática TP/TS con recomendación según potencia, empalme y distribuidora."},
   {id:"empalme", icon:"🔌", label:"Empalme", status:"ready", desc:"Módulo funcional: empalme inteligente con RIC 1, potencia normalizada, distribuidora y checklist documental."},
-  {id:"carpeta", icon:"📂", label:"Carpeta Técnica", status:"ready", desc:"Módulo funcional: revisión documental por distribuidora, checklist, archivos y estado de carpeta."},
+  {id:"carpeta", icon:"📂", label:"Carpeta Técnica", status:"ready", desc:"Módulo funcional: expediente técnico consolidado desde Proyecto, Cargas, Cuadro, Unilineal, Empalme y Tierra."},
   {id:"presupuesto", icon:"💰", label:"Presupuesto", status:"missing", desc:"Pendiente: módulo separado de materiales, mano de obra, IVA y utilidad."},
   {id:"asistente", icon:"🤖", label:"Asistente Documental", status:"ready", desc:"Módulo funcional: responde qué documentos exige cada distribuidora y muestra checklist."},
   {id:"auditoria", icon:"🧩", label:"Auditoría", status:"missing", desc:"Pendiente: trazabilidad, historial de consultas y registro de errores."},
@@ -330,7 +330,7 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.3.1</span>
+    <span class="badge ready">Módulo funcional v2.4.0</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
     <p class="privacy-note">🔒 Privacidad: los datos quedan sólo en este navegador. Al completar el proyecto puedes continuar a Cargas sin perder información.</p>
@@ -833,7 +833,7 @@ function renderCargas(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cargas-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.3.1</span>
+    <span class="badge ready">Módulo funcional v2.4.0</span>
     <h2>⚡ Cargas por circuitos</h2>
     <p>Ingresa los circuitos del proyecto. GIAE calcula potencia instalada, demanda estimada y una recomendación preliminar de empalme.</p>
     <p class="privacy-note">📌 Regla técnica: la distribuidora define la protección/limitador del medidor según potencia contratada y factibilidad. GIAE sólo recomienda y advierte.</p>
@@ -1124,45 +1124,46 @@ function cerrarRicModal(){
 
 
 
+
 function renderCarpetaTecnica(){
-  const proyecto = getProyectoGuardado ? getProyectoGuardado() : null;
-  const distProyecto = proyecto?.ubicacion?.distribuidora || "CGE";
-  const distribuidora = normalizarDistribuidora(distProyecto);
-  const data = cargarCarpeta();
-  const seleccion = data.distribuidora || distribuidora;
-  const view = document.getElementById("moduleView");
-  view.className = "module-view show ready carpeta-view";
-  view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.3.1</span>
-    <h2>📂 Carpeta Técnica</h2>
-    <p>Revisa documentos según la distribuidora seleccionada. Puedes usar GIAE sólo para revisar o para preparar un envío posterior.</p>
-    <p class="privacy-note">🔒 Modo actual: revisión local. El envío por correo y respaldo en servidor se implementarán después.</p>
-    <section class="folder-head">
-      <div><h3>Proyecto vinculado</h3><p><b>Proyecto:</b> ${proyecto?.proyecto?.nombre || "Sin proyecto"} · <b>Cliente:</b> ${proyecto?.cliente?.nombre || "Sin cliente"} · <b>Distribuidora:</b> ${seleccion}</p></div>
-      <label>Modo de trabajo<select id="modoCarpeta"><option value="revisar">Sólo revisar documentos</option><option value="preparar">Revisar y preparar envío</option></select></label>
-      <label>Distribuidora<select id="distCarpeta">${Object.keys(DISTRIBUIDORAS).map(d=>`<option ${d===seleccion?'selected':''}>${d}</option>`).join("")}</select></label>
-    </section>
-    <section class="folder-upload"><h3>Subir documentos</h3><p>Selecciona archivos o ZIP. Esta versión revisa nombres y tipos de archivo de forma local.</p><input id="fileInputCarpeta" type="file" multiple accept=".pdf,.dwg,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx,.zip"><div class="folder-buttons"><button class="btn primary" id="btnGuardarCarpeta">Guardar revisión</button><button class="btn danger" id="btnLimpiarCarpeta">Limpiar carpeta</button><button class="btn" id="btnRevisarCarpeta">Revisar documentos</button></div></section>
-    <section class="folder-grid"><article class="folder-panel"><h3>Checklist ${seleccion}</h3><div id="checklistDistribuidora"></div></article><article class="folder-panel"><h3>Archivos detectados</h3><div id="archivosDetectados"></div></article></section>
-    <section class="folder-result" id="resultadoCarpeta"></section>
-    <div class="ric-modal" id="distModal" aria-hidden="true"><div class="ric-modal-box"><h3 id="distModalTitle">Requisito aplicado</h3><div id="distModalBody"></div><button type="button" class="btn primary" onclick="cerrarDistModal()">Cerrar y volver a Carpeta</button></div></div>`;
-  document.getElementById("modoCarpeta").value = data.modo || "revisar";
-  bindCarpeta(); renderChecklistCarpeta(); renderArchivosCarpeta(); revisarCarpeta();
-  view.scrollIntoView({behavior:"smooth", block:"start"});
+  const v=document.getElementById("moduleView"), e=exp240();
+  v.className="module-view show ready carpeta-view carpeta-240";
+  v.innerHTML=`<span class="badge ready">Módulo funcional v2.4.0</span>
+  <h2>📂 Carpeta Técnica Inteligente</h2>
+  <p>Consolida automáticamente Proyecto, Cargas, Cuadro, Unilineal, Empalme y Tierra en un expediente técnico.</p>
+  <p class="privacy-note">📌 No recalcula ni modifica módulos anteriores. Sólo lee y organiza información.</p>
+  <section class="folder-head"><div><h3>Expediente técnico</h3><p><b>Proyecto:</b> ${esc240(e.proyectoNombre)} · <b>Cliente:</b> ${esc240(e.cliente)} · <b>Distribuidora:</b> ${esc240(e.distribuidora)}</p></div><div class="uni-mini"><b>${e.porcentaje}%</b><small>Avance</small></div><div class="uni-mini"><b>${e.estado}</b><small>Estado</small></div></section>
+  <section class="exp-progress"><div class="exp-progress-bar"><span style="width:${e.porcentaje}%"></span></div><p>${e.mensaje}</p></section>
+  <section class="folder-grid"><article class="folder-panel"><h3>1. Resumen del Proyecto</h3>${resProyecto240(e)}</article><article class="folder-panel"><h3>2. Resumen Eléctrico</h3>${resElectrico240(e)}</article></section>
+  <section class="folder-panel"><h3>3. Estado de módulos</h3><div class="mod-state-grid">${e.modulos.map(m=>`<div class="mod-state ${m.ok?'ok':'warn'}"><b>${m.ok?'✓':'⚠'} ${m.nombre}</b><small>${m.detalle}</small></div>`).join("")}</div></section>
+  <section class="folder-grid"><article class="folder-panel"><h3>4. Documentos generados</h3>${docs240(e)}</article><article class="folder-panel"><h3>5. Checklist ${esc240(e.distribuidora)}</h3>${check240(e)}</article></section>
+  <section class="folder-panel"><h3>6. Observaciones automáticas</h3>${obs240(e)}</section>
+  <section class="folder-panel"><h3>Acciones</h3><div class="folder-buttons"><button class="btn primary" onclick="renderCarpetaTecnica()">Actualizar expediente</button><button class="btn" onclick="validarExp240()">Validar expediente</button><button class="btn" onclick="guardarExp240()">Guardar expediente</button><button class="btn next" onclick="guardarExp240(true)">Continuar a Documentación</button></div><div id="validacionCarpeta240" class="inline-check">${e.porcentaje>=80?'✅ Expediente avanzado.':'⚠ Expediente aún incompleto.'}</div></section>`;
+  v.scrollIntoView({behavior:"smooth",block:"start"});
 }
-function normalizarDistribuidora(d){const up=String(d||"").toUpperCase(); if(up.includes("ENEL"))return"ENEL"; if(up.includes("CHIL"))return"CHILQUINTA"; if(up.includes("COPELEC"))return"COPELEC"; if(up.includes("FRONTEL")||up.includes("SAESA"))return"SAESA / FRONTEL"; return"CGE";}
-function cargarCarpeta(){try{return JSON.parse(localStorage.getItem(CARPETA_KEY)||"{}");}catch(e){return{};}}
-function guardarCarpeta(data){localStorage.setItem(CARPETA_KEY,JSON.stringify(data));}
-function bindCarpeta(){const dist=document.getElementById("distCarpeta"), modo=document.getElementById("modoCarpeta"), input=document.getElementById("fileInputCarpeta"); dist.onchange=()=>{const data=cargarCarpeta(); data.distribuidora=dist.value; guardarCarpeta(data); renderCarpetaTecnica();}; modo.onchange=()=>{const data=cargarCarpeta(); data.modo=modo.value; guardarCarpeta(data); revisarCarpeta();}; input.onchange=()=>{const archivos=Array.from(input.files||[]).map(f=>({name:f.name,type:f.type,size:f.size,updated:new Date().toISOString()})); const data=cargarCarpeta(); data.archivos=archivos; data.distribuidora=dist.value; data.modo=modo.value; guardarCarpeta(data); renderArchivosCarpeta(); revisarCarpeta();}; document.getElementById("btnGuardarCarpeta").onclick=()=>{const data=cargarCarpeta(); data.actualizado=new Date().toISOString(); guardarCarpeta(data); toast("Carpeta técnica guardada.");}; document.getElementById("btnLimpiarCarpeta").onclick=()=>{if(!confirm("¿Limpiar archivos detectados y revisión de carpeta?"))return; localStorage.removeItem(CARPETA_KEY); renderCarpetaTecnica(); toast("Carpeta técnica limpiada.");}; document.getElementById("btnRevisarCarpeta").onclick=revisarCarpeta;}
-function renderChecklistCarpeta(){const dist=document.getElementById("distCarpeta")?.value||"CGE", box=document.getElementById("checklistDistribuidora"); if(!box)return; const req=DISTRIBUIDORAS[dist]; box.innerHTML=`<p>${req.descripcion}</p><div class="checklist-list">${req.documentos.map(doc=>`<div class="check-item"><span>${doc.obligatorio?"🔴":"🟡"}</span><div><b>${doc.nombre}</b><small>${doc.obligatorio?"Obligatorio":"Condicional"} · ${doc.detalle}</small></div><button class="mini-info" onclick="verDetalleDistribuidora('${dist}','${doc.id}')">Ver</button></div>`).join("")}</div>`;}
-function renderArchivosCarpeta(){const data=cargarCarpeta(), archivos=data.archivos||[], box=document.getElementById("archivosDetectados"); if(!box)return; box.innerHTML=archivos.length?`<div class="file-list">${archivos.map(a=>`<div class="file-item"><b>${iconoArchivo(a.name)} ${a.name}</b><small>${formatoPeso(a.size)}</small></div>`).join("")}</div>`:`<p>No hay archivos cargados todavía.</p>`;}
-function iconoArchivo(name){const n=name.toLowerCase(); if(n.endsWith(".pdf"))return"📄"; if(n.endsWith(".dwg"))return"📐"; if(n.match(/\.(jpg|jpeg|png)$/))return"🖼"; if(n.endsWith(".zip"))return"🗜"; if(n.match(/\.(doc|docx)$/))return"📝"; if(n.match(/\.(xls|xlsx)$/))return"📊"; return"📎";}
-function formatoPeso(bytes){if(!bytes)return"0 KB"; if(bytes<1024*1024)return`${(bytes/1024).toFixed(1)} KB`; return`${(bytes/1024/1024).toFixed(2)} MB`;}
-function revisarCarpeta(){const data=cargarCarpeta(), dist=document.getElementById("distCarpeta")?.value||data.distribuidora||"CGE", modo=document.getElementById("modoCarpeta")?.value||data.modo||"revisar", archivos=data.archivos||[], req=DISTRIBUIDORAS[dist]; const resultado=req.documentos.map(doc=>({...doc,encontrado:detectarDocumento(doc,archivos)})), obligatorios=resultado.filter(x=>x.obligatorio), faltantes=obligatorios.filter(x=>!x.encontrado), presentes=resultado.filter(x=>x.encontrado), box=document.getElementById("resultadoCarpeta"); if(!box)return; let estado="incompleta"; if(archivos.length&&faltantes.length===0)estado=modo==="preparar"?"lista":"revisada"; else if(archivos.length)estado="observada"; const estadoTxt={incompleta:"🔴 Carpeta incompleta",observada:"🟡 Carpeta con observaciones",revisada:"🟢 Documentos mínimos presentes",lista:"🟢 Lista para preparar envío"}[estado]; box.className=`folder-result ${estado}`; box.innerHTML=`<h3>${estadoTxt}</h3><p><b>Distribuidora:</b> ${dist} · <b>Modo:</b> ${modo==="revisar"?"Sólo revisar":"Revisar y preparar envío"}</p><div class="folder-metrics"><div><b>${archivos.length}</b><small>Archivos cargados</small></div><div><b>${presentes.length}</b><small>Requisitos detectados</small></div><div><b>${faltantes.length}</b><small>Obligatorios faltantes</small></div></div>${faltantes.length?`<h4>Faltan documentos obligatorios</h4><ul>${faltantes.map(f=>`<li>❌ ${f.nombre}</li>`).join("")}</ul>`:`<p>✅ No se detectan faltantes obligatorios según el checklist configurado.</p>`}<p><b>Nota:</b> revisión preliminar por nombres/tipos de archivo. Lectura inteligente se agregará con servidor documental.</p>`;}
-function detectarDocumento(doc,archivos){const texto=archivos.map(a=>a.name.toLowerCase()).join(" "), id=doc.id.toLowerCase(); const claves={te1:["te1","declaracion","declaración","sec"],te1qr:["te1","qr","sec"],anexo_te1:["anexo","te1","sec"],fotos:["foto","fotos","imagen","jpg","jpeg","png"],poste:["poste","placa","punto_red","punto-red"],croquis:["croquis","ubicacion","ubicación","coordenada"],rol:["rol","sii"],numero:["numero","número","municipal","dom"],medidor:["medidor","calibracion","calibración","pruebas"],empresa:["sociedad","empresa","rut","vigencia","personeria"],dominio:["dominio","cbr","conservador"],contrato:["contrato","suministro"],jurada:["jurada","notarial"],factibilidad:["factibilidad"],poder:["poder","notarial","autorizacion","autorización"],vecino:["vecino","cuenta","cliente"],construccion:["construccion","construcción","vivienda","caseta"],distancia:["distancia","30m","30_m"],camarilla:["camarilla","160"],tierra:["tierra","puesta","malla"],ubicacion:["ubicacion","ubicación","croquis","coordenada"]}; return (claves[id]||[id]).some(k=>texto.includes(k));}
-function verDetalleDistribuidora(dist,id){const doc=DISTRIBUIDORAS[dist]?.documentos.find(d=>d.id===id); if(!doc)return; document.getElementById("distModalTitle").textContent=`📚 ${dist} · ${doc.nombre}`; document.getElementById("distModalBody").innerHTML=`<p><b>Tipo:</b> ${doc.obligatorio?"Obligatorio":"Condicional"}</p><p><b>Detalle:</b> ${doc.detalle}</p><p><b>Acción GIAE:</b> cargar documento asociado. Si falta, la carpeta queda observada antes de envío.</p>`; document.getElementById("distModal").classList.add("show");}
-function cerrarDistModal(){document.getElementById("distModal")?.classList.remove("show");}
-function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.3.1</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
+function exp240(){
+ const p=getP240(), c=getC240(), r=getR240(c), emp=getJ240("giae_chile_empalme_v220"), tie=getJ240("giae_chile_tierra_v230");
+ const dist=normD240(emp?.distribuidora||p?.ubicacion?.distribuidora||"CGE");
+ const mod=[["Proyecto",!!p,p?"Datos base encontrados":"Falta crear proyecto"],["Cargas",c.length>0,c.length?`${c.length} circuitos registrados`:"Sin circuitos"],["Cuadro de Carga",c.length>0,c.length?"Protecciones disponibles":"Falta cuadro/cargas"],["Unilineal",c.length>0,c.length?"Generable automáticamente":"Falta información"],["Empalme",!!emp,emp?(emp.evaluacion?.tipoEmpalme||"Empalme guardado"):"Sin empalme"],["Tierra",!!tie,tie?`${tie.data?.tipoSistema||"Tierra"} · ${tie.calculo?.rt||"--"} Ω`:"Sin tierra"]];
+ const docs=[["Resumen del proyecto",!!p],["Cuadro de carga",c.length>0],["Unilineal",c.length>0],["Informe Empalme",!!emp],["Informe Tierra",!!tie],["TE1",false,true],["Croquis",false,true],["Fotografías",false,true],["Certificados",false,true]];
+ const pct=Math.round(docs.filter(d=>d[1]).length/docs.length*100);
+ return{p,c,r,emp,tie,distribuidora:dist,proyectoNombre:p?.proyecto?.nombre||"Sin proyecto",cliente:p?.cliente?.nombre||"Sin cliente",direccion:p?.ubicacion?.direccion||"Sin dirección",comuna:p?.ubicacion?.comuna||"",region:p?.ubicacion?.region||"",instalador:p?.instalador?.nombre||"Sin instalador",claseSEC:p?.instalador?.claseSEC||"Sin clase SEC",suministro:p?.electrico?.suministro||"Sin definir",porcentaje:pct,modulos:mod.map(x=>({nombre:x[0],ok:x[1],detalle:x[2]})),docs:docs.map(x=>({nombre:x[0],ok:x[1],manual:x[2]})),estado:pct>=90?"Listo":pct>=60?"Avanzado":"Incompleto",mensaje:pct>=90?"Expediente casi listo para documentación.":pct>=60?"Expediente técnico avanzado, faltan antecedentes documentales.":"Expediente incompleto, faltan módulos o documentos clave."};
+}
+function getP240(){try{return typeof getProyectoSeguro==="function"?getProyectoSeguro():JSON.parse(localStorage.getItem(STORAGE_KEY)||"null")}catch(e){return null}}
+function getC240(){try{return typeof getCargasSeguras==="function"?getCargasSeguras():JSON.parse(localStorage.getItem(CARGAS_KEY)||"[]")}catch(e){return[]}}
+function getJ240(k){try{return JSON.parse(localStorage.getItem(k)||"null")}catch(e){return null}}
+function getR240(c){let r=null;try{if(typeof resumenIngenieria==="function")r=resumenIngenieria()}catch(e){}; if(r)return r; const totalW=(c||[]).reduce((s,x)=>s+Number(x.totalW||(Number(x.cantidad||1)*Number(x.potenciaUnidad||x.potencia||0))||0),0); const demandaW=(c||[]).reduce((s,x)=>s+Number(x.demandaW||x.totalW||(Number(x.cantidad||1)*Number(x.potenciaUnidad||x.potencia||0))||0),0); return{totalW,demandaW,cargas:c}}
+function normD240(d){const s=String(d||"CGE").toUpperCase(); if(s.includes("COPELEC"))return"COPELEC"; if(s.includes("SAESA")||s.includes("FRONTEL"))return"SAESA / FRONTEL"; if(s.includes("ENEL"))return"ENEL"; if(s.includes("CHIL"))return"CHILQUINTA"; return"CGE"}
+function resProyecto240(e){return`<dl class="exp-dl"><dt>Cliente</dt><dd>${esc240(e.cliente)}</dd><dt>RUT</dt><dd>${esc240(e.p?.cliente?.rutFormateado||"Sin RUT")}</dd><dt>Dirección</dt><dd>${esc240(e.direccion)}</dd><dt>Comuna / Región</dt><dd>${esc240(e.comuna)} / ${esc240(e.region)}</dd><dt>Distribuidora</dt><dd>${esc240(e.distribuidora)}</dd><dt>Instalador SEC</dt><dd>${esc240(e.instalador)} / ${esc240(e.claseSEC)}</dd></dl>`}
+function resElectrico240(e){return`<dl class="exp-dl"><dt>Suministro</dt><dd>${esc240(e.suministro)}</dd><dt>Potencia instalada</dt><dd>${(Number(e.r.totalW||0)/1000).toFixed(2)} kW</dd><dt>Potencia demandada</dt><dd>${(Number(e.r.demandaW||0)/1000).toFixed(2)} kW</dd><dt>Empalme</dt><dd>${esc240(e.emp?.evaluacion?.tipoEmpalme||"Sin empalme")}</dd><dt>Potencia normalizada</dt><dd>${esc240(e.emp?.evaluacion?.potenciaSugerida||"Sin definir")}</dd><dt>Tierra</dt><dd>${esc240(e.tie?.data?.tipoSistema||"Sin tierra")}</dd></dl>`}
+function docs240(e){return`<ul class="doc-gen-list">${e.docs.map(d=>`<li class="${d.ok?'ok':'warn'}"><span>${d.ok?'✓':'☐'}</span><b>${esc240(d.nombre)}</b><small>${d.manual?'Externo/manual':'Generado desde GIAE'}</small></li>`).join("")}</ul>`}
+function check240(e){const base=(typeof DISTRIBUIDORAS!=="undefined"&&DISTRIBUIDORAS[e.distribuidora])?DISTRIBUIDORAS[e.distribuidora]:null; const auto=[["Proyecto",!!e.p],["Cuadro de carga",e.c.length>0],["Unilineal",e.c.length>0],["Empalme",!!e.emp],["Tierra",!!e.tie]]; const ext=base?base.documentos.map(d=>[d.nombre,false,d.obligatorio]):[["TE1",false,true],["Croquis",false,true],["Fotografías",false,true]]; return`<ul class="checklist-240">${auto.map(x=>`<li class="${x[1]?'ok':'warn'}"><span>${x[1]?'☑':'☐'}</span>${esc240(x[0])}</li>`).join("")}${ext.map(x=>`<li class="warn"><span>☐</span>${esc240(x[0])}<small>${x[2]?'obligatorio':'opcional'}</small></li>`).join("")}</ul>`}
+function obs240(e){const f=[...e.modulos.filter(m=>!m.ok).map(m=>m.nombre),...e.docs.filter(d=>!d.ok).map(d=>d.nombre)]; return f.length?`<div class="obs-warn"><b>⚠ Expediente incompleto.</b><p>Faltan o deben adjuntarse:</p><ul>${f.map(x=>`<li>${esc240(x)}</li>`).join("")}</ul></div>`:`<div class="obs-ok"><b>✅ Expediente completo.</b><p>Preparado para documentación SEC.</p></div>`}
+function validarExp240(){const e=exp240(),b=document.getElementById("validacionCarpeta240"); if(!b)return; b.className=e.porcentaje>=80?"inline-check ok":"inline-check error"; b.innerHTML=e.porcentaje>=80?`✅ Expediente avanzado: ${e.porcentaje}%. Puede continuar a Documentación.`:`⚠ Expediente incompleto: ${e.porcentaje}%. Revise observaciones.`}
+function guardarExp240(cont=false){const e=exp240(); localStorage.setItem("giae_chile_expediente_v240",JSON.stringify({version:APP_VERSION,actualizado:new Date().toISOString(),expediente:e})); toast("Expediente técnico guardado."); if(cont)setTimeout(()=>openModule("documentacion"),650)}
+function esc240(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+
+function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.4.0</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
 function responderAsistente(){const dist=document.getElementById("assistantDist")?.value||"CGE", data=DISTRIBUIDORAS[dist], box=document.getElementById("assistantAnswer"); if(!box)return; box.innerHTML=`<h3>Documentación requerida para ${dist}</h3><p>${data.descripcion}</p><h4>Documentos obligatorios</h4><ul>${data.documentos.filter(d=>d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")}</ul><h4>Documentos condicionales</h4><ul>${data.documentos.filter(d=>!d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")||"<li>No hay condicionales registrados.</li>"}</ul><p><b>Recomendación GIAE:</b> crear proyecto, subir carpeta técnica y ejecutar revisión antes de enviar a la distribuidora.</p>`;}
 
 
@@ -1262,7 +1263,7 @@ function renderCuadroInteligente(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cuadro-inteligente";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.3.1</span>
+    <span class="badge ready">Módulo funcional v2.4.0</span>
     <h2>▣ Cuadro de Carga Inteligente</h2>
     <p>Genera protecciones preliminares, conductores, canalizaciones y balance de fases desde las cargas ingresadas.</p>
     <p class="privacy-note">📌 Uso técnico preliminar: debe verificarse con RIC, cálculo de caída de tensión, ICC y criterio del instalador autorizado SEC.</p>
@@ -1326,7 +1327,7 @@ function renderTierraInteligente(){
   const guardado = getTierraGuardada230();
   view.className = "module-view show ready tierra-view tierra-230";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.3.1</span>
+    <span class="badge ready">Módulo funcional v2.4.0</span>
     <h2>⏚ Tierra Automática TP / TS</h2>
     <p>Define Tierra de Protección, Tierra de Servicio, sistema existente o proyectado, equipotencialidad y validación preliminar RIC 6.</p>
     <p class="privacy-note">📌 GIAE documenta y calcula de forma preliminar. La resistencia final debe medirse en terreno con instrumento adecuado.</p>
@@ -1715,7 +1716,7 @@ function svgSymbolTS230(x,y){
 function modalRic6230(){
   return `<div class="ric-modal" id="ric6230Modal"><div class="ric-modal-box">
     <h3>📚 Fundamento RIC 6 aplicado</h3>
-    <p><b>GIAE v2.3.1:</b> clasifica TP, TS, equipotencialidad y sistema de tierra, dejando registro para carpeta técnica.</p>
+    <p><b>GIAE v2.4.0:</b> clasifica TP, TS, equipotencialidad y sistema de tierra, dejando registro para carpeta técnica.</p>
     <p><b>Símbolos:</b> TP IEC 60417-5019, TS IEC 60417-5018 y equipotencialidad IEC 60417-5021.</p>
     <p><b>Validación:</b> la resistencia calculada es preliminar. El cumplimiento definitivo requiere medición en terreno.</p>
     <button class="btn primary" onclick="cerrarModalRic6230()">Cerrar y volver a Tierra</button>
@@ -1734,7 +1735,7 @@ function renderEmpalmeInteligente(){
   const ev=evaluarEmpalme220(resumen,dist);
   view.className="module-view show ready empalme-view empalme-220";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.3.1</span>
+    <span class="badge ready">Módulo funcional v2.4.0</span>
     <h2>🔌 Empalme Inteligente</h2>
     <p>Valida demanda, suministro, potencia normalizada, distribuidora y fundamento RIC 1 sin tocar módulos operativos.</p>
     <p class="privacy-note">📌 GIAE recomienda y advierte. La distribuidora define condiciones finales, medidor, limitador y factibilidad.</p>
@@ -1920,7 +1921,7 @@ function renderUnilinealAutomatico(){
 
     view.className = "module-view show ready unilineal-view unilineal-v951";
     view.innerHTML = `
-      <span class="badge ready">Módulo funcional v2.3.1</span>
+      <span class="badge ready">Módulo funcional v2.4.0</span>
       <h2>⌁ Unilineal v9.5.1 Restaurado</h2>
       <p>Motor gráfico restaurado desde v9.5.1: automático con media luna, círculos, rayita central, diferencial alineado y diseño tipo plano.</p>
       <p class="privacy-note">📐 Vista técnica preliminar. El instalador autorizado SEC debe validar el plano final.</p>
@@ -2047,7 +2048,7 @@ function renderSVG951(cargas, proyecto, esTri, general, barra){
   const cs = cargas.length ? cargas : [];
   const n = Math.max(cs.length,1);
 
-  // Ajuste v2.3.1:
+  // Ajuste v2.4.0:
   // El dibujo se adapta a la cantidad real de circuitos.
   // La barra horizontal nace en el primer circuito y termina en el último circuito.
   // El automático general se centra sobre el conjunto de circuitos, no sobre la hoja completa.
