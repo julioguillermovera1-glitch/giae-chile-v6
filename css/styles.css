@@ -635,3 +635,16 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .doc-gen-list,.checklist-240{list-style:none;padding:0;margin:0;display:grid;gap:8px}.doc-gen-list li,.checklist-240 li{border:1px solid #245366;border-radius:10px;padding:10px;background:#061017;display:flex;gap:9px;align-items:center}.doc-gen-list li.ok,.checklist-240 li.ok{border-color:#22c55e;background:#071b12}.doc-gen-list li.warn,.checklist-240 li.warn{border-color:#ffd166;background:#2a240e}.doc-gen-list small,.checklist-240 small{margin-left:auto;color:#8db0bb}
 .obs-warn,.obs-ok{border-radius:14px;padding:14px}.obs-warn{border:1px solid #ffd166;background:#2a240e}.obs-ok{border:1px solid #22c55e;background:#071b12}
 @media(max-width:900px){.mod-state-grid{grid-template-columns:1fr}.exp-dl{grid-template-columns:1fr}}
+
+/* v2.5.0 · Motor Normativo SEC */
+.norm-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.norm-panel-250{border:1px solid #245366;background:#061017;border-radius:16px;padding:16px;margin:16px 0}
+.norm-card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.norm-card-grid article,.ric-grid-250 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}
+.norm-card-grid small,.ric-grid-250 small{display:block;color:#8db0bb;margin-top:5px}
+.ric-grid-250{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.norm-audit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.norm-audit{border:1px solid #245366;background:#061017;border-radius:12px;padding:12px}
+.norm-audit.ok{border-color:#22c55e;background:#071b12}.norm-audit.warn{border-color:#ffd166;background:#2a240e}
+.norm-audit small{display:block;color:#8db0bb;margin-top:5px}
+@media(max-width:900px){.norm-card-grid,.ric-grid-250,.norm-audit-grid{grid-template-columns:1fr}}

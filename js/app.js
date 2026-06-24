@@ -1,4 +1,4 @@
-const APP_VERSION = "2.4.0";
+const APP_VERSION = "2.5.0";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -311,6 +311,7 @@ function openModule(id){
   if(id==="tierra"){ renderTierraInteligente(); return; }
   if(id==="unilineal"){ renderUnilinealAutomatico(); return; }
   if(id==="carpeta"){ renderCarpetaTecnica(); return; }
+  if(id==="motor"){ renderMotorNormativo(); return; }
   if(id==="asistente"){ renderAsistenteDocumental(); return; }
   const m = modules.find(x=>x.id===id) || modules[0];
   const view = document.getElementById("moduleView");
@@ -330,7 +331,7 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.4.0</span>
+    <span class="badge ready">Módulo funcional v2.5.0</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
     <p class="privacy-note">🔒 Privacidad: los datos quedan sólo en este navegador. Al completar el proyecto puedes continuar a Cargas sin perder información.</p>
@@ -833,7 +834,7 @@ function renderCargas(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cargas-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.4.0</span>
+    <span class="badge ready">Módulo funcional v2.5.0</span>
     <h2>⚡ Cargas por circuitos</h2>
     <p>Ingresa los circuitos del proyecto. GIAE calcula potencia instalada, demanda estimada y una recomendación preliminar de empalme.</p>
     <p class="privacy-note">📌 Regla técnica: la distribuidora define la protección/limitador del medidor según potencia contratada y factibilidad. GIAE sólo recomienda y advierte.</p>
@@ -1128,7 +1129,7 @@ function cerrarRicModal(){
 function renderCarpetaTecnica(){
   const v=document.getElementById("moduleView"), e=exp240();
   v.className="module-view show ready carpeta-view carpeta-240";
-  v.innerHTML=`<span class="badge ready">Módulo funcional v2.4.0</span>
+  v.innerHTML=`<span class="badge ready">Módulo funcional v2.5.0</span>
   <h2>📂 Carpeta Técnica Inteligente</h2>
   <p>Consolida automáticamente Proyecto, Cargas, Cuadro, Unilineal, Empalme y Tierra en un expediente técnico.</p>
   <p class="privacy-note">📌 No recalcula ni modifica módulos anteriores. Sólo lee y organiza información.</p>
@@ -1163,7 +1164,7 @@ function validarExp240(){const e=exp240(),b=document.getElementById("validacionC
 function guardarExp240(cont=false){const e=exp240(); localStorage.setItem("giae_chile_expediente_v240",JSON.stringify({version:APP_VERSION,actualizado:new Date().toISOString(),expediente:e})); toast("Expediente técnico guardado."); if(cont)setTimeout(()=>openModule("documentacion"),650)}
 function esc240(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 
-function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.4.0</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
+function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.5.0</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
 function responderAsistente(){const dist=document.getElementById("assistantDist")?.value||"CGE", data=DISTRIBUIDORAS[dist], box=document.getElementById("assistantAnswer"); if(!box)return; box.innerHTML=`<h3>Documentación requerida para ${dist}</h3><p>${data.descripcion}</p><h4>Documentos obligatorios</h4><ul>${data.documentos.filter(d=>d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")}</ul><h4>Documentos condicionales</h4><ul>${data.documentos.filter(d=>!d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")||"<li>No hay condicionales registrados.</li>"}</ul><p><b>Recomendación GIAE:</b> crear proyecto, subir carpeta técnica y ejecutar revisión antes de enviar a la distribuidora.</p>`;}
 
 
@@ -1263,7 +1264,7 @@ function renderCuadroInteligente(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cuadro-inteligente";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.4.0</span>
+    <span class="badge ready">Módulo funcional v2.5.0</span>
     <h2>▣ Cuadro de Carga Inteligente</h2>
     <p>Genera protecciones preliminares, conductores, canalizaciones y balance de fases desde las cargas ingresadas.</p>
     <p class="privacy-note">📌 Uso técnico preliminar: debe verificarse con RIC, cálculo de caída de tensión, ICC y criterio del instalador autorizado SEC.</p>
@@ -1327,7 +1328,7 @@ function renderTierraInteligente(){
   const guardado = getTierraGuardada230();
   view.className = "module-view show ready tierra-view tierra-230";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.4.0</span>
+    <span class="badge ready">Módulo funcional v2.5.0</span>
     <h2>⏚ Tierra Automática TP / TS</h2>
     <p>Define Tierra de Protección, Tierra de Servicio, sistema existente o proyectado, equipotencialidad y validación preliminar RIC 6.</p>
     <p class="privacy-note">📌 GIAE documenta y calcula de forma preliminar. La resistencia final debe medirse en terreno con instrumento adecuado.</p>
@@ -1716,7 +1717,7 @@ function svgSymbolTS230(x,y){
 function modalRic6230(){
   return `<div class="ric-modal" id="ric6230Modal"><div class="ric-modal-box">
     <h3>📚 Fundamento RIC 6 aplicado</h3>
-    <p><b>GIAE v2.4.0:</b> clasifica TP, TS, equipotencialidad y sistema de tierra, dejando registro para carpeta técnica.</p>
+    <p><b>GIAE v2.5.0:</b> clasifica TP, TS, equipotencialidad y sistema de tierra, dejando registro para carpeta técnica.</p>
     <p><b>Símbolos:</b> TP IEC 60417-5019, TS IEC 60417-5018 y equipotencialidad IEC 60417-5021.</p>
     <p><b>Validación:</b> la resistencia calculada es preliminar. El cumplimiento definitivo requiere medición en terreno.</p>
     <button class="btn primary" onclick="cerrarModalRic6230()">Cerrar y volver a Tierra</button>
@@ -1735,7 +1736,7 @@ function renderEmpalmeInteligente(){
   const ev=evaluarEmpalme220(resumen,dist);
   view.className="module-view show ready empalme-view empalme-220";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.4.0</span>
+    <span class="badge ready">Módulo funcional v2.5.0</span>
     <h2>🔌 Empalme Inteligente</h2>
     <p>Valida demanda, suministro, potencia normalizada, distribuidora y fundamento RIC 1 sin tocar módulos operativos.</p>
     <p class="privacy-note">📌 GIAE recomienda y advierte. La distribuidora define condiciones finales, medidor, limitador y factibilidad.</p>
@@ -1921,7 +1922,7 @@ function renderUnilinealAutomatico(){
 
     view.className = "module-view show ready unilineal-view unilineal-v951";
     view.innerHTML = `
-      <span class="badge ready">Módulo funcional v2.4.0</span>
+      <span class="badge ready">Módulo funcional v2.5.0</span>
       <h2>⌁ Unilineal v9.5.1 Restaurado</h2>
       <p>Motor gráfico restaurado desde v9.5.1: automático con media luna, círculos, rayita central, diferencial alineado y diseño tipo plano.</p>
       <p class="privacy-note">📐 Vista técnica preliminar. El instalador autorizado SEC debe validar el plano final.</p>
@@ -2048,7 +2049,7 @@ function renderSVG951(cargas, proyecto, esTri, general, barra){
   const cs = cargas.length ? cargas : [];
   const n = Math.max(cs.length,1);
 
-  // Ajuste v2.4.0:
+  // Ajuste v2.5.0:
   // El dibujo se adapta a la cantidad real de circuitos.
   // La barra horizontal nace en el primer circuito y termina en el último circuito.
   // El automático general se centra sobre el conjunto de circuitos, no sobre la hoja completa.
@@ -2128,6 +2129,150 @@ function descargarUnilinealSVG218(){
   URL.revokeObjectURL(url);
   toast("Unilineal restaurado descargado en SVG.");
 }
+
+function renderMotorNormativo(){
+  const view=document.getElementById("moduleView");
+  const exp=getExpedienteNorm250();
+  const audit=auditarNormativa250(exp);
+  view.className="module-view show ready motor-view motor-250";
+  view.innerHTML=`
+    <span class="badge ready">Módulo funcional v2.5.0</span>
+    <h2>⚖️ Motor Normativo SEC</h2>
+    <p>Base normativa transversal: Decreto Supremo N°8, RIC 1-19, normas IEC y requisitos de distribuidoras.</p>
+    <p class="privacy-note">📌 Esta versión crea la base normativa y auditoría preliminar. No modifica cálculos ni módulos operativos.</p>
+
+    <section class="folder-head">
+      <div>
+        <h3>Proyecto auditado</h3>
+        <p><b>Proyecto:</b> ${esc250(exp.proyectoNombre)} · <b>Cliente:</b> ${esc250(exp.cliente)} · <b>Distribuidora:</b> ${esc250(exp.distribuidora)}</p>
+      </div>
+      <div class="uni-mini"><b>${audit.porcentaje}%</b><small>Cumplimiento preliminar</small></div>
+      <div class="uni-mini"><b>${audit.estado}</b><small>Estado normativo</small></div>
+    </section>
+
+    <section class="norm-tabs">
+      <button class="btn primary" onclick="mostrarNormTab250('ds8')">DS N°8</button>
+      <button class="btn" onclick="mostrarNormTab250('ric')">RIC 1-19</button>
+      <button class="btn" onclick="mostrarNormTab250('iec')">IEC</button>
+      <button class="btn" onclick="mostrarNormTab250('dist')">Distribuidoras</button>
+      <button class="btn next" onclick="mostrarNormTab250('audit')">Auditoría</button>
+    </section>
+
+    <section id="normPanel250" class="norm-panel-250">
+      ${renderTabDS8250(exp)}
+    </section>
+
+    <section class="folder-panel">
+      <h3>Resultado de auditoría preliminar</h3>
+      <div class="norm-audit-grid">
+        ${audit.items.map(i=>`<article class="norm-audit ${i.estado}"><b>${i.icono} ${esc250(i.titulo)}</b><small>${esc250(i.detalle)}</small></article>`).join("")}
+      </div>
+    </section>
+
+    <section class="folder-panel">
+      <h3>Acciones</h3>
+      <div class="folder-buttons">
+        <button class="btn primary" onclick="guardarAuditoriaNorm250()">Guardar auditoría normativa</button>
+        <button class="btn" onclick="mostrarNormTab250('audit')">Ver auditoría completa</button>
+        <button class="btn next" onclick="openModule('documentacion')">Continuar a Documentación</button>
+      </div>
+      <div id="normMsg250" class="inline-check">Motor Normativo listo para usar como base de Documentación Inteligente.</div>
+    </section>
+  `;
+  view.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function getExpedienteNorm250(){
+  let expediente=getJSON250("giae_chile_expediente_v240")?.expediente;
+  const p=typeof getProyectoSeguro==="function"?getProyectoSeguro():getJSON250(STORAGE_KEY);
+  const cargas=typeof getCargasSeguras==="function"?getCargasSeguras():getJSON250(CARGAS_KEY)||[];
+  const emp=getJSON250("giae_chile_empalme_v220");
+  const tie=getJSON250("giae_chile_tierra_v230");
+  if(expediente) return {
+    ...expediente,
+    p:expediente.p||p,
+    c:expediente.c||cargas,
+    emp:expediente.emp||emp,
+    tie:expediente.tie||tie,
+    proyectoNombre:expediente.proyectoNombre||p?.proyecto?.nombre||"Sin proyecto",
+    cliente:expediente.cliente||p?.cliente?.nombre||"Sin cliente",
+    distribuidora:expediente.distribuidora||emp?.distribuidora||p?.ubicacion?.distribuidora||"CGE"
+  };
+  return {p,c:cargas,emp,tie,proyectoNombre:p?.proyecto?.nombre||"Sin proyecto",cliente:p?.cliente?.nombre||"Sin cliente",distribuidora:emp?.distribuidora||p?.ubicacion?.distribuidora||"CGE"};
+}
+function getJSON250(k){try{return JSON.parse(localStorage.getItem(k)||"null")}catch(e){return null}}
+
+function auditarNormativa250(exp){
+  const items=[
+    {titulo:"DS N°8 Art. 7 · Proyecto técnico", ok:!!exp.p, detalle:exp.p?"Existe proyecto base en GIAE.":"Falta proyecto técnico base."},
+    {titulo:"DS N°8 Art. 8 · Instalador autorizado", ok:!!(exp.p?.instalador?.nombre), detalle:exp.p?.instalador?.nombre?"Instalador registrado.":"Falta registrar instalador SEC."},
+    {titulo:"RIC 1 · Empalmes", ok:!!exp.emp, detalle:exp.emp?"Empalme inteligente guardado.":"Falta guardar empalme."},
+    {titulo:"RIC 2 · Tableros", ok:(exp.c||[]).length>0, detalle:(exp.c||[]).length?`${exp.c.length} circuitos disponibles para tablero.`:"Falta cuadro/cargas."},
+    {titulo:"RIC 3 · Alimentadores y demanda", ok:Number(exp.r?.demandaW||0)>0 || !!exp.emp, detalle:"Demanda calculada desde cargas/empalme."},
+    {titulo:"RIC 4 · Conductores", ok:(exp.c||[]).length>0, detalle:"Conductores asociados al cuadro de carga."},
+    {titulo:"RIC 5 · Protección contra tensiones peligrosas", ok:(exp.c||[]).length>0, detalle:"Protecciones preliminares disponibles."},
+    {titulo:"RIC 6 · Tierra y equipotencialidad", ok:!!exp.tie, detalle:exp.tie?"Tierra automática guardada.":"Falta guardar Tierra."},
+    {titulo:"RIC 18 · Presentación de proyectos", ok:!!getJSON250("giae_chile_expediente_v240"), detalle:"Carpeta Técnica centraliza el expediente."},
+    {titulo:"RIC 19 · Puesta en servicio", ok:false, detalle:"Pendiente para Documentación Inteligente / TE1."},
+    {titulo:"IEC 60417 · Símbolos", ok:!!exp.tie, detalle:"TP, TS y equipotencialidad implementados en Tierra."},
+    {titulo:"IEC 60364 · Baja tensión", ok:!!exp.p, detalle:"Base internacional referencial para instalaciones BT."},
+    {titulo:"IEC 61439 · Tableros", ok:(exp.c||[]).length>0, detalle:"Referencia futura para tableros eléctricos."}
+  ].map(x=>({...x,estado:x.ok?"ok":"warn",icono:x.ok?"✓":"⚠"}));
+  const pct=Math.round(items.filter(i=>i.ok).length/items.length*100);
+  return{items,porcentaje:pct,estado:pct>=85?"Avanzado":pct>=60?"En revisión":"Incompleto"};
+}
+
+function renderTabDS8250(exp){
+  return `<h3>📖 Decreto Supremo N°8</h3>
+  <p>El DS N°8 aprueba el Reglamento de Seguridad de las Instalaciones de Consumo de Energía Eléctrica y funciona como base superior de los RIC.</p>
+  <div class="norm-card-grid">
+    <article><b>Artículo 7</b><small>Toda instalación debe ejecutarse de acuerdo a un proyecto técnicamente elaborado.</small></article>
+    <article><b>Artículo 8</b><small>La instalación debe ser proyectada, ejecutada y dirigida por instalador eléctrico autorizado o profesional competente.</small></article>
+    <article><b>Artículo 12</b><small>Enumera oficialmente los Pliegos Técnicos Normativos RIC N°1 al RIC N°19.</small></article>
+    <article><b>Artículo 16</b><small>Las instalaciones deben ser declaradas para su puesta en servicio según RIC N°19.</small></article>
+  </div>`;
+}
+function renderTabRIC250(){
+  const rics=[
+    ["RIC 1","Empalmes"],["RIC 2","Tableros eléctricos"],["RIC 3","Alimentadores y demanda de una instalación"],["RIC 4","Conductores, materiales y sistemas de canalización"],["RIC 5","Medidas de protección contra tensiones peligrosas y descargas eléctricas"],["RIC 6","Puesta a tierra y enlace equipotencial"],["RIC 7","Instalaciones de equipos"],["RIC 8","Sistemas de emergencia"],["RIC 9","Sistemas de autogeneración"],["RIC 10","Instalaciones de uso general"],["RIC 11","Instalaciones especiales"],["RIC 12","Instalaciones en ambientes explosivos"],["RIC 13","Subestaciones y salas eléctricas"],["RIC 14","Exigencias de eficiencia energética para edificios"],["RIC 15","Infraestructura para recarga de vehículos eléctricos"],["RIC 16","Subsistemas de distribución"],["RIC 17","Operación y mantenimiento"],["RIC 18","Presentación de proyectos"],["RIC 19","Puesta en servicio"]
+  ];
+  return `<h3>📚 Pliegos Técnicos Normativos RIC 1-19</h3><div class="ric-grid-250">${rics.map(r=>`<article><b>${r[0]}</b><small>${r[1]}</small></article>`).join("")}</div>`;
+}
+function renderTabIEC250(){
+  const iec=[
+    ["IEC 60364","Instalaciones eléctricas de baja tensión"],["IEC 60417","Símbolos gráficos para uso en equipos"],["IEC 61439","Conjuntos de aparamenta de baja tensión / tableros"],["IEC 60529","Grados de protección IP"],["IEC 62305","Protección contra rayos"],["IEC 60947","Aparamenta de baja tensión"]
+  ];
+  return `<h3>🌎 Normas IEC referenciales</h3><p>Se integran como base internacional de apoyo. La aplicación final debe respetar normativa chilena vigente.</p><div class="norm-card-grid">${iec.map(i=>`<article><b>${i[0]}</b><small>${i[1]}</small></article>`).join("")}</div>`;
+}
+function renderTabDist250(){
+  return `<h3>🏢 Normas y requisitos de distribuidoras</h3>
+  <p>GIAE considera requisitos documentales y de factibilidad de CGE, COPELEC, ENEL, CHILQUINTA, SAESA y FRONTEL.</p>
+  <div class="norm-card-grid">
+    <article><b>CGE</b><small>TE1, set fotográfico, punto de red, croquis, rol y número municipal cuando aplique.</small></article>
+    <article><b>COPELEC</b><small>Factibilidad rural, número de vecino, requisitos constructivos y documentación de propiedad.</small></article>
+    <article><b>SAESA / FRONTEL</b><small>Factibilidad, antecedentes de dominio, croquis, fotografías y condiciones rurales.</small></article>
+    <article><b>ENEL / CHILQUINTA</b><small>Proceso digital, contrato, dominio vigente, número municipal y formularios propios.</small></article>
+  </div>`;
+}
+function renderTabAudit250(){
+  const exp=getExpedienteNorm250(), a=auditarNormativa250(exp);
+  return `<h3>🔍 Auditoría normativa preliminar</h3><p><b>Cumplimiento estimado:</b> ${a.porcentaje}% · ${a.estado}</p><div class="norm-audit-grid">${a.items.map(i=>`<article class="norm-audit ${i.estado}"><b>${i.icono} ${esc250(i.titulo)}</b><small>${esc250(i.detalle)}</small></article>`).join("")}</div>`;
+}
+function mostrarNormTab250(tab){
+  const p=document.getElementById("normPanel250"); if(!p)return;
+  if(tab==="ds8")p.innerHTML=renderTabDS8250(getExpedienteNorm250());
+  if(tab==="ric")p.innerHTML=renderTabRIC250();
+  if(tab==="iec")p.innerHTML=renderTabIEC250();
+  if(tab==="dist")p.innerHTML=renderTabDist250();
+  if(tab==="audit")p.innerHTML=renderTabAudit250();
+}
+function guardarAuditoriaNorm250(){
+  const exp=getExpedienteNorm250(), audit=auditarNormativa250(exp);
+  localStorage.setItem("giae_chile_normativo_v250",JSON.stringify({version:APP_VERSION,actualizado:new Date().toISOString(),expediente:exp,auditoria:audit}));
+  const m=document.getElementById("normMsg250"); if(m)m.innerHTML="✅ Auditoría normativa guardada.";
+  toast("Auditoría normativa guardada.");
+}
+function esc250(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 
 function tick(){
   const d = new Date();
