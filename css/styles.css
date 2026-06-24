@@ -704,3 +704,14 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .biblioteca-table-257{width:100%;border-collapse:collapse;margin:10px 0}.biblioteca-table-257 th,.biblioteca-table-257 td{border:1px solid #245366;padding:8px;text-align:left;vertical-align:top}.biblioteca-table-257 th{color:#8cffad}.biblioteca-table-257 small{display:block;color:#8db0bb;margin-top:4px}.biblioteca-table-257 input{width:100px;background:#061017;color:#fff;border:1px solid #245366;border-radius:8px;padding:6px}.btn.small{padding:6px 9px;font-size:.8rem}.btn.danger{border-color:#ff6b6b;background:#2a1010;color:#ffd0d0}
 .import-box-257{width:100%;min-height:90px;margin-top:12px;font-family:monospace}
 @media(max-width:900px){.biblioteca-tools-257,.biblioteca-form-257{grid-template-columns:1fr}.biblioteca-table-257{font-size:.8rem}}
+
+/* v2.5.8 · Biblioteca 2.0 + Exportación Profesional */
+.bib-tabs-258,.export-options-258{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.bib-panel-258{border:1px solid #245366;background:#061017;border-radius:16px;padding:16px;margin:16px 0}
+.biblioteca-form-258{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.biblioteca-form-258 input,.biblioteca-form-258 textarea{background:#061017;color:#fff;border:1px solid #245366;border-radius:10px;padding:10px}.biblioteca-form-258 textarea{grid-column:1/-1;min-height:80px}.biblioteca-form-258 label{border:1px solid #245366;border-radius:10px;padding:10px;background:#07131c}
+.cat-grid-258{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.cat-grid-258 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}.cat-grid-258 small{display:block;color:#8db0bb;margin-top:5px}
+.hist-bib-258{list-style:none;padding:0;margin:0;display:grid;gap:8px}.hist-bib-258 li{border:1px solid #245366;background:#07131c;border-radius:10px;padding:10px}.hist-bib-258 span,.hist-bib-258 small{display:block;color:#8db0bb}
+.export-list-258{list-style:none;padding:0;margin:0;display:grid;gap:8px}.export-list-258 li{border:1px solid #22c55e;background:#071b12;border-radius:10px;padding:10px}
+.indice-export-258{display:grid;gap:7px}.indice-export-258 li{border:1px solid #245366;background:#07131c;border-radius:9px;padding:8px}
+.export-preview-258{background:#f8fafc;color:#111;border-radius:14px;padding:20px;max-height:600px;overflow:auto}.export-preview-258 h1{border-bottom:4px solid #111;padding-bottom:10px}.export-preview-258 h2{border-bottom:1px solid #ccc;padding-bottom:6px;margin-top:24px}
+@media(max-width:900px){.biblioteca-form-258,.cat-grid-258{grid-template-columns:1fr}}

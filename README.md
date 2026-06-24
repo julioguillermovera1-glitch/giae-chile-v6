@@ -1,28 +1,32 @@
-# GIAE Chile v2.5.7 - Biblioteca Inteligente de Materiales
+# GIAE Chile v2.5.8 - Biblioteca 2.0 + Exportación Profesional
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.5.6 Presupuesto Inteligente.
+Base: GIAE Chile v2.5.7 Biblioteca Inteligente de Materiales.
 
-## Mejora
-Nuevo módulo independiente Biblioteca Inteligente de Materiales.
+## Mejoras
+- Biblioteca Inteligente 2.0.
+- Exportación Profesional.
 
-## Funciones
-- Conductores.
-- Canalizaciones.
-- Protecciones.
-- Tableros.
-- Puesta a tierra.
-- Empalmes.
-- Material menor.
+## Biblioteca 2.0
+- Materiales.
+- Categorías.
+- Marcas.
+- Proveedores.
+- Recursos técnicos.
+- Favoritos.
+- Historial.
+- Importar/exportar.
+- Duplicar materiales.
 - Precios editables.
-- Normas RIC e IEC asociadas.
-- Búsqueda rápida.
-- Agregar materiales.
-- Quitar materiales.
-- Exportar biblioteca JSON.
-- Importar biblioteca JSON.
-- Restaurar base inicial.
+
+## Exportación Profesional
+- Vista previa del expediente.
+- Descarga HTML.
+- Descarga Word compatible (.doc).
+- Descarga CSV compatible con Excel.
+- Preparación PDF mediante navegador.
+- Estructura de expediente ZIP.
 
 ## Regla
-No modifica módulos operativos. Sólo administra una biblioteca local para Presupuesto, Documentación y futuras exportaciones.
+No modifica módulos operativos. Biblioteca y Exportación sólo administran o leen información existente.
