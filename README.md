@@ -1,22 +1,27 @@
-# GIAE Chile v2.5.4 - Documentación Inteligente
+# GIAE Chile v2.5.5 - Revisión de Expediente
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.5.3 Clasificación SEC Inteligente.
+Base: GIAE Chile v2.5.4 Documentación Inteligente.
 
 ## Mejora
-Nuevo módulo Documentación Inteligente.
+Nuevo módulo independiente de Revisión de Expediente.
 
 ## Funciones
-- Memoria Técnica automática.
-- Informe de Empalme automático.
-- Informe de Tierra automático.
-- Base documental TE1 / TE2 / TE3.
-- Vista previa documental.
-- Descarga HTML.
-- Guardado de documentación.
-- Preparación para PDF y Word profesional.
+- Revisa Proyecto.
+- Revisa Clasificación SEC.
+- Revisa Cargas y Cuadro.
+- Revisa Unilineal.
+- Revisa Empalme.
+- Revisa Tierra.
+- Revisa Carpeta Técnica.
+- Revisa Guía SEC.
+- Revisa Documentación.
+- Revisa Motor Normativo.
+- Genera porcentaje de cumplimiento.
+- Genera observaciones críticas y pendientes.
+- Guarda revisión.
+- Descarga revisión HTML.
 
 ## Regla
-No modifica Proyecto, Cargas, Cuadro, Unilineal, Empalme, Tierra, Carpeta Técnica, Guía SEC ni Motor Normativo.
-Sólo agrega el módulo Documentación.
+No modifica módulos operativos. Sólo lee información existente y genera una auditoría independiente.

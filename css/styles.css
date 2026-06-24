@@ -680,3 +680,11 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .doc-preview-254{background:#f8fafc;color:#111;border-radius:14px;padding:20px;max-height:520px;overflow:auto}
 .doc-preview-254 h1{border-bottom:3px solid #111;padding-bottom:8px}.doc-preview-254 h2{border-bottom:1px solid #ccc;padding-bottom:5px}.doc-preview-254 table{width:100%;border-collapse:collapse;margin:12px 0}.doc-preview-254 th,.doc-preview-254 td{border:1px solid #999;padding:8px;text-align:left}
 @media(max-width:900px){.docs-254 .doc-status-grid-254{grid-template-columns:1fr}}
+
+/* v2.5.5 · Revisión de Expediente */
+.revision-progress-255{border:1px solid #245366;background:#061017;border-radius:16px;padding:16px;margin:16px 0}
+.revision-bar-255{height:18px;background:#0b1f2c;border-radius:999px;overflow:hidden;border:1px solid #1d4656}.revision-bar-255 span{display:block;height:100%;background:linear-gradient(90deg,#22c55e,#8cffad)}
+.revision-grid-255{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.revision-grid-255 article{border:1px solid #245366;background:#061017;border-radius:12px;padding:12px}.revision-grid-255 article.ok{border-color:#22c55e;background:#071b12}.revision-grid-255 article.warn{border-color:#ffd166;background:#2a240e}.revision-grid-255 small{display:block;color:#8db0bb;margin-top:5px}
+.revision-list-255{list-style:none;padding:0;margin:0;display:grid;gap:8px}.revision-list-255 li{border:1px solid #245366;border-radius:10px;padding:10px;background:#061017}.revision-list-255.critica li{border-color:#ff6b6b;background:#2a1010}.revision-list-255.pendiente li{border-color:#ffd166;background:#2a240e}.revision-list-255.ok li{border-color:#22c55e;background:#071b12}
+.revision-preview-255{background:#f8fafc;color:#111;border-radius:14px;padding:20px;max-height:520px;overflow:auto}.revision-preview-255 h1{border-bottom:3px solid #111;padding-bottom:8px}.revision-preview-255 h2{border-bottom:1px solid #ccc;padding-bottom:5px}.revision-preview-255 table{width:100%;border-collapse:collapse;margin:12px 0}.revision-preview-255 th,.revision-preview-255 td{border:1px solid #999;padding:8px;text-align:left}
+@media(max-width:900px){.revision-grid-255{grid-template-columns:1fr}}
