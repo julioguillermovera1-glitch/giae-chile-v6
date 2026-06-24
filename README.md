@@ -1,20 +1,20 @@
-# GIAE Chile v2.5.2 - Guía SEC Inteligente
+# GIAE Chile v2.5.3 - Clasificación SEC Inteligente
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.5.1 Exportación de Expediente.
+Base: GIAE Chile v2.5.2 Guía SEC Inteligente.
 
 ## Mejora
-Nuevo módulo Guía SEC Inteligente para TE1, TE2 y TE3.
+Se agrega clasificación SEC al módulo Proyecto.
 
 ## Funciones
-- Selección TE1 / TE2 / TE3.
-- Guía paso a paso para plataforma SEC / E-Declarador.
-- Datos que GIAE ya tiene.
-- Antecedentes que debe aportar el instalador.
-- Qué copiar desde GIAE.
-- Descarga de guía HTML.
-- Marcar guía como revisada.
+- Selección TE1.
+- Selección TE2.
+- Selección TE3.
+- Guardado automático.
+- Integración con Guía SEC.
+- Integración con Carpeta Técnica.
+- Preparación para Documentación Inteligente, PDF y Word.
 
 ## Regla
-No modifica módulos existentes. Sólo agrega el módulo Guía SEC.
+No modifica Cargas, Cuadro, Unilineal, Empalme, Tierra ni Motor Normativo.

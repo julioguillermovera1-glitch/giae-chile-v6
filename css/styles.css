@@ -664,3 +664,9 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .sec-steps-252{display:grid;gap:10px}.sec-steps-252 li{border-left:4px solid #22c55e;background:#061017;border-radius:10px;padding:10px}
 .copy-table-252{width:100%;border-collapse:collapse}.copy-table-252 th,.copy-table-252 td{border:1px solid #245366;padding:9px;text-align:left}.copy-table-252 th{width:42%;color:#8cffad}
 @media(max-width:900px){.guia-sec-252 .guia-sec-hero{grid-template-columns:1fr}}
+
+/* v2.5.3 · Clasificación SEC Inteligente */
+.sec-class-card-253{grid-column:1/-1;border:1px solid #22c55e;background:#071b12;border-radius:16px;padding:16px;margin:12px 0}
+.sec-class-card-253 label{display:grid;gap:6px;margin-top:10px}
+.sec-class-card-253 select{width:100%;border:1px solid #245366;border-radius:10px;padding:10px;background:#061017;color:#fff}
+.sec-desc-253{margin-top:10px;border:1px solid #245366;background:#061017;border-radius:12px;padding:12px;color:#c7f9d4}

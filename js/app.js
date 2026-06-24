@@ -1,4 +1,4 @@
-const APP_VERSION = "2.5.2";
+const APP_VERSION = "2.5.3";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -334,7 +334,7 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.5.2</span>
+    <span class="badge ready">Módulo funcional v2.5.3</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
     <p class="privacy-note">🔒 Privacidad: los datos quedan sólo en este navegador. Al completar el proyecto puedes continuar a Cargas sin perder información.</p>
@@ -464,6 +464,8 @@ function renderProyecto(){
   cargarProyecto(false);
 }
 
+
+  conectarClasificacionSEC253();
 
 function bindProjectSections(){
   document.querySelectorAll(".step-chip").forEach(btn=>{
@@ -703,7 +705,7 @@ function guardarProyecto(continuar=false){
   const obj = formToObject();
   const faltantes = validarProyectoBase(obj);
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(aplicarSECAlProyecto253(obj)));
   renderResumen(obj, faltantes);
 
   if(faltantes.length){
@@ -837,7 +839,7 @@ function renderCargas(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cargas-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.5.2</span>
+    <span class="badge ready">Módulo funcional v2.5.3</span>
     <h2>⚡ Cargas por circuitos</h2>
     <p>Ingresa los circuitos del proyecto. GIAE calcula potencia instalada, demanda estimada y una recomendación preliminar de empalme.</p>
     <p class="privacy-note">📌 Regla técnica: la distribuidora define la protección/limitador del medidor según potencia contratada y factibilidad. GIAE sólo recomienda y advierte.</p>
@@ -1132,7 +1134,7 @@ function cerrarRicModal(){
 function renderCarpetaTecnica(){
   const v=document.getElementById("moduleView"), e=exp240();
   v.className="module-view show ready carpeta-view carpeta-240";
-  v.innerHTML=`<span class="badge ready">Módulo funcional v2.5.2</span>
+  v.innerHTML=`<span class="badge ready">Módulo funcional v2.5.3</span>
   <h2>📂 Carpeta Técnica Inteligente</h2>
   <p>Consolida automáticamente Proyecto, Cargas, Cuadro, Unilineal, Empalme y Tierra en un expediente técnico.</p>
   <p class="privacy-note">📌 No recalcula ni modifica módulos anteriores. Sólo lee y organiza información.</p>
@@ -1163,14 +1165,14 @@ function exp240(){
  const mod=[["Proyecto",!!p,p?"Datos base encontrados":"Falta crear proyecto"],["Cargas",c.length>0,c.length?`${c.length} circuitos registrados`:"Sin circuitos"],["Cuadro de Carga",c.length>0,c.length?"Protecciones disponibles":"Falta cuadro/cargas"],["Unilineal",c.length>0,c.length?"Generable automáticamente":"Falta información"],["Empalme",!!emp,emp?(emp.evaluacion?.tipoEmpalme||"Empalme guardado"):"Sin empalme"],["Tierra",!!tie,tie?`${tie.data?.tipoSistema||"Tierra"} · ${tie.calculo?.rt||"--"} Ω`:"Sin tierra"]];
  const docs=[["Resumen del proyecto",!!p],["Cuadro de carga",c.length>0],["Unilineal",c.length>0],["Informe Empalme",!!emp],["Informe Tierra",!!tie],["TE1",false,true],["Croquis",false,true],["Fotografías",false,true],["Certificados",false,true]];
  const pct=Math.round(docs.filter(d=>d[1]).length/docs.length*100);
- return{p,c,r,emp,tie,distribuidora:dist,proyectoNombre:p?.proyecto?.nombre||"Sin proyecto",cliente:p?.cliente?.nombre||"Sin cliente",direccion:p?.ubicacion?.direccion||"Sin dirección",comuna:p?.ubicacion?.comuna||"",region:p?.ubicacion?.region||"",instalador:p?.instalador?.nombre||"Sin instalador",claseSEC:p?.instalador?.claseSEC||"Sin clase SEC",suministro:p?.electrico?.suministro||"Sin definir",porcentaje:pct,modulos:mod.map(x=>({nombre:x[0],ok:x[1],detalle:x[2]})),docs:docs.map(x=>({nombre:x[0],ok:x[1],manual:x[2]})),estado:pct>=90?"Listo":pct>=60?"Avanzado":"Incompleto",mensaje:pct>=90?"Expediente casi listo para documentación.":pct>=60?"Expediente técnico avanzado, faltan antecedentes documentales.":"Expediente incompleto, faltan módulos o documentos clave."};
+ return{p,c,r,emp,tie,distribuidora:dist,proyectoNombre:p?.proyecto?.nombre||"Sin proyecto",cliente:p?.cliente?.nombre||"Sin cliente",direccion:p?.ubicacion?.direccion||"Sin dirección",comuna:p?.ubicacion?.comuna||"",region:p?.ubicacion?.region||"",instalador:p?.instalador?.nombre||"Sin instalador",claseSEC:p?.instalador?.claseSEC||"Sin clase SEC",suministro:p?.electrico?.suministro||"Sin definir",tipoDeclaracionSEC:getTipoDeclaracionSEC253(p),porcentaje:pct,modulos:mod.map(x=>({nombre:x[0],ok:x[1],detalle:x[2]})),docs:docs.map(x=>({nombre:x[0],ok:x[1],manual:x[2]})),estado:pct>=90?"Listo":pct>=60?"Avanzado":"Incompleto",mensaje:pct>=90?"Expediente casi listo para documentación.":pct>=60?"Expediente técnico avanzado, faltan antecedentes documentales.":"Expediente incompleto, faltan módulos o documentos clave."};
 }
 function getP240(){try{return typeof getProyectoSeguro==="function"?getProyectoSeguro():JSON.parse(localStorage.getItem(STORAGE_KEY)||"null")}catch(e){return null}}
 function getC240(){try{return typeof getCargasSeguras==="function"?getCargasSeguras():JSON.parse(localStorage.getItem(CARGAS_KEY)||"[]")}catch(e){return[]}}
 function getJ240(k){try{return JSON.parse(localStorage.getItem(k)||"null")}catch(e){return null}}
 function getR240(c){let r=null;try{if(typeof resumenIngenieria==="function")r=resumenIngenieria()}catch(e){}; if(r)return r; const totalW=(c||[]).reduce((s,x)=>s+Number(x.totalW||(Number(x.cantidad||1)*Number(x.potenciaUnidad||x.potencia||0))||0),0); const demandaW=(c||[]).reduce((s,x)=>s+Number(x.demandaW||x.totalW||(Number(x.cantidad||1)*Number(x.potenciaUnidad||x.potencia||0))||0),0); return{totalW,demandaW,cargas:c}}
 function normD240(d){const s=String(d||"CGE").toUpperCase(); if(s.includes("COPELEC"))return"COPELEC"; if(s.includes("SAESA")||s.includes("FRONTEL"))return"SAESA / FRONTEL"; if(s.includes("ENEL"))return"ENEL"; if(s.includes("CHIL"))return"CHILQUINTA"; return"CGE"}
-function resProyecto240(e){return`<dl class="exp-dl"><dt>Cliente</dt><dd>${esc240(e.cliente)}</dd><dt>RUT</dt><dd>${esc240(e.p?.cliente?.rutFormateado||"Sin RUT")}</dd><dt>Dirección</dt><dd>${esc240(e.direccion)}</dd><dt>Comuna / Región</dt><dd>${esc240(e.comuna)} / ${esc240(e.region)}</dd><dt>Distribuidora</dt><dd>${esc240(e.distribuidora)}</dd><dt>Instalador SEC</dt><dd>${esc240(e.instalador)} / ${esc240(e.claseSEC)}</dd></dl>`}
+function resProyecto240(e){return`<dl class="exp-dl"><dt>Cliente</dt><dd>${esc240(e.cliente)}</dd><dt>RUT</dt><dd>${esc240(e.p?.cliente?.rutFormateado||"Sin RUT")}</dd><dt>Dirección</dt><dd>${esc240(e.direccion)}</dd><dt>Comuna / Región</dt><dd>${esc240(e.comuna)} / ${esc240(e.region)}</dd><dt>Distribuidora</dt><dd>${esc240(e.distribuidora)}</dd><dt>Declaración SEC</dt><dd>${esc240(getTipoDeclaracionSEC253(e.p))}</dd><dt>Instalador SEC</dt><dd>${esc240(e.instalador)} / ${esc240(e.claseSEC)}</dd></dl>`}
 function resElectrico240(e){return`<dl class="exp-dl"><dt>Suministro</dt><dd>${esc240(e.suministro)}</dd><dt>Potencia instalada</dt><dd>${(Number(e.r.totalW||0)/1000).toFixed(2)} kW</dd><dt>Potencia demandada</dt><dd>${(Number(e.r.demandaW||0)/1000).toFixed(2)} kW</dd><dt>Empalme</dt><dd>${esc240(e.emp?.evaluacion?.tipoEmpalme||"Sin empalme")}</dd><dt>Potencia normalizada</dt><dd>${esc240(e.emp?.evaluacion?.potenciaSugerida||"Sin definir")}</dd><dt>Tierra</dt><dd>${esc240(e.tie?.data?.tipoSistema||"Sin tierra")}</dd></dl>`}
 function docs240(e){return`<ul class="doc-gen-list">${e.docs.map(d=>`<li class="${d.ok?'ok':'warn'}"><span>${d.ok?'✓':'☐'}</span><b>${esc240(d.nombre)}</b><small>${d.manual?'Externo/manual':'Generado desde GIAE'}</small></li>`).join("")}</ul>`}
 function check240(e){const base=(typeof DISTRIBUIDORAS!=="undefined"&&DISTRIBUIDORAS[e.distribuidora])?DISTRIBUIDORAS[e.distribuidora]:null; const auto=[["Proyecto",!!e.p],["Cuadro de carga",e.c.length>0],["Unilineal",e.c.length>0],["Empalme",!!e.emp],["Tierra",!!e.tie]]; const ext=base?base.documentos.map(d=>[d.nombre,false,d.obligatorio]):[["TE1",false,true],["Croquis",false,true],["Fotografías",false,true]]; return`<ul class="checklist-240">${auto.map(x=>`<li class="${x[1]?'ok':'warn'}"><span>${x[1]?'☑':'☐'}</span>${esc240(x[0])}</li>`).join("")}${ext.map(x=>`<li class="warn"><span>☐</span>${esc240(x[0])}<small>${x[2]?'obligatorio':'opcional'}</small></li>`).join("")}</ul>`}
@@ -1179,7 +1181,7 @@ function validarExp240(){const e=exp240(),b=document.getElementById("validacionC
 function guardarExp240(cont=false){const e=exp240(); localStorage.setItem("giae_chile_expediente_v240",JSON.stringify({version:APP_VERSION,actualizado:new Date().toISOString(),expediente:e})); toast("Expediente técnico guardado."); if(cont)setTimeout(()=>openModule("documentacion"),650)}
 function esc240(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 
-function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.5.2</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
+function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.5.3</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
 function responderAsistente(){const dist=document.getElementById("assistantDist")?.value||"CGE", data=DISTRIBUIDORAS[dist], box=document.getElementById("assistantAnswer"); if(!box)return; box.innerHTML=`<h3>Documentación requerida para ${dist}</h3><p>${data.descripcion}</p><h4>Documentos obligatorios</h4><ul>${data.documentos.filter(d=>d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")}</ul><h4>Documentos condicionales</h4><ul>${data.documentos.filter(d=>!d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")||"<li>No hay condicionales registrados.</li>"}</ul><p><b>Recomendación GIAE:</b> crear proyecto, subir carpeta técnica y ejecutar revisión antes de enviar a la distribuidora.</p>`;}
 
 
@@ -1279,7 +1281,7 @@ function renderCuadroInteligente(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cuadro-inteligente";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.5.2</span>
+    <span class="badge ready">Módulo funcional v2.5.3</span>
     <h2>▣ Cuadro de Carga Inteligente</h2>
     <p>Genera protecciones preliminares, conductores, canalizaciones y balance de fases desde las cargas ingresadas.</p>
     <p class="privacy-note">📌 Uso técnico preliminar: debe verificarse con RIC, cálculo de caída de tensión, ICC y criterio del instalador autorizado SEC.</p>
@@ -1343,7 +1345,7 @@ function renderTierraInteligente(){
   const guardado = getTierraGuardada230();
   view.className = "module-view show ready tierra-view tierra-230";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.5.2</span>
+    <span class="badge ready">Módulo funcional v2.5.3</span>
     <h2>⏚ Tierra Automática TP / TS</h2>
     <p>Define Tierra de Protección, Tierra de Servicio, sistema existente o proyectado, equipotencialidad y validación preliminar RIC 6.</p>
     <p class="privacy-note">📌 GIAE documenta y calcula de forma preliminar. La resistencia final debe medirse en terreno con instrumento adecuado.</p>
@@ -1732,7 +1734,7 @@ function svgSymbolTS230(x,y){
 function modalRic6230(){
   return `<div class="ric-modal" id="ric6230Modal"><div class="ric-modal-box">
     <h3>📚 Fundamento RIC 6 aplicado</h3>
-    <p><b>GIAE v2.5.2:</b> clasifica TP, TS, equipotencialidad y sistema de tierra, dejando registro para carpeta técnica.</p>
+    <p><b>GIAE v2.5.3:</b> clasifica TP, TS, equipotencialidad y sistema de tierra, dejando registro para carpeta técnica.</p>
     <p><b>Símbolos:</b> TP IEC 60417-5019, TS IEC 60417-5018 y equipotencialidad IEC 60417-5021.</p>
     <p><b>Validación:</b> la resistencia calculada es preliminar. El cumplimiento definitivo requiere medición en terreno.</p>
     <button class="btn primary" onclick="cerrarModalRic6230()">Cerrar y volver a Tierra</button>
@@ -1751,7 +1753,7 @@ function renderEmpalmeInteligente(){
   const ev=evaluarEmpalme220(resumen,dist);
   view.className="module-view show ready empalme-view empalme-220";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.5.2</span>
+    <span class="badge ready">Módulo funcional v2.5.3</span>
     <h2>🔌 Empalme Inteligente</h2>
     <p>Valida demanda, suministro, potencia normalizada, distribuidora y fundamento RIC 1 sin tocar módulos operativos.</p>
     <p class="privacy-note">📌 GIAE recomienda y advierte. La distribuidora define condiciones finales, medidor, limitador y factibilidad.</p>
@@ -1937,7 +1939,7 @@ function renderUnilinealAutomatico(){
 
     view.className = "module-view show ready unilineal-view unilineal-v951";
     view.innerHTML = `
-      <span class="badge ready">Módulo funcional v2.5.2</span>
+      <span class="badge ready">Módulo funcional v2.5.3</span>
       <h2>⌁ Unilineal v9.5.1 Restaurado</h2>
       <p>Motor gráfico restaurado desde v9.5.1: automático con media luna, círculos, rayita central, diferencial alineado y diseño tipo plano.</p>
       <p class="privacy-note">📐 Vista técnica preliminar. El instalador autorizado SEC debe validar el plano final.</p>
@@ -2064,7 +2066,7 @@ function renderSVG951(cargas, proyecto, esTri, general, barra){
   const cs = cargas.length ? cargas : [];
   const n = Math.max(cs.length,1);
 
-  // Ajuste v2.5.2:
+  // Ajuste v2.5.3:
   // El dibujo se adapta a la cantidad real de circuitos.
   // La barra horizontal nace en el primer circuito y termina en el último circuito.
   // El automático general se centra sobre el conjunto de circuitos, no sobre la hoja completa.
@@ -2207,7 +2209,7 @@ function plantillaDoc251(titulo, body, e){
     .meta{color:#444;font-size:12px}.ok{color:#067a29}.warn{color:#9a6900}.box{border:1px solid #999;padding:12px;margin:10px 0}
     @media print{button{display:none}body{margin:18mm}}
   </style></head><body>
-  <header><h1>${esc251(titulo)}</h1><p class="meta">GIAE Chile v2.5.2 · Creado por Julio Vera Concha · ${fecha}</p><p><b>Proyecto:</b> ${esc251(e.proyectoNombre||"Sin proyecto")} · <b>Cliente:</b> ${esc251(e.cliente||"Sin cliente")}</p></header>
+  <header><h1>${esc251(titulo)}</h1><p class="meta">GIAE Chile v2.5.3 · Creado por Julio Vera Concha · ${fecha}</p><p><b>Proyecto:</b> ${esc251(e.proyectoNombre||"Sin proyecto")} · <b>Cliente:</b> ${esc251(e.cliente||"Sin cliente")}</p></header>
   ${body}
   <footer><p class="meta">Documento generado localmente por GIAE Chile. Validar antecedentes con instalador autorizado SEC y distribuidora correspondiente.</p></footer>
   </body></html>`;
@@ -2279,10 +2281,40 @@ function limpiarNombre251(s){
 }
 function esc251(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 
+function getTipoDeclaracionSEC253(proyecto){
+  try{const s=JSON.parse(localStorage.getItem("giae_chile_tipo_sec_v253")||"null");if(s&&s.tipo)return s.tipo;}catch(e){}
+  return proyecto?.sec?.tipoDeclaracionSEC || proyecto?.tipoDeclaracionSEC || localStorage.getItem("giae_chile_tipo_sec_v252") || "TE1";
+}
+function descDeclaracionSEC253(tipo){
+  if(tipo==="TE2") return "TE2: instalaciones de alumbrado público, luminarias, postes y circuitos AP.";
+  if(tipo==="TE3") return "TE3: instalaciones especiales o de mayor complejidad con antecedentes técnicos específicos.";
+  return "TE1: instalaciones interiores eléctricas de consumo en baja tensión.";
+}
+function guardarTipoDeclaracionSEC253(tipo){
+  localStorage.setItem("giae_chile_tipo_sec_v253", JSON.stringify({version:APP_VERSION,tipo,actualizado:new Date().toISOString()}));
+  localStorage.setItem("giae_chile_tipo_sec_v252", tipo);
+}
+function renderClasificacionSEC253(proyecto){
+  const tipo=getTipoDeclaracionSEC253(proyecto);
+  return `<section class="sec-class-card-253"><h3>📌 Clasificación SEC</h3><p>Seleccione el tipo de declaración SEC del proyecto. Este dato será usado por Guía SEC, Carpeta Técnica y Documentación Inteligente.</p><label>Tipo de Declaración SEC<select id="tipoDeclaracionSEC253" name="tipoDeclaracionSEC"><option value="TE1" ${tipo==="TE1"?"selected":""}>TE1 · Instalaciones interiores eléctricas</option><option value="TE2" ${tipo==="TE2"?"selected":""}>TE2 · Alumbrado público</option><option value="TE3" ${tipo==="TE3"?"selected":""}>TE3 · Instalaciones especiales</option></select></label><div id="descDeclaracionSEC253" class="sec-desc-253">${descDeclaracionSEC253(tipo)}</div></section>`;
+}
+function conectarClasificacionSEC253(){
+  const sel=document.getElementById("tipoDeclaracionSEC253"), desc=document.getElementById("descDeclaracionSEC253");
+  if(!sel)return;
+  sel.onchange=()=>{guardarTipoDeclaracionSEC253(sel.value); if(desc)desc.innerHTML=descDeclaracionSEC253(sel.value); toast("Clasificación SEC guardada: "+sel.value);};
+}
+function aplicarSECAlProyecto253(data){
+  const tipo=document.getElementById("tipoDeclaracionSEC253")?.value || getTipoDeclaracionSEC253(data);
+  guardarTipoDeclaracionSEC253(tipo);
+  data.sec=Object.assign({},data.sec||{},{tipoDeclaracionSEC:tipo,descripcion:descDeclaracionSEC253(tipo),actualizado:new Date().toISOString()});
+  data.tipoDeclaracionSEC=tipo;
+  return data;
+}
+
 function renderGuiaSEC252(){
- const v=document.getElementById("moduleView"), e=guiaExp252(), tipo=localStorage.getItem("giae_chile_tipo_sec_v252")||"TE1";
+ const v=document.getElementById("moduleView"), e=guiaExp252(), tipo=getTipoDeclaracionSEC253(getP252())||"TE1";
  v.className="module-view show ready guia-sec-view guia-sec-252";
- v.innerHTML=`<span class="badge ready">Módulo funcional v2.5.2</span><h2>📋 Guía SEC Inteligente · TE1 · TE2 · TE3</h2>
+ v.innerHTML=`<span class="badge ready">Módulo funcional v2.5.3</span><h2>📋 Guía SEC Inteligente · TE1 · TE2 · TE3</h2>
  <p>Asistente paso a paso para preparar la presentación electrónica en la plataforma SEC / E-Declarador usando datos de GIAE.</p>
  <p class="privacy-note">📌 GIAE no reemplaza la plataforma SEC. Esta guía ayuda al instalador a preparar, copiar y revisar antecedentes antes de declarar.</p>
  <section class="folder-head"><div><h3>Proyecto base</h3><p><b>Proyecto:</b> ${esc252(e.proyecto)} · <b>Cliente:</b> ${esc252(e.cliente)} · <b>Distribuidora:</b> ${esc252(e.dist)}</p></div><label>Tipo de declaración SEC<select id="tipoSEC252">${["TE1","TE2","TE3"].map(x=>`<option ${x===tipo?"selected":""}>${x}</option>`).join("")}</select></label><div class="uni-mini"><b>${e.avance}%</b><small>Datos GIAE</small></div></section>
@@ -2290,7 +2322,7 @@ function renderGuiaSEC252(){
  <section class="folder-grid"><article class="folder-panel"><h3>1. Pasos en plataforma SEC</h3><ol class="sec-steps-252">${pasosSEC252(tipo)}</ol></article><article class="folder-panel"><h3>2. Antecedentes que debe aportar el instalador</h3>${pendientesSEC252(tipo)}</article></section>
  <section class="folder-grid"><article class="folder-panel"><h3>3. Qué copiar desde GIAE</h3>${copiarGIAE252(e)}</article><article class="folder-panel"><h3>4. Validación antes de enviar</h3>${checkEnvio252(tipo,e)}</article></section>
  <section class="folder-panel"><h3>Referencia del manual SEC</h3><p>El manual SEC/E-Declarador trabaja con presentaciones electrónicas TE1, TE2 y TE3 actualizadas por RIC y DS N°8.</p><div class="folder-buttons"><button class="btn primary" onclick="descargarGuiaSEC252()">📥 Descargar Guía SEC HTML</button><button class="btn" onclick="marcarGuiaSEC252()">✔ Marcar como revisado</button><button class="btn" onclick="openModule('carpeta')">Volver a Carpeta Técnica</button><button class="btn next" onclick="openModule('documentacion')">Continuar a Documentación</button></div><div id="guiaSECMsg252" class="inline-check">Seleccione TE1, TE2 o TE3 para adaptar la guía.</div></section>`;
- document.getElementById("tipoSEC252").onchange=(ev)=>{localStorage.setItem("giae_chile_tipo_sec_v252",ev.target.value);renderGuiaSEC252();};
+ document.getElementById("tipoSEC252").onchange=(ev)=>{guardarTipoDeclaracionSEC253(ev.target.value);renderGuiaSEC252();};
  v.scrollIntoView({behavior:"smooth",block:"start"});
 }
 function guiaExp252(){
@@ -2308,8 +2340,8 @@ function pasosSEC252(t){let a=["Ingresar al portal SEC con credenciales del inst
 function pendientesSEC252(t){let a=["Fotografías","Croquis de ubicación","Antecedentes propietario","Datos instalador SEC","Certificados aplicables","Revisión final"]; if(t==="TE2")a.push("Detalle de luminarias","Autorizaciones de apoyo si corresponde","Informe puesta a tierra si aplica"); else if(t==="TE3")a.push("Adjuntos técnicos específicos","Planos o documentos especiales"); else a.push("Memoria explicativa si corresponde","Informe de imágenes","Informe verificación inicial si aplica"); return`<ul class="pendientes-sec-252">${a.map(x=>`<li>□ ${esc252(x)}</li>`).join("")}</ul>`}
 function copiarGIAE252(e){let dem=((e.emp?.resumen?.demandaW||0)/1000).toFixed(2);let rows=[["Proyecto",e.proyecto],["Cliente",e.cliente],["Distribuidora",e.dist],["Demanda",dem+" kW"],["Empalme",e.emp?.evaluacion?.tipoEmpalme||"Sin empalme"],["Potencia normalizada",e.emp?.evaluacion?.potenciaSugerida||"Sin definir"],["Tierra",e.tie?.data?.tipoSistema||"Sin tierra"],["Resistencia",e.tie?.calculo?.rt?e.tie.calculo.rt+" Ω":"Sin dato"]];return`<table class="copy-table-252">${rows.map(r=>`<tr><th>${esc252(r[0])}</th><td>${esc252(r[1])}</td></tr>`).join("")}</table>`}
 function checkEnvio252(t,e){let a=[["Proyecto GIAE completo",!!e.p],["Cargas y cuadro completos",e.c.length>0],["Empalme revisado",!!e.emp],["Tierra revisada",!!e.tie],[`Tipo ${t} seleccionado`,true],["Documentos externos revisados",false]];return`<ul class="checklist-252">${a.map(x=>`<li class="${x[1]?'ok':'warn'}"><span>${x[1]?'☑':'☐'}</span>${esc252(x[0])}</li>`).join("")}</ul>`}
-function descargarGuiaSEC252(){const e=guiaExp252(),t=localStorage.getItem("giae_chile_tipo_sec_v252")||"TE1";const html=`<!doctype html><html lang="es"><meta charset="utf-8"><title>Guía SEC ${t}</title><body style="font-family:Arial;margin:32px"><h1>Guía SEC ${t} · GIAE v2.5.2</h1><p><b>Proyecto:</b> ${esc252(e.proyecto)} · <b>Cliente:</b> ${esc252(e.cliente)}</p><h2>${tituloSEC252(t)}</h2><p>${descSEC252(t)}</p><h2>Pasos</h2><ol>${pasosSEC252(t)}</ol><h2>Datos desde GIAE</h2>${copiarGIAE252(e)}<h2>Pendientes</h2>${pendientesSEC252(t)}<p><small>No reemplaza plataforma oficial SEC.</small></p></body></html>`;descargarArchivo252(`GIAE_Guia_SEC_${t}_v2_5_2.html`,html,"text/html;charset=utf-8");toast("Guía SEC descargada.")}
-function marcarGuiaSEC252(){const t=localStorage.getItem("giae_chile_tipo_sec_v252")||"TE1";localStorage.setItem("giae_chile_guia_sec_v252",JSON.stringify({version:APP_VERSION,tipo:t,revisado:true,actualizado:new Date().toISOString()}));const m=document.getElementById("guiaSECMsg252");if(m){m.className="inline-check ok";m.innerHTML=`✅ Guía ${t} marcada como revisada.`}toast("Guía SEC marcada como revisada.")}
+function descargarGuiaSEC252(){const e=guiaExp252(),t=getTipoDeclaracionSEC253(getP252())||"TE1";const html=`<!doctype html><html lang="es"><meta charset="utf-8"><title>Guía SEC ${t}</title><body style="font-family:Arial;margin:32px"><h1>Guía SEC ${t} · GIAE v2.5.3</h1><p><b>Proyecto:</b> ${esc252(e.proyecto)} · <b>Cliente:</b> ${esc252(e.cliente)}</p><h2>${tituloSEC252(t)}</h2><p>${descSEC252(t)}</p><h2>Pasos</h2><ol>${pasosSEC252(t)}</ol><h2>Datos desde GIAE</h2>${copiarGIAE252(e)}<h2>Pendientes</h2>${pendientesSEC252(t)}<p><small>No reemplaza plataforma oficial SEC.</small></p></body></html>`;descargarArchivo252(`GIAE_Guia_SEC_${t}_v2_5_2.html`,html,"text/html;charset=utf-8");toast("Guía SEC descargada.")}
+function marcarGuiaSEC252(){const t=getTipoDeclaracionSEC253(getP252())||"TE1";localStorage.setItem("giae_chile_guia_sec_v252",JSON.stringify({version:APP_VERSION,tipo:t,revisado:true,actualizado:new Date().toISOString()}));const m=document.getElementById("guiaSECMsg252");if(m){m.className="inline-check ok";m.innerHTML=`✅ Guía ${t} marcada como revisada.`}toast("Guía SEC marcada como revisada.")}
 function descargarArchivo252(n,c,m){const b=new Blob([c],{type:m}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=n;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u)}
 function esc252(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 
@@ -2319,7 +2351,7 @@ function renderMotorNormativo(){
   const audit=auditarNormativa250(exp);
   view.className="module-view show ready motor-view motor-250";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.5.2</span>
+    <span class="badge ready">Módulo funcional v2.5.3</span>
     <h2>⚖️ Motor Normativo SEC</h2>
     <p>Base normativa transversal: Decreto Supremo N°8, RIC 1-19, normas IEC y requisitos de distribuidoras.</p>
     <p class="privacy-note">📌 Esta versión crea la base normativa y auditoría preliminar. No modifica cálculos ni módulos operativos.</p>
