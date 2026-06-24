@@ -1,4 +1,4 @@
-const APP_VERSION = "2.3.0";
+const APP_VERSION = "2.3.1";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -6,7 +6,7 @@ const modules = [
   {id:"cargas", icon:"⚡", label:"Cargas", status:"ready", desc:"Módulo funcional: ingreso de circuitos, potencia instalada, demanda y recomendación preliminar de empalme."},
   {id:"cuadro", icon:"▣", label:"Cuadro de Carga", status:"ready", desc:"Módulo funcional: calcula Ib, protecciones preliminares, conductores, fases y resumen de carga."},
   {id:"unilineal", icon:"⌁", label:"Unilineal", status:"ready", desc:"Módulo funcional: motor gráfico restaurado desde v9.5.1, adaptado a Cargas, Cuadro y Empalme."},
-  {id:"tierra", icon:"⏚", label:"Tierra", status:"ready", desc:"Módulo funcional: Tierra Inteligente TP/TS, símbolos IEC 60417, sistema existente, equipotencialidad y RIC 6."},
+  {id:"tierra", icon:"⏚", label:"Tierra", status:"ready", desc:"Módulo funcional: Tierra Automática TP/TS con recomendación según potencia, empalme y distribuidora."},
   {id:"empalme", icon:"🔌", label:"Empalme", status:"ready", desc:"Módulo funcional: empalme inteligente con RIC 1, potencia normalizada, distribuidora y checklist documental."},
   {id:"carpeta", icon:"📂", label:"Carpeta Técnica", status:"ready", desc:"Módulo funcional: revisión documental por distribuidora, checklist, archivos y estado de carpeta."},
   {id:"presupuesto", icon:"💰", label:"Presupuesto", status:"missing", desc:"Pendiente: módulo separado de materiales, mano de obra, IVA y utilidad."},
@@ -330,7 +330,7 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.3.0</span>
+    <span class="badge ready">Módulo funcional v2.3.1</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
     <p class="privacy-note">🔒 Privacidad: los datos quedan sólo en este navegador. Al completar el proyecto puedes continuar a Cargas sin perder información.</p>
@@ -833,7 +833,7 @@ function renderCargas(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cargas-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.3.0</span>
+    <span class="badge ready">Módulo funcional v2.3.1</span>
     <h2>⚡ Cargas por circuitos</h2>
     <p>Ingresa los circuitos del proyecto. GIAE calcula potencia instalada, demanda estimada y una recomendación preliminar de empalme.</p>
     <p class="privacy-note">📌 Regla técnica: la distribuidora define la protección/limitador del medidor según potencia contratada y factibilidad. GIAE sólo recomienda y advierte.</p>
@@ -1133,7 +1133,7 @@ function renderCarpetaTecnica(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready carpeta-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.3.0</span>
+    <span class="badge ready">Módulo funcional v2.3.1</span>
     <h2>📂 Carpeta Técnica</h2>
     <p>Revisa documentos según la distribuidora seleccionada. Puedes usar GIAE sólo para revisar o para preparar un envío posterior.</p>
     <p class="privacy-note">🔒 Modo actual: revisión local. El envío por correo y respaldo en servidor se implementarán después.</p>
@@ -1162,7 +1162,7 @@ function revisarCarpeta(){const data=cargarCarpeta(), dist=document.getElementBy
 function detectarDocumento(doc,archivos){const texto=archivos.map(a=>a.name.toLowerCase()).join(" "), id=doc.id.toLowerCase(); const claves={te1:["te1","declaracion","declaración","sec"],te1qr:["te1","qr","sec"],anexo_te1:["anexo","te1","sec"],fotos:["foto","fotos","imagen","jpg","jpeg","png"],poste:["poste","placa","punto_red","punto-red"],croquis:["croquis","ubicacion","ubicación","coordenada"],rol:["rol","sii"],numero:["numero","número","municipal","dom"],medidor:["medidor","calibracion","calibración","pruebas"],empresa:["sociedad","empresa","rut","vigencia","personeria"],dominio:["dominio","cbr","conservador"],contrato:["contrato","suministro"],jurada:["jurada","notarial"],factibilidad:["factibilidad"],poder:["poder","notarial","autorizacion","autorización"],vecino:["vecino","cuenta","cliente"],construccion:["construccion","construcción","vivienda","caseta"],distancia:["distancia","30m","30_m"],camarilla:["camarilla","160"],tierra:["tierra","puesta","malla"],ubicacion:["ubicacion","ubicación","croquis","coordenada"]}; return (claves[id]||[id]).some(k=>texto.includes(k));}
 function verDetalleDistribuidora(dist,id){const doc=DISTRIBUIDORAS[dist]?.documentos.find(d=>d.id===id); if(!doc)return; document.getElementById("distModalTitle").textContent=`📚 ${dist} · ${doc.nombre}`; document.getElementById("distModalBody").innerHTML=`<p><b>Tipo:</b> ${doc.obligatorio?"Obligatorio":"Condicional"}</p><p><b>Detalle:</b> ${doc.detalle}</p><p><b>Acción GIAE:</b> cargar documento asociado. Si falta, la carpeta queda observada antes de envío.</p>`; document.getElementById("distModal").classList.add("show");}
 function cerrarDistModal(){document.getElementById("distModal")?.classList.remove("show");}
-function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.3.0</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
+function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.3.1</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
 function responderAsistente(){const dist=document.getElementById("assistantDist")?.value||"CGE", data=DISTRIBUIDORAS[dist], box=document.getElementById("assistantAnswer"); if(!box)return; box.innerHTML=`<h3>Documentación requerida para ${dist}</h3><p>${data.descripcion}</p><h4>Documentos obligatorios</h4><ul>${data.documentos.filter(d=>d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")}</ul><h4>Documentos condicionales</h4><ul>${data.documentos.filter(d=>!d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")||"<li>No hay condicionales registrados.</li>"}</ul><p><b>Recomendación GIAE:</b> crear proyecto, subir carpeta técnica y ejecutar revisión antes de enviar a la distribuidora.</p>`;}
 
 
@@ -1262,7 +1262,7 @@ function renderCuadroInteligente(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cuadro-inteligente";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.3.0</span>
+    <span class="badge ready">Módulo funcional v2.3.1</span>
     <h2>▣ Cuadro de Carga Inteligente</h2>
     <p>Genera protecciones preliminares, conductores, canalizaciones y balance de fases desde las cargas ingresadas.</p>
     <p class="privacy-note">📌 Uso técnico preliminar: debe verificarse con RIC, cálculo de caída de tensión, ICC y criterio del instalador autorizado SEC.</p>
@@ -1326,8 +1326,8 @@ function renderTierraInteligente(){
   const guardado = getTierraGuardada230();
   view.className = "module-view show ready tierra-view tierra-230";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.3.0</span>
-    <h2>⏚ Tierra Inteligente TP / TS</h2>
+    <span class="badge ready">Módulo funcional v2.3.1</span>
+    <h2>⏚ Tierra Automática TP / TS</h2>
     <p>Define Tierra de Protección, Tierra de Servicio, sistema existente o proyectado, equipotencialidad y validación preliminar RIC 6.</p>
     <p class="privacy-note">📌 GIAE documenta y calcula de forma preliminar. La resistencia final debe medirse en terreno con instrumento adecuado.</p>
 
@@ -1338,6 +1338,15 @@ function renderTierraInteligente(){
       </div>
       <div class="uni-mini"><b>${((resumen.demandaW||0)/1000).toFixed(2)} kW</b><small>Demanda</small></div>
       <div class="uni-mini"><b>${empalme?.distribuidora || proyecto?.ubicacion?.distribuidora || "CGE"}</b><small>Distribuidora</small></div>
+    </section>
+
+    <section class="tierra-auto-box">
+      <div>
+        <h3>🤖 Recomendación automática GIAE</h3>
+        <p>Según potencia, empalme y distribuidora, GIAE propone un sistema inicial editable para TP/TS.</p>
+      </div>
+      <div id="tierraAutoResumen230">${renderRecomendacionTierra230(recomendarTierra230(proyecto, empalme, resumen))}</div>
+      <button class="btn primary" id="btnAplicarRecomendacion230">Aplicar recomendación</button>
     </section>
 
     <section class="tierra-symbol-grid">
@@ -1466,6 +1475,8 @@ function renderTierraInteligente(){
     ${modalRic6230()}
   `;
   cargarFormTierra230(guardado?.data || null);
+  document.getElementById("btnAplicarRecomendacion230").onclick = aplicarRecomendacionTierra230;
+  if(!guardado) aplicarRecomendacionTierra230(false);
   document.getElementById("btnCalcTierra230").onclick = calcularTierra230;
   document.getElementById("btnGuardarTierra230").onclick = guardarTierraContinuar230;
   view.scrollIntoView({behavior:"smooth", block:"start"});
@@ -1484,6 +1495,97 @@ function getResumenTierra230(){
   try{ if(typeof getResumenEmpalme220==="function") return getResumenEmpalme220(); }catch(e){}
   return {totalW:0, demandaW:0, corriente:0, tri:false};
 }
+
+function recomendarTierra230(proyecto, empalme, resumen){
+  const kw = Number((resumen?.demandaW || 0) / 1000);
+  const tipoEmpalme = String(empalme?.evaluacion?.tipoEmpalme || "").toLowerCase();
+  const distribuidora = String(empalme?.distribuidora || proyecto?.ubicacion?.distribuidora || "CGE").toUpperCase();
+  const tri = tipoEmpalme.includes("trif") || resumen?.tri || String(proyecto?.electrico?.suministro || "").includes("Trifásico");
+
+  let tipoSistema = "Jabalina simple";
+  let cantidad = 1;
+  let conductorTP = "Cu 16 mm²";
+  let conductorTS = tri ? "Cu 16 mm²" : "Cu 10 mm²";
+  let longitud = 2.4;
+  let diametro = '5/8"';
+  let material = "Jabalina cobreada";
+  let resistividad = 100;
+  let motivo = "Proyecto de baja demanda: se recomienda solución básica con jabalina simple y medición final.";
+
+  if(kw > 10 && kw <= 25){
+    tipoSistema = "Jabalinas múltiples en paralelo";
+    cantidad = 2;
+    conductorTP = "Cu 16 mm²";
+    conductorTS = "Cu 16 mm²";
+    motivo = "Demanda media: se recomiendan dos electrodos en paralelo para mejorar resistencia y estabilidad.";
+  }
+  if(kw > 25 && kw <= 50){
+    tipoSistema = "Jabalinas múltiples en paralelo";
+    cantidad = 3;
+    conductorTP = "Cu 25 mm²";
+    conductorTS = "Cu 16 mm²";
+    motivo = "Demanda alta en BT: se recomiendan múltiples electrodos y conductor TP reforzado.";
+  }
+  if(kw > 50 || tipoEmpalme.includes("indirecto")){
+    tipoSistema = "Malla de tierra";
+    cantidad = 4;
+    conductorTP = "Cu 35 mm²";
+    conductorTS = "Cu 25 mm²";
+    motivo = "Potencia elevada o empalme indirecto: se recomienda evaluar malla de tierra y memoria técnica.";
+  }
+
+  if(distribuidora.includes("COPELEC")){
+    cantidad = Math.max(cantidad, 2);
+    motivo += " Para COPELEC se recomienda especial atención a camarilla, distancia poste-medidor y requisitos constructivos locales.";
+  }
+  if(distribuidora.includes("SAESA") || distribuidora.includes("FRONTEL")){
+    resistividad = 150;
+    motivo += " En zonas rurales del sur se sugiere considerar mayor resistividad y validar factibilidad/medición.";
+  }
+  if(distribuidora.includes("CGE")){
+    motivo += " Para CGE se debe respaldar con set fotográfico: puesta a tierra, camarilla y unión al tablero.";
+  }
+
+  return {
+    tipoSistema, tipoExistente:"No aplica", resistenciaMedida:0, fechaMedicion:"",
+    instrumento:"Telurómetro", material, diametro, longitud, cantidad,
+    separacion: longitud, resistividad, conductorTP, conductorTS,
+    equipotencialidad:["Barra principal de tierra","Unión equipotencial principal","Unión equipotencial suplementaria","Tablero conectado a TP","Empalme conectado a TP"],
+    observaciones: motivo,
+    motivo, kw, distribuidora, tri
+  };
+}
+
+function renderRecomendacionTierra230(rec){
+  return `<div class="auto-rec-grid">
+    <p><b>Sistema:</b> ${esc230(rec.tipoSistema)}</p>
+    <p><b>Electrodos:</b> ${rec.cantidad} · ${esc230(rec.diametro)} x ${rec.longitud} m</p>
+    <p><b>TP:</b> ${esc230(rec.conductorTP)}</p>
+    <p><b>TS:</b> ${esc230(rec.conductorTS)}</p>
+    <p><b>Distribuidora:</b> ${esc230(rec.distribuidora)}</p>
+    <p><b>Base:</b> ${rec.kw.toFixed(2)} kW</p>
+    <small>${esc230(rec.motivo)}</small>
+  </div>`;
+}
+
+function aplicarRecomendacionTierra230(mostrarToast=true){
+  const proyecto = getProyectoSeguro230();
+  const empalme = getEmpalmeGuardado230();
+  const resumen = empalme?.resumen || getResumenTierra230();
+  const rec = recomendarTierra230(proyecto, empalme, resumen);
+  const f = document.getElementById("tierraForm230");
+  if(!f) return;
+  Object.entries(rec).forEach(([k,v])=>{
+    if(f.elements[k] && typeof v !== "object") f.elements[k].value = v;
+  });
+  f.querySelectorAll(".check-line input").forEach(ch=>{
+    ch.checked = rec.equipotencialidad.includes(ch.parentElement.textContent.trim());
+  });
+  calcularTierra230();
+  if(mostrarToast) toast("Recomendación automática aplicada.");
+}
+
+
 function leerFormTierra230(){
   const f = document.getElementById("tierraForm230");
   const fd = Object.fromEntries(new FormData(f).entries());
@@ -1613,7 +1715,7 @@ function svgSymbolTS230(x,y){
 function modalRic6230(){
   return `<div class="ric-modal" id="ric6230Modal"><div class="ric-modal-box">
     <h3>📚 Fundamento RIC 6 aplicado</h3>
-    <p><b>GIAE v2.3.0:</b> clasifica TP, TS, equipotencialidad y sistema de tierra, dejando registro para carpeta técnica.</p>
+    <p><b>GIAE v2.3.1:</b> clasifica TP, TS, equipotencialidad y sistema de tierra, dejando registro para carpeta técnica.</p>
     <p><b>Símbolos:</b> TP IEC 60417-5019, TS IEC 60417-5018 y equipotencialidad IEC 60417-5021.</p>
     <p><b>Validación:</b> la resistencia calculada es preliminar. El cumplimiento definitivo requiere medición en terreno.</p>
     <button class="btn primary" onclick="cerrarModalRic6230()">Cerrar y volver a Tierra</button>
@@ -1632,7 +1734,7 @@ function renderEmpalmeInteligente(){
   const ev=evaluarEmpalme220(resumen,dist);
   view.className="module-view show ready empalme-view empalme-220";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.3.0</span>
+    <span class="badge ready">Módulo funcional v2.3.1</span>
     <h2>🔌 Empalme Inteligente</h2>
     <p>Valida demanda, suministro, potencia normalizada, distribuidora y fundamento RIC 1 sin tocar módulos operativos.</p>
     <p class="privacy-note">📌 GIAE recomienda y advierte. La distribuidora define condiciones finales, medidor, limitador y factibilidad.</p>
@@ -1818,7 +1920,7 @@ function renderUnilinealAutomatico(){
 
     view.className = "module-view show ready unilineal-view unilineal-v951";
     view.innerHTML = `
-      <span class="badge ready">Módulo funcional v2.3.0</span>
+      <span class="badge ready">Módulo funcional v2.3.1</span>
       <h2>⌁ Unilineal v9.5.1 Restaurado</h2>
       <p>Motor gráfico restaurado desde v9.5.1: automático con media luna, círculos, rayita central, diferencial alineado y diseño tipo plano.</p>
       <p class="privacy-note">📐 Vista técnica preliminar. El instalador autorizado SEC debe validar el plano final.</p>
@@ -1945,7 +2047,7 @@ function renderSVG951(cargas, proyecto, esTri, general, barra){
   const cs = cargas.length ? cargas : [];
   const n = Math.max(cs.length,1);
 
-  // Ajuste v2.3.0:
+  // Ajuste v2.3.1:
   // El dibujo se adapta a la cantidad real de circuitos.
   // La barra horizontal nace en el primer circuito y termina en el último circuito.
   // El automático general se centra sobre el conjunto de circuitos, no sobre la hoja completa.
