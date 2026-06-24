@@ -1,23 +1,28 @@
-# GIAE Chile v2.5.6 - Presupuesto Inteligente
+# GIAE Chile v2.5.7 - Biblioteca Inteligente de Materiales
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.5.5 Revisión de Expediente.
+Base: GIAE Chile v2.5.6 Presupuesto Inteligente.
 
 ## Mejora
-Nuevo módulo independiente de Presupuesto Inteligente.
+Nuevo módulo independiente Biblioteca Inteligente de Materiales.
 
 ## Funciones
-- Lee Proyecto, Cargas, Empalme, Tierra, Documentación y Revisión.
-- Sugiere materiales preliminares.
-- Calcula mano de obra.
-- Calcula gastos generales.
-- Calcula utilidad.
-- Calcula IVA.
-- Genera total estimado.
-- Permite parámetros editables.
-- Guarda presupuesto.
-- Descarga presupuesto HTML.
+- Conductores.
+- Canalizaciones.
+- Protecciones.
+- Tableros.
+- Puesta a tierra.
+- Empalmes.
+- Material menor.
+- Precios editables.
+- Normas RIC e IEC asociadas.
+- Búsqueda rápida.
+- Agregar materiales.
+- Quitar materiales.
+- Exportar biblioteca JSON.
+- Importar biblioteca JSON.
+- Restaurar base inicial.
 
 ## Regla
-No modifica módulos operativos. Sólo lee información existente y genera presupuesto independiente.
+No modifica módulos operativos. Sólo administra una biblioteca local para Presupuesto, Documentación y futuras exportaciones.

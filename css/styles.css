@@ -697,3 +697,10 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .budget-param-grid-256{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.budget-param-grid-256 label{display:grid;gap:6px}.budget-param-grid-256 input{background:#061017;color:#fff;border:1px solid #245366;border-radius:10px;padding:10px}
 .presupuesto-preview-256{background:#f8fafc;color:#111;border-radius:14px;padding:20px;max-height:520px;overflow:auto}.presupuesto-preview-256 h1{border-bottom:3px solid #111;padding-bottom:8px}.presupuesto-preview-256 h2{border-bottom:1px solid #ccc;padding-bottom:5px}.presupuesto-preview-256 table{width:100%;border-collapse:collapse;margin:12px 0}.presupuesto-preview-256 th,.presupuesto-preview-256 td{border:1px solid #999;padding:8px;text-align:left}
 @media(max-width:900px){.budget-kpis-256,.budget-param-grid-256{grid-template-columns:1fr}}
+
+/* v2.5.7 · Biblioteca Inteligente de Materiales */
+.biblioteca-tools-257{display:grid;grid-template-columns:1fr 240px;gap:10px}.biblioteca-tools-257 input,.biblioteca-tools-257 select,.biblioteca-form-257 input,.import-box-257{background:#061017;color:#fff;border:1px solid #245366;border-radius:10px;padding:10px}
+.biblioteca-form-257{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.biblioteca-table-257{width:100%;border-collapse:collapse;margin:10px 0}.biblioteca-table-257 th,.biblioteca-table-257 td{border:1px solid #245366;padding:8px;text-align:left;vertical-align:top}.biblioteca-table-257 th{color:#8cffad}.biblioteca-table-257 small{display:block;color:#8db0bb;margin-top:4px}.biblioteca-table-257 input{width:100px;background:#061017;color:#fff;border:1px solid #245366;border-radius:8px;padding:6px}.btn.small{padding:6px 9px;font-size:.8rem}.btn.danger{border-color:#ff6b6b;background:#2a1010;color:#ffd0d0}
+.import-box-257{width:100%;min-height:90px;margin-top:12px;font-family:monospace}
+@media(max-width:900px){.biblioteca-tools-257,.biblioteca-form-257{grid-template-columns:1fr}.biblioteca-table-257{font-size:.8rem}}
