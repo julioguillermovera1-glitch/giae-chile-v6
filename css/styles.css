@@ -580,3 +580,17 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .emp-docs li{display:flex;gap:10px;border:1px solid #245366;border-radius:12px;padding:10px;background:#061017}
 .emp-docs small{display:block;color:#8db0bb;margin-top:4px}.inline-check.ok{border-color:#22c55e;background:#071b12}.inline-check.error{border-color:#ff4d5d;background:#210b10}
 @media(max-width:800px){.empalme-kv{grid-template-columns:1fr}}
+
+/* v2.3.0 · Tierra Inteligente */
+.tierra-symbol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0}
+.tierra-symbol-card{border:1px solid #245366;border-radius:16px;background:#061017;padding:16px;text-align:center}
+.iec-symbol{width:120px;height:90px;color:#8cffad;margin:6px auto;display:block}
+.check-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;grid-column:1/-1}
+.check-line{border:1px solid #245366;border-radius:10px;padding:10px;background:#061017}
+.tierra-result{margin:16px 0}
+.tierra-status{border:1px solid #22c55e;background:#071b12;border-radius:16px;padding:16px}
+.tierra-status.revisar{border-color:#ffd166;background:#2a240e}
+.tierra-status.nocumple{border-color:#ff4d5d;background:#210b10}
+.tierra-svg{width:100%;max-width:720px;background:white;color:#111;border-radius:14px}
+.tierra-report p{border-bottom:1px solid #245366;padding-bottom:7px}
+@media(max-width:900px){.tierra-symbol-grid,.check-grid{grid-template-columns:1fr}}

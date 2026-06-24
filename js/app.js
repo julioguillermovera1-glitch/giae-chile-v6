@@ -1,4 +1,4 @@
-const APP_VERSION = "2.2.0";
+const APP_VERSION = "2.3.0";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -6,7 +6,7 @@ const modules = [
   {id:"cargas", icon:"⚡", label:"Cargas", status:"ready", desc:"Módulo funcional: ingreso de circuitos, potencia instalada, demanda y recomendación preliminar de empalme."},
   {id:"cuadro", icon:"▣", label:"Cuadro de Carga", status:"ready", desc:"Módulo funcional: calcula Ib, protecciones preliminares, conductores, fases y resumen de carga."},
   {id:"unilineal", icon:"⌁", label:"Unilineal", status:"ready", desc:"Módulo funcional: motor gráfico restaurado desde v9.5.1, adaptado a Cargas, Cuadro y Empalme."},
-  {id:"tierra", icon:"⏚", label:"Tierra", status:"missing", desc:"Pendiente: puesta a tierra y equipotencialidad según RIC 6."},
+  {id:"tierra", icon:"⏚", label:"Tierra", status:"ready", desc:"Módulo funcional: Tierra Inteligente TP/TS, símbolos IEC 60417, sistema existente, equipotencialidad y RIC 6."},
   {id:"empalme", icon:"🔌", label:"Empalme", status:"ready", desc:"Módulo funcional: empalme inteligente con RIC 1, potencia normalizada, distribuidora y checklist documental."},
   {id:"carpeta", icon:"📂", label:"Carpeta Técnica", status:"ready", desc:"Módulo funcional: revisión documental por distribuidora, checklist, archivos y estado de carpeta."},
   {id:"presupuesto", icon:"💰", label:"Presupuesto", status:"missing", desc:"Pendiente: módulo separado de materiales, mano de obra, IVA y utilidad."},
@@ -22,6 +22,7 @@ const quicks = [
   {label:"Cuadro de Carga", icon:"▣", status:"ready", target:"cuadro", text:"Calcular protecciones y fases"},
   {label:"Unilineal", icon:"⌁", status:"ready", target:"unilineal", text:"Funcional ✓ Motor gráfico v9.5.1"},
   {label:"Empalme", icon:"🔌", status:"ready", target:"empalme", text:"Validar RIC 1 y distribuidora"},
+  {label:"Tierra", icon:"⏚", status:"ready", target:"tierra", text:"TP/TS · RIC 6 · IEC 60417"},
   {label:"Carpeta Técnica", icon:"📂", status:"ready", target:"carpeta", text:"Revisar documentos por distribuidora"},
   {label:"Asistente", icon:"🤖", status:"ready", target:"asistente", text:"Consultar documentos requeridos"}
 ];
@@ -307,6 +308,7 @@ function openModule(id){
   if(id==="cargas"){ renderCargas(); return; }
   if(id==="cuadro"){ renderCuadroInteligente(); return; }
   if(id==="empalme"){ renderEmpalmeInteligente(); return; }
+  if(id==="tierra"){ renderTierraInteligente(); return; }
   if(id==="unilineal"){ renderUnilinealAutomatico(); return; }
   if(id==="carpeta"){ renderCarpetaTecnica(); return; }
   if(id==="asistente"){ renderAsistenteDocumental(); return; }
@@ -328,7 +330,7 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.2.0</span>
+    <span class="badge ready">Módulo funcional v2.3.0</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
     <p class="privacy-note">🔒 Privacidad: los datos quedan sólo en este navegador. Al completar el proyecto puedes continuar a Cargas sin perder información.</p>
@@ -831,7 +833,7 @@ function renderCargas(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cargas-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.2.0</span>
+    <span class="badge ready">Módulo funcional v2.3.0</span>
     <h2>⚡ Cargas por circuitos</h2>
     <p>Ingresa los circuitos del proyecto. GIAE calcula potencia instalada, demanda estimada y una recomendación preliminar de empalme.</p>
     <p class="privacy-note">📌 Regla técnica: la distribuidora define la protección/limitador del medidor según potencia contratada y factibilidad. GIAE sólo recomienda y advierte.</p>
@@ -1131,7 +1133,7 @@ function renderCarpetaTecnica(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready carpeta-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.2.0</span>
+    <span class="badge ready">Módulo funcional v2.3.0</span>
     <h2>📂 Carpeta Técnica</h2>
     <p>Revisa documentos según la distribuidora seleccionada. Puedes usar GIAE sólo para revisar o para preparar un envío posterior.</p>
     <p class="privacy-note">🔒 Modo actual: revisión local. El envío por correo y respaldo en servidor se implementarán después.</p>
@@ -1160,7 +1162,7 @@ function revisarCarpeta(){const data=cargarCarpeta(), dist=document.getElementBy
 function detectarDocumento(doc,archivos){const texto=archivos.map(a=>a.name.toLowerCase()).join(" "), id=doc.id.toLowerCase(); const claves={te1:["te1","declaracion","declaración","sec"],te1qr:["te1","qr","sec"],anexo_te1:["anexo","te1","sec"],fotos:["foto","fotos","imagen","jpg","jpeg","png"],poste:["poste","placa","punto_red","punto-red"],croquis:["croquis","ubicacion","ubicación","coordenada"],rol:["rol","sii"],numero:["numero","número","municipal","dom"],medidor:["medidor","calibracion","calibración","pruebas"],empresa:["sociedad","empresa","rut","vigencia","personeria"],dominio:["dominio","cbr","conservador"],contrato:["contrato","suministro"],jurada:["jurada","notarial"],factibilidad:["factibilidad"],poder:["poder","notarial","autorizacion","autorización"],vecino:["vecino","cuenta","cliente"],construccion:["construccion","construcción","vivienda","caseta"],distancia:["distancia","30m","30_m"],camarilla:["camarilla","160"],tierra:["tierra","puesta","malla"],ubicacion:["ubicacion","ubicación","croquis","coordenada"]}; return (claves[id]||[id]).some(k=>texto.includes(k));}
 function verDetalleDistribuidora(dist,id){const doc=DISTRIBUIDORAS[dist]?.documentos.find(d=>d.id===id); if(!doc)return; document.getElementById("distModalTitle").textContent=`📚 ${dist} · ${doc.nombre}`; document.getElementById("distModalBody").innerHTML=`<p><b>Tipo:</b> ${doc.obligatorio?"Obligatorio":"Condicional"}</p><p><b>Detalle:</b> ${doc.detalle}</p><p><b>Acción GIAE:</b> cargar documento asociado. Si falta, la carpeta queda observada antes de envío.</p>`; document.getElementById("distModal").classList.add("show");}
 function cerrarDistModal(){document.getElementById("distModal")?.classList.remove("show");}
-function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.2.0</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
+function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.3.0</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
 function responderAsistente(){const dist=document.getElementById("assistantDist")?.value||"CGE", data=DISTRIBUIDORAS[dist], box=document.getElementById("assistantAnswer"); if(!box)return; box.innerHTML=`<h3>Documentación requerida para ${dist}</h3><p>${data.descripcion}</p><h4>Documentos obligatorios</h4><ul>${data.documentos.filter(d=>d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")}</ul><h4>Documentos condicionales</h4><ul>${data.documentos.filter(d=>!d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")||"<li>No hay condicionales registrados.</li>"}</ul><p><b>Recomendación GIAE:</b> crear proyecto, subir carpeta técnica y ejecutar revisión antes de enviar a la distribuidora.</p>`;}
 
 
@@ -1260,7 +1262,7 @@ function renderCuadroInteligente(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cuadro-inteligente";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.2.0</span>
+    <span class="badge ready">Módulo funcional v2.3.0</span>
     <h2>▣ Cuadro de Carga Inteligente</h2>
     <p>Genera protecciones preliminares, conductores, canalizaciones y balance de fases desde las cargas ingresadas.</p>
     <p class="privacy-note">📌 Uso técnico preliminar: debe verificarse con RIC, cálculo de caída de tensión, ICC y criterio del instalador autorizado SEC.</p>
@@ -1316,6 +1318,311 @@ function renderErroresRic(cargas){
   return `<ul>${errores.map(e=>`<li>❌ ${e}</li>`).join("")}</ul>`;
 }
 
+function renderTierraInteligente(){
+  const view = document.getElementById("moduleView");
+  const proyecto = getProyectoSeguro230();
+  const empalme = getEmpalmeGuardado230();
+  const resumen = empalme?.resumen || getResumenTierra230();
+  const guardado = getTierraGuardada230();
+  view.className = "module-view show ready tierra-view tierra-230";
+  view.innerHTML = `
+    <span class="badge ready">Módulo funcional v2.3.0</span>
+    <h2>⏚ Tierra Inteligente TP / TS</h2>
+    <p>Define Tierra de Protección, Tierra de Servicio, sistema existente o proyectado, equipotencialidad y validación preliminar RIC 6.</p>
+    <p class="privacy-note">📌 GIAE documenta y calcula de forma preliminar. La resistencia final debe medirse en terreno con instrumento adecuado.</p>
+
+    <section class="folder-head">
+      <div>
+        <h3>Proyecto analizado</h3>
+        <p><b>Proyecto:</b> ${esc230(proyecto?.proyecto?.nombre || "Sin proyecto")} · <b>Cliente:</b> ${esc230(proyecto?.cliente?.nombre || "Sin cliente")} · <b>Empalme:</b> ${esc230(empalme?.evaluacion?.tipoEmpalme || "Sin empalme guardado")}</p>
+      </div>
+      <div class="uni-mini"><b>${((resumen.demandaW||0)/1000).toFixed(2)} kW</b><small>Demanda</small></div>
+      <div class="uni-mini"><b>${empalme?.distribuidora || proyecto?.ubicacion?.distribuidora || "CGE"}</b><small>Distribuidora</small></div>
+    </section>
+
+    <section class="tierra-symbol-grid">
+      <article class="tierra-symbol-card">
+        <h3>TP · Tierra de Protección</h3>
+        ${svgTP230()}
+        <p><b>IEC 60417-5019</b></p>
+        <small>Protección de personas, masas metálicas, PE y barra de tierra del tablero.</small>
+      </article>
+      <article class="tierra-symbol-card">
+        <h3>TS · Tierra de Servicio</h3>
+        ${svgTS230()}
+        <p><b>IEC 60417-5018</b></p>
+        <small>Referencia operacional del sistema, neutro o tierra funcional según corresponda.</small>
+      </article>
+      <article class="tierra-symbol-card">
+        <h3>Equipotencialidad</h3>
+        ${svgEQ230()}
+        <p><b>IEC 60417-5021</b></p>
+        <small>Unión equipotencial principal y suplementaria.</small>
+      </article>
+    </section>
+
+    <form id="tierraForm230" class="project-form compact tierra-form" autocomplete="off">
+      <fieldset class="form-section active">
+        <legend>Sistema de puesta a tierra</legend>
+        <label>Tipo de sistema
+          <select name="tipoSistema" id="tipoSistema230">
+            <option>Jabalina simple</option>
+            <option>Jabalinas múltiples en paralelo</option>
+            <option>Malla de tierra</option>
+            <option>Anillo de tierra</option>
+            <option>Tierra química</option>
+            <option>Tierra profunda</option>
+            <option>Sistema existente</option>
+            <option>Sistema compartido autorizado</option>
+            <option>Otro sistema especial</option>
+          </select>
+        </label>
+        <label>Tipo existente, si aplica
+          <select name="tipoExistente">
+            <option>No aplica</option>
+            <option>Jabalina existente</option>
+            <option>Malla existente</option>
+            <option>Anillo existente</option>
+            <option>Tierra química existente</option>
+            <option>Desconocido</option>
+          </select>
+        </label>
+        <label>Resistencia medida de tierra Ω<input name="resistenciaMedida" type="number" min="0" step="0.01" placeholder="Ej: 8.5"></label>
+        <label>Fecha de medición<input name="fechaMedicion" type="date"></label>
+        <label>Instrumento utilizado<input name="instrumento" placeholder="Ej: Telurómetro"></label>
+      </fieldset>
+
+      <fieldset class="form-section active">
+        <legend>Datos técnicos</legend>
+        <label>Material
+          <select name="material">
+            <option>Jabalina cobreada</option>
+            <option>Cobre desnudo</option>
+            <option>Acero galvanizado</option>
+            <option>Malla de cobre</option>
+            <option>Existente verificado</option>
+          </select>
+        </label>
+        <label>Diámetro electrodo
+          <select name="diametro">
+            <option>5/8&quot;</option>
+            <option>3/4&quot;</option>
+            <option>1&quot;</option>
+            <option>No aplica</option>
+          </select>
+        </label>
+        <label>Longitud electrodo m<input name="longitud" type="number" min="0" step="0.1" value="2.4"></label>
+        <label>Cantidad de electrodos<input name="cantidad" type="number" min="1" step="1" value="1"></label>
+        <label>Separación entre electrodos m<input name="separacion" type="number" min="0" step="0.1" value="2.4"></label>
+        <label>Resistividad estimada terreno Ω·m<input name="resistividad" type="number" min="1" step="1" value="100"></label>
+      </fieldset>
+
+      <fieldset class="form-section active">
+        <legend>Conductores y equipotencialidad</legend>
+        <label>Conductor TP / PE
+          <select name="conductorTP">
+            <option>Cu 16 mm²</option>
+            <option>Cu 25 mm²</option>
+            <option>Cu 35 mm²</option>
+            <option>Cu 50 mm²</option>
+          </select>
+        </label>
+        <label>Conductor TS
+          <select name="conductorTS">
+            <option>Cu 10 mm²</option>
+            <option>Cu 16 mm²</option>
+            <option>Cu 25 mm²</option>
+            <option>No aplica</option>
+          </select>
+        </label>
+        <div class="check-grid">
+          ${["Barra principal de tierra","Unión equipotencial principal","Unión equipotencial suplementaria","Canalizaciones metálicas conectadas","Tablero conectado a TP","Empalme conectado a TP"].map((x,i)=>`<label class="check-line"><input type="checkbox" name="eq${i}" ${i<3?"checked":""}> ${x}</label>`).join("")}
+        </div>
+        <label>Observaciones<textarea name="observaciones" placeholder="Observaciones del sistema de tierra"></textarea></label>
+      </fieldset>
+
+      <div class="form-actions">
+        <button type="button" class="btn primary" id="btnCalcTierra230">Calcular y validar RIC 6</button>
+        <button type="button" class="btn" onclick="abrirModalRic6230()">📚 Ver fundamento RIC 6</button>
+        <button type="button" class="btn next" id="btnGuardarTierra230">Guardar Tierra y continuar</button>
+      </div>
+    </form>
+
+    <section id="resultadoTierra230" class="tierra-result">
+      ${guardado ? renderResultadoTierra230(guardado.calculo, guardado.data) : "<p>Complete los datos y presione calcular.</p>"}
+    </section>
+
+    <section class="folder-grid">
+      <article class="folder-panel">
+        <h3>Dibujo preliminar</h3>
+        <div id="dibujoTierra230">${renderDibujoTierra230(guardado?.data || null)}</div>
+      </article>
+      <article class="folder-panel">
+        <h3>Informe automático</h3>
+        <div id="informeTierra230">${guardado ? renderInformeTierra230(guardado.data, guardado.calculo) : "<p>Aún no hay informe generado.</p>"}</div>
+      </article>
+    </section>
+
+    ${modalRic6230()}
+  `;
+  cargarFormTierra230(guardado?.data || null);
+  document.getElementById("btnCalcTierra230").onclick = calcularTierra230;
+  document.getElementById("btnGuardarTierra230").onclick = guardarTierraContinuar230;
+  view.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function getProyectoSeguro230(){
+  try{ return typeof getProyectoSeguro==="function" ? getProyectoSeguro() : JSON.parse(localStorage.getItem(STORAGE_KEY)||"null"); }catch(e){ return null; }
+}
+function getEmpalmeGuardado230(){
+  try{ return JSON.parse(localStorage.getItem("giae_chile_empalme_v220")||"null"); }catch(e){ return null; }
+}
+function getTierraGuardada230(){
+  try{ return JSON.parse(localStorage.getItem("giae_chile_tierra_v230")||"null"); }catch(e){ return null; }
+}
+function getResumenTierra230(){
+  try{ if(typeof getResumenEmpalme220==="function") return getResumenEmpalme220(); }catch(e){}
+  return {totalW:0, demandaW:0, corriente:0, tri:false};
+}
+function leerFormTierra230(){
+  const f = document.getElementById("tierraForm230");
+  const fd = Object.fromEntries(new FormData(f).entries());
+  const eq = [];
+  f.querySelectorAll(".check-line input").forEach(ch=>{ if(ch.checked) eq.push(ch.parentElement.textContent.trim()); });
+  return {
+    tipoSistema: fd.tipoSistema || "Jabalina simple",
+    tipoExistente: fd.tipoExistente || "No aplica",
+    resistenciaMedida: Number(fd.resistenciaMedida || 0),
+    fechaMedicion: fd.fechaMedicion || "",
+    instrumento: fd.instrumento || "",
+    material: fd.material || "",
+    diametro: fd.diametro || "",
+    longitud: Number(fd.longitud || 0),
+    cantidad: Number(fd.cantidad || 1),
+    separacion: Number(fd.separacion || 0),
+    resistividad: Number(fd.resistividad || 100),
+    conductorTP: fd.conductorTP || "",
+    conductorTS: fd.conductorTS || "",
+    equipotencialidad: eq,
+    observaciones: fd.observaciones || ""
+  };
+}
+function cargarFormTierra230(data){
+  if(!data) return;
+  const f = document.getElementById("tierraForm230");
+  Object.entries(data).forEach(([k,v])=>{
+    if(f.elements[k] && typeof v !== "object") f.elements[k].value = v;
+  });
+}
+function calcularTierra230(){
+  const data = leerFormTierra230();
+  const calculo = calcularRt230(data);
+  document.getElementById("resultadoTierra230").innerHTML = renderResultadoTierra230(calculo, data);
+  document.getElementById("dibujoTierra230").innerHTML = renderDibujoTierra230(data);
+  document.getElementById("informeTierra230").innerHTML = renderInformeTierra230(data, calculo);
+}
+function calcularRt230(data){
+  let rtTeorica = 0;
+  if(data.tipoSistema.includes("Existente") && data.resistenciaMedida){
+    rtTeorica = data.resistenciaMedida;
+  }else{
+    const rho = Math.max(1, data.resistividad || 100);
+    const L = Math.max(0.5, data.longitud || 2.4);
+    const n = Math.max(1, data.cantidad || 1);
+    // Fórmula preliminar simple para electrodo vertical. GIAE la usa como estimación, no reemplaza medición en terreno.
+    const electrodo = rho / (2 * Math.PI * L) * (Math.log((4 * L) / 0.016) - 1);
+    const factorParalelo = n === 1 ? 1 : Math.max(0.35, 1 / (n * 0.75));
+    rtTeorica = electrodo * factorParalelo;
+    if(data.tipoSistema.includes("Malla")) rtTeorica *= 0.55;
+    if(data.tipoSistema.includes("Anillo")) rtTeorica *= 0.7;
+    if(data.tipoSistema.includes("química")) rtTeorica *= 0.65;
+    if(data.tipoSistema.includes("profunda")) rtTeorica *= 0.5;
+  }
+  const cumple = rtTeorica <= 10;
+  const revisar = rtTeorica > 10 && rtTeorica <= 20;
+  return {
+    rt: Number(rtTeorica.toFixed(2)),
+    estado: cumple ? "cumple" : revisar ? "revisar" : "nocumple",
+    titulo: cumple ? "✅ Cumple preliminar" : revisar ? "⚠️ Revisar en terreno" : "❌ No cumple preliminar",
+    mensaje: cumple ? "La resistencia estimada/medida está bajo el criterio preliminar de 10 Ω." : revisar ? "La resistencia supera 10 Ω. Revisar cantidad de electrodos, malla o medición real." : "La resistencia es alta. Requiere mejora del sistema de puesta a tierra."
+  };
+}
+function renderResultadoTierra230(calc, data){
+  return `<section class="tierra-status ${calc.estado}">
+    <h3>${calc.titulo}</h3>
+    <div class="load-summary-grid">
+      <article><b>${calc.rt} Ω</b><small>Resistencia estimada/medida</small></article>
+      <article><b>${esc230(data.tipoSistema)}</b><small>Sistema</small></article>
+      <article><b>${esc230(data.conductorTP)}</b><small>Conductor TP</small></article>
+      <article><b>${data.equipotencialidad.length}</b><small>Uniones equipotenciales</small></article>
+    </div>
+    <p>${calc.mensaje}</p>
+    <p><b>Nota:</b> validar medición final con instrumento en terreno y documentar fecha/instrumento.</p>
+  </section>`;
+}
+function renderDibujoTierra230(data){
+  const tipo = data?.tipoSistema || "Jabalina simple";
+  const multi = tipo.includes("múltiples") || tipo.includes("Malla") || tipo.includes("Anillo");
+  return `<svg class="tierra-svg" viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="680" height="320" rx="12" fill="white" stroke="#111"/>
+    <text x="360" y="50" text-anchor="middle" font-family="Arial" font-weight="700" font-size="20">Sistema de puesta a tierra</text>
+    <rect x="270" y="75" width="180" height="45" fill="white" stroke="#111"/>
+    <text x="360" y="103" text-anchor="middle" font-family="Arial" font-weight="700" font-size="14">Tablero General</text>
+    <line x1="360" y1="120" x2="360" y2="155" stroke="#111" stroke-width="3"/>
+    <rect x="260" y="155" width="200" height="34" fill="white" stroke="#111"/>
+    <text x="360" y="177" text-anchor="middle" font-family="Arial" font-size="13">Barra principal TP / PE</text>
+    <line x1="360" y1="189" x2="360" y2="225" stroke="#111" stroke-width="3"/>
+    ${svgSymbolTP230(315,225)} ${svgSymbolTS230(405,225)}
+    <text x="315" y="285" text-anchor="middle" font-family="Arial" font-size="12">TP</text>
+    <text x="405" y="285" text-anchor="middle" font-family="Arial" font-size="12">TS</text>
+    ${multi ? `<line x1="250" y1="300" x2="470" y2="300" stroke="#111" stroke-width="3"/><line x1="250" y1="288" x2="250" y2="325" stroke="#111" stroke-width="3"/><line x1="360" y1="288" x2="360" y2="325" stroke="#111" stroke-width="3"/><line x1="470" y1="288" x2="470" y2="325" stroke="#111" stroke-width="3"/>` : `<line x1="360" y1="288" x2="360" y2="325" stroke="#111" stroke-width="3"/>`}
+    <line x1="180" y1="330" x2="540" y2="330" stroke="#111" stroke-width="2"/>
+    <text x="360" y="350" text-anchor="middle" font-family="Arial" font-size="12">${esc230(tipo)}</text>
+  </svg>`;
+}
+function renderInformeTierra230(data, calc){
+  return `<div class="tierra-report">
+    <p><b>Tipo:</b> ${esc230(data.tipoSistema)}</p>
+    <p><b>Tipo existente:</b> ${esc230(data.tipoExistente)}</p>
+    <p><b>Material:</b> ${esc230(data.material)} · ${esc230(data.diametro)} · ${data.longitud} m</p>
+    <p><b>Cantidad electrodos:</b> ${data.cantidad}</p>
+    <p><b>Resistividad terreno:</b> ${data.resistividad} Ω·m</p>
+    <p><b>Resistencia:</b> ${calc.rt} Ω · ${esc230(calc.titulo)}</p>
+    <p><b>TP:</b> ${esc230(data.conductorTP)} · IEC 60417-5019</p>
+    <p><b>TS:</b> ${esc230(data.conductorTS)} · IEC 60417-5018</p>
+    <p><b>Equipotencialidad:</b> ${data.equipotencialidad.map(esc230).join(", ") || "Sin marcar"}</p>
+    <p><b>Normativa:</b> RIC 6 referencial. Validar medición final en terreno.</p>
+  </div>`;
+}
+function guardarTierraContinuar230(){
+  const data = leerFormTierra230();
+  const calculo = calcularRt230(data);
+  localStorage.setItem("giae_chile_tierra_v230", JSON.stringify({version:APP_VERSION, actualizado:new Date().toISOString(), data, calculo}));
+  toast("Tierra guardada. Pasando a Carpeta Técnica...");
+  setTimeout(()=>openModule("carpeta"),650);
+}
+function svgTP230(){ return `<svg viewBox="0 0 120 90" class="iec-symbol">${svgSymbolTP230(60,12)}</svg>`; }
+function svgTS230(){ return `<svg viewBox="0 0 120 90" class="iec-symbol">${svgSymbolTS230(60,12)}</svg>`; }
+function svgEQ230(){ return `<svg viewBox="0 0 120 90" class="iec-symbol"><circle cx="60" cy="45" r="24" fill="none" stroke="currentColor" stroke-width="4"/><line x1="30" y1="45" x2="90" y2="45" stroke="currentColor" stroke-width="4"/><line x1="60" y1="15" x2="60" y2="75" stroke="currentColor" stroke-width="4"/></svg>`; }
+function svgSymbolTP230(x,y){
+  return `<g stroke="currentColor" stroke-width="3" fill="none"><line x1="${x}" y1="${y}" x2="${x}" y2="${y+28}"/><line x1="${x-28}" y1="${y+28}" x2="${x+28}" y2="${y+28}"/><line x1="${x-18}" y1="${y+39}" x2="${x+18}" y2="${y+39}"/><line x1="${x-9}" y1="${y+50}" x2="${x+9}" y2="${y+50}"/></g>`;
+}
+function svgSymbolTS230(x,y){
+  return `<g stroke="currentColor" stroke-width="3" fill="none"><line x1="${x}" y1="${y}" x2="${x}" y2="${y+25}"/><line x1="${x-24}" y1="${y+25}" x2="${x+24}" y2="${y+25}"/><path d="M ${x-20} ${y+38} Q ${x} ${y+52} ${x+20} ${y+38}"/></g>`;
+}
+function modalRic6230(){
+  return `<div class="ric-modal" id="ric6230Modal"><div class="ric-modal-box">
+    <h3>📚 Fundamento RIC 6 aplicado</h3>
+    <p><b>GIAE v2.3.0:</b> clasifica TP, TS, equipotencialidad y sistema de tierra, dejando registro para carpeta técnica.</p>
+    <p><b>Símbolos:</b> TP IEC 60417-5019, TS IEC 60417-5018 y equipotencialidad IEC 60417-5021.</p>
+    <p><b>Validación:</b> la resistencia calculada es preliminar. El cumplimiento definitivo requiere medición en terreno.</p>
+    <button class="btn primary" onclick="cerrarModalRic6230()">Cerrar y volver a Tierra</button>
+  </div></div>`;
+}
+function abrirModalRic6230(){ document.getElementById("ric6230Modal")?.classList.add("show"); }
+function cerrarModalRic6230(){ document.getElementById("ric6230Modal")?.classList.remove("show"); }
+function esc230(v){ return String(v ?? "").replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
+
 function renderEmpalmeInteligente(){
   const view=document.getElementById("moduleView");
   const proyecto=getProyectoSeguro220();
@@ -1325,7 +1632,7 @@ function renderEmpalmeInteligente(){
   const ev=evaluarEmpalme220(resumen,dist);
   view.className="module-view show ready empalme-view empalme-220";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.2.0</span>
+    <span class="badge ready">Módulo funcional v2.3.0</span>
     <h2>🔌 Empalme Inteligente</h2>
     <p>Valida demanda, suministro, potencia normalizada, distribuidora y fundamento RIC 1 sin tocar módulos operativos.</p>
     <p class="privacy-note">📌 GIAE recomienda y advierte. La distribuidora define condiciones finales, medidor, limitador y factibilidad.</p>
@@ -1511,7 +1818,7 @@ function renderUnilinealAutomatico(){
 
     view.className = "module-view show ready unilineal-view unilineal-v951";
     view.innerHTML = `
-      <span class="badge ready">Módulo funcional v2.2.0</span>
+      <span class="badge ready">Módulo funcional v2.3.0</span>
       <h2>⌁ Unilineal v9.5.1 Restaurado</h2>
       <p>Motor gráfico restaurado desde v9.5.1: automático con media luna, círculos, rayita central, diferencial alineado y diseño tipo plano.</p>
       <p class="privacy-note">📐 Vista técnica preliminar. El instalador autorizado SEC debe validar el plano final.</p>
@@ -1638,7 +1945,7 @@ function renderSVG951(cargas, proyecto, esTri, general, barra){
   const cs = cargas.length ? cargas : [];
   const n = Math.max(cs.length,1);
 
-  // Ajuste v2.2.0:
+  // Ajuste v2.3.0:
   // El dibujo se adapta a la cantidad real de circuitos.
   // La barra horizontal nace en el primer circuito y termina en el último circuito.
   // El automático general se centra sobre el conjunto de circuitos, no sobre la hoja completa.
