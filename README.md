@@ -1,32 +1,21 @@
-# GIAE Chile v2.5.8 - Biblioteca 2.0 + Exportación Profesional
+# GIAE Chile v2.5.9 - Menú Lateral Adaptable
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.5.7 Biblioteca Inteligente de Materiales.
+Base: GIAE Chile v2.5.8 Biblioteca 2.0 + Exportación Profesional.
 
-## Mejoras
-- Biblioteca Inteligente 2.0.
-- Exportación Profesional.
+## Mejora
+Se corrige la visualización del menú lateral para que todos los módulos puedan verse y utilizarse correctamente.
 
-## Biblioteca 2.0
-- Materiales.
-- Categorías.
-- Marcas.
-- Proveedores.
-- Recursos técnicos.
-- Favoritos.
-- Historial.
-- Importar/exportar.
-- Duplicar materiales.
-- Precios editables.
-
-## Exportación Profesional
-- Vista previa del expediente.
-- Descarga HTML.
-- Descarga Word compatible (.doc).
-- Descarga CSV compatible con Excel.
-- Preparación PDF mediante navegador.
-- Estructura de expediente ZIP.
+## Funciones
+- Menú lateral con scroll independiente.
+- Ajuste para pantallas grandes.
+- Ajuste para teléfonos.
+- Indicador de menú desplazable.
+- Botón para volver arriba.
+- Se conserva acceso a Biblioteca 2.0 y Exportación.
+- No altera lógica de módulos existentes.
 
 ## Regla
-No modifica módulos operativos. Biblioteca y Exportación sólo administran o leen información existente.
+No modifica Proyecto, Cargas, Cuadro, Unilineal, Empalme, Tierra, Carpeta Técnica, Guía SEC, Documentación, Auditoría, Presupuesto, Biblioteca ni Exportación.
+Sólo corrige navegación visual y accesibilidad del menú.
