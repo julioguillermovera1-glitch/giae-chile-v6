@@ -1,30 +1,28 @@
-# GIAE Chile v2.7.3 - Panel de Diagnóstico GIAE
+# GIAE Chile v2.7.4 - GIAE Control Center
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.7.2 Motor Normativo Inteligente.
+Base: GIAE Chile v2.7.3 Panel de Diagnóstico.
 
 ## Tipo de versión
-Versión de consolidación técnica.
+Versión de consolidación y administración interna.
 
 ## Mejora
-Nuevo Panel de Diagnóstico GIAE.
+Nuevo GIAE Control Center.
 
 ## Funciones
-- Revisa APIs internas.
-- Verifica funciones críticas.
-- Revisa datos guardados en localStorage.
-- Documenta dependencias entre módulos.
-- Genera reporte de consolidación.
-- Descarga reporte HTML.
-- Crea registro de API unificada propuesta.
-
-## Objetivo
-Reducir deuda técnica antes de continuar con versiones 3.x.
+- Dashboard general.
+- Self Check.
+- API Manager.
+- Rendimiento local preliminar.
+- Registro del sistema.
+- Backup JSON.
+- Validación de backup.
+- Reporte HTML del Control Center.
 
 ## Reglas inquebrantables
 - Código original creado para GIAE.
 - Sin copia deliberada de código protegido.
 - Sin copiar interfaces propietarias.
 - No agrega cálculos nuevos.
-- Consolida y documenta lo existente.
+- Administra y supervisa la plataforma.

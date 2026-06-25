@@ -881,3 +881,13 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .diag-table-273{width:100%;border-collapse:collapse}.diag-table-273 th,.diag-table-273 td{border:1px solid #245366;padding:8px;text-align:left;vertical-align:top}.diag-table-273 tr.ok{background:#071b12}.diag-table-273 tr.critico{background:#240707}.diag-table-273 tr.advertencia{background:#241b07}.diag-table-273 code{color:#8cffad}
 .diag-datos-273,.diag-deps-273{display:grid;gap:10px}.diag-datos-273 article,.diag-deps-273 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}.diag-datos-273 article.ok{border-color:#22c55e;background:#071b12}.diag-datos-273 article.warn{border-color:#eab308;background:#241b07}.diag-datos-273 small{display:block;color:#8db0bb;margin-top:5px}.diag-deps-273 p{color:#8db0bb;margin:6px 0 0}
 .diag-reporte-273{background:#f8fafc;color:#111;border-radius:14px;padding:22px;max-height:620px;overflow:auto}.diag-reporte-273 h1{border-bottom:4px solid #111;padding-bottom:10px}.diag-reporte-273 h2{border-bottom:1px solid #ccc;padding-bottom:5px;margin-top:22px}
+
+/* v2.7.4 · GIAE Control Center */
+.control-tabs-274{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.cc-panel-274{border:1px solid #245366;background:#061017;border-radius:16px;padding:16px;margin:16px 0}
+.cc-barra-274{height:16px;background:#061017;border:1px solid #245366;border-radius:999px;overflow:hidden;margin:12px 0}.cc-barra-274 div{height:100%;background:linear-gradient(90deg,#22c55e,#8cffad)}
+.cc-kpis-274{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.cc-kpis-274 article{border:1px solid #22c55e;background:#071b12;border-radius:12px;padding:12px}.cc-kpis-274 b{font-size:20px;color:#8cffad}.cc-kpis-274 small{display:block;color:#8db0bb;margin-top:4px}
+.cc-table-274{width:100%;border-collapse:collapse}.cc-table-274 th,.cc-table-274 td{border:1px solid #245366;padding:8px;text-align:left}.cc-table-274 tr.ok{background:#071b12}.cc-table-274 tr.warn{background:#241b07}.cc-table-274 code{color:#8cffad}
+.cc-api-grid-274{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.cc-api-grid-274 article,.cc-logs-274 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}.cc-api-grid-274 ul{margin:8px 0 0;padding-left:18px;color:#cbd5e1}
+.cc-logs-274{display:grid;gap:10px;max-height:520px;overflow:auto}.cc-logs-274 small{display:block;color:#8db0bb;margin:5px 0}.cc-logs-274 p{margin:0;color:#cbd5e1}
+#ccImportBackup274{background:#061017;color:#fff;border:1px solid #245366;border-radius:10px;padding:10px;width:100%;min-height:140px}
+@media(max-width:900px){.cc-api-grid-274,.cc-kpis-274{grid-template-columns:1fr}}
