@@ -801,3 +801,18 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
     margin-left:var(--sidebar-width, 280px)!important;
   }
 }
+
+/* v2.6.0 · Asistente Inteligente de Informes */
+.informes-260 label{display:grid;gap:6px;margin:10px 0}
+.informes-260 select,.informes-260 input,.informes-260 textarea{background:#061017;color:#fff;border:1px solid #245366;border-radius:10px;padding:10px;width:100%}
+.informes-260 textarea{min-height:110px;resize:vertical}
+.estructura-informe-260{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.estructura-informe-260 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}
+.estructura-informe-260 small{display:block;color:#8db0bb;margin-top:5px}
+.preview-informe-260{background:#f8fafc;color:#111;border-radius:14px;padding:22px;max-height:650px;overflow:auto}
+.preview-informe-260 h1{font-size:28px;border-bottom:4px solid #111;padding-bottom:10px}
+.preview-informe-260 h2{border-bottom:1px solid #ccc;padding-bottom:5px;margin-top:24px}
+.preview-informe-260 table{width:100%;border-collapse:collapse;margin:12px 0}
+.preview-informe-260 th,.preview-informe-260 td{border:1px solid #999;padding:8px;text-align:left}
+.portada-260{text-align:center;margin:35px 0 45px}
+@media(max-width:900px){.estructura-informe-260{grid-template-columns:1fr}}

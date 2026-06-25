@@ -1,21 +1,27 @@
-# GIAE Chile v2.5.9 - Menú Lateral Adaptable
+# GIAE Chile v2.6.0 - Asistente Inteligente de Informes
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.5.8 Biblioteca 2.0 + Exportación Profesional.
+Base: GIAE Chile v2.5.9 Menú Lateral Adaptable.
 
 ## Mejora
-Se corrige la visualización del menú lateral para que todos los módulos puedan verse y utilizarse correctamente.
+Nuevo módulo independiente Asistente Inteligente de Informes.
 
 ## Funciones
-- Menú lateral con scroll independiente.
-- Ajuste para pantallas grandes.
-- Ajuste para teléfonos.
-- Indicador de menú desplazable.
-- Botón para volver arriba.
-- Se conserva acceso a Biblioteca 2.0 y Exportación.
-- No altera lógica de módulos existentes.
+- Selección de tipo de informe.
+- Perfil de redacción: estudiante, instalador, empresa o cliente.
+- Extensión: corto, medio, profesional o completo.
+- Identidad del usuario, empresa o institución.
+- Campos guiados para trabajo realizado, observaciones, mediciones y fotografías.
+- Vista previa del informe.
+- Guardar informe.
+- Descargar HTML.
+- Descargar Word compatible.
+
+## Propiedad intelectual
+El módulo fue construido con código original para este proyecto.
+No se incorporan fragmentos de terceros ni plantillas protegidas.
 
 ## Regla
-No modifica Proyecto, Cargas, Cuadro, Unilineal, Empalme, Tierra, Carpeta Técnica, Guía SEC, Documentación, Auditoría, Presupuesto, Biblioteca ni Exportación.
-Sólo corrige navegación visual y accesibilidad del menú.
+No modifica módulos operativos. Sólo lee información existente y genera una estructura de informe editable.
+Los documentos exportados no incluyen marca GIAE en su contenido final.
