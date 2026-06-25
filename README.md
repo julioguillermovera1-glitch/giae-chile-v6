@@ -1,28 +1,29 @@
-# GIAE Chile v2.6.2 - Motor Inteligente de Redacción
+# GIAE Chile v2.6.3 - GIAE Intelligence Engine
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.6.1 Motor Inteligente de Plantillas.
+Base: GIAE Chile v2.6.2 Motor Inteligente de Redacción.
 
 ## Mejora
-Nuevo módulo independiente Motor Inteligente de Redacción.
+Nuevo módulo independiente GIAE Intelligence Engine.
 
 ## Funciones
-- Redacción guiada por capítulo.
-- Perfiles: estudiante, instalador, empresa y cliente.
-- Niveles técnicos.
-- Banco de frases técnicas original.
-- Revisión de coherencia documental.
-- Detección de datos pendientes.
-- Generación de capítulos.
-- Guardar redacción.
-- Descargar capítulo HTML.
-- Enviar contenido al Asistente de Informes.
+- Contexto global del proyecto.
+- Motor central de reglas.
+- Motor de validación.
+- Motor de explicación.
+- API interna del GIE.
+- Panel de integridad.
+- Generación de informe integrado preliminar.
+- Guardar estado GIE.
 
-## Propiedad intelectual
-Código original creado para GIAE.
-No se incorporan fragmentos, plantillas ni interfaces protegidas de terceros.
+## Reglas inquebrantables
+- Código original creado para GIAE.
+- Sin incorporación deliberada de código protegido.
+- Sin copiar interfaces propietarias.
+- Sin copiar plantillas de terceros.
+- Sin inventar datos técnicos.
+- Cada módulo conserva su independencia.
 
-## Regla
-El motor no inventa hechos técnicos, mediciones ni antecedentes.
-Si falta información, la declara como pendiente.
+## Arquitectura
+Los módulos no dependen directamente entre sí. El GIE coordina contexto, reglas y validación.

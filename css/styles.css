@@ -840,3 +840,9 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .frases-262 p{border:1px solid #245366;background:#07131c;border-radius:10px;padding:10px;margin:0}
 .capitulo-generado-262{background:#f8fafc;color:#111;border-radius:14px;padding:22px;max-height:520px;overflow:auto}
 .capitulo-generado-262 h2{border-bottom:2px solid #111;padding-bottom:8px}
+
+/* v2.6.3 · GIAE Intelligence Engine */
+.gie-table-263{width:100%;border-collapse:collapse}.gie-table-263 th,.gie-table-263 td{border:1px solid #245366;padding:8px;text-align:left;vertical-align:top}.gie-table-263 tr.ok{background:#071b12}.gie-table-263 tr.warn{background:#241b07}.gie-table-263 small{display:block;color:#8db0bb;margin-top:4px}
+.gie-explica-263{display:grid;gap:10px}.gie-explica-263 p{border:1px solid #245366;background:#07131c;border-radius:10px;padding:10px;margin:0}.api-gie-263{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.api-gie-263 code{border:1px solid #245366;background:#07131c;color:#8cffad;border-radius:10px;padding:10px}
+.gie-preview-263{background:#f8fafc;color:#111;border-radius:14px;padding:22px;max-height:620px;overflow:auto}.gie-preview-263 h1{border-bottom:4px solid #111;padding-bottom:10px}.gie-preview-263 h2{border-bottom:1px solid #ccc;padding-bottom:5px;margin-top:22px}
+@media(max-width:900px){.api-gie-263{grid-template-columns:1fr}}
