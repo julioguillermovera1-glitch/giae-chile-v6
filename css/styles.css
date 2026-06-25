@@ -829,3 +829,14 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .lista-plantillas-261{list-style:none;padding:0;display:grid;gap:8px}.lista-plantillas-261 li{border:1px solid #245366;background:#07131c;border-radius:10px;padding:10px}
 .preview-plantilla-261{background:#f8fafc;color:#111;border-radius:14px;padding:24px;max-height:520px;overflow:auto}.preview-plantilla-261 h1{border-bottom:4px solid #111;padding-bottom:10px}
 @media(max-width:900px){.plantilla-grid-261{grid-template-columns:1fr}}
+
+/* v2.6.2 · Motor Inteligente de Redacción */
+.redaccion-262 label{display:grid;gap:6px;margin:10px 0}
+.redaccion-262 input,.redaccion-262 select,.redaccion-262 textarea{background:#061017;color:#fff;border:1px solid #245366;border-radius:10px;padding:10px;width:100%}
+.redaccion-262 textarea{min-height:120px;resize:vertical}
+.lista-coherencia-262{list-style:none;padding:0;display:grid;gap:8px}
+.lista-coherencia-262 li{border:1px solid #eab308;background:#241b07;color:#fde68a;border-radius:10px;padding:10px}
+.frases-262{display:grid;gap:8px}
+.frases-262 p{border:1px solid #245366;background:#07131c;border-radius:10px;padding:10px;margin:0}
+.capitulo-generado-262{background:#f8fafc;color:#111;border-radius:14px;padding:22px;max-height:520px;overflow:auto}
+.capitulo-generado-262 h2{border-bottom:2px solid #111;padding-bottom:8px}
