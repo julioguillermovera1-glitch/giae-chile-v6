@@ -1,28 +1,26 @@
-# GIAE Chile v2.6.4 - Motor de Integridad del Proyecto
+# GIAE Chile v2.7.0 - GIAE Knowledge Core
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.6.3 GIAE Intelligence Engine.
+Base: GIAE Chile v2.6.4 Motor de Integridad del Proyecto.
 
 ## Mejora
-Nuevo módulo independiente Motor de Integridad del Proyecto.
+Nuevo módulo independiente GIAE Knowledge Core.
 
 ## Funciones
-- Tablero de estado de módulos.
-- Avance general del proyecto.
-- Detección de pendientes, revisiones y bloqueos.
-- Botones para ir directamente al módulo correspondiente.
-- Checklist final antes de exportar.
-- Reporte preliminar de integridad.
-- Guardar estado de integridad.
+- Núcleo de conocimiento técnico.
+- Registros de normativa referencial.
+- Fórmulas base.
+- Materiales base.
+- Distribuidoras.
+- Búsqueda interna.
+- Agregar/editar conocimiento.
+- Restaurar base.
+- API interna para conexión futura con GIE.
 
 ## Reglas inquebrantables
 - Código original creado para GIAE.
 - Sin copia deliberada de código protegido.
-- Sin copiar interfaces propietarias.
-- Sin copiar plantillas de terceros.
-- Sin inventar datos técnicos.
-- Los módulos mantienen independencia.
-
-## Arquitectura
-El Motor de Integridad consulta el estado del GIE y guía al usuario sin modificar módulos operativos.
+- Sin copiar textos normativos completos protegidos.
+- El Knowledge Core registra resúmenes, criterios y referencias propias.
+- Si falta información, debe indicarse como pendiente.

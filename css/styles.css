@@ -854,3 +854,10 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .prioridades-264{display:grid;gap:10px;padding-left:20px}.prioridades-264 li{border:1px solid #245366;background:#07131c;border-radius:12px;padding:10px}.prioridades-264 p{color:#8db0bb;margin:4px 0 8px}
 .check-integridad-264{width:100%;border-collapse:collapse}.check-integridad-264 th,.check-integridad-264 td{border:1px solid #245366;padding:8px;text-align:left}.check-integridad-264 tr.completo{background:#071b12}.check-integridad-264 tr.bloqueado{background:#240707}.check-integridad-264 tr.revision{background:#241b07}
 .reporte-integridad-264{background:#f8fafc;color:#111;border-radius:14px;padding:22px;max-height:620px;overflow:auto}.reporte-integridad-264 h1{border-bottom:4px solid #111;padding-bottom:10px}.reporte-integridad-264 h2{border-bottom:1px solid #ccc;padding-bottom:5px;margin-top:22px}
+
+/* v2.7.0 · GIAE Knowledge Core */
+.gkc-tools-270{display:grid;grid-template-columns:1fr 220px auto;gap:10px}.gkc-tools-270 input,.gkc-tools-270 select,.gkc-editor-270 input,.gkc-editor-270 select,.gkc-editor-270 textarea{background:#061017;color:#fff;border:1px solid #245366;border-radius:10px;padding:10px;width:100%}
+.gkc-lista-270{display:grid;gap:10px;max-height:620px;overflow:auto}.gkc-lista-270 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px;cursor:pointer}.gkc-lista-270 article:hover{border-color:#22c55e}.gkc-lista-270 small{display:block;color:#8db0bb;margin:5px 0}.gkc-lista-270 p{margin:0;color:#cbd5e1}
+.gkc-detalle-270{border:1px solid #245366;background:#07131c;border-radius:12px;padding:14px;min-height:220px}.gkc-editor-270{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.gkc-editor-270 label{display:grid;gap:6px}.gkc-editor-270 textarea{min-height:140px;grid-column:1/-1}.gkc-editor-270 .folder-buttons{grid-column:1/-1}
+.api-gkc-270{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.api-gkc-270 code{border:1px solid #245366;background:#07131c;color:#8cffad;border-radius:10px;padding:10px}
+@media(max-width:900px){.gkc-tools-270,.gkc-editor-270,.api-gkc-270{grid-template-columns:1fr}}
