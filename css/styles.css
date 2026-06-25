@@ -861,3 +861,10 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .gkc-detalle-270{border:1px solid #245366;background:#07131c;border-radius:12px;padding:14px;min-height:220px}.gkc-editor-270{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.gkc-editor-270 label{display:grid;gap:6px}.gkc-editor-270 textarea{min-height:140px;grid-column:1/-1}.gkc-editor-270 .folder-buttons{grid-column:1/-1}
 .api-gkc-270{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.api-gkc-270 code{border:1px solid #245366;background:#07131c;color:#8cffad;border-radius:10px;padding:10px}
 @media(max-width:900px){.gkc-tools-270,.gkc-editor-270,.api-gkc-270{grid-template-columns:1fr}}
+
+/* v2.7.1 · Motor Eléctrico Inteligente */
+.mei-271 label{display:grid;gap:6px;margin:10px 0}
+.mei-271 input,.mei-271 select{background:#061017;color:#fff;border:1px solid #245366;border-radius:10px;padding:10px;width:100%}
+.mei-cards-271{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mei-cards-271 article{border:1px solid #22c55e;background:#071b12;border-radius:12px;padding:12px}.mei-cards-271 b{font-size:20px;color:#8cffad}.mei-cards-271 small{display:block;color:#8db0bb;margin-top:4px}
+.mei-explicacion-271,.mei-resultado-271{border:1px solid #245366;background:#07131c;border-radius:12px;padding:14px}.mei-lista-271{list-style:none;padding:0;display:grid;gap:8px}.mei-lista-271 li{border:1px solid #245366;background:#07131c;border-radius:10px;padding:10px}
+@media(max-width:900px){.mei-cards-271{grid-template-columns:1fr}}

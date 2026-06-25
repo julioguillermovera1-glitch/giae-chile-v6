@@ -1,26 +1,27 @@
-# GIAE Chile v2.7.0 - GIAE Knowledge Core
+# GIAE Chile v2.7.1 - Motor Eléctrico Inteligente
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.6.4 Motor de Integridad del Proyecto.
+Base: GIAE Chile v2.7.0 GIAE Knowledge Core.
 
 ## Mejora
-Nuevo módulo independiente GIAE Knowledge Core.
+Nuevo módulo independiente Motor Eléctrico Inteligente (MEI).
 
 ## Funciones
-- Núcleo de conocimiento técnico.
-- Registros de normativa referencial.
-- Fórmulas base.
-- Materiales base.
-- Distribuidoras.
-- Búsqueda interna.
-- Agregar/editar conocimiento.
-- Restaurar base.
-- API interna para conexión futura con GIE.
+- Cálculo de corriente monofásica y trifásica.
+- Recomendación preliminar de conductor.
+- Recomendación preliminar de protección.
+- Estimación de caída de tensión.
+- Relación técnica Ib ≤ In ≤ Iz.
+- Nivel de confianza.
+- Explicación técnica trazable.
+- Guardar cálculo.
+- Enviar resultado al Knowledge Core.
 
 ## Reglas inquebrantables
 - Código original creado para GIAE.
 - Sin copia deliberada de código protegido.
-- Sin copiar textos normativos completos protegidos.
-- El Knowledge Core registra resúmenes, criterios y referencias propias.
-- Si falta información, debe indicarse como pendiente.
+- Sin copiar interfaces propietarias.
+- Sin inventar datos técnicos.
+- Toda recomendación debe poder explicarse.
+- El resultado no reemplaza la revisión del profesional responsable.
