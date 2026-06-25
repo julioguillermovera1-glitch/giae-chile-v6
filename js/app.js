@@ -1,4 +1,4 @@
-const APP_VERSION = "2.6.3";
+const APP_VERSION = "2.6.4";
 
 const modules = [
   {id:"inicio", icon:"🏠", label:"Inicio", status:"base", desc:"Portada profesional del sistema GIAE Chile."},
@@ -18,6 +18,7 @@ const modules = [
   {id:"plantillas-informes", icon:"🧩", label:"Plantillas", status:"ready", desc:"Módulo funcional: motor inteligente de plantillas e identidad del usuario."},
   {id:"motor-redaccion", icon:"🧠", label:"Redacción IA", status:"ready", desc:"Módulo funcional: motor inteligente de redacción técnica y coherencia documental."},
   {id:"intelligence-engine", icon:"🧠", label:"GIE", status:"ready", desc:"Motor funcional: contexto, reglas, validación y explicación centralizada."},
+  {id:"integridad-proyecto", icon:"🧭", label:"Integridad", status:"ready", desc:"Módulo funcional: tablero de estado, pendientes y navegación inteligente del proyecto."},
   {id:"asistente", icon:"🤖", label:"Asistente Documental", status:"ready", desc:"Módulo funcional: responde qué documentos exige cada distribuidora y muestra checklist."},
   {id:"auditoria", icon:"🧪", label:"Auditoría", status:"ready", desc:"Módulo funcional: revisión integral de expediente sin modificar módulos operativos."},
   {id:"administracion", icon:"🔐", label:"Administración", status:"hidden", desc:"Pendiente: centro de monitoreo exclusivo del administrador."}
@@ -42,6 +43,7 @@ const quicks = [
   {label:"Plantillas", icon:"🧩", status:"ready", target:"plantillas-informes", text:"Portadas · Identidad · Estructura"},
   {label:"Redacción IA", icon:"🧠", status:"ready", target:"motor-redaccion", text:"Redacción · Coherencia · Capítulos"},
   {label:"GIE", icon:"🧠", status:"ready", target:"intelligence-engine", text:"Contexto · Reglas · Validación"},
+  {label:"Integridad", icon:"🧭", status:"ready", target:"integridad-proyecto", text:"Estado · Pendientes · Flujo"},
   {label:"Asistente", icon:"🤖", status:"ready", target:"asistente", text:"Consultar documentos requeridos"}
 ];
 
@@ -339,6 +341,7 @@ function openModule(id){
   if(id==="plantillas-informes"){ renderMotorPlantillas261(); return; }
   if(id==="motor-redaccion"){ renderMotorRedaccion262(); return; }
   if(id==="intelligence-engine"){ renderGIE263(); return; }
+  if(id==="integridad-proyecto"){ renderIntegridadProyecto264(); return; }
   if(id==="motor"){ renderMotorNormativo(); return; }
   if(id==="asistente"){ renderAsistenteDocumental(); return; }
   const m = modules.find(x=>x.id===id) || modules[0];
@@ -359,7 +362,7 @@ function renderProyecto(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready proyecto-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>📁 Proyecto</h2>
     <p>Este módulo guarda los datos base del proyecto. No calcula presupuesto, no dibuja unilineal y no define protecciones finales.</p>
     <p class="privacy-note">🔒 Privacidad: los datos quedan sólo en este navegador. Al completar el proyecto puedes continuar a Cargas sin perder información.</p>
@@ -864,7 +867,7 @@ function renderCargas(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cargas-view";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>⚡ Cargas por circuitos</h2>
     <p>Ingresa los circuitos del proyecto. GIAE calcula potencia instalada, demanda estimada y una recomendación preliminar de empalme.</p>
     <p class="privacy-note">📌 Regla técnica: la distribuidora define la protección/limitador del medidor según potencia contratada y factibilidad. GIAE sólo recomienda y advierte.</p>
@@ -1159,7 +1162,7 @@ function cerrarRicModal(){
 function renderCarpetaTecnica(){
   const v=document.getElementById("moduleView"), e=exp240();
   v.className="module-view show ready carpeta-view carpeta-240";
-  v.innerHTML=`<span class="badge ready">Módulo funcional v2.6.3</span>
+  v.innerHTML=`<span class="badge ready">Módulo funcional v2.6.4</span>
   <h2>📂 Carpeta Técnica Inteligente</h2>
   <p>Consolida automáticamente Proyecto, Cargas, Cuadro, Unilineal, Empalme y Tierra en un expediente técnico.</p>
   <p class="privacy-note">📌 No recalcula ni modifica módulos anteriores. Sólo lee y organiza información.</p>
@@ -1206,7 +1209,7 @@ function validarExp240(){const e=exp240(),b=document.getElementById("validacionC
 function guardarExp240(cont=false){const e=exp240(); localStorage.setItem("giae_chile_expediente_v240",JSON.stringify({version:APP_VERSION,actualizado:new Date().toISOString(),expediente:e})); toast("Expediente técnico guardado."); if(cont)setTimeout(()=>openModule("documentacion"),650)}
 function esc240(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 
-function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.6.3</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
+function renderAsistenteDocumental(){const view=document.getElementById("moduleView"); view.className="module-view show ready asistente-view"; view.innerHTML=`<span class="badge ready">Módulo funcional v2.6.4</span><h2>🤖 Asistente Documental GIAE</h2><p>Consulta qué documentos debe presentar una persona o instalador autorizado SEC según la distribuidora.</p><section class="assistant-card"><label>Distribuidora<select id="assistantDist">${Object.keys(DISTRIBUIDORAS).map(d=>`<option>${d}</option>`).join("")}</select></label><label>Pregunta<input id="assistantQuestion" placeholder="Ej: ¿Qué documentos pide CGE para empalme?"></label><button class="btn primary" id="assistantAsk">Responder</button></section><section class="assistant-answer" id="assistantAnswer"></section>`; document.getElementById("assistantAsk").onclick=responderAsistente; responderAsistente(); view.scrollIntoView({behavior:"smooth",block:"start"});}
 function responderAsistente(){const dist=document.getElementById("assistantDist")?.value||"CGE", data=DISTRIBUIDORAS[dist], box=document.getElementById("assistantAnswer"); if(!box)return; box.innerHTML=`<h3>Documentación requerida para ${dist}</h3><p>${data.descripcion}</p><h4>Documentos obligatorios</h4><ul>${data.documentos.filter(d=>d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")}</ul><h4>Documentos condicionales</h4><ul>${data.documentos.filter(d=>!d.obligatorio).map(d=>`<li><b>${d.nombre}</b>: ${d.detalle}</li>`).join("")||"<li>No hay condicionales registrados.</li>"}</ul><p><b>Recomendación GIAE:</b> crear proyecto, subir carpeta técnica y ejecutar revisión antes de enviar a la distribuidora.</p>`;}
 
 
@@ -1306,7 +1309,7 @@ function renderCuadroInteligente(){
   const view = document.getElementById("moduleView");
   view.className = "module-view show ready cuadro-inteligente";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>▣ Cuadro de Carga Inteligente</h2>
     <p>Genera protecciones preliminares, conductores, canalizaciones y balance de fases desde las cargas ingresadas.</p>
     <p class="privacy-note">📌 Uso técnico preliminar: debe verificarse con RIC, cálculo de caída de tensión, ICC y criterio del instalador autorizado SEC.</p>
@@ -1370,7 +1373,7 @@ function renderTierraInteligente(){
   const guardado = getTierraGuardada230();
   view.className = "module-view show ready tierra-view tierra-230";
   view.innerHTML = `
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>⏚ Tierra Automática TP / TS</h2>
     <p>Define Tierra de Protección, Tierra de Servicio, sistema existente o proyectado, equipotencialidad y validación preliminar RIC 6.</p>
     <p class="privacy-note">📌 GIAE documenta y calcula de forma preliminar. La resistencia final debe medirse en terreno con instrumento adecuado.</p>
@@ -1759,7 +1762,7 @@ function svgSymbolTS230(x,y){
 function modalRic6230(){
   return `<div class="ric-modal" id="ric6230Modal"><div class="ric-modal-box">
     <h3>📚 Fundamento RIC 6 aplicado</h3>
-    <p><b>GIAE v2.6.3:</b> clasifica TP, TS, equipotencialidad y sistema de tierra, dejando registro para carpeta técnica.</p>
+    <p><b>GIAE v2.6.4:</b> clasifica TP, TS, equipotencialidad y sistema de tierra, dejando registro para carpeta técnica.</p>
     <p><b>Símbolos:</b> TP IEC 60417-5019, TS IEC 60417-5018 y equipotencialidad IEC 60417-5021.</p>
     <p><b>Validación:</b> la resistencia calculada es preliminar. El cumplimiento definitivo requiere medición en terreno.</p>
     <button class="btn primary" onclick="cerrarModalRic6230()">Cerrar y volver a Tierra</button>
@@ -1778,7 +1781,7 @@ function renderEmpalmeInteligente(){
   const ev=evaluarEmpalme220(resumen,dist);
   view.className="module-view show ready empalme-view empalme-220";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>🔌 Empalme Inteligente</h2>
     <p>Valida demanda, suministro, potencia normalizada, distribuidora y fundamento RIC 1 sin tocar módulos operativos.</p>
     <p class="privacy-note">📌 GIAE recomienda y advierte. La distribuidora define condiciones finales, medidor, limitador y factibilidad.</p>
@@ -1964,7 +1967,7 @@ function renderUnilinealAutomatico(){
 
     view.className = "module-view show ready unilineal-view unilineal-v951";
     view.innerHTML = `
-      <span class="badge ready">Módulo funcional v2.6.3</span>
+      <span class="badge ready">Módulo funcional v2.6.4</span>
       <h2>⌁ Unilineal v9.5.1 Restaurado</h2>
       <p>Motor gráfico restaurado desde v9.5.1: automático con media luna, círculos, rayita central, diferencial alineado y diseño tipo plano.</p>
       <p class="privacy-note">📐 Vista técnica preliminar. El instalador autorizado SEC debe validar el plano final.</p>
@@ -2091,7 +2094,7 @@ function renderSVG951(cargas, proyecto, esTri, general, barra){
   const cs = cargas.length ? cargas : [];
   const n = Math.max(cs.length,1);
 
-  // Ajuste v2.6.3:
+  // Ajuste v2.6.4:
   // El dibujo se adapta a la cantidad real de circuitos.
   // La barra horizontal nace en el primer circuito y termina en el último circuito.
   // El automático general se centra sobre el conjunto de circuitos, no sobre la hoja completa.
@@ -2234,7 +2237,7 @@ function plantillaDoc251(titulo, body, e){
     .meta{color:#444;font-size:12px}.ok{color:#067a29}.warn{color:#9a6900}.box{border:1px solid #999;padding:12px;margin:10px 0}
     @media print{button{display:none}body{margin:18mm}}
   </style></head><body>
-  <header><h1>${esc251(titulo)}</h1><p class="meta">GIAE Chile v2.6.3 · Creado por Julio Vera Concha · ${fecha}</p><p><b>Proyecto:</b> ${esc251(e.proyectoNombre||"Sin proyecto")} · <b>Cliente:</b> ${esc251(e.cliente||"Sin cliente")}</p></header>
+  <header><h1>${esc251(titulo)}</h1><p class="meta">GIAE Chile v2.6.4 · Creado por Julio Vera Concha · ${fecha}</p><p><b>Proyecto:</b> ${esc251(e.proyectoNombre||"Sin proyecto")} · <b>Cliente:</b> ${esc251(e.cliente||"Sin cliente")}</p></header>
   ${body}
   <footer><p class="meta">Documento generado localmente por GIAE Chile. Validar antecedentes con instalador autorizado SEC y distribuidora correspondiente.</p></footer>
   </body></html>`;
@@ -2339,7 +2342,7 @@ function aplicarSECAlProyecto253(data){
 function renderGuiaSEC252(){
  const v=document.getElementById("moduleView"), e=guiaExp252(), tipo=getTipoDeclaracionSEC253(getP252())||"TE1";
  v.className="module-view show ready guia-sec-view guia-sec-252";
- v.innerHTML=`<span class="badge ready">Módulo funcional v2.6.3</span><h2>📋 Guía SEC Inteligente · TE1 · TE2 · TE3</h2>
+ v.innerHTML=`<span class="badge ready">Módulo funcional v2.6.4</span><h2>📋 Guía SEC Inteligente · TE1 · TE2 · TE3</h2>
  <p>Asistente paso a paso para preparar la presentación electrónica en la plataforma SEC / E-Declarador usando datos de GIAE.</p>
  <p class="privacy-note">📌 GIAE no reemplaza la plataforma SEC. Esta guía ayuda al instalador a preparar, copiar y revisar antecedentes antes de declarar.</p>
  <section class="folder-head"><div><h3>Proyecto base</h3><p><b>Proyecto:</b> ${esc252(e.proyecto)} · <b>Cliente:</b> ${esc252(e.cliente)} · <b>Distribuidora:</b> ${esc252(e.dist)}</p></div><label>Tipo de declaración SEC<select id="tipoSEC252">${["TE1","TE2","TE3"].map(x=>`<option ${x===tipo?"selected":""}>${x}</option>`).join("")}</select></label><div class="uni-mini"><b>${e.avance}%</b><small>Datos GIAE</small></div></section>
@@ -2365,7 +2368,7 @@ function pasosSEC252(t){let a=["Ingresar al portal SEC con credenciales del inst
 function pendientesSEC252(t){let a=["Fotografías","Croquis de ubicación","Antecedentes propietario","Datos instalador SEC","Certificados aplicables","Revisión final"]; if(t==="TE2")a.push("Detalle de luminarias","Autorizaciones de apoyo si corresponde","Informe puesta a tierra si aplica"); else if(t==="TE3")a.push("Adjuntos técnicos específicos","Planos o documentos especiales"); else a.push("Memoria explicativa si corresponde","Informe de imágenes","Informe verificación inicial si aplica"); return`<ul class="pendientes-sec-252">${a.map(x=>`<li>□ ${esc252(x)}</li>`).join("")}</ul>`}
 function copiarGIAE252(e){let dem=((e.emp?.resumen?.demandaW||0)/1000).toFixed(2);let rows=[["Proyecto",e.proyecto],["Cliente",e.cliente],["Distribuidora",e.dist],["Demanda",dem+" kW"],["Empalme",e.emp?.evaluacion?.tipoEmpalme||"Sin empalme"],["Potencia normalizada",e.emp?.evaluacion?.potenciaSugerida||"Sin definir"],["Tierra",e.tie?.data?.tipoSistema||"Sin tierra"],["Resistencia",e.tie?.calculo?.rt?e.tie.calculo.rt+" Ω":"Sin dato"]];return`<table class="copy-table-252">${rows.map(r=>`<tr><th>${esc252(r[0])}</th><td>${esc252(r[1])}</td></tr>`).join("")}</table>`}
 function checkEnvio252(t,e){let a=[["Proyecto GIAE completo",!!e.p],["Cargas y cuadro completos",e.c.length>0],["Empalme revisado",!!e.emp],["Tierra revisada",!!e.tie],[`Tipo ${t} seleccionado`,true],["Documentos externos revisados",false]];return`<ul class="checklist-252">${a.map(x=>`<li class="${x[1]?'ok':'warn'}"><span>${x[1]?'☑':'☐'}</span>${esc252(x[0])}</li>`).join("")}</ul>`}
-function descargarGuiaSEC252(){const e=guiaExp252(),t=getTipoDeclaracionSEC253(getP252())||"TE1";const html=`<!doctype html><html lang="es"><meta charset="utf-8"><title>Guía SEC ${t}</title><body style="font-family:Arial;margin:32px"><h1>Guía SEC ${t} · GIAE v2.6.3</h1><p><b>Proyecto:</b> ${esc252(e.proyecto)} · <b>Cliente:</b> ${esc252(e.cliente)}</p><h2>${tituloSEC252(t)}</h2><p>${descSEC252(t)}</p><h2>Pasos</h2><ol>${pasosSEC252(t)}</ol><h2>Datos desde GIAE</h2>${copiarGIAE252(e)}<h2>Pendientes</h2>${pendientesSEC252(t)}<p><small>No reemplaza plataforma oficial SEC.</small></p></body></html>`;descargarArchivo252(`GIAE_Guia_SEC_${t}_v2_5_2.html`,html,"text/html;charset=utf-8");toast("Guía SEC descargada.")}
+function descargarGuiaSEC252(){const e=guiaExp252(),t=getTipoDeclaracionSEC253(getP252())||"TE1";const html=`<!doctype html><html lang="es"><meta charset="utf-8"><title>Guía SEC ${t}</title><body style="font-family:Arial;margin:32px"><h1>Guía SEC ${t} · GIAE v2.6.4</h1><p><b>Proyecto:</b> ${esc252(e.proyecto)} · <b>Cliente:</b> ${esc252(e.cliente)}</p><h2>${tituloSEC252(t)}</h2><p>${descSEC252(t)}</p><h2>Pasos</h2><ol>${pasosSEC252(t)}</ol><h2>Datos desde GIAE</h2>${copiarGIAE252(e)}<h2>Pendientes</h2>${pendientesSEC252(t)}<p><small>No reemplaza plataforma oficial SEC.</small></p></body></html>`;descargarArchivo252(`GIAE_Guia_SEC_${t}_v2_5_2.html`,html,"text/html;charset=utf-8");toast("Guía SEC descargada.")}
 function marcarGuiaSEC252(){const t=getTipoDeclaracionSEC253(getP252())||"TE1";localStorage.setItem("giae_chile_guia_sec_v252",JSON.stringify({version:APP_VERSION,tipo:t,revisado:true,actualizado:new Date().toISOString()}));const m=document.getElementById("guiaSECMsg252");if(m){m.className="inline-check ok";m.innerHTML=`✅ Guía ${t} marcada como revisada.`}toast("Guía SEC marcada como revisada.")}
 function descargarArchivo252(n,c,m){const b=new Blob([c],{type:m}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=n;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u)}
 function esc252(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
@@ -2376,7 +2379,7 @@ function renderDocumentacionInteligente254(){
   const docs=generarDocs254(exp);
   view.className="module-view show ready documentacion-view docs-254";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>📄 Documentación Inteligente</h2>
     <p>Genera la base documental del proyecto desde Proyecto, Cargas, Empalme, Tierra, Carpeta Técnica y Clasificación SEC.</p>
     <p class="privacy-note">📌 Esta versión prepara documentación técnica en pantalla y HTML descargable. PDF y Word profesional quedan para la siguiente etapa.</p>
@@ -2482,7 +2485,7 @@ function estadoDocs254(e){
 function generarDocs254(e){
   return{memoria:docMemoria254(e),empalme:docEmpalme254(e),tierra:docTierra254(e),te:docTE254(e)};
 }
-function docHeader254(t,e){return`<div class="doc-print-254"><h1>${esc254(t)}</h1><p><b>GIAE Chile v2.6.3</b> · Creado por Julio Vera Concha</p><p><b>Proyecto:</b> ${esc254(e.proyecto)} · <b>Cliente:</b> ${esc254(e.cliente)} · <b>Declaración:</b> ${esc254(e.tipoSEC)}</p>`}
+function docHeader254(t,e){return`<div class="doc-print-254"><h1>${esc254(t)}</h1><p><b>GIAE Chile v2.6.4</b> · Creado por Julio Vera Concha</p><p><b>Proyecto:</b> ${esc254(e.proyecto)} · <b>Cliente:</b> ${esc254(e.cliente)} · <b>Declaración:</b> ${esc254(e.tipoSEC)}</p>`}
 function docMemoria254(e){return`${docHeader254("Memoria Técnica",e)}<h2>1. Antecedentes generales</h2><table><tr><th>Cliente</th><td>${esc254(e.cliente)}</td></tr><tr><th>RUT</th><td>${esc254(e.rut)}</td></tr><tr><th>Dirección</th><td>${esc254(e.direccion)}</td></tr><tr><th>Comuna / Región</th><td>${esc254(e.comuna)} / ${esc254(e.region)}</td></tr><tr><th>Distribuidora</th><td>${esc254(e.dist)}</td></tr><tr><th>Instalador</th><td>${esc254(e.instalador)} / ${esc254(e.claseSEC)}</td></tr></table><h2>2. Resumen eléctrico</h2><table><tr><th>Potencia instalada</th><td>${(Number(e.r.totalW||0)/1000).toFixed(2)} kW</td></tr><tr><th>Potencia demandada</th><td>${(Number(e.r.demandaW||0)/1000).toFixed(2)} kW</td></tr><tr><th>Empalme</th><td>${esc254(e.emp?.evaluacion?.tipoEmpalme||"Sin empalme")}</td></tr><tr><th>Tierra</th><td>${esc254(e.tie?.data?.tipoSistema||"Sin tierra")}</td></tr></table><h2>3. Normativa aplicada</h2><p>DS N°8, RIC 1 al RIC 19, IEC referenciales y requisitos de distribuidora.</p></div>`}
 function docEmpalme254(e){return`${docHeader254("Informe de Empalme",e)}<table><tr><th>Distribuidora</th><td>${esc254(e.dist)}</td></tr><tr><th>Tipo de empalme</th><td>${esc254(e.emp?.evaluacion?.tipoEmpalme||"Sin empalme guardado")}</td></tr><tr><th>Suministro</th><td>${esc254(e.emp?.evaluacion?.tipoSuministro||"Sin definir")}</td></tr><tr><th>Potencia normalizada</th><td>${esc254(e.emp?.evaluacion?.potenciaSugerida||"Sin definir")}</td></tr><tr><th>Limitador preliminar</th><td>${esc254(e.emp?.evaluacion?.limitador||"Sin definir")}</td></tr><tr><th>Demanda</th><td>${(Number(e.emp?.resumen?.demandaW||e.r.demandaW||0)/1000).toFixed(2)} kW</td></tr></table><p>Validación preliminar basada en RIC 1 y factibilidad final de distribuidora.</p></div>`}
 function docTierra254(e){return`${docHeader254("Informe de Tierra",e)}<table><tr><th>Sistema</th><td>${esc254(e.tie?.data?.tipoSistema||"Sin tierra guardada")}</td></tr><tr><th>TP</th><td>${esc254(e.tie?.data?.conductorTP||"Sin definir")}</td></tr><tr><th>TS</th><td>${esc254(e.tie?.data?.conductorTS||"Sin definir")}</td></tr><tr><th>Resistencia</th><td>${esc254(e.tie?.calculo?.rt||"--")} Ω</td></tr><tr><th>Resultado</th><td>${esc254(e.tie?.calculo?.titulo||"Sin validar")}</td></tr></table><p>Validación preliminar RIC 6. La medición final debe realizarse en terreno.</p></div>`}
@@ -2501,7 +2504,7 @@ function renderRevisionExpediente255(){
   const audit=auditarExpediente255(exp);
   view.className="module-view show ready auditoria-view revision-255";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>🧪 Revisión de Expediente</h2>
     <p>Revisa el expediente completo sin modificar los módulos operativos. Lee Proyecto, Cargas, Unilineal, Empalme, Tierra, Carpeta Técnica, Guía SEC, Documentación y Motor Normativo.</p>
     <p class="privacy-note">📌 Módulo independiente: no recalcula, no sobrescribe y no altera Unilineal, Empalme, Tierra ni Documentación.</p>
@@ -2646,7 +2649,7 @@ function renderListaRevision255(lista,tipo){
   return`<ul class="revision-list-255 ${tipo}">${lista.map(x=>`<li>${esc255(x)}</li>`).join("")}</ul>`;
 }
 function renderInformeRevision255(e,a){
-  return`<div class="doc-print-255"><h1>Informe de Revisión de Expediente</h1><p><b>GIAE Chile v2.6.3</b> · Creado por Julio Vera Concha</p><table><tr><th>Proyecto</th><td>${esc255(e.proyecto)}</td></tr><tr><th>Cliente</th><td>${esc255(e.cliente)}</td></tr><tr><th>Dirección</th><td>${esc255(e.direccion)}</td></tr><tr><th>Distribuidora</th><td>${esc255(e.dist)}</td></tr><tr><th>Declaración SEC</th><td>${esc255(e.tipoSEC)}</td></tr><tr><th>Potencia instalada</th><td>${(Number(e.totalW||0)/1000).toFixed(2)} kW</td></tr><tr><th>Potencia demandada</th><td>${(Number(e.demandaW||0)/1000).toFixed(2)} kW</td></tr><tr><th>Cumplimiento expediente</th><td>${a.porcentaje}% · ${esc255(a.estado)}</td></tr></table><h2>Observaciones críticas</h2>${renderListaRevision255(a.criticas,"critica")}<h2>Pendientes</h2>${renderListaRevision255(a.pendientes,"pendiente")}<h2>Normativa considerada</h2>${renderListaRevision255(a.normativa,"ok")}</div>`;
+  return`<div class="doc-print-255"><h1>Informe de Revisión de Expediente</h1><p><b>GIAE Chile v2.6.4</b> · Creado por Julio Vera Concha</p><table><tr><th>Proyecto</th><td>${esc255(e.proyecto)}</td></tr><tr><th>Cliente</th><td>${esc255(e.cliente)}</td></tr><tr><th>Dirección</th><td>${esc255(e.direccion)}</td></tr><tr><th>Distribuidora</th><td>${esc255(e.dist)}</td></tr><tr><th>Declaración SEC</th><td>${esc255(e.tipoSEC)}</td></tr><tr><th>Potencia instalada</th><td>${(Number(e.totalW||0)/1000).toFixed(2)} kW</td></tr><tr><th>Potencia demandada</th><td>${(Number(e.demandaW||0)/1000).toFixed(2)} kW</td></tr><tr><th>Cumplimiento expediente</th><td>${a.porcentaje}% · ${esc255(a.estado)}</td></tr></table><h2>Observaciones críticas</h2>${renderListaRevision255(a.criticas,"critica")}<h2>Pendientes</h2>${renderListaRevision255(a.pendientes,"pendiente")}<h2>Normativa considerada</h2>${renderListaRevision255(a.normativa,"ok")}</div>`;
 }
 function guardarRevision255(){
   const e=getRevisionExp255(), a=auditarExpediente255(e);
@@ -2669,7 +2672,7 @@ function renderPresupuestoInteligente256(){
   const pres=calcularPresupuesto256(exp);
   view.className="module-view show ready presupuesto-view presupuesto-256";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>💲 Presupuesto Inteligente</h2>
     <p>Genera un presupuesto técnico preliminar leyendo Proyecto, Cargas, Cuadro, Empalme, Tierra, Documentación y Revisión, sin modificar módulos operativos.</p>
     <p class="privacy-note">📌 Los precios son editables y referenciales. Cada instalador debe ajustar valores según proveedor, zona, mano de obra y alcance real.</p>
@@ -2819,7 +2822,7 @@ function renderResumenPresupuesto256(p){
   return`<table class="budget-table-256"><tr><th>Materiales</th><td>${formatCLP256(p.materialesTotal)}</td></tr><tr><th>Mano de obra</th><td>${formatCLP256(p.manoObraTotal)}</td></tr><tr><th>Gastos generales</th><td>${formatCLP256(p.gastosGenerales)}</td></tr><tr><th>Utilidad</th><td>${formatCLP256(p.utilidad)}</td></tr><tr><th>Neto</th><td>${formatCLP256(p.neto)}</td></tr><tr><th>IVA</th><td>${formatCLP256(p.iva)}</td></tr><tr class="total"><th>Total</th><td>${formatCLP256(p.totalFinal)}</td></tr></table>`;
 }
 function renderInformePresupuesto256(e,p){
-  return`<div class="doc-print-256"><h1>Presupuesto Técnico Preliminar</h1><p><b>GIAE Chile v2.6.3</b> · Creado por Julio Vera Concha</p><table><tr><th>Proyecto</th><td>${esc256(e.proyecto)}</td></tr><tr><th>Cliente</th><td>${esc256(e.cliente)}</td></tr><tr><th>Dirección</th><td>${esc256(e.direccion)}</td></tr><tr><th>Distribuidora</th><td>${esc256(e.dist)}</td></tr><tr><th>Declaración SEC</th><td>${esc256(e.tipoSEC)}</td></tr><tr><th>Potencia demandada</th><td>${(Number(e.demandaW||0)/1000).toFixed(2)} kW</td></tr></table><h2>Materiales</h2>${renderMaterialesLectura256(p.materiales)}<h2>Resumen</h2>${renderResumenPresupuesto256(p)}<p><b>Nota:</b> presupuesto preliminar editable. Validar precios, cubicación, distancias y condiciones de terreno.</p></div>`;
+  return`<div class="doc-print-256"><h1>Presupuesto Técnico Preliminar</h1><p><b>GIAE Chile v2.6.4</b> · Creado por Julio Vera Concha</p><table><tr><th>Proyecto</th><td>${esc256(e.proyecto)}</td></tr><tr><th>Cliente</th><td>${esc256(e.cliente)}</td></tr><tr><th>Dirección</th><td>${esc256(e.direccion)}</td></tr><tr><th>Distribuidora</th><td>${esc256(e.dist)}</td></tr><tr><th>Declaración SEC</th><td>${esc256(e.tipoSEC)}</td></tr><tr><th>Potencia demandada</th><td>${(Number(e.demandaW||0)/1000).toFixed(2)} kW</td></tr></table><h2>Materiales</h2>${renderMaterialesLectura256(p.materiales)}<h2>Resumen</h2>${renderResumenPresupuesto256(p)}<p><b>Nota:</b> presupuesto preliminar editable. Validar precios, cubicación, distancias y condiciones de terreno.</p></div>`;
 }
 function renderMaterialesLectura256(mats){
   return`<table class="budget-table-256"><tr><th>Material</th><th>Cantidad</th><th>Unidad</th><th>Precio</th><th>Subtotal</th></tr>${mats.map(m=>`<tr><td>${esc256(m.nombre)}</td><td>${m.cantidad}</td><td>${esc256(m.unidad)}</td><td>${formatCLP256(m.precio)}</td><td>${formatCLP256(m.subtotal)}</td></tr>`).join("")}</table>`;
@@ -2877,7 +2880,7 @@ function renderBibliotecaMateriales257(){
   const cats=[...new Set(b.map(x=>x.cat))];
   view.className="module-view show ready biblioteca-view biblioteca-257";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>📚 Biblioteca Inteligente de Materiales</h2>
     <p>Biblioteca central para materiales, precios, marcas, unidades y normas. Presupuesto y futuras exportaciones podrán consultar esta base sin duplicar información.</p>
     <p class="privacy-note">📌 Módulo independiente: no modifica Proyecto, Presupuesto ni cálculos. Sólo administra una base de materiales editable.</p>
@@ -3009,7 +3012,7 @@ function renderBibliotecaMateriales258(){
   const hist=getHistorialBiblioteca258();
   view.className="module-view show ready biblioteca-view biblioteca-258";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>📚 Biblioteca Inteligente 2.0</h2>
     <p>Gestor avanzado de materiales con categorías, marcas, proveedores, favoritos, historial y recursos técnicos.</p>
     <p class="privacy-note">📌 Subsistema independiente: administra información técnica, no modifica proyectos ni cálculos.</p>
@@ -3126,7 +3129,7 @@ function renderExportacionProfesional258(){
   const expediente=armarExpediente258(exp);
   view.className="module-view show ready exportacion-view exportacion-258";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>📦 Exportación Profesional</h2>
     <p>Genera una vista previa de expediente y prepara exportaciones HTML, Word, PDF, Excel y ZIP desde la información existente.</p>
     <p class="privacy-note">📌 Exportación es solo lectura: no modifica Proyecto, Cargas, Unilineal, Empalme, Tierra, Documentación, Presupuesto ni Biblioteca.</p>
@@ -3195,7 +3198,7 @@ function armarExpediente258(e){
 }
 function renderResumenExportPres258(p){return`Materiales: ${formatExportCLP258(p?.materialesTotal)}<br>Mano de obra: ${formatExportCLP258(p?.manoObraTotal)}<br>Total: ${formatExportCLP258(p?.totalFinal)}`}
 function renderIndiceExport258(exp){return`<ol class="indice-export-258">${exp.secciones.map(s=>`<li>${esc258(s[0])}</li>`).join("")}</ol>`}
-function renderExpedienteHTML258(exp){return`<div class="exp-doc-258"><h1>${esc258(exp.titulo)}</h1><p><b>GIAE Chile v2.6.3</b> · Creado por Julio Vera Concha</p>${exp.secciones.map((s,i)=>`<section><h2>${i+1}. ${esc258(s[0])}</h2><div>${s[1]}</div></section>`).join("")}</div>`}
+function renderExpedienteHTML258(exp){return`<div class="exp-doc-258"><h1>${esc258(exp.titulo)}</h1><p><b>GIAE Chile v2.6.4</b> · Creado por Julio Vera Concha</p>${exp.secciones.map((s,i)=>`<section><h2>${i+1}. ${esc258(s[0])}</h2><div>${s[1]}</div></section>`).join("")}</div>`}
 function descargarHTML258(){const data=window.giaeExport258||{expediente:armarExpediente258(getExportExp258())};downloadExport258("GIAE_Expediente_Profesional_v2_5_8.html",plantillaExport258(renderExpedienteHTML258(data.expediente)),"text/html;charset=utf-8");}
 function descargarWord258(){const data=window.giaeExport258||{expediente:armarExpediente258(getExportExp258())};downloadExport258("GIAE_Expediente_Profesional_v2_5_8.doc",plantillaExport258(renderExpedienteHTML258(data.expediente)),"application/msword;charset=utf-8");}
 function descargarExcel258(){const e=getExportExp258();const rows=[["Item","Valor"],["Proyecto",e.proyecto],["Cliente",e.cliente],["Declaración",e.tipoSEC],["Materiales biblioteca",e.bib.length],["Total presupuesto",e.pres?.presupuesto?.totalFinal||0]];const csv=rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(";")).join("\\n");downloadExport258("GIAE_Resumen_Exportacion_v2_5_8.csv",csv,"text/csv;charset=utf-8");}
@@ -3211,7 +3214,7 @@ function renderAsistenteInformes260(){
   const base=datosInforme260();
   view.className="module-view show ready asistente-informes-view informes-260";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>🤖 Asistente Inteligente de Informes</h2>
     <p>Primera etapa para generar informes técnicos guiados usando datos del proyecto, cargas, empalme, tierra, presupuesto y documentación.</p>
     <p class="privacy-note">📌 Código original modular. El informe generado no incluye marca GIAE; usa la identidad del usuario, empresa o estudiante.</p>
@@ -3291,7 +3294,7 @@ function renderMotorPlantillas261(){
   const id=getIdentidad261(), pls=getPlantillas261();
   view.className="module-view show ready plantillas-view plantillas-261";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>🧩 Motor Inteligente de Plantillas</h2>
     <p>Configura la identidad del usuario y crea plantillas propias para informes académicos, profesionales y empresariales.</p>
     <p class="privacy-note">📌 Regla GIAE: los documentos exportados no incluyen marca GIAE. La identidad del informe pertenece al usuario, estudiante, instalador o empresa.</p>
@@ -3408,7 +3411,7 @@ function renderMotorRedaccion262(){
   const rev=revisionCoherencia262(ctx);
   view.className="module-view show ready redaccion-view redaccion-262";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>🧠 Motor Inteligente de Redacción</h2>
     <p>Primera etapa del motor que estructura, redacta y revisa coherencia documental según perfil de usuario, plantilla activa y datos del proyecto.</p>
     <p class="privacy-note">📌 Código original modular. El motor no inventa datos técnicos: si falta información, la declara como pendiente.</p>
@@ -3519,7 +3522,7 @@ function generarTextoCapitulo262(){
   if(v.capitulo==="observaciones") cuerpo=`${b.observacion[0]} Observación registrada: ${problema} En caso de existir antecedentes incompletos, el informe debe indicar claramente los datos pendientes y evitar conclusiones no respaldadas.`;
   if(v.capitulo==="conclusiones") cuerpo=`${b.conclusion[0]} De acuerdo con los antecedentes disponibles, la solución indicada fue: ${solucion} La conclusión final debe emitirse únicamente cuando se hayan validado mediciones, fotografías, datos del proyecto y normativa aplicable.`;
   if(v.capitulo==="recomendaciones") cuerpo=`${b.conclusion[2]} Se recomienda revisar periódicamente la instalación, mantener identificados los circuitos, conservar respaldos fotográficos y actualizar la documentación técnica cuando se realicen modificaciones.`;
-  return `<article><h2>${esc262(titulo)}</h2><p>${esc262(cuerpo)}</p><p><small>Generado por el Motor de Redacción v2.6.3 usando datos ingresados por el usuario. No inventa mediciones ni hechos técnicos.</small></p></article>`;
+  return `<article><h2>${esc262(titulo)}</h2><p>${esc262(cuerpo)}</p><p><small>Generado por el Motor de Redacción v2.6.4 usando datos ingresados por el usuario. No inventa mediciones ni hechos técnicos.</small></p></article>`;
 }
 function tituloCapitulo262(c){return {introduccion:"Introducción",objetivos:"Objetivos",desarrollo:"Desarrollo técnico",normativa:"Normativa aplicada",observaciones:"Observaciones",conclusiones:"Conclusiones",recomendaciones:"Recomendaciones"}[c]||"Capítulo";}
 function actualizarRedaccion262(){const c=document.getElementById("capituloGenerado262"); if(c)c.innerHTML=generarTextoCapitulo262();}
@@ -3590,7 +3593,7 @@ function renderGIE263(){
   const view=document.getElementById("moduleView");
   view.className="module-view show ready gie-view gie-263";
   view.innerHTML=`
-  <span class="badge ready">Módulo funcional v2.6.3</span>
+  <span class="badge ready">Módulo funcional v2.6.4</span>
   <h2>🧠 GIAE Intelligence Engine</h2>
   <p>Motor central de contexto, reglas, validación y explicación. Coordina módulos sin romper su independencia.</p>
   <p class="privacy-note">📌 Reglas inquebrantables: código original, sin copia deliberada de código protegido, interfaces propietarias ni plantillas de terceros.</p>
@@ -3620,13 +3623,128 @@ function gieGuardar263(){
 }
 function escGIE263(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 
+function intCtx264(){
+  const gie=typeof gieEvaluar263==="function"?gieEvaluar263():null;
+  const c=gie?.contexto||{};
+  return {gie,c};
+}
+function intModulos264(){
+  const {gie,c}=intCtx264();
+  const has=(x)=>!!x;
+  return [
+    {id:"proyecto",nombre:"Proyecto",icon:"📁",estado:has(c.p)?"completo":"bloqueado",detalle:has(c.p)?"Proyecto activo disponible.":"Debe crear o abrir un proyecto.",target:"proyecto"},
+    {id:"cargas",nombre:"Cargas",icon:"⚡",estado:(c.cargas||[]).length>0?"completo":"pendiente",detalle:(c.cargas||[]).length>0?`${c.cargas.length} circuitos/cargas registrados.`:"Debe registrar cargas o circuitos.",target:"cargas"},
+    {id:"cuadro",nombre:"Cuadro de Carga",icon:"📊",estado:(c.cargas||[]).length>0?"completo":"pendiente",detalle:(c.cargas||[]).length>0?"Puede generarse desde cargas disponibles.":"Depende de las cargas ingresadas.",target:"cuadro"},
+    {id:"unilineal",nombre:"Unilineal",icon:"🔌",estado:(c.cargas||[]).length>0?"revision":"pendiente",detalle:(c.cargas||[]).length>0?"Revisar diagrama generado con los datos disponibles.":"Necesita cargas/protecciones.",target:"unilineal"},
+    {id:"empalme",nombre:"Empalme",icon:"🏠",estado:has(c.empalme)?"completo":"pendiente",detalle:has(c.empalme)?"Empalme registrado.":"Completar recomendación de empalme.",target:"empalme"},
+    {id:"tierra",nombre:"Tierra",icon:"⏚",estado:has(c.tierra)?"completo":"pendiente",detalle:has(c.tierra)?"Puesta a tierra registrada.":"Completar módulo de tierra.",target:"tierra"},
+    {id:"presupuesto",nombre:"Presupuesto",icon:"💲",estado:has(c.presupuesto)?"completo":"pendiente",detalle:has(c.presupuesto)?"Presupuesto disponible.":"Generar presupuesto preliminar.",target:"presupuesto"},
+    {id:"plantillas",nombre:"Plantillas",icon:"🧩",estado:has(c.plantilla)?"completo":"pendiente",detalle:has(c.plantilla)?`Plantilla activa: ${c.plantilla.nombre||"sin nombre"}`:"Seleccionar o crear plantilla.",target:"plantillas-informes"},
+    {id:"redaccion",nombre:"Redacción IA",icon:"🧠",estado:has(c.redaccion)?"completo":"pendiente",detalle:has(c.redaccion)?"Redacción base disponible.":"Generar capítulo base.",target:"motor-redaccion"},
+    {id:"asistente",nombre:"Asistente Informes",icon:"🤖",estado:(gie&&gie.criticos===0)?"revision":"bloqueado",detalle:(gie&&gie.criticos===0)?"Puede generar informe preliminar.":"Bloqueado por falta crítica.",target:"asistente-informes"},
+    {id:"exportacion",nombre:"Exportación",icon:"📦",estado:(gie&&gie.criticos===0&&gie.advertencias===0)?"completo":(gie&&gie.criticos===0?"revision":"bloqueado"),detalle:(gie&&gie.criticos===0&&gie.advertencias===0)?"Lista para exportación profesional.":"Revisar pendientes antes de exportar.",target:"exportacion"}
+  ];
+}
+function intResumen264(mods=intModulos264()){
+  const total=mods.length, completos=mods.filter(m=>m.estado==="completo").length;
+  const bloqueados=mods.filter(m=>m.estado==="bloqueado").length;
+  const pendientes=mods.filter(m=>m.estado==="pendiente").length;
+  const revision=mods.filter(m=>m.estado==="revision").length;
+  return {total,completos,bloqueados,pendientes,revision,porcentaje:Math.round(completos/total*100)};
+}
+function renderIntegridadProyecto264(){
+  const mods=intModulos264(), r=intResumen264(mods);
+  const view=document.getElementById("moduleView");
+  view.className="module-view show ready integridad-view integridad-264";
+  view.innerHTML=`
+    <span class="badge ready">Módulo funcional v2.6.4</span>
+    <h2>🧭 Motor de Integridad del Proyecto</h2>
+    <p>Tablero inteligente para revisar el estado real de cada módulo, detectar pendientes y guiar al usuario hasta el informe y exportación final.</p>
+    <p class="privacy-note">📌 Regla inquebrantable: código original para GIAE, sin copia deliberada de código protegido, interfaces propietarias ni plantillas de terceros.</p>
+
+    <section class="folder-head">
+      <div>
+        <h3>Estado general</h3>
+        <p><b>Completos:</b> ${r.completos}/${r.total} · <b>Pendientes:</b> ${r.pendientes} · <b>Revisión:</b> ${r.revision} · <b>Bloqueados:</b> ${r.bloqueados}</p>
+      </div>
+      <div class="uni-mini"><b>${r.porcentaje}%</b><small>Avance</small></div>
+      <div class="uni-mini"><b>${r.bloqueados}</b><small>Bloqueos</small></div>
+    </section>
+
+    <section class="integridad-barra-264">
+      <div style="width:${r.porcentaje}%"></div>
+    </section>
+
+    <section class="folder-grid">
+      <article class="folder-panel">
+        <h3>Flujo del proyecto</h3>
+        <div class="flujo-integridad-264">${mods.map(m=>renderCardModulo264(m)).join("")}</div>
+      </article>
+      <article class="folder-panel">
+        <h3>Prioridad de acción</h3>
+        ${renderPrioridades264(mods)}
+      </article>
+    </section>
+
+    <section class="folder-panel">
+      <h3>Checklist final antes de exportar</h3>
+      ${renderChecklist264(mods)}
+    </section>
+
+    <section class="folder-panel">
+      <h3>Acciones</h3>
+      <div class="folder-buttons">
+        <button class="btn primary" onclick="intGuardar264()">Guardar estado</button>
+        <button class="btn" onclick="intGenerarReporte264()">Generar reporte de integridad</button>
+        <button class="btn" onclick="openModule('intelligence-engine')">Ir a GIE</button>
+        <button class="btn" onclick="openModule('asistente-informes')">Ir a Informes</button>
+      </div>
+      <div id="intMsg264" class="inline-check">Integridad calculada. Revise los módulos pendientes antes de exportar.</div>
+    </section>
+
+    <section class="folder-panel">
+      <h3>Reporte preliminar</h3>
+      <div id="intReporte264" class="reporte-integridad-264">${renderReporte264(mods,r)}</div>
+    </section>
+  `;
+  view.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function renderCardModulo264(m){
+  const tag=m.estado==="completo"?"✅":m.estado==="bloqueado"?"⛔":m.estado==="revision"?"⚠":"🟡";
+  return `<div class="mod-int-264 ${m.estado}"><div><b>${m.icon} ${escInt264(m.nombre)}</b><small>${escInt264(m.detalle)}</small></div><button class="btn small" onclick="openModule('${escInt264(m.target)}')">Ir</button><span>${tag}</span></div>`;
+}
+function renderPrioridades264(mods){
+  const orden=mods.filter(m=>m.estado==="bloqueado").concat(mods.filter(m=>m.estado==="pendiente"),mods.filter(m=>m.estado==="revision"));
+  if(!orden.length)return `<div class="inline-check ok">✅ No existen acciones críticas pendientes.</div>`;
+  return `<ol class="prioridades-264">${orden.slice(0,7).map(m=>`<li><b>${escInt264(m.nombre)}</b><p>${escInt264(m.detalle)}</p><button class="btn small" onclick="openModule('${escInt264(m.target)}')">Corregir</button></li>`).join("")}</ol>`;
+}
+function renderChecklist264(mods){
+  return `<table class="check-integridad-264"><tr><th>Módulo</th><th>Estado</th><th>Detalle</th></tr>${mods.map(m=>`<tr class="${m.estado}"><td>${m.icon} ${escInt264(m.nombre)}</td><td>${m.estado==="completo"?"✅ Completo":m.estado==="bloqueado"?"⛔ Bloqueado":m.estado==="revision"?"⚠ Revisión":"🟡 Pendiente"}</td><td>${escInt264(m.detalle)}</td></tr>`).join("")}</table>`;
+}
+function renderReporte264(mods,r){
+  return `<article><h1>Reporte de integridad del proyecto</h1><p>Avance general: <b>${r.porcentaje}%</b></p><p>Completos: ${r.completos}. Pendientes: ${r.pendientes}. Revisión: ${r.revision}. Bloqueados: ${r.bloqueados}.</p><h2>Módulos revisados</h2><ul>${mods.map(m=>`<li><b>${escInt264(m.nombre)}:</b> ${escInt264(m.estado)} - ${escInt264(m.detalle)}</li>`).join("")}</ul><h2>Conclusión</h2><p>${r.bloqueados>0?"Existen bloqueos críticos que deben resolverse antes de generar documentos finales.":r.pendientes>0||r.revision>0?"El proyecto puede avanzar como preliminar, pero requiere revisión antes de exportación final.":"El proyecto está listo para exportación profesional."}</p></article>`;
+}
+function intGuardar264(){
+  const mods=intModulos264(), r=intResumen264(mods);
+  localStorage.setItem("giae_chile_integridad_v264",JSON.stringify({version:APP_VERSION,fecha:new Date().toISOString(),resumen:r,modulos:mods}));
+  const msg=document.getElementById("intMsg264"); if(msg){msg.className="inline-check ok";msg.innerHTML="✅ Estado de integridad guardado."}
+  toast("Integridad guardada.");
+}
+function intGenerarReporte264(){
+  const mods=intModulos264(), r=intResumen264(mods);
+  const p=document.getElementById("intReporte264"); if(p)p.innerHTML=renderReporte264(mods,r);
+  localStorage.setItem("giae_chile_reporte_integridad_v264",JSON.stringify({version:APP_VERSION,fecha:new Date().toISOString(),html:renderReporte264(mods,r),resumen:r,modulos:mods}));
+  toast("Reporte de integridad generado.");
+}
+function escInt264(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+
 function renderMotorNormativo(){
   const view=document.getElementById("moduleView");
   const exp=getExpedienteNorm250();
   const audit=auditarNormativa250(exp);
   view.className="module-view show ready motor-view motor-250";
   view.innerHTML=`
-    <span class="badge ready">Módulo funcional v2.6.3</span>
+    <span class="badge ready">Módulo funcional v2.6.4</span>
     <h2>⚖️ Motor Normativo SEC</h2>
     <p>Base normativa transversal: Decreto Supremo N°8, RIC 1-19, normas IEC y requisitos de distribuidoras.</p>
     <p class="privacy-note">📌 Esta versión crea la base normativa y auditoría preliminar. No modifica cálculos ni módulos operativos.</p>

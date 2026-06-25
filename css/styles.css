@@ -846,3 +846,11 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .gie-explica-263{display:grid;gap:10px}.gie-explica-263 p{border:1px solid #245366;background:#07131c;border-radius:10px;padding:10px;margin:0}.api-gie-263{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.api-gie-263 code{border:1px solid #245366;background:#07131c;color:#8cffad;border-radius:10px;padding:10px}
 .gie-preview-263{background:#f8fafc;color:#111;border-radius:14px;padding:22px;max-height:620px;overflow:auto}.gie-preview-263 h1{border-bottom:4px solid #111;padding-bottom:10px}.gie-preview-263 h2{border-bottom:1px solid #ccc;padding-bottom:5px;margin-top:22px}
 @media(max-width:900px){.api-gie-263{grid-template-columns:1fr}}
+
+/* v2.6.4 · Motor de Integridad del Proyecto */
+.integridad-barra-264{height:16px;background:#061017;border:1px solid #245366;border-radius:999px;overflow:hidden;margin:16px 0}.integridad-barra-264 div{height:100%;background:linear-gradient(90deg,#22c55e,#8cffad)}
+.flujo-integridad-264{display:grid;gap:10px;max-height:650px;overflow:auto}
+.mod-int-264{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;border:1px solid #245366;background:#07131c;border-radius:12px;padding:10px}.mod-int-264 small{display:block;color:#8db0bb;margin-top:4px}.mod-int-264.completo{border-color:#22c55e;background:#071b12}.mod-int-264.bloqueado{border-color:#ef4444;background:#240707}.mod-int-264.revision{border-color:#eab308;background:#241b07}
+.prioridades-264{display:grid;gap:10px;padding-left:20px}.prioridades-264 li{border:1px solid #245366;background:#07131c;border-radius:12px;padding:10px}.prioridades-264 p{color:#8db0bb;margin:4px 0 8px}
+.check-integridad-264{width:100%;border-collapse:collapse}.check-integridad-264 th,.check-integridad-264 td{border:1px solid #245366;padding:8px;text-align:left}.check-integridad-264 tr.completo{background:#071b12}.check-integridad-264 tr.bloqueado{background:#240707}.check-integridad-264 tr.revision{background:#241b07}
+.reporte-integridad-264{background:#f8fafc;color:#111;border-radius:14px;padding:22px;max-height:620px;overflow:auto}.reporte-integridad-264 h1{border-bottom:4px solid #111;padding-bottom:10px}.reporte-integridad-264 h2{border-bottom:1px solid #ccc;padding-bottom:5px;margin-top:22px}

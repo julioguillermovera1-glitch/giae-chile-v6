@@ -1,29 +1,28 @@
-# GIAE Chile v2.6.3 - GIAE Intelligence Engine
+# GIAE Chile v2.6.4 - Motor de Integridad del Proyecto
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.6.2 Motor Inteligente de Redacción.
+Base: GIAE Chile v2.6.3 GIAE Intelligence Engine.
 
 ## Mejora
-Nuevo módulo independiente GIAE Intelligence Engine.
+Nuevo módulo independiente Motor de Integridad del Proyecto.
 
 ## Funciones
-- Contexto global del proyecto.
-- Motor central de reglas.
-- Motor de validación.
-- Motor de explicación.
-- API interna del GIE.
-- Panel de integridad.
-- Generación de informe integrado preliminar.
-- Guardar estado GIE.
+- Tablero de estado de módulos.
+- Avance general del proyecto.
+- Detección de pendientes, revisiones y bloqueos.
+- Botones para ir directamente al módulo correspondiente.
+- Checklist final antes de exportar.
+- Reporte preliminar de integridad.
+- Guardar estado de integridad.
 
 ## Reglas inquebrantables
 - Código original creado para GIAE.
-- Sin incorporación deliberada de código protegido.
+- Sin copia deliberada de código protegido.
 - Sin copiar interfaces propietarias.
 - Sin copiar plantillas de terceros.
 - Sin inventar datos técnicos.
-- Cada módulo conserva su independencia.
+- Los módulos mantienen independencia.
 
 ## Arquitectura
-Los módulos no dependen directamente entre sí. El GIE coordina contexto, reglas y validación.
+El Motor de Integridad consulta el estado del GIE y guía al usuario sin modificar módulos operativos.
