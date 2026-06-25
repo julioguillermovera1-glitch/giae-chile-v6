@@ -868,3 +868,10 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .mei-cards-271{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mei-cards-271 article{border:1px solid #22c55e;background:#071b12;border-radius:12px;padding:12px}.mei-cards-271 b{font-size:20px;color:#8cffad}.mei-cards-271 small{display:block;color:#8db0bb;margin-top:4px}
 .mei-explicacion-271,.mei-resultado-271{border:1px solid #245366;background:#07131c;border-radius:12px;padding:14px}.mei-lista-271{list-style:none;padding:0;display:grid;gap:8px}.mei-lista-271 li{border:1px solid #245366;background:#07131c;border-radius:10px;padding:10px}
 @media(max-width:900px){.mei-cards-271{grid-template-columns:1fr}}
+
+/* v2.7.2 · Motor Normativo Inteligente */
+.mni-cards-272{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mni-cards-272 article{border:1px solid #22c55e;background:#071b12;border-radius:12px;padding:12px}.mni-cards-272 b{font-size:20px;color:#8cffad}.mni-cards-272 small{display:block;color:#8db0bb;margin-top:4px}
+.mni-ref-272{display:grid;gap:10px;max-height:420px;overflow:auto}.mni-ref-272 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}.mni-ref-272 small{display:block;color:#8db0bb;margin:5px 0}.mni-ref-272 p{margin:0;color:#cbd5e1}
+.mni-table-272{width:100%;border-collapse:collapse}.mni-table-272 th,.mni-table-272 td{border:1px solid #245366;padding:8px;text-align:left;vertical-align:top}.mni-table-272 tr.ok{background:#071b12}.mni-table-272 tr.warn{background:#241b07}.mni-table-272 small{display:block;color:#8db0bb;margin-top:4px}
+.mni-texto-272{background:#f8fafc;color:#111;border-radius:14px;padding:18px;line-height:1.5}.mni-lista-272{list-style:none;padding:0;display:grid;gap:8px}.mni-lista-272 li{border:1px solid #245366;background:#07131c;border-radius:10px;padding:10px}
+@media(max-width:900px){.mni-cards-272{grid-template-columns:1fr}}
