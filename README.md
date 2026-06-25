@@ -1,28 +1,33 @@
-# GIAE Chile v2.7.4 - GIAE Control Center
+# GIAE Chile v2.7.5 - Core Integration Framework
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.7.3 Panel de Diagnóstico.
+Base: GIAE Chile v2.7.4 Control Center.
 
 ## Tipo de versión
-Versión de consolidación y administración interna.
+Versión de preparación para Fase 3 - Integración Total.
 
 ## Mejora
-Nuevo GIAE Control Center.
+Nuevo GIAE Core Integration Framework.
 
 ## Funciones
-- Dashboard general.
-- Self Check.
-- API Manager.
-- Rendimiento local preliminar.
-- Registro del sistema.
-- Backup JSON.
-- Validación de backup.
-- Reporte HTML del Control Center.
+- GIAE Core global.
+- API unificada inicial.
+- Storage Manager.
+- EventBus.
+- Settings Manager.
+- Version Manager.
+- Backup Core.
+- Registro de eventos.
+- Conexión inicial con GIE, Knowledge Core, MEI, MNI y Control Center.
+
+## Regla nueva
+Compatibilidad permanente:
+Ninguna actualización deberá romper proyectos existentes sin mecanismo de migración seguro y documentado.
 
 ## Reglas inquebrantables
 - Código original creado para GIAE.
 - Sin copia deliberada de código protegido.
 - Sin copiar interfaces propietarias.
-- No agrega cálculos nuevos.
-- Administra y supervisa la plataforma.
+- Comunicación centralizada mediante Core y EventBus.
+- Preparado para Fase 3.

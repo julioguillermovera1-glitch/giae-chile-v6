@@ -891,3 +891,10 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .cc-logs-274{display:grid;gap:10px;max-height:520px;overflow:auto}.cc-logs-274 small{display:block;color:#8db0bb;margin:5px 0}.cc-logs-274 p{margin:0;color:#cbd5e1}
 #ccImportBackup274{background:#061017;color:#fff;border:1px solid #245366;border-radius:10px;padding:10px;width:100%;min-height:140px}
 @media(max-width:900px){.cc-api-grid-274,.cc-kpis-274{grid-template-columns:1fr}}
+
+/* v2.7.5 · GIAE Core Integration Framework */
+.core-tabs-275{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.core-panel-275{border:1px solid #245366;background:#061017;border-radius:16px;padding:16px;margin:16px 0}
+.core-api-grid-275{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.core-api-grid-275 article,.core-logs-275 article,.core-storage-275 article,.core-versions-275 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}.core-api-grid-275 article.operativo,.core-api-grid-275 article.conectado{border-color:#22c55e;background:#071b12}.core-api-grid-275 small,.core-logs-275 small,.core-storage-275 small,.core-versions-275 small{display:block;color:#8db0bb;margin:5px 0}.core-api-grid-275 ul{margin:8px 0 0;padding-left:18px}.core-api-grid-275 code{color:#8cffad}
+.core-logs-275,.core-storage-275,.core-versions-275{display:grid;gap:10px;max-height:540px;overflow:auto}.core-logs-275 p{margin:0;color:#cbd5e1;word-break:break-word}
+.core-settings-275{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.core-settings-275 label{display:grid;gap:6px}.core-settings-275 input,.core-settings-275 select{background:#061017;color:#fff;border:1px solid #245366;border-radius:10px;padding:10px;width:100%}.core-settings-275 button{grid-column:1/-1}
+@media(max-width:900px){.core-api-grid-275,.core-settings-275{grid-template-columns:1fr}}
