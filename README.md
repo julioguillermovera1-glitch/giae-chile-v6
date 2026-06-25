@@ -1,27 +1,27 @@
-# GIAE Chile v2.6.0 - Asistente Inteligente de Informes
+# GIAE Chile v2.6.1 - Motor Inteligente de Plantillas
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.5.9 Menú Lateral Adaptable.
+Base: GIAE Chile v2.6.0 Asistente Inteligente de Informes.
 
 ## Mejora
-Nuevo módulo independiente Asistente Inteligente de Informes.
+Nuevo módulo independiente Motor Inteligente de Plantillas.
 
 ## Funciones
-- Selección de tipo de informe.
-- Perfil de redacción: estudiante, instalador, empresa o cliente.
-- Extensión: corto, medio, profesional o completo.
-- Identidad del usuario, empresa o institución.
-- Campos guiados para trabajo realizado, observaciones, mediciones y fotografías.
-- Vista previa del informe.
-- Guardar informe.
-- Descargar HTML.
-- Descargar Word compatible.
+- Configuración de identidad del usuario.
+- Perfiles: estudiante, instalador, empresa o particular.
+- Portada elegida por el usuario.
+- Biblioteca personal de plantillas.
+- Constructor de plantillas.
+- Duplicar plantillas.
+- Eliminar plantillas.
+- Seleccionar plantilla activa.
+- Vista previa de estructura documental.
 
 ## Propiedad intelectual
-El módulo fue construido con código original para este proyecto.
-No se incorporan fragmentos de terceros ni plantillas protegidas.
+Código original creado para este proyecto.
+No se incorporan plantillas, interfaces ni código protegido de terceros.
 
 ## Regla
-No modifica módulos operativos. Sólo lee información existente y genera una estructura de informe editable.
-Los documentos exportados no incluyen marca GIAE en su contenido final.
+GIAE entrega la herramienta. La identidad del documento pertenece al usuario.
+Los informes generados no incluyen marca GIAE en su contenido final.

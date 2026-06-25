@@ -816,3 +816,16 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .preview-informe-260 th,.preview-informe-260 td{border:1px solid #999;padding:8px;text-align:left}
 .portada-260{text-align:center;margin:35px 0 45px}
 @media(max-width:900px){.estructura-informe-260{grid-template-columns:1fr}}
+
+/* v2.6.1 · Motor Inteligente de Plantillas */
+.plantillas-261 label{display:grid;gap:6px;margin:10px 0}
+.plantillas-261 input,.plantillas-261 select,.plantillas-261 textarea{background:#061017;color:#fff;border:1px solid #245366;border-radius:10px;padding:10px;width:100%}
+.plantillas-261 textarea{min-height:120px;resize:vertical}
+.tabs-plantillas-261{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.panel-plantillas-261{border:1px solid #245366;background:#061017;border-radius:16px;padding:16px;margin:16px 0}
+.plantilla-grid-261{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.plantilla-grid-261 article{border:1px solid #245366;background:#07131c;border-radius:14px;padding:14px}
+.plantilla-grid-261 h4{margin:0 0 8px;color:#8cffad}.plantilla-grid-261 small{display:block;color:#8db0bb;margin:8px 0}
+.lista-plantillas-261{list-style:none;padding:0;display:grid;gap:8px}.lista-plantillas-261 li{border:1px solid #245366;background:#07131c;border-radius:10px;padding:10px}
+.preview-plantilla-261{background:#f8fafc;color:#111;border-radius:14px;padding:24px;max-height:520px;overflow:auto}.preview-plantilla-261 h1{border-bottom:4px solid #111;padding-bottom:10px}
+@media(max-width:900px){.plantilla-grid-261{grid-template-columns:1fr}}
