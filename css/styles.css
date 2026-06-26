@@ -1046,3 +1046,130 @@ body.workspace-active-330 #moduleView.workspace-panel-330{
     align-items:flex-start;
   }
 }
+
+/* v3.4.0 · Adaptive Workspace */
+html.adaptive-workspace-340,
+body.adaptive-workspace-340{
+  height:100%;
+}
+body.adaptive-workspace-340{
+  overflow:hidden;
+}
+.adaptive-workspace-340 .workspace,
+.adaptive-workspace-340 .adaptive-main-340{
+  min-height:100vh;
+  max-height:100vh;
+  overflow:hidden;
+}
+.adaptive-workspace-340 .topbar{
+  min-height:58px;
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+}
+body.workspace-home-330.adaptive-workspace-340 .hero{
+  min-height:clamp(190px,32vh,330px);
+  max-height:34vh;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin:16px 34px 12px!important;
+  overflow:hidden!important;
+}
+body.workspace-home-330.adaptive-workspace-340 .hero h1,
+body.workspace-home-330.adaptive-workspace-340 .hero .hero-title{
+  transform:translateY(-4px);
+}
+body.workspace-home-330.adaptive-workspace-340 .kpis{
+  margin:10px 34px!important;
+}
+body.workspace-home-330.adaptive-workspace-340 .grid{
+  margin:12px 34px 70px!important;
+  max-height:calc(100vh - 430px);
+  overflow:auto;
+}
+body.workspace-active-330.adaptive-workspace-340 #moduleView.workspace-panel-330,
+.adaptive-workspace-340 #moduleView.adaptive-panel-340.show{
+  height:calc(100vh - 104px)!important;
+  max-height:calc(100vh - 104px)!important;
+  margin:10px 24px 58px!important;
+  padding:14px!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+}
+.adaptive-workspace-340 .workspace-header-330{
+  margin:-2px -2px 12px -2px!important;
+  padding:10px 12px!important;
+}
+.adaptive-workspace-340 .folder-head,
+.adaptive-workspace-340 .folder-panel,
+.adaptive-workspace-340 .card,
+.adaptive-workspace-340 .panel{
+  margin-top:10px!important;
+  margin-bottom:10px!important;
+}
+.adaptive-workspace-340 .folder-grid,
+.adaptive-workspace-340 .grid-2,
+.adaptive-workspace-340 .grid-3,
+.adaptive-workspace-340 .quick-grid{
+  gap:10px!important;
+}
+.adaptive-workspace-340 .engine,
+.adaptive-workspace-340 .quick,
+.adaptive-workspace-340 .folder-panel{
+  padding:12px!important;
+}
+.adaptive-workspace-340 input,
+.adaptive-workspace-340 select,
+.adaptive-workspace-340 textarea,
+.adaptive-workspace-340 .btn{
+  min-height:34px;
+}
+.adaptive-workspace-340 .adaptive-badge-340{
+  position:absolute;
+  right:16px;
+  bottom:12px;
+  border:1px solid #245366;
+  border-radius:999px;
+  padding:6px 10px;
+  color:#8cffad;
+  background:rgba(3,15,25,.7);
+  font-size:12px;
+}
+.adaptive-workspace-340 .hero{
+  position:relative;
+}
+.adaptive-workspace-340 table{
+  font-size:13px;
+}
+@media(min-width:1400px){
+  body.workspace-home-330.adaptive-workspace-340 .grid{
+    grid-template-columns:1.2fr 1.2fr .9fr .9fr;
+  }
+  .adaptive-workspace-340 .folder-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:1100px){
+  body.workspace-home-330.adaptive-workspace-340 .hero{
+    min-height:220px;
+    margin:12px 18px!important;
+  }
+  body.workspace-home-330.adaptive-workspace-340 .grid{
+    max-height:none;
+    overflow:visible;
+  }
+  body.adaptive-workspace-340{
+    overflow:auto;
+  }
+  .adaptive-workspace-340 .workspace,
+  .adaptive-workspace-340 .adaptive-main-340{
+    max-height:none;
+    overflow:visible;
+  }
+  body.workspace-active-330.adaptive-workspace-340 #moduleView.workspace-panel-330{
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+    margin:12px!important;
+  }
+}
