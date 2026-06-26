@@ -934,3 +934,8 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .reorg-menu-grid-320,.reorg-docs-320{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.reorg-menu-grid-320 article,.reorg-docs-320 article,.reorg-list-320 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}.reorg-docs-320 article.ok{border-color:#22c55e;background:#071b12}.reorg-docs-320 article.warn,.reorg-list-320 article.warn{border-color:#eab308;background:#241b07}.reorg-menu-grid-320 ul{margin:8px 0 0;padding-left:18px;color:#cbd5e1}.reorg-list-320{display:grid;gap:10px}.reorg-list-320 small,.reorg-docs-320 small{display:block;color:#8db0bb;margin-top:5px}
 .reorg-table-320{width:100%;border-collapse:collapse}.reorg-table-320 th,.reorg-table-320 td{border:1px solid #245366;padding:8px;text-align:left;vertical-align:top}.reorg-table-320 tr.ok{background:#071b12}.reorg-table-320 tr.warn{background:#241b07}
 @media(max-width:900px){.reorg-kpis-320,.reorg-menu-grid-320,.reorg-docs-320{grid-template-columns:1fr}}
+
+/* v3.2.1 · Limpieza de menú y auditoría */
+.clean-list-321{list-style:none;padding:0;display:grid;gap:10px}
+.clean-list-321 li{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px;color:#dbeafe}
+.menu-clean-321 .folder-panel{border-color:#22c55e}
