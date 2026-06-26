@@ -1,22 +1,17 @@
-# GIAE Chile v3.1.0 - Inspector Inteligente
+# GIAE Chile v3.2.0 - Reorganización de Arquitectura
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v3.0.0 Arquitectura Unificada.
-
-## Mejora
-Nuevo Inspector Inteligente.
+Base: GIAE Chile v3.1.0 Inspector Inteligente.
 
 ## Funciones
-- Salud arquitectónica.
-- Detección de funciones grandes o complejas.
-- Detección simple de funciones similares.
-- Detección simple de posible código muerto.
-- Detección simple de llamadas circulares.
-- Revisión de APIs críticas.
-- Recomendaciones priorizadas.
-- Informe HTML descargable.
+- Detecta duplicados visibles del menú.
+- Propone menú por categorías.
+- Revisa documentos estándar pendientes.
+- Detecta documentos heredados.
+- Genera plan de limpieza seguro.
+- Reporte HTML descargable.
+- Registro de estándar de menú.
 
-## Importante
-El Inspector no modifica ni elimina código.
-Solo entrega recomendaciones para evitar romper GIAE.
+## Regla
+No eliminar funciones automáticamente. Toda limpieza debe hacerse con respaldo, prueba y compatibilidad.
