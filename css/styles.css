@@ -919,3 +919,11 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .audit-kpis-300{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.audit-kpis-300 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}.audit-kpis-300 b{font-size:22px;color:#8cffad}.audit-kpis-300 small{display:block;color:#8db0bb;margin-top:4px}
 .audit-table-300{width:100%;border-collapse:collapse}.audit-table-300 th,.audit-table-300 td{border:1px solid #245366;padding:8px;text-align:left;vertical-align:top}.audit-table-300 tr.ok{background:#071b12}
 @media(max-width:900px){.audit-kpis-300{grid-template-columns:1fr}}
+
+/* v3.1.0 · Inspector Inteligente */
+.inspector-tabs-310{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.inspector-panel-310{border:1px solid #245366;background:#061017;border-radius:16px;padding:16px;margin:16px 0}
+.inspector-kpis-310{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.inspector-kpis-310 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}.inspector-kpis-310 b{font-size:22px;color:#8cffad}.inspector-kpis-310 small{display:block;color:#8db0bb;margin-top:4px}
+.inspector-prioridad-310{display:grid;gap:8px}.inspector-prioridad-310 li{border:1px solid #245366;background:#07131c;border-radius:10px;padding:10px}
+.inspector-table-310{width:100%;border-collapse:collapse}.inspector-table-310 th,.inspector-table-310 td{border:1px solid #245366;padding:8px;text-align:left;vertical-align:top}.inspector-table-310 tr.ok{background:#071b12}.inspector-table-310 tr.warn{background:#241b07}.inspector-table-310 code{color:#8cffad}
+.inspector-list-310{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-height:620px;overflow:auto}.inspector-list-310 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:10px}.inspector-list-310 article.warn{border-color:#eab308;background:#241b07}.inspector-list-310 small{display:block;color:#8db0bb;margin-top:5px}
+@media(max-width:900px){.inspector-kpis-310,.inspector-list-310{grid-template-columns:1fr}}

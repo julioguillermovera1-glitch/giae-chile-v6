@@ -1,21 +1,22 @@
-# GIAE Chile v3.0.0 - Arquitectura Unificada
+# GIAE Chile v3.1.0 - Inspector Inteligente
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.9.1 Smart Audit Engine.
+Base: GIAE Chile v3.0.0 Arquitectura Unificada.
 
-## Objetivo
-Consolidar la arquitectura y unificar la auditoría legal/técnica con Smart Audit en un único centro de auditoría.
+## Mejora
+Nuevo Inspector Inteligente.
 
-## Cambios
-- Auditoría Unificada.
-- Explicación del puntaje.
-- Detección de duplicados de menú.
-- Consolidación de código, licencias, documentos y reportes.
-- Registro de arquitectura limpia para serie 3.x.
+## Funciones
+- Salud arquitectónica.
+- Detección de funciones grandes o complejas.
+- Detección simple de funciones similares.
+- Detección simple de posible código muerto.
+- Detección simple de llamadas circulares.
+- Revisión de APIs críticas.
+- Recomendaciones priorizadas.
+- Informe HTML descargable.
 
-## Reglas
-- Evitar módulos duplicados.
-- Nuevas funciones deben conectarse al GIAE Core.
-- Toda versión debe pasar Control Center y Auditoría Unificada.
-- Código original y sin copia deliberada de material protegido.
+## Importante
+El Inspector no modifica ni elimina código.
+Solo entrega recomendaciones para evitar romper GIAE.
