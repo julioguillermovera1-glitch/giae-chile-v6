@@ -5652,68 +5652,35 @@ window.addEventListener("resize",activarMenuAdaptable259);
 
 
 
-/* v3.2.4 · Pantalla Única Responsiva
-   Evita que la página completa baje al abrir módulos. Solo el panel central puede hacer scroll interno. */
+/* v3.2.4 SAFE · Pantalla Modular Segura
+   No bloquea body ni reemplaza rutas críticas. Solo ajusta scroll y vista. */
 (function(){
-  function activarPantallaUnica324(){
-    document.body.classList.add("giae-single-page-324");
-    document.documentElement.classList.add("giae-single-page-324");
-    const main = document.querySelector(".main") || document.querySelector("main") || document.querySelector(".content");
-    if(main) main.classList.add("giae-main-324");
-    const view=document.getElementById("moduleView");
-    if(view) view.classList.add("giae-panel-324");
-  }
-
-  function limpiarYFijar324(id){
-    activarPantallaUnica324();
+  function safePanel324(){
+    document.body.classList.add("giae-safe-panel-324");
     const view=document.getElementById("moduleView");
     if(view){
-      view.classList.add("giae-panel-324");
+      view.classList.add("safe-panel-324");
       view.scrollTop=0;
     }
-    const candidates=[
-      document.querySelector(".main"),
-      document.querySelector("main"),
-      document.querySelector(".content"),
-      document.querySelector(".app-main"),
-      document.querySelector(".workspace")
-    ].filter(Boolean);
-    candidates.forEach(el=>{try{el.scrollTop=0;}catch(e){}});
-    try{window.scrollTo(0,0);}catch(e){}
-    document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.id===id));
   }
 
-  const openPrev324 = openModule;
+  const prevOpen324 = openModule;
   window.openModule = openModule = function(id){
-    limpiarYFijar324(id);
-    const r=openPrev324(id);
-    setTimeout(()=>{
-      limpiarYFijar324(id);
+    const r = prevOpen324(id);
+    setTimeout(function(){
+      safePanel324();
       const view=document.getElementById("moduleView");
-      if(view && !view.querySelector(".single-page-label-324")){
-        const title=(modules.find(m=>m.id===id)||{}).label||id;
-        view.insertAdjacentHTML("afterbegin",`
-          <div class="single-page-label-324">
-            <b>${title}</b>
-            <span>Pantalla única · ${APP_VERSION}</span>
-          </div>`);
-      }
-    },40);
+      if(view){ view.scrollTop=0; }
+      try{ window.scrollTo(0,0); }catch(e){}
+      document.querySelectorAll(".nav-btn").forEach(function(b){
+        b.classList.toggle("active", b.dataset.id===id);
+      });
+    },30);
     return r;
   };
 
-  const renderInicioPrev324 = typeof renderInicio === "function" ? renderInicio : null;
-  if(renderInicioPrev324){
-    window.renderInicio = renderInicio = function(){
-      activarPantallaUnica324();
-      const r=renderInicioPrev324();
-      setTimeout(()=>{try{window.scrollTo(0,0);}catch(e){}},20);
-      return r;
-    };
-  }
-
-  window.addEventListener("resize",activarPantallaUnica324);
-  document.addEventListener("DOMContentLoaded",activarPantallaUnica324);
-  setTimeout(activarPantallaUnica324,80);
+  document.addEventListener("DOMContentLoaded",safePanel324);
+  window.addEventListener("resize",safePanel324);
+  setTimeout(safePanel324,80);
 })();
 
