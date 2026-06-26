@@ -951,3 +951,44 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .core-map-322 b{display:block;margin-bottom:6px}
 .core-map-322 span{color:#b8c7d1}
 @media(max-width:900px){.core-grid-322,.core-map-322{grid-template-columns:1fr}}
+
+/* v3.2.3 · Vista Modular Limpia */
+.giae-modular-clean-323 #moduleView{
+  min-height:calc(100vh - 120px);
+  max-height:none;
+  overflow:visible;
+}
+.modular-screen-323{
+  border:1px solid #16a34a!important;
+  border-radius:18px!important;
+  padding:18px!important;
+  background:linear-gradient(180deg,rgba(0,35,22,.92),rgba(0,18,28,.96))!important;
+}
+.modular-topbar-323{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  margin:-4px 0 18px 0;
+  border:1px solid #245366;
+  border-radius:14px;
+  background:rgba(3,15,25,.96);
+  backdrop-filter:blur(8px);
+}
+.modular-topbar-323 strong{display:block;font-size:18px;color:#e7fff0}
+.modular-topbar-323 small{display:block;color:#8db0bb;margin-top:3px}
+.giae-modular-clean-323 .nav-btn.active{
+  background:#16a34a!important;
+  color:#fff!important;
+  box-shadow:0 0 0 1px rgba(34,197,94,.45),0 10px 28px rgba(22,163,74,.18);
+}
+.giae-modular-clean-323 .module-view:not(.show){
+  display:none!important;
+}
+@media(max-width:900px){
+  .modular-topbar-323{position:relative;flex-direction:column;align-items:flex-start}
+}
