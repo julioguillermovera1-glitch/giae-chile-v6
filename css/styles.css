@@ -898,3 +898,11 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .core-logs-275,.core-storage-275,.core-versions-275{display:grid;gap:10px;max-height:540px;overflow:auto}.core-logs-275 p{margin:0;color:#cbd5e1;word-break:break-word}
 .core-settings-275{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.core-settings-275 label{display:grid;gap:6px}.core-settings-275 input,.core-settings-275 select{background:#061017;color:#fff;border:1px solid #245366;border-radius:10px;padding:10px;width:100%}.core-settings-275 button{grid-column:1/-1}
 @media(max-width:900px){.core-api-grid-275,.core-settings-275{grid-template-columns:1fr}}
+
+/* v2.9.0 · Auditoría Legal y Técnica */
+.audit-tabs-290{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.audit-panel-290{border:1px solid #245366;background:#061017;border-radius:16px;padding:16px;margin:16px 0}
+.audit-kpis-290{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.audit-kpis-290 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}.audit-kpis-290 b{font-size:22px;color:#8cffad}.audit-kpis-290 small{display:block;color:#8db0bb;margin-top:4px}
+.audit-table-290{width:100%;border-collapse:collapse;font-size:13px}.audit-table-290 th,.audit-table-290 td{border:1px solid #245366;padding:8px;text-align:left;vertical-align:top}.audit-table-290 tr.alto{background:#240707}.audit-table-290 tr.medio{background:#241b07}.audit-table-290 tr.bajo{background:#071b12}.audit-table-290 code{color:#8cffad}
+.audit-mods-290,.audit-docs-290{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.audit-mods-290 article,.audit-docs-290 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}.audit-mods-290 article.alto{border-color:#ef4444;background:#240707}.audit-mods-290 article.medio{border-color:#eab308;background:#241b07}.audit-mods-290 article.bajo{border-color:#22c55e;background:#071b12}.audit-mods-290 small,.audit-docs-290 small{display:block;color:#8db0bb;margin:5px 0}
+.audit-reglas-290{display:grid;gap:8px}.audit-reglas-290 li{border:1px solid #245366;background:#07131c;border-radius:10px;padding:10px}
+@media(max-width:900px){.audit-kpis-290,.audit-mods-290,.audit-docs-290{grid-template-columns:1fr}}
