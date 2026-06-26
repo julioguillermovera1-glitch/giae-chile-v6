@@ -992,3 +992,47 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 @media(max-width:900px){
   .modular-topbar-323{position:relative;flex-direction:column;align-items:flex-start}
 }
+
+/* v3.2.4 SAFE · Pantalla Modular Segura */
+.giae-safe-panel-324 #moduleView.safe-panel-324{
+  max-height:calc(100vh - 120px);
+  overflow-y:auto;
+  overflow-x:hidden;
+  scroll-behavior:smooth;
+  padding-bottom:80px;
+}
+.giae-safe-panel-324 .module-view.show{
+  display:block;
+}
+.giae-safe-panel-324 .nav-btn.active{
+  background:#16a34a!important;
+  color:#fff!important;
+}
+@media(max-width:900px){
+  .giae-safe-panel-324 #moduleView.safe-panel-324{
+    max-height:none;
+    overflow:visible;
+  }
+}
+
+/* v3.2.4 SAFE · Pantalla Modular Segura */
+.giae-safe-panel-324 #moduleView.safe-panel-324{
+  max-height:calc(100vh - 120px);
+  overflow-y:auto;
+  overflow-x:hidden;
+  scroll-behavior:smooth;
+  padding-bottom:80px;
+}
+.giae-safe-panel-324 .module-view.show{
+  display:block;
+}
+.giae-safe-panel-324 .nav-btn.active{
+  background:#16a34a!important;
+  color:#fff!important;
+}
+@media(max-width:900px){
+  .giae-safe-panel-324 #moduleView.safe-panel-324{
+    max-height:none;
+    overflow:visible;
+  }
+}

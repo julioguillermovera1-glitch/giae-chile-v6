@@ -1,20 +1,19 @@
-# GIAE Chile v3.2.3 - Vista Modular Limpia
+# GIAE Chile v3.2.4 SAFE - Pantalla Modular Segura
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v3.2.2 Orden del Core.
+Base: GIAE Chile v3.2.3 Vista Modular Limpia.
 
-## Mejora
-Versión de mantenimiento 3.2.x enfocada en experiencia de usuario.
+## Corrección
+Se revierte el cambio agresivo que bloqueaba el body y rompía los botones.
 
 ## Cambios
-- Cada módulo se abre como pantalla independiente.
-- Se limpia la vista anterior al cambiar de módulo.
-- El usuario no queda perdido en una página larga.
-- Motores internos siguen agrupados dentro de GIAE Core.
-- Inspector y Reorganización quedan bajo Auditoría Inteligente.
-- No se elimina lógica ni funciones existentes.
-- Mantiene compatibilidad con rutas anteriores.
+- Los botones vuelven a funcionar usando el sistema original.
+- Cada módulo intenta mantenerse dentro de su panel.
+- El scroll queda dentro del módulo cuando la pantalla lo permite.
+- No se bloquea la página completa.
+- No se reemplazan rutas críticas.
+- No se borra lógica ni funciones.
 
-## Regla aplicada
-Un módulo visible a la vez para evitar confusión.
+## Nota
+Esta es una versión segura para reemplazar la v3.2.4 anterior.
