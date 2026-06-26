@@ -1,21 +1,15 @@
-# GIAE Chile v3.4.0 - Adaptive Workspace
+# GIAE Chile v3.5.0 - Professional Dashboard
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v3.3.0 Workspace Engine.
+Base: GIAE Chile v3.4.0 Adaptive Workspace.
 
 ## Mejora
-Optimización visual y responsiva del Workspace.
+Inicio profesional sin accesos rápidos duplicados.
 
 ## Cambios
-- Inicio mejor centrado y ajustado a pantalla.
-- Módulos más compactos.
-- Workspace ocupa mejor el alto útil del monitor.
-- Menos espacios vacíos.
-- Tarjetas y paneles más adaptables.
-- Menú lateral permanece fijo.
+- Dashboard profesional.
+- Menú lateral como único sistema de navegación.
+- Se ocultan accesos rápidos duplicados del inicio.
+- Se muestra estado del sistema, normativa, base local, distribuidoras y núcleo GIAE.
 - No se modifica la lógica eléctrica ni normativa.
-- No se eliminan funciones.
-
-## Objetivo
-Que GIAE se sienta como una aplicación profesional y no como una página web larga.
