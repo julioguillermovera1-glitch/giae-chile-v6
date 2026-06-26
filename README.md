@@ -1,19 +1,26 @@
-# GIAE Chile v3.2.4 SAFE - Pantalla Modular Segura
+# GIAE Chile v3.3.0 - Workspace Engine
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v3.2.3 Vista Modular Limpia.
+Base estable: GIAE Chile v3.2.2 Orden del Core.
 
-## Corrección
-Se revierte el cambio agresivo que bloqueaba el body y rompía los botones.
+## Cambio principal
+Nueva arquitectura de interfaz tipo aplicación.
 
-## Cambios
-- Los botones vuelven a funcionar usando el sistema original.
-- Cada módulo intenta mantenerse dentro de su panel.
-- El scroll queda dentro del módulo cuando la pantalla lo permite.
-- No se bloquea la página completa.
-- No se reemplazan rutas críticas.
-- No se borra lógica ni funciones.
+## Qué corrige
+- El usuario ya no debe bajar con la rueda del mouse para encontrar el módulo.
+- Inicio y módulos quedan separados.
+- Solo hay un módulo activo a la vez.
+- El menú lateral queda fijo.
+- El contenido cambia en el Workspace central.
+- Los motores internos quedan ocultos del menú y agrupados en GIAE Core.
+- Inspector y Reorganización quedan agrupados en Auditoría Inteligente.
 
-## Nota
-Esta es una versión segura para reemplazar la v3.2.4 anterior.
+## Seguridad de la actualización
+- No elimina funciones.
+- No elimina rutas antiguas.
+- No toca los cálculos eléctricos existentes.
+- Mantiene compatibilidad con módulos anteriores.
+
+## Regla aplicada
+Workspace Engine no es un parche visual: es la base de navegación para la serie 3.3.x.
