@@ -1,23 +1,21 @@
-# GIAE Chile v2.9.1 - Smart Audit Engine
+# GIAE Chile v3.0.0 - Arquitectura Unificada
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v2.9.0 Auditoría Legal y Técnica.
+Base: GIAE Chile v2.9.1 Smart Audit Engine.
 
-## Mejora
-Nuevo Smart Audit Engine.
+## Objetivo
+Consolidar la arquitectura y unificar la auditoría legal/técnica con Smart Audit en un único centro de auditoría.
 
-## Funciones
-- Auditoría real del paquete usando manifiesto interno.
-- Conteo de archivos y funciones.
-- Detección de funciones duplicadas por nombre.
-- Detección simple de funciones posiblemente sin uso.
-- Detección de señales de librerías externas.
-- Revisión de recursos gráficos y fuentes.
-- Revisión de marcas TODO/FIXME/pendiente/licencia.
-- Revisión de APIs críticas.
-- Reporte HTML descargable.
+## Cambios
+- Auditoría Unificada.
+- Explicación del puntaje.
+- Detección de duplicados de menú.
+- Consolidación de código, licencias, documentos y reportes.
+- Registro de arquitectura limpia para serie 3.x.
 
-## Importante
-No reemplaza revisión humana ni asesoría legal.
-Sirve para encontrar señales de riesgo y priorizar limpieza técnica.
+## Reglas
+- Evitar módulos duplicados.
+- Nuevas funciones deben conectarse al GIAE Core.
+- Toda versión debe pasar Control Center y Auditoría Unificada.
+- Código original y sin copia deliberada de material protegido.
