@@ -906,3 +906,10 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 .audit-mods-290,.audit-docs-290{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.audit-mods-290 article,.audit-docs-290 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}.audit-mods-290 article.alto{border-color:#ef4444;background:#240707}.audit-mods-290 article.medio{border-color:#eab308;background:#241b07}.audit-mods-290 article.bajo{border-color:#22c55e;background:#071b12}.audit-mods-290 small,.audit-docs-290 small{display:block;color:#8db0bb;margin:5px 0}
 .audit-reglas-290{display:grid;gap:8px}.audit-reglas-290 li{border:1px solid #245366;background:#07131c;border-radius:10px;padding:10px}
 @media(max-width:900px){.audit-kpis-290,.audit-mods-290,.audit-docs-290{grid-template-columns:1fr}}
+
+/* v2.9.1 · Smart Audit Engine */
+.smart-tabs-291{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.smart-panel-291{border:1px solid #245366;background:#061017;border-radius:16px;padding:16px;margin:16px 0}
+.smart-kpis-291{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.smart-kpis-291 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:12px}.smart-kpis-291 b{font-size:22px;color:#8cffad}.smart-kpis-291 small{display:block;color:#8db0bb;margin-top:4px}
+.smart-list-291{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-height:620px;overflow:auto}.smart-list-291 article{border:1px solid #245366;background:#07131c;border-radius:12px;padding:10px}.smart-list-291 article.warn{border-color:#eab308;background:#241b07}.smart-list-291 article.danger{border-color:#ef4444;background:#240707}.smart-list-291 small{display:block;color:#8db0bb;margin-top:5px}
+.smart-table-291{width:100%;border-collapse:collapse;font-size:13px}.smart-table-291 th,.smart-table-291 td{border:1px solid #245366;padding:8px;text-align:left;vertical-align:top}.smart-table-291 tr.ok{background:#071b12}.smart-table-291 tr.warn{background:#241b07}.smart-table-291 code{color:#8cffad}
+@media(max-width:900px){.smart-kpis-291,.smart-list-291{grid-template-columns:1fr}}
