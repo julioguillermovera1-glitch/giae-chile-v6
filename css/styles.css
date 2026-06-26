@@ -992,3 +992,83 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 @media(max-width:900px){
   .modular-topbar-323{position:relative;flex-direction:column;align-items:flex-start}
 }
+
+/* v3.2.4 · Pantalla Única Responsiva */
+html.giae-single-page-324,
+body.giae-single-page-324{
+  height:100vh!important;
+  overflow:hidden!important;
+}
+body.giae-single-page-324{
+  position:fixed!important;
+  inset:0!important;
+  width:100%!important;
+}
+.giae-single-page-324 .app,
+.giae-single-page-324 .layout,
+.giae-single-page-324 .shell{
+  height:100vh!important;
+  max-height:100vh!important;
+  overflow:hidden!important;
+}
+.giae-main-324,
+.giae-single-page-324 main,
+.giae-single-page-324 .main,
+.giae-single-page-324 .content,
+.giae-single-page-324 .workspace{
+  height:100vh!important;
+  max-height:100vh!important;
+  overflow:hidden!important;
+}
+.giae-panel-324,
+.giae-single-page-324 #moduleView{
+  height:calc(100vh - 92px)!important;
+  max-height:calc(100vh - 92px)!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  scroll-behavior:smooth;
+  padding-bottom:90px!important;
+}
+.giae-single-page-324 .hero,
+.giae-single-page-324 .welcome,
+.giae-single-page-324 .dashboard-hero{
+  max-height:28vh;
+  overflow:hidden;
+}
+.single-page-label-324{
+  position:sticky;
+  top:0;
+  z-index:30;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin:0 0 12px 0;
+  padding:10px 12px;
+  border:1px solid #245366;
+  border-radius:12px;
+  background:rgba(3,15,25,.96);
+  backdrop-filter:blur(8px);
+}
+.single-page-label-324 b{color:#e7fff0;font-size:16px}
+.single-page-label-324 span{color:#8db0bb;font-size:12px}
+.giae-single-page-324 .sidebar,
+.giae-single-page-324 aside,
+.giae-single-page-324 .side{
+  height:100vh!important;
+  max-height:100vh!important;
+  overflow-y:auto!important;
+}
+@media(max-width:900px){
+  html.giae-single-page-324,
+  body.giae-single-page-324{
+    position:relative!important;
+    height:auto!important;
+    overflow:auto!important;
+  }
+  .giae-single-page-324 #moduleView{
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+}

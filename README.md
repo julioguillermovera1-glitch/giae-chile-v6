@@ -1,20 +1,20 @@
-# GIAE Chile v3.2.3 - Vista Modular Limpia
+# GIAE Chile v3.2.4 - Pantalla Única Responsiva
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v3.2.2 Orden del Core.
+Base: GIAE Chile v3.2.3 Vista Modular Limpia.
 
 ## Mejora
-Versión de mantenimiento 3.2.x enfocada en experiencia de usuario.
+Versión de mantenimiento para que GIAE se comporte como una aplicación web de pantalla única.
 
 ## Cambios
-- Cada módulo se abre como pantalla independiente.
-- Se limpia la vista anterior al cambiar de módulo.
-- El usuario no queda perdido en una página larga.
-- Motores internos siguen agrupados dentro de GIAE Core.
-- Inspector y Reorganización quedan bajo Auditoría Inteligente.
-- No se elimina lógica ni funciones existentes.
-- Mantiene compatibilidad con rutas anteriores.
+- La página principal ya no baja completa al abrir módulos.
+- Cada módulo queda dentro de una pantalla/panel propio.
+- El scroll queda dentro del módulo, no en toda la página.
+- El menú lateral se mantiene fijo.
+- El contenido vuelve arriba al cambiar de módulo.
+- La portada se ajusta mejor a la pantalla.
+- No se elimina lógica ni funciones.
 
 ## Regla aplicada
-Un módulo visible a la vez para evitar confusión.
+Una página visible, un módulo activo, navegación limpia.
