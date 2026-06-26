@@ -1,19 +1,19 @@
-# GIAE Chile v3.2.1 - Limpieza de Menú y Auditoría
+# GIAE Chile v3.2.2 - Orden del Core
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v3.2.0 Reorganización de Arquitectura.
+Base: GIAE Chile v3.2.1 Limpieza de Menú y Auditoría.
 
 ## Mejora
-Corrección menor de arquitectura visual.
+Versión de mantenimiento 3.2.x para ordenar el núcleo interno.
 
 ## Cambios
-- Oculta del menú principal módulos duplicados de auditoría.
-- Renombra "Auditoría Unificada" a "Auditoría Inteligente".
-- Renombra la auditoría de expediente a "Revisión Expediente".
-- Mantiene rutas antiguas para compatibilidad.
-- No elimina lógica interna ni rompe módulos existentes.
-- Reorganiza accesos rápidos para evitar duplicados.
+- GIE, Integridad, Knowledge Core, MEI y MNI ya no aparecen como módulos separados en el menú principal.
+- Todos quedan agrupados dentro de GIAE Core.
+- Se mantiene compatibilidad con rutas antiguas.
+- No se elimina lógica ni funciones existentes.
+- Se reduce la confusión visual del menú lateral.
+- Se prepara el sistema para retomar el Motor Eléctrico Inteligente.
 
-## Regla
-Esta versión es de mantenimiento 3.2.x. No agrega módulos nuevos.
+## Regla aplicada
+No se agregan motores nuevos en esta versión. Solo se ordena la arquitectura.
