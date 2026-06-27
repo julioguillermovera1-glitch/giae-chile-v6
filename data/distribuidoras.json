@@ -1,0 +1,213 @@
+{
+  "CGE": {
+    "descripcion": "Expediente orientado a TE1, evidencias fotográficas, punto de red y antecedentes del inmueble.",
+    "documentos": [
+      {
+        "id": "te1",
+        "nombre": "Certificado TE1 SEC aprobado",
+        "obligatorio": true,
+        "detalle": "Debe coincidir dirección y potencia con lo solicitado."
+      },
+      {
+        "id": "fotos",
+        "nombre": "Set fotográfico obligatorio",
+        "obligatorio": true,
+        "detalle": "Caja de empalme, poste, puesta a tierra, camarilla, unión al tablero y vista panorámica."
+      },
+      {
+        "id": "poste",
+        "nombre": "Identificación de punto de red",
+        "obligatorio": true,
+        "detalle": "Número de poste o cámara subterránea cercana."
+      },
+      {
+        "id": "croquis",
+        "nombre": "Croquis de ubicación",
+        "obligatorio": true,
+        "detalle": "Coordenadas o referencias claras."
+      },
+      {
+        "id": "rol",
+        "nombre": "Certificado de Rol SII",
+        "obligatorio": false,
+        "detalle": "Obligatorio en parcelaciones o loteos recientes."
+      },
+      {
+        "id": "numero",
+        "nombre": "Certificado de número municipal",
+        "obligatorio": false,
+        "detalle": "Si el dominio no especifica numeración exacta."
+      },
+      {
+        "id": "medidor",
+        "nombre": "Factura y certificado del medidor",
+        "obligatorio": false,
+        "detalle": "Si el cliente aporta el medidor."
+      },
+      {
+        "id": "empresa",
+        "nombre": "Antecedentes persona jurídica",
+        "obligatorio": false,
+        "detalle": "RUT sociedad, representante legal, vigencias y constitución."
+      }
+    ]
+  },
+  "ENEL": {
+    "descripcion": "Proceso digital con documentos legales, contrato y factibilidad según potencia o red.",
+    "documentos": [
+      {
+        "id": "te1qr",
+        "nombre": "Declaración TE1 SEC con QR",
+        "obligatorio": true,
+        "detalle": "Documento digital verificable."
+      },
+      {
+        "id": "dominio",
+        "nombre": "Certificado de dominio vigente",
+        "obligatorio": true,
+        "detalle": "Antigüedad no mayor a 90 días."
+      },
+      {
+        "id": "numero",
+        "nombre": "Certificado de número municipal",
+        "obligatorio": true,
+        "detalle": "Emitido por DOM."
+      },
+      {
+        "id": "contrato",
+        "nombre": "Contrato de suministro firmado",
+        "obligatorio": true,
+        "detalle": "Firmado por propietario."
+      },
+      {
+        "id": "jurada",
+        "nombre": "Declaración jurada notarial",
+        "obligatorio": false,
+        "detalle": "Si no cuenta temporalmente con dominio inscrito."
+      },
+      {
+        "id": "factibilidad",
+        "nombre": "Formulario de factibilidad técnica",
+        "obligatorio": false,
+        "detalle": "Para potencias altas o red subterránea."
+      },
+      {
+        "id": "fotos",
+        "nombre": "Evidencia fotográfica",
+        "obligatorio": true,
+        "detalle": "Nicho/poste, tubo de bajada y término de obra."
+      }
+    ]
+  },
+  "CHILQUINTA": {
+    "descripcion": "Trámite con fuerte control de representación legal del propietario.",
+    "documentos": [
+      {
+        "id": "anexo_te1",
+        "nombre": "Anexo TE1 SEC",
+        "obligatorio": true,
+        "detalle": "Instalador autorizado vigente."
+      },
+      {
+        "id": "contrato",
+        "nombre": "Contrato de suministro Chilquinta",
+        "obligatorio": true,
+        "detalle": "Firmado por dueño del inmueble."
+      },
+      {
+        "id": "dominio",
+        "nombre": "Certificado de dominio vigente",
+        "obligatorio": true,
+        "detalle": "Copia autorizada CBR."
+      },
+      {
+        "id": "poder",
+        "nombre": "Poder notarial",
+        "obligatorio": false,
+        "detalle": "Si instalador o tercero postula en nombre del propietario."
+      }
+    ]
+  },
+  "COPELEC": {
+    "descripcion": "Requisitos orientados a terreno rural, constructividad local y factibilidad por red cercana.",
+    "documentos": [
+      {
+        "id": "vecino",
+        "nombre": "Número de cuenta de vecino cercano",
+        "obligatorio": true,
+        "detalle": "Referencia para identificar transformador o red cercana."
+      },
+      {
+        "id": "te1",
+        "nombre": "Certificado TE1 SEC",
+        "obligatorio": true,
+        "detalle": "Definitivo o de faena según corresponda."
+      },
+      {
+        "id": "construccion",
+        "nombre": "Acreditación de construcción existente",
+        "obligatorio": true,
+        "detalle": "Para definitivo debe existir construcción/caseta habitable."
+      },
+      {
+        "id": "distancia",
+        "nombre": "Distancia poste-medidor ≤ 30 m",
+        "obligatorio": true,
+        "detalle": "Si supera, requiere revisión especial."
+      },
+      {
+        "id": "camarilla",
+        "nombre": "Camarilla de tierra 160 mm",
+        "obligatorio": true,
+        "detalle": "Requisito constructivo local señalado."
+      },
+      {
+        "id": "tierra",
+        "nombre": "Cañería tierra 20 mm y bajada 25 mm",
+        "obligatorio": true,
+        "detalle": "Requisito constructivo indicado."
+      },
+      {
+        "id": "rol",
+        "nombre": "Certificado de Rol",
+        "obligatorio": true,
+        "detalle": "Especialmente en parcelas/subdivisiones."
+      }
+    ]
+  },
+  "SAESA / FRONTEL": {
+    "descripcion": "Gestión orientada a factibilidad rural, ubicación, fotografías y respaldo de propiedad.",
+    "documentos": [
+      {
+        "id": "te1",
+        "nombre": "TE1 SEC aprobado",
+        "obligatorio": true,
+        "detalle": "Declaración eléctrica autorizada."
+      },
+      {
+        "id": "dominio",
+        "nombre": "Dominio vigente o acreditación de propiedad",
+        "obligatorio": true,
+        "detalle": "Según tipo de solicitud."
+      },
+      {
+        "id": "ubicacion",
+        "nombre": "Croquis / ubicación del empalme",
+        "obligatorio": true,
+        "detalle": "Referencia clara para terreno rural."
+      },
+      {
+        "id": "fotos",
+        "nombre": "Fotografías de obra y punto de conexión",
+        "obligatorio": true,
+        "detalle": "Permite revisión previa."
+      },
+      {
+        "id": "factibilidad",
+        "nombre": "Factibilidad técnica",
+        "obligatorio": false,
+        "detalle": "Según potencia, distancia y condiciones de red."
+      }
+    ]
+  }
+}
