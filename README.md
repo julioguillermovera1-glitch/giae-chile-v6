@@ -1,11 +1,16 @@
-# GIAE Chile v4.0.1 - Portada Reparada
+# GIAE Chile v4.0.2 - Inicio Limpio
 
 Creado por Julio Vera Concha.
 
-## Corrección
-- Repara la portada de Inicio que quedaba cortada.
-- Fuerza la portada oficial programada en el módulo Inicio.
-- Mantiene el botón de educación a pueblos originarios debajo de Inicio.
-- Mantiene panel de personas conectadas.
-- Mantiene pie de página: Diseñado por Julio Vera Concha | © 2026 GIAE CHILE | Todos los derechos reservados.
+## Reparación
+Esta versión elimina las capas antiguas que quedaban superpuestas sobre Inicio.
+
+## Cambios
+- Base estable desde v3.5.0.
+- Limpieza total del DOM de Inicio antes de renderizar portada.
+- Portada oficial limpia, sin imagen negra sobrepuesta.
+- Botón educativo bajo Inicio.
+- Módulo educativo independiente.
+- Panel de personas conectadas.
+- Pie de página con derechos reservados.
 - JavaScript probado correctamente.
