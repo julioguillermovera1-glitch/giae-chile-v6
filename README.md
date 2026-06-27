@@ -1,18 +1,15 @@
-# GIAE Chile v4.0.5 - Portada Estable
+# GIAE Chile v4.0.6 - Inicio Quirúrgico
 
 Creado por Julio Vera Concha.
 
 ## Reparación
-Esta versión vuelve a la portada visual estable de v3.5.0 y elimina los intentos experimentales de reescribir Inicio.
+Esta versión elimina de raíz los motores duplicados que pisaban la pantalla Inicio.
 
 ## Cambios
-- No se reemplaza el Inicio con capas nuevas.
-- Se conserva la portada estable original.
-- Se agrega el botón: Educar e informar a pueblos originarios.
-- El módulo educativo se abre como pantalla independiente.
-- Se actualiza versión a v4.0.5.
+- Se elimina/desactiva Workspace Engine sobre Inicio.
+- Se elimina/desactiva Professional Dashboard sobre Inicio.
+- Se elimina/desactiva Adaptive Workspace sobre Inicio.
+- El botón Inicio muestra solo la portada HTML original.
+- El módulo educativo se mantiene como módulo independiente.
 - No se toca la lógica eléctrica ni normativa.
 - JavaScript probado correctamente.
-
-## Motivo
-El problema anterior era que el Inicio viejo se renderizaba encima de la portada nueva. Esta versión evita esa pelea: usa el Inicio estable como base y agrega solamente el módulo educativo.

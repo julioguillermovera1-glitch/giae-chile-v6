@@ -1192,7 +1192,7 @@ body.workspace-active-330.adaptive-workspace-340 #moduleView.workspace-panel-330
 @media(max-width:1200px){.dash-kpis-350,.dash-grid-350{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.professional-home-350{height:auto!important;max-height:none!important;margin:12px!important}.dash-hero-350{flex-direction:column;align-items:flex-start}.dash-kpis-350,.dash-grid-350{grid-template-columns:1fr}}
 
-/* v4.0.5 · Módulo educativo sin tocar portada */
+/* 4.0.6 · Módulo educativo sin tocar portada */
 .educacion405-view .edu405-hero{
   border:1px solid #245366;
   border-radius:18px;
@@ -1236,4 +1236,79 @@ body.workspace-active-330.adaptive-workspace-340 #moduleView.workspace-panel-330
 }
 @media(max-width:900px){
   .edu405-grid{grid-template-columns:1fr}
+}
+
+/* v4.0.6 · Inicio Quirúrgico */
+body.inicio-seguro-406 .hero,
+body.inicio-seguro-406 .kpis,
+body.inicio-seguro-406 .grid{
+  display:grid;
+}
+body.inicio-seguro-406 .hero{
+  display:flex;
+}
+body.inicio-seguro-406 #moduleView{
+  display:none!important;
+}
+.educacion406-view{
+  display:block!important;
+  margin:0 34px 88px!important;
+}
+.educacion406-view .workspace-header-330{
+  border:1px solid #1d4656;
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:14px;
+  background:#071923c7;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.educacion406-view .workspace-header-330 small{
+  display:block;
+  color:#8db0bb;
+  margin-top:4px;
+}
+.educacion406-view .edu406-hero{
+  border:1px solid #245366;
+  border-radius:18px;
+  padding:28px;
+  margin-bottom:14px;
+  background:radial-gradient(circle at 20% 20%,rgba(34,197,94,.18),transparent 35%),linear-gradient(135deg,rgba(8,20,34,.96),rgba(14,8,38,.96));
+}
+.educacion406-view .edu406-hero span{
+  color:#8cffad;
+  border:1px solid #245366;
+  border-radius:999px;
+  padding:6px 10px;
+}
+.educacion406-view .edu406-hero h1{
+  color:#e7fff0;
+  font-size:42px;
+  margin:18px 0 8px;
+}
+.educacion406-view .edu406-hero p{
+  color:#dbeafe;
+  max-width:900px;
+  font-size:17px;
+}
+.edu406-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.edu406-grid article{
+  border:1px solid #245366;
+  background:#07131c;
+  border-radius:14px;
+  padding:16px;
+  color:#dbeafe;
+}
+.edu406-grid h3{
+  color:#e7fff0;
+  margin-top:0;
+}
+@media(max-width:900px){
+  .edu406-grid{grid-template-columns:1fr}
 }
