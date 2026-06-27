@@ -1,11 +1,10 @@
-# GIAE Chile v4.0.3 - Inicio Estable
+# GIAE Chile v4.0.4 - Inicio Real Reparado
 
 Creado por Julio Vera Concha.
 
-## Corrección
-- Repara el problema donde Inicio aparecía y luego se ponía negro.
-- Agrega Home Lock para impedir que scripts antiguos sobrescriban la portada.
-- Mantiene botón educativo bajo Inicio.
-- Mantiene módulo educativo independiente.
-- Mantiene panel de conectados y footer.
+## Reparación real
+- Se desactivan llamadas automáticas antiguas a openModule("inicio").
+- Inicio se monta en un contenedor propio #giaeHome404.
+- Si un render antiguo intenta pisarlo, se restaura automáticamente.
+- Botón educativo bajo Inicio.
 - JavaScript probado correctamente.
