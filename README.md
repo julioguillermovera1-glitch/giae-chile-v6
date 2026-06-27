@@ -1,14 +1,11 @@
-# GIAE Chile v4.0.0 - Portada Oficial y Educación
+# GIAE Chile v4.0.1 - Portada Reparada
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v3.5.0.
-
-## Cambios
-- Nueva portada oficial programada en HTML/CSS/JS.
-- Se mantiene identidad profesional de GIAE.
-- Se agrega botón en menú: Educar e informar a pueblos originarios.
-- El botón abre un módulo independiente de educación eléctrica comunitaria.
-- Panel de personas conectadas con vista de detalle.
-- Pie de página: Diseñado por Julio Vera Concha © 2026 GIAE CHILE | Todos los derechos reservados.
-- No se elimina lógica eléctrica ni normativa existente.
+## Corrección
+- Repara la portada de Inicio que quedaba cortada.
+- Fuerza la portada oficial programada en el módulo Inicio.
+- Mantiene el botón de educación a pueblos originarios debajo de Inicio.
+- Mantiene panel de personas conectadas.
+- Mantiene pie de página: Diseñado por Julio Vera Concha | © 2026 GIAE CHILE | Todos los derechos reservados.
+- JavaScript probado correctamente.
