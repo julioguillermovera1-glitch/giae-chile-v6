@@ -1,0 +1,22 @@
+{
+  "version": "3.2.5",
+  "nombre": "Limpieza Segura",
+  "base": "GIAE_Chile_v3_2_4_Pantalla_Unica_Responsiva_Julio_Vera.zip",
+  "creador": "Julio Vera Concha",
+  "fecha": "2026-06-27",
+  "acciones": [
+    "indice.html movido a docs/_duplicados_retirados por ser duplicado exacto de index.html.",
+    "Agregados _redirects y _headers para publicación estática en Cloudflare Pages."
+  ],
+  "no_modificado": [
+    "js/app.js",
+    "css/styles.css",
+    "lógica eléctrica",
+    "lógica normativa"
+  ],
+  "cloudflare": {
+    "build_command": "",
+    "build_output_directory": "/",
+    "root_directory": "/"
+  }
+}
