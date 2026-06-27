@@ -1,0 +1,10 @@
+{
+  "name": "GIAE Chile",
+  "short_name": "GIAE",
+  "description": "Software chileno para diseño, cálculo y validación de proyectos eléctricos.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#061017",
+  "theme_color": "#22c55e",
+  "lang": "es-CL"
+}
