@@ -1,1 +1,0 @@
-window.GIAE={version:'2.0.0',step:0,project:{cliente:'Cliente',direccion:'Dirección del proyecto',rut:'',sistema:'monofasico',tension:220,compania:'CGE'},cargas:[{tipo:'Alumbrado',potencia:300,cantidad:4,fp:1},{tipo:'Enchufes',potencia:1500,cantidad:2,fp:1}],tierra:{tipo:'Electrodo vertical',resistencia:10,pe:'Cu 2,5 mm²',union:'Sí considera'}};

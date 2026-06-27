@@ -1,1 +1,0 @@
-function generarCuadro(){const total=calcularTotal();const ib=calcularIb(total.kw,GIAE.project.sistema);const aut=calibreAutomatico(ib,GIAE.project.sistema);const barra=GIAE.project.sistema==='monofasico'?'Barra repartidora bipolar':'Barra repartidora tetrapolar';return{total,ib,aut,barra,polos:GIAE.project.sistema==='monofasico'?'1P+N':'3P+N'};}
