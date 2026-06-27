@@ -13,3 +13,11 @@
 - Se agrega `wrangler.jsonc`.
 - Se agrega `.assetsignore`.
 - Fecha: 2026-06-27.
+
+## v3.2.5.3 – Fix Botones
+- Se agrega parche externo `js/giae-fix-botones.js`.
+- Se reactivan eventos de menú lateral y accesos rápidos.
+- Se aplica cache busting a `js/app.js`.
+- No se modifica `js/app.js`.
+- No se modifica `css/styles.css`.
+- Fecha: 2026-06-27.
