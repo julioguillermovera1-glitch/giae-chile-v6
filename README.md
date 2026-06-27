@@ -1,20 +1,17 @@
-# GIAE Chile v3.2.4 - Pantalla Única Responsiva
+# GIAE Chile v3.2.0 - Reorganización de Arquitectura
 
 Creado por Julio Vera Concha.
 
-Base: GIAE Chile v3.2.3 Vista Modular Limpia.
+Base: GIAE Chile v3.1.0 Inspector Inteligente.
 
-## Mejora
-Versión de mantenimiento para que GIAE se comporte como una aplicación web de pantalla única.
+## Funciones
+- Detecta duplicados visibles del menú.
+- Propone menú por categorías.
+- Revisa documentos estándar pendientes.
+- Detecta documentos heredados.
+- Genera plan de limpieza seguro.
+- Reporte HTML descargable.
+- Registro de estándar de menú.
 
-## Cambios
-- La página principal ya no baja completa al abrir módulos.
-- Cada módulo queda dentro de una pantalla/panel propio.
-- El scroll queda dentro del módulo, no en toda la página.
-- El menú lateral se mantiene fijo.
-- El contenido vuelve arriba al cambiar de módulo.
-- La portada se ajusta mejor a la pantalla.
-- No se elimina lógica ni funciones.
-
-## Regla aplicada
-Una página visible, un módulo activo, navegación limpia.
+## Regla
+No eliminar funciones automáticamente. Toda limpieza debe hacerse con respaldo, prueba y compatibilidad.
