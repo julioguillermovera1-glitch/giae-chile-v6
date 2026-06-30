@@ -92,3 +92,11 @@ Cambios:
 
 Criterio de cierre:
 Al seleccionar un botón del menú lateral, debe abrirse o activarse el módulo correspondiente, no solo cambiar el encabezado.
+
+
+## Etapa 2.7 - Administrador de Proyectos
+Estado: terminada.
+- Biblioteca local de proyectos.
+- Importación/exportación `.giae`.
+- Duplicar, renombrar, archivar y eliminar proyectos.
+- Preparación documental para Cloudflare D1/R2.

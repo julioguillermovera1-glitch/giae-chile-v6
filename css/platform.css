@@ -472,3 +472,25 @@ body{background:var(--bg);}
 .workspace-tab span{font-weight:900}.workspace-tab small{color:#64748b;font-weight:700}.workspace-tab.active{background:#102033;color:white;border-color:#102033}.workspace-tab.active small{color:#d7e4f2}.workspace-tab.minimized{opacity:.78}
 .window-host{position:relative;display:block}.internal-window{display:none}.internal-window.active{display:block}.internal-window.minimized{display:none!important}.module-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}.workspace-title-row{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;margin-bottom:1rem}.workspace-title-row p{margin:.35rem 0 0;color:#526173}.data-table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:white}.data-table-wrap table{margin:0}.status-strip{display:flex;gap:10px;flex-wrap:wrap;margin:.8rem 0}.status-strip span{border:1px solid #d8e3ef;background:#f8fbff;border-radius:999px;padding:.45rem .7rem;font-weight:800;color:#33465f;font-size:.9rem}.form-grid.compact{grid-template-columns:1.4fr .7fr .7fr .7fr .7fr}.muted-panel{background:#f8fbff;border:1px solid var(--line);border-radius:16px;padding:1rem;color:#40536a}.workspace-empty{border:1px dashed #b9c7d8;border-radius:16px;background:#f9fbfd;padding:1.2rem;color:#526173}.module-window .primary-action{background:var(--brand-primary);color:#fff}
 @media(max-width:900px){.form-grid.compact{grid-template-columns:1fr}.workspace-title-row{display:grid}.workspace-tab{min-width:130px}.status-strip{display:grid}.status-strip span{border-radius:12px}}
+
+
+/* Etapa 2.7 · Administrador de proyectos */
+.projects-module .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+.projects-table{width:100%;border-collapse:collapse;min-width:980px;font-size:13px}
+.projects-table th,.projects-table td{border-bottom:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}
+.projects-table th{background:#f5f8fb;color:#27364a;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.projects-table tr:hover td{background:#f8fbff}
+.project-actions-cell{display:flex;gap:6px;flex-wrap:wrap;min-width:240px}
+.project-actions-cell button{border:1px solid var(--line);background:#fff;color:#102033;border-radius:8px;padding:7px 9px;font-weight:700;cursor:pointer}
+.project-actions-cell button:hover{border-color:var(--accent);color:var(--accent)}
+.project-actions-cell .danger-text{color:#9f2626;border-color:#f0c2c2}
+.project-toolbar-card{display:grid;gap:14px}
+.project-search-row label{display:block;font-weight:800;color:#26364f}
+.project-search-row input{margin-top:6px;width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;background:#fff}
+.empty-cell{text-align:center;color:#6c7a89;padding:24px!important}
+.cloud-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.cloud-grid div{border:1px solid var(--line);background:#f8fbff;border-radius:12px;padding:12px}
+.cloud-grid strong{display:block;margin-bottom:6px;color:#102033}
+.cloud-grid span{display:block;color:#526579;font-size:13px;line-height:1.35}
+.muted-note{color:#6c7a89;margin-top:12px}
+@media(max-width:900px){.cloud-grid{grid-template-columns:1fr}.projects-table{min-width:760px}.project-actions-cell{min-width:180px}}

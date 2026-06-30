@@ -1,4 +1,5 @@
 const STORAGE_KEY = "giae_chile_v1_workspace";
+const LIBRARY_KEY = "giae_chile_v1_project_library";
 
 function nowStamp(){
   return new Date().toLocaleString("es-CL");
@@ -12,7 +13,7 @@ function defaultProject(){
   const created = nowStamp();
   return {
     id: createProjectId(),
-    version: "1.0-alpha.025",
+    version: "1.0-alpha.027",
     name: "Proyecto sin nombre",
     code: "",
     client: "",
@@ -57,6 +58,7 @@ function defaultProject(){
 export const state = {
   profile: null,
   currentProject: defaultProject(),
+  projectLibrary: [],
   companyBrand: {
     name: "GIAE Chile",
     logoData: "",
@@ -197,11 +199,143 @@ export function recalculateProject(){
   return p;
 }
 
+
+function projectSummary(project){
+  const p = normalizeProject(project);
+  return {
+    id: p.id,
+    name: p.name,
+    code: p.code || p.id,
+    client: p.client || "",
+    company: p.company || "",
+    installer: p.installer || p.responsible || "",
+    status: p.status || "En desarrollo",
+    distributor: p.distributor || "",
+    supplyType: p.supplyType || "monofasico",
+    installedPowerKw: Number(p.installedPowerKw || 0),
+    commune: p.commune || "",
+    region: p.region || "",
+    updatedAt: p.updatedAt || nowStamp(),
+    createdAt: p.createdAt || nowStamp(),
+    archived: Boolean(p.archived)
+  };
+}
+
+function normalizeLibrary(list){
+  return (Array.isArray(list) ? list : []).map(project => normalizeProject(project));
+}
+
+export function saveCurrentProjectToLibrary(action = "Proyecto guardado en biblioteca local"){
+  recalculateProject();
+  state.projectLibrary = normalizeLibrary(state.projectLibrary);
+  const idx = state.projectLibrary.findIndex(project => project.id === state.currentProject.id);
+  const snapshot = normalizeProject(JSON.parse(JSON.stringify(state.currentProject)));
+  snapshot.updatedAt = nowStamp();
+  if(idx >= 0) state.projectLibrary[idx] = snapshot;
+  else state.projectLibrary.unshift(snapshot);
+  state.projectLibrary = state.projectLibrary
+    .sort((a,b) => String(b.updatedAt).localeCompare(String(a.updatedAt)))
+    .slice(0, 200);
+  addHistory(action, "Proyectos", false);
+  persist();
+  return snapshot;
+}
+
+export function listProjects(options = {}){
+  state.projectLibrary = normalizeLibrary(state.projectLibrary);
+  const includeArchived = Boolean(options.includeArchived);
+  return state.projectLibrary
+    .filter(project => includeArchived || !project.archived)
+    .map(projectSummary);
+}
+
+export function openProject(projectId){
+  state.projectLibrary = normalizeLibrary(state.projectLibrary);
+  const found = state.projectLibrary.find(project => project.id === projectId);
+  if(!found) return false;
+  saveCurrentProjectToLibrary("Proyecto anterior guardado antes de abrir otro");
+  state.currentProject = normalizeProject(JSON.parse(JSON.stringify(found)));
+  addHistory("Proyecto abierto desde administrador local", "Proyectos", false);
+  recalculateProject();
+  persist();
+  return true;
+}
+
+export function duplicateProject(projectId){
+  state.projectLibrary = normalizeLibrary(state.projectLibrary);
+  const source = state.projectLibrary.find(project => project.id === projectId) || state.currentProject;
+  const copy = normalizeProject(JSON.parse(JSON.stringify(source)));
+  copy.id = createProjectId();
+  copy.name = `${copy.name || "Proyecto"} - copia`;
+  copy.code = "";
+  copy.createdAt = nowStamp();
+  copy.updatedAt = nowStamp();
+  copy.history = [{ date: nowStamp(), action: "Proyecto duplicado", module: "Proyectos" }];
+  state.projectLibrary.unshift(copy);
+  persist();
+  return copy;
+}
+
+export function deleteProject(projectId){
+  state.projectLibrary = normalizeLibrary(state.projectLibrary).filter(project => project.id !== projectId);
+  if(state.currentProject.id === projectId) newProject({ name: "Proyecto sin nombre" });
+  persist();
+}
+
+export function archiveProject(projectId){
+  state.projectLibrary = normalizeLibrary(state.projectLibrary).map(project => {
+    if(project.id === projectId){
+      project.archived = true;
+      project.updatedAt = nowStamp();
+    }
+    return project;
+  });
+  persist();
+}
+
+export function renameProject(projectId, name){
+  state.projectLibrary = normalizeLibrary(state.projectLibrary).map(project => {
+    if(project.id === projectId){
+      project.name = name || project.name;
+      project.updatedAt = nowStamp();
+    }
+    return project;
+  });
+  if(state.currentProject.id === projectId){
+    updateProject({ name }, { module: "Proyectos", action: "Proyecto renombrado" });
+  }
+  persist();
+}
+
+export function exportProjectById(projectId){
+  state.projectLibrary = normalizeLibrary(state.projectLibrary);
+  const project = state.projectLibrary.find(project => project.id === projectId) || state.currentProject;
+  return {
+    fileType: "GIAE_PROJECT",
+    fileVersion: "1.0-alpha.027",
+    exportedAt: nowStamp(),
+    author: "Julio Guillermo Vera",
+    project: normalizeProject(project)
+  };
+}
+
+export function importProjectToLibrary(payload, openAfter = true){
+  const incoming = normalizeProject(payload?.project || payload);
+  incoming.updatedAt = nowStamp();
+  incoming.history = incoming.history || [];
+  incoming.history.push({ date: nowStamp(), action: "Proyecto importado a biblioteca local", module: "Proyectos" });
+  state.projectLibrary = normalizeLibrary(state.projectLibrary).filter(project => project.id !== incoming.id);
+  state.projectLibrary.unshift(incoming);
+  if(openAfter) state.currentProject = normalizeProject(JSON.parse(JSON.stringify(incoming)));
+  persist();
+  return incoming;
+}
+
 export function exportProjectFile(){
   recalculateProject();
   return {
     fileType: "GIAE_PROJECT",
-    fileVersion: "1.0-alpha.025",
+    fileVersion: "1.0-alpha.027",
     exportedAt: nowStamp(),
     author: "Julio Guillermo Vera",
     project: state.currentProject
@@ -231,6 +365,7 @@ export function restore() {
     const saved = JSON.parse(raw);
     Object.assign(state, saved);
     state.currentProject = normalizeProject(state.currentProject);
+    state.projectLibrary = normalizeLibrary(state.projectLibrary);
     if(state.normativePolicy?.allowedSources?.includes("DL8")){
       state.normativePolicy.allowedSources = state.normativePolicy.allowedSources.map(x => x === "DL8" ? "DS8" : x);
     }

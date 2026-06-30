@@ -1,5 +1,5 @@
 import { modules, menuGroups } from "./moduleRegistry.js";
-import { restore, setProfile, clearProfile, state, persist, exportProjectFile, importProjectFile } from "./store.js";
+import { restore, setProfile, clearProfile, state, persist, exportProjectFile, importProjectFile, saveCurrentProjectToLibrary } from "./store.js";
 
 const loginView = document.querySelector("#loginView");
 const platformView = document.querySelector("#platformView");
@@ -31,8 +31,8 @@ document.querySelectorAll("[data-profile]").forEach(button => {
 });
 
 document.querySelector("#saveProjectBtn").addEventListener("click", () => {
-  persist();
-  alert("Proyecto guardado localmente en este navegador.");
+  saveCurrentProjectToLibrary();
+  alert("Proyecto guardado en la biblioteca local de este navegador.");
 });
 
 const logoutBtn = document.querySelector("#logoutBtn");

@@ -30,3 +30,7 @@ Incluye:
 ## Norma de desarrollo
 
 GIAE Chile no debe inventar datos técnicos ni normativos. Toda recomendación debe estar respaldada por normativa autorizada: RIC, IEC aplicable a instalaciones eléctricas y DS N°8 cuando corresponda.
+
+
+## Etapa 2.7
+Administrador de Proyectos local agregado. Permite crear, guardar, abrir, duplicar, importar, exportar, archivar y eliminar proyectos `.giae`. La estructura queda preparada para Cloudflare D1/R2.
