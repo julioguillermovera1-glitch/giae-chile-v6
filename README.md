@@ -10,3 +10,8 @@ Nota: los cálculos son preliminares y deben validarse con normativa vigente, me
 
 ## Actualización: Administración de plataforma
 Se agregó el módulo independiente `modules/administracion`, con gestión local de empresa, usuarios, roles, plantillas, módulos activos, respaldo y resumen del proyecto activo. También se agregó el perfil de acceso Administrador.
+
+### Ajuste de marca blanca y normativa estricta
+- Empresas: logo propio, colores propios y plantillas editables de cotización/trabajo.
+- Autoría: Julio Guillermo Vera como autor intelectual y director del proyecto.
+- Motor normativo: modo estricto basado solo en RIC, IEC y Decreto de Ley N°8 de Chile. Sin datos inventados.

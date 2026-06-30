@@ -24,7 +24,14 @@ function ensureAdminData(state){
     phone: "",
     email: "",
     logoName: "Logo interno GIAE",
-    logoData: ""
+    logoData: "",
+    brand: {
+      name: state.currentProject.company || "GIAE Chile",
+      primaryColor: "#102033",
+      accentColor: "#1456a0",
+      backgroundColor: "#eef3f8",
+      templateStyle: "tecnico"
+    }
   };
   state.admin.users = state.admin.users || [
     { name: "Administrador general", email: "admin@giae.local", role: "Administrador", profile: "administrador", status: "Activo" },
@@ -35,8 +42,9 @@ function ensureAdminData(state){
     { name: "Administrador", profile: "administrador", status: state.profile === "administrador" ? "Conectado" : "Desconectado", lastSeen: new Date().toLocaleString("es-CL") }
   ];
   state.admin.templates = state.admin.templates || [
-    { name: "Cotización estándar", type: "Presupuesto", status: "Activa" },
-    { name: "Informe técnico", type: "Informe", status: "Activa" }
+    { name: "Cotización estándar", type: "Presupuesto", status: "Activa", content: "Cotización técnica\nCliente: {{cliente}}\nProyecto: {{proyecto}}\nTotal: {{total}}" },
+    { name: "Orden de trabajo", type: "Trabajo", status: "Activa", content: "Orden de trabajo\nResponsable: {{instalador}}\nActividad: {{actividad}}" },
+    { name: "Informe técnico", type: "Informe", status: "Activa", content: "Informe técnico\nProyecto: {{proyecto}}\nObservaciones: {{observaciones}}" }
   ];
   state.admin.enabledModules = state.admin.enabledModules || Object.fromEntries(Object.keys(moduleLabels).map(key => [key, true]));
   state.admin.auditLog = state.admin.auditLog || [];
@@ -121,6 +129,18 @@ export function render(host, state){
             <div id="admLogoPreview">${state.admin.company.logoData ? `<img src="${state.admin.company.logoData}" alt="Logo empresa">` : defaultLogo()}</div>
             <p>Logo actual: <b id="admLogoName">${escapeHtml(state.admin.company.logoName)}</b></p>
           </div>
+          <h4>Colores corporativos de la empresa</h4>
+          <p class="small">Cada empresa puede usar una identidad propia. Se recomienda mantener pocos colores para conservar una imagen técnica y profesional.</p>
+          <div class="color-grid">
+            <label>Color principal<input id="admPrimaryColor" type="color" value="${escapeHtml(state.admin.company.brand?.primaryColor || '#102033')}"></label>
+            <label>Color de acento<input id="admAccentColor" type="color" value="${escapeHtml(state.admin.company.brand?.accentColor || '#1456a0')}"></label>
+            <label>Fondo<input id="admBackgroundColor" type="color" value="${escapeHtml(state.admin.company.brand?.backgroundColor || '#eef3f8')}"></label>
+          </div>
+          <label>Estilo de plantilla
+            <select id="admTemplateStyle">
+              ${["tecnico","sobrio","empresa","minimal"].map(style => `<option value="${style}" ${style === (state.admin.company.brand?.templateStyle || "tecnico") ? "selected" : ""}>${style}</option>`).join("")}
+            </select>
+          </label>
         </div>
       </section>
 
@@ -137,15 +157,18 @@ export function render(host, state){
           <h4>Plantillas de documentos y cotizaciones</h4>
           <div class="admin-inline">
             <input id="admTemplateName" placeholder="Nombre de plantilla">
-            <select id="admTemplateType"><option>Presupuesto</option><option>Informe</option><option>TE1</option><option>Memoria técnica</option></select>
+            <select id="admTemplateType"><option>Presupuesto</option><option>Trabajo</option><option>Informe</option><option>TE1</option><option>Memoria técnica</option></select>
             <button id="admAddTemplate">Agregar</button>
           </div>
+          <textarea id="admTemplateContent" class="template-editor" placeholder="Contenido de la plantilla. Puedes usar variables como {{cliente}}, {{proyecto}}, {{empresa}}, {{total}}."></textarea>
           <div id="admTemplatesTable"></div>
         </div>
       </section>
 
       <section id="admTabSistema" class="admin-tab-page">
         <div class="admin-card">
+          <h4>Política normativa estricta</h4>
+          <div class="policy-box"><b>Fuentes permitidas:</b> RIC, IEC y Decreto de Ley N°8 de Chile.<br><b>Regla:</b> si no hay respaldo local suficiente, GIAE debe responder “requiere revisión normativa” y nunca inventar datos.</div>
           <h4>Resumen del sistema</h4>
           <div class="project-summary">
             <span><b>Proyecto activo:</b> ${escapeHtml(state.currentProject.name || "Sin nombre")}</span>
@@ -191,8 +214,17 @@ function saveAdminForm(state, notify=false){
   if(companyInput){
     state.admin.company = {
       ...state.admin.company,
-      name: companyInput.value.trim(), rut: document.querySelector("#admRut").value.trim(), address: document.querySelector("#admAddress").value.trim(), email: document.querySelector("#admEmail").value.trim(), phone: document.querySelector("#admPhone").value.trim()
+      name: companyInput.value.trim(), rut: document.querySelector("#admRut").value.trim(), address: document.querySelector("#admAddress").value.trim(), email: document.querySelector("#admEmail").value.trim(), phone: document.querySelector("#admPhone").value.trim(),
+      logoName: state.admin.company.logoName, logoData: state.admin.company.logoData,
+      brand: {
+        name: companyInput.value.trim() || "GIAE Chile",
+        primaryColor: document.querySelector("#admPrimaryColor")?.value || "#102033",
+        accentColor: document.querySelector("#admAccentColor")?.value || "#1456a0",
+        backgroundColor: document.querySelector("#admBackgroundColor")?.value || "#eef3f8",
+        templateStyle: document.querySelector("#admTemplateStyle")?.value || "tecnico"
+      }
     };
+    state.companyBrand = { ...state.admin.company.brand, logoData: state.admin.company.logoData };
     state.currentProject.company = state.admin.company.name;
   }
   addLog(state, "Configuración administrativa guardada.");
@@ -246,15 +278,15 @@ function paintModules(state){
   document.querySelectorAll("[data-module-switch]").forEach(input => input.addEventListener("change", ()=>{state.admin.enabledModules[input.dataset.moduleSwitch] = input.checked; addLog(state, `Módulo ${moduleLabels[input.dataset.moduleSwitch]} ${input.checked ? "activado" : "desactivado"}.`); persist(); window.dispatchEvent(new CustomEvent("giae:admin-updated")); paintAudit(state);}));
 }
 
-function addTemplate(state){ const name=document.querySelector("#admTemplateName").value.trim(); const type=document.querySelector("#admTemplateType").value; if(!name)return alert("Ingresa el nombre de la plantilla."); state.admin.templates.push({name,type,status:"Activa"}); document.querySelector("#admTemplateName").value=""; addLog(state,`Plantilla creada: ${name}.`); persist(); paintTemplates(state); paintAudit(state); }
+function addTemplate(state){ const name=document.querySelector("#admTemplateName").value.trim(); const type=document.querySelector("#admTemplateType").value; const content=document.querySelector("#admTemplateContent").value.trim(); if(!name)return alert("Ingresa el nombre de la plantilla."); state.admin.templates.push({name,type,status:"Activa",content}); document.querySelector("#admTemplateName").value=""; document.querySelector("#admTemplateContent").value=""; addLog(state,`Plantilla creada: ${name}.`); persist(); paintTemplates(state); paintAudit(state); }
 function paintTemplates(state){
-  const rows=state.admin.templates.map((tpl,i)=>`<tr><td>${i+1}</td><td><input data-tpl-name="${i}" value="${escapeHtml(tpl.name)}"></td><td><select data-tpl-type="${i}">${["Presupuesto","Informe","TE1","Memoria técnica"].map(t=>`<option ${t===tpl.type?"selected":""}>${t}</option>`).join("")}</select></td><td><select data-tpl-status="${i}"><option ${tpl.status==="Activa"?"selected":""}>Activa</option><option ${tpl.status==="Borrador"?"selected":""}>Borrador</option><option ${tpl.status==="Inactiva"?"selected":""}>Inactiva</option></select></td><td><button class="ghost" data-save-tpl="${i}">Guardar</button><button class="ghost danger-text" data-remove-template="${i}">Borrar</button></td></tr>`).join("");
-  document.querySelector("#admTemplatesTable").innerHTML=`<div class="table-scroll"><table><thead><tr><th>N°</th><th>Plantilla</th><th>Tipo</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${rows||`<tr><td colspan="5">Sin plantillas.</td></tr>`}</tbody></table></div>`;
-  document.querySelectorAll("[data-save-tpl]").forEach(btn=>btn.addEventListener("click",()=>{const i=Number(btn.dataset.saveTpl); state.admin.templates[i].name=document.querySelector(`[data-tpl-name="${i}"]`).value.trim(); state.admin.templates[i].type=document.querySelector(`[data-tpl-type="${i}"]`).value; state.admin.templates[i].status=document.querySelector(`[data-tpl-status="${i}"]`).value; addLog(state,`Plantilla actualizada: ${state.admin.templates[i].name}.`); persist(); paintTemplates(state); paintAudit(state);}));
+  const rows=state.admin.templates.map((tpl,i)=>`<tr><td>${i+1}</td><td><input data-tpl-name="${i}" value="${escapeHtml(tpl.name)}"></td><td><select data-tpl-type="${i}">${["Presupuesto","Trabajo","Informe","TE1","Memoria técnica"].map(t=>`<option ${t===tpl.type?"selected":""}>${t}</option>`).join("")}</select></td><td><select data-tpl-status="${i}"><option ${tpl.status==="Activa"?"selected":""}>Activa</option><option ${tpl.status==="Borrador"?"selected":""}>Borrador</option><option ${tpl.status==="Inactiva"?"selected":""}>Inactiva</option></select></td><td><textarea data-tpl-content="${i}" class="template-editor">${escapeHtml(tpl.content || "")}</textarea></td><td><button class="ghost" data-save-tpl="${i}">Guardar</button><button class="ghost danger-text" data-remove-template="${i}">Borrar</button></td></tr>`).join("");
+  document.querySelector("#admTemplatesTable").innerHTML=`<div class="table-scroll"><table><thead><tr><th>N°</th><th>Plantilla</th><th>Tipo</th><th>Estado</th><th>Contenido</th><th>Acciones</th></tr></thead><tbody>${rows||`<tr><td colspan="5">Sin plantillas.</td></tr>`}</tbody></table></div>`;
+  document.querySelectorAll("[data-save-tpl]").forEach(btn=>btn.addEventListener("click",()=>{const i=Number(btn.dataset.saveTpl); state.admin.templates[i].name=document.querySelector(`[data-tpl-name="${i}"]`).value.trim(); state.admin.templates[i].type=document.querySelector(`[data-tpl-type="${i}"]`).value; state.admin.templates[i].status=document.querySelector(`[data-tpl-status="${i}"]`).value; state.admin.templates[i].content=document.querySelector(`[data-tpl-content="${i}"]`).value; addLog(state,`Plantilla actualizada: ${state.admin.templates[i].name}.`); persist(); paintTemplates(state); paintAudit(state);}));
   document.querySelectorAll("[data-remove-template]").forEach(btn=>btn.addEventListener("click",()=>{const i=Number(btn.dataset.removeTemplate); const name=state.admin.templates[i].name; if(!confirm(`¿Borrar plantilla ${name}?`))return; state.admin.templates.splice(i,1); addLog(state,`Plantilla borrada: ${name}.`); persist(); paintTemplates(state); paintAudit(state);}));
 }
 
-function loadLogo(event,state){ const file=event.target.files?.[0]; if(!file)return; const reader=new FileReader(); reader.onload=()=>{state.admin.company.logoName=file.name; state.admin.company.logoData=reader.result; document.querySelector("#admLogoName").textContent=file.name; document.querySelector("#admLogoPreview").innerHTML=`<img src="${reader.result}" alt="Logo empresa">`; addLog(state,`Logo cargado: ${file.name}.`); persist();}; reader.readAsDataURL(file); }
+function loadLogo(event,state){ const file=event.target.files?.[0]; if(!file)return; const reader=new FileReader(); reader.onload=()=>{state.admin.company.logoName=file.name; state.admin.company.logoData=reader.result; document.querySelector("#admLogoName").textContent=file.name; document.querySelector("#admLogoPreview").innerHTML=`<img src="${reader.result}" alt="Logo empresa">`; state.companyBrand = { ...(state.companyBrand || {}), ...(state.admin.company.brand || {}), logoData: reader.result, name: state.admin.company.name }; addLog(state,`Logo cargado: ${file.name}.`); persist(); window.dispatchEvent(new CustomEvent("giae:admin-updated"));}; reader.readAsDataURL(file); }
 function downloadBackup(state){ saveAdminForm(state,false); const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}); const url=URL.createObjectURL(blob); const link=document.createElement("a"); link.href=url; link.download="giae-respaldo-administracion.json"; link.click(); URL.revokeObjectURL(url); }
 function addLog(state,text){ ensureAdminData(state); state.admin.auditLog.unshift({date:new Date().toLocaleString("es-CL"),text}); state.admin.auditLog=state.admin.auditLog.slice(0,50); }
 function paintAudit(state){ const rows=(state.admin.auditLog||[]).map((l,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(l.date)}</td><td>${escapeHtml(l.text)}</td></tr>`).join(""); const el=document.querySelector("#admAuditLog"); if(el) el.innerHTML=`<div class="table-scroll"><table><thead><tr><th>N°</th><th>Fecha</th><th>Acción</th></tr></thead><tbody>${rows||`<tr><td colspan="3">Sin acciones registradas.</td></tr>`}</tbody></table></div>`; }

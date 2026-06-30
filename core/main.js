@@ -9,10 +9,11 @@ const title = document.querySelector("#workspaceTitle");
 const activeProfile = document.querySelector("#activeProfile");
 
 restore();
+applyBranding();
 
 if (state.profile) openPlatform();
 
-window.addEventListener("giae:admin-updated", () => renderMenu());
+window.addEventListener("giae:admin-updated", () => { applyBranding(); renderMenu(); });
 
 document.querySelectorAll("[data-profile]").forEach(button => {
   button.addEventListener("click", () => {
@@ -50,6 +51,7 @@ document.querySelector("#exportBtn").addEventListener("click", () => {
 });
 
 function openPlatform() {
+  applyBranding();
   loginView.classList.add("hidden");
   platformView.classList.remove("hidden");
   activeProfile.textContent = profileLabel(state.profile);
@@ -124,4 +126,27 @@ function closeSession(){
     current.lastSeen = new Date().toLocaleString("es-CL");
   }
   persist();
+}
+
+
+function applyBranding(){
+  const brand = state.companyBrand || state.admin?.company?.brand || {};
+  const root = document.documentElement;
+  if(brand.primaryColor) root.style.setProperty("--brand-primary", brand.primaryColor);
+  if(brand.accentColor) root.style.setProperty("--accent", brand.accentColor);
+  if(brand.backgroundColor) root.style.setProperty("--bg", brand.backgroundColor);
+  const logoNodes = document.querySelectorAll("[data-brand-logo]");
+  logoNodes.forEach(node => {
+    if(brand.logoData){
+      node.innerHTML = `<img src="${brand.logoData}" alt="Logo empresa">`;
+    } else {
+      node.innerHTML = defaultLogoMarkup();
+    }
+  });
+  const nameNodes = document.querySelectorAll("[data-brand-name]");
+  nameNodes.forEach(node => node.textContent = brand.name || state.admin?.company?.name || "GIAE Chile");
+}
+
+function defaultLogoMarkup(){
+  return `<svg viewBox="0 0 120 120" role="img" aria-hidden="true"><rect x="10" y="10" width="100" height="100" rx="24" fill="currentColor"/><path d="M30 72h25l-5 28 40-52H65l7-28z" fill="#fff"/></svg>`;
 }

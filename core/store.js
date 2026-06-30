@@ -10,6 +10,19 @@ export const state = {
     supplyType: "monofasico",
     distributor: "cge",
     loads: []
+  },
+  companyBrand: {
+    name: "GIAE Chile",
+    logoData: "",
+    primaryColor: "#102033",
+    accentColor: "#1456a0",
+    backgroundColor: "#eef3f8",
+    templateStyle: "tecnico"
+  },
+  normativePolicy: {
+    allowedSources: ["RIC", "IEC", "DL8"],
+    mode: "estricto",
+    noInventar: true
   }
 };
 
