@@ -422,3 +422,25 @@ body{background:var(--bg);}
   .internal-window-titlebar{background:white;border-bottom:1px solid #bbb}
   .internal-window:not(.active){display:none!important}
 }
+
+/* Etapa 2.5 · Proyecto Activo */
+.split-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}
+.project-state-card{min-width:190px;border:1px solid var(--line);background:#f8fbff;border-radius:14px;padding:14px;text-align:left}
+.project-state-card small{display:block;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:11px}
+.project-state-card strong{display:block;font-size:20px;margin:4px 0;color:var(--brand-primary)}
+.project-state-card span{font-size:13px;color:var(--muted)}
+.project-kpis article strong{font-size:18px;line-height:1.15}
+.active-checklist{display:grid;gap:8px;margin:10px 0 16px}
+.check-item{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
+.check-item span{width:24px;height:24px;border-radius:999px;display:grid;place-items:center;font-weight:900;border:1px solid var(--line)}
+.check-item.done{border-color:#bad7bf;background:#f2fbf4}
+.check-item.done span{background:#1f7a4f;color:#fff;border-color:#1f7a4f}
+.check-item.pending{background:#fbfcfe;color:#536173}
+.check-item.pending span{background:#edf2f7;color:#536173}
+.history-list{max-height:260px;overflow:auto;border-top:1px solid var(--line);padding-top:6px}
+.history-list p{border-bottom:1px solid var(--line);padding:9px 0;margin:0}
+.history-list span{color:var(--muted);font-size:13px}
+.wrap-actions{flex-wrap:wrap}
+.import-label{display:inline-flex;align-items:center;border:1px solid var(--line);background:#f4f7fb;color:var(--brand-primary);border-radius:10px;padding:10px 14px;font-weight:900;cursor:pointer;margin:0}
+.import-label:hover{background:#e7eef8}
+@media(max-width:760px){.split-head{display:block}.project-state-card{margin-top:12px}.project-kpis{grid-template-columns:1fr!important}}

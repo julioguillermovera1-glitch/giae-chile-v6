@@ -60,3 +60,21 @@ Cambios:
 
 Criterio de término:
 - Un módulo puede abrirse, activarse, minimizarse y cerrarse sin cerrar sesión.
+
+## Etapa 2.5 - Proyecto Activo
+Estado: Terminada.
+
+Se incorporó el Proyecto Activo como núcleo de datos compartido por los módulos de GIAE Chile v1.0.
+
+Funciones agregadas:
+- Identificador interno de proyecto.
+- Datos generales, técnicos y comerciales en una sola ficha.
+- Cálculo automático de potencia instalada y demanda estimada desde cargas registradas.
+- Checklist automático de avance.
+- Historial de cambios del proyecto.
+- Exportación de archivo propio `.giae`.
+- Importación de proyecto `.giae` desde el módulo Proyecto Activo.
+- Barra inferior con estado del proyecto, avance y último guardado.
+
+Regla de etapa:
+Todos los módulos técnicos deberán leer y escribir datos mediante el Proyecto Activo, evitando duplicar información.

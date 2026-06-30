@@ -76,13 +76,16 @@ function standardPanel(state){
   const stats = getProjectStats(state);
   const projectName = state.currentProject?.name || 'Proyecto sin nombre';
   const client = state.currentProject?.client || 'Cliente no definido';
+  const checklist = state.currentProject?.checklist || [];
+  const done = checklist.filter(item => item.done).length;
+  const progress = checklist.length ? Math.round((done / checklist.length) * 100) : 0;
   const company = state.admin?.company?.name || state.companyBrand?.name || 'GIAE Chile';
   const cards = quickByProfile[profile] || quickByProfile.independiente;
   return `
     <section class="dashboard-grid kpi-row">
       <article><small>Proyecto activo</small><strong>${projectName}</strong></article>
       <article><small>Cliente</small><strong>${client}</strong></article>
-      <article><small>Cargas registradas</small><strong>${stats.loads}</strong></article>
+      <article><small>Avance</small><strong>${progress}%</strong></article>
       <article><small>Potencia estimada</small><strong>${stats.totalKw} kW</strong></article>
     </section>
     <section class="dashboard-grid two">
@@ -92,6 +95,8 @@ function standardPanel(state){
         <p><strong>Perfil:</strong> ${profileNames[profile] || 'Usuario'}</p>
         <p><strong>Empresa/Marca:</strong> ${company}</p>
         <p><strong>Normativa autorizada:</strong> RIC · IEC eléctrica · DS N°8</p>
+        <p><strong>Último guardado:</strong> ${state.currentProject?.updatedAt || 'Pendiente'}</p>
+        <p><strong>Checklist:</strong> ${done}/${checklist.length || 0} tareas completas</p>
         <div class="dashboard-notice">El sistema no debe emitir recomendaciones técnicas sin respaldo normativo cargado.</div>
       </article>
     </section>`;

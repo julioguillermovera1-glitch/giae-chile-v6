@@ -1,5 +1,5 @@
 import { modules, menuGroups } from "./moduleRegistry.js";
-import { restore, setProfile, clearProfile, state, persist } from "./store.js";
+import { restore, setProfile, clearProfile, state, persist, exportProjectFile, importProjectFile } from "./store.js";
 
 const loginView = document.querySelector("#loginView");
 const platformView = document.querySelector("#platformView");
@@ -49,14 +49,22 @@ logoutBtn.addEventListener("click", () => {
 });
 
 document.querySelector("#exportBtn").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify(state.currentProject, null, 2)], { type: "application/json" });
+  const payload = exportProjectFile();
+  const safeName = (state.currentProject.name || "proyecto-giae").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "proyecto-giae";
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/giae+json" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "giae-proyecto.json";
+  link.download = `${safeName}.giae`;
   link.click();
   URL.revokeObjectURL(url);
 });
+
+window.GIAE.importProjectFile = payload => {
+  importProjectFile(payload);
+  updateStatusLine();
+  if(window.GIAE?.openModule) window.GIAE.openModule("proyecto");
+};
 
 function openPlatform() {
   applyBranding();
@@ -270,8 +278,10 @@ function updateStatusLine(){
   if(!projectStatusLine) return;
   const p = state.currentProject || {};
   const name = p.name || p.nombre || p.projectName || "sin proyecto cargado";
-  const company = state.admin?.company?.name || state.companyBrand?.name || "GIAE Chile";
-  projectStatusLine.textContent = `Proyecto activo: ${name} · Empresa: ${company} · Normativa: RIC · IEC eléctrica · DS N°8`;
+  const company = state.admin?.company?.name || p.company || state.companyBrand?.name || "GIAE Chile";
+  const pct = p.progress?.engineering ?? 0;
+  const saved = p.updatedAt || "sin guardar";
+  projectStatusLine.textContent = `Proyecto activo: ${name} · ${pct}% avance · Último guardado: ${saved} · Empresa: ${company} · Normativa: RIC · IEC eléctrica · DS N°8`;
 }
 
 function defaultLogoMarkup(){
