@@ -172,3 +172,19 @@ button.danger { background: #a32323; color: #fff; border-left: 0; }
 .table-scroll table { width: 100%; border-collapse: collapse; background: #fff; }
 .table-scroll th, .table-scroll td { border: 1px solid var(--line); padding: .65rem; text-align: left; }
 .table-scroll th { background: #f1f6fb; }
+
+/* Ajuste automático del unilineal v1.0: centra el automático general, corta la barra en el último circuito y ajusta impresión. */
+.unilineal-v951 .diagram-panel { overflow: auto; }
+.unilineal-v951 .svg-scroll { width: 100%; overflow: auto; }
+.unilineal-v951 svg { max-width: 100%; height: auto; display: block; }
+@page { size: A4 landscape; margin: 10mm; }
+@media print {
+  .unilineal-v951 h3,
+  .unilineal-v951 p,
+  .unilineal-v951 .table-scroll,
+  .unilineal-v951 .result-box,
+  .unilineal-v951 .top-actions { display: none !important; }
+  .unilineal-v951 .diagram-panel,
+  .unilineal-v951 .svg-scroll { overflow: visible !important; width: 100% !important; padding: 0 !important; border: 0 !important; }
+  .unilineal-v951 svg { width: 100% !important; max-height: 185mm !important; height: auto !important; border: 0 !important; }
+}

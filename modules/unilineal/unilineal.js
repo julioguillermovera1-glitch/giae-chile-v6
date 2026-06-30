@@ -109,33 +109,46 @@ function renderSvg(project, circuits) {
   const generalA = suggestBreaker(totalCurrent) || 10;
   const general = isThree ? `Aut. 3x${generalA}A 10 kA C` : `Aut. 1x${generalA}A 10 kA C`;
   const n = Math.max(circuits.length, 1);
-  const gap = 190;
-  const left = 130;
-  const top = 175;
-  const width = Math.max(1700, left * 2 + (n - 1) * gap);
-  const height = 700;
-  const busY = top;
-  const outY = 525;
+
+  // Ajuste automático del dibujo:
+  // - pocos circuitos: más separación para que no se vea apretado.
+  // - muchos circuitos: menos separación para que pueda entrar en hoja al imprimir.
+  const gap = n <= 3 ? 210 : n <= 6 ? 180 : n <= 10 ? 145 : n <= 16 ? 118 : 96;
+  const margin = 135;
+  const minWidth = 920;
+  const groupWidth = (n - 1) * gap;
+  const width = Math.max(minWidth, groupWidth + margin * 2);
+  const height = 720;
+  const centerX = width / 2;
+  const firstX = centerX - groupWidth / 2;
+  const lastX = centerX + groupWidth / 2;
+  const busY = 190;
+  const outY = 545;
+  const busStart = n === 1 ? centerX - 65 : firstX;
+  const busEnd = n === 1 ? centerX + 65 : lastX;
   const title = project.name || "Tablero general";
   const barra = isThree ? "Barra repartidora tetrapolar 4x100A 10kA" : "Barra repartidora bipolar 2x100A 10kA";
 
-  let svg = `<svg id="svgUnilineal" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 ${width} ${height}" style="background:white;border:1px solid #cbd8e6;border-radius:14px">`;
-  svg += `<rect x="50" y="55" width="${width - 100}" height="${height - 95}" fill="none" stroke="#777" stroke-dasharray="5 4"/>`;
-  svg += svgText(width / 2, 35, "Tablero general", 17, "middle", "700");
+  let svg = `<svg id="svgUnilineal" class="unilineal-print-fit" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" style="background:white;border:1px solid #cbd8e6;border-radius:14px">`;
+  svg += `<rect x="50" y="55" width="${width - 100}" height="${height - 105}" fill="none" stroke="#777" stroke-dasharray="5 4"/>`;
+  svg += svgText(centerX, 35, "Tablero general", 17, "middle", "700");
   svg += svgText(82, 82, title, 15, "start", "700");
   svg += svgText(82, 108, `Cliente: ${project.client || "Sin cliente"}`, 12, "start", "700");
   svg += svgText(82, 132, `Alimentación: ${isThree ? "Trifásica 3F+N+T" : "Monofásica 1F+N+T"} · P total: ${safeRound(total / 1000, 2)} kW · I total: ${safeRound(totalCurrent, 2)} A`, 12, "start", "700");
 
-  svg += `<line x1="${width / 2}" y1="45" x2="${width / 2}" y2="53" stroke="#111" stroke-width="2"/>`;
-  svg += breakerSymbol(width / 2, 95, general);
-  svg += `<line x1="${width / 2}" y1="159" x2="${width / 2}" y2="${busY}" stroke="#111" stroke-width="2"/>`;
-  svg += svgText(width / 2 + 350, busY - 30, barra, 16, "middle", "900");
-  svg += `<line x1="${left - 15}" y1="${busY}" x2="${width - left + 15}" y2="${busY}" stroke="#111" stroke-width="3"/>`;
+  // El automático general siempre queda centrado respecto al grupo de circuitos.
+  svg += `<line x1="${centerX}" y1="45" x2="${centerX}" y2="53" stroke="#111" stroke-width="2"/>`;
+  svg += breakerSymbol(centerX, 95, general);
+  svg += `<line x1="${centerX}" y1="159" x2="${centerX}" y2="${busY}" stroke="#111" stroke-width="2"/>`;
+
+  // La barra termina automáticamente en el último circuito generado.
+  svg += `<line x1="${busStart}" y1="${busY}" x2="${busEnd}" y2="${busY}" stroke="#111" stroke-width="3"/>`;
+  svg += svgText(centerX + Math.min(350, Math.max(180, groupWidth / 2)), busY - 28, barra, 15, "middle", "900");
 
   if (isThree) {
-    svg += `<text x="${width - 95}" y="${busY - 18}" font-size="14" font-family="Arial" font-weight="900">R</text><text x="${width - 75}" y="${busY - 18}" font-size="14" font-family="Arial" font-weight="900">S</text><text x="${width - 55}" y="${busY - 18}" font-size="14" font-family="Arial" font-weight="900">T</text>`;
+    svg += `<text x="${busEnd + 25}" y="${busY - 18}" font-size="14" font-family="Arial" font-weight="900">R</text><text x="${busEnd + 45}" y="${busY - 18}" font-size="14" font-family="Arial" font-weight="900">S</text><text x="${busEnd + 65}" y="${busY - 18}" font-size="14" font-family="Arial" font-weight="900">T</text>`;
   } else {
-    svg += `<text x="${width - 75}" y="${busY - 18}" font-size="14" font-family="Arial" font-weight="900">R</text>`;
+    svg += `<text x="${busEnd + 25}" y="${busY - 18}" font-size="14" font-family="Arial" font-weight="900">R</text>`;
   }
 
   svg += `<line x1="25" y1="${outY - 80}" x2="60" y2="${outY - 80}" stroke="#111" stroke-width="2"/><line x1="${width - 60}" y1="${outY - 80}" x2="${width - 25}" y2="${outY - 80}" stroke="#111" stroke-width="2"/>`;
@@ -144,7 +157,7 @@ function renderSvg(project, circuits) {
   svg += `<line x1="22" y1="${outY - 70}" x2="5" y2="${outY - 55}" stroke="#111"/><line x1="32" y1="${outY - 70}" x2="15" y2="${outY - 55}" stroke="#111"/><line x1="${width - 22}" y1="${outY - 70}" x2="${width - 5}" y2="${outY - 55}" stroke="#111"/><line x1="${width - 32}" y1="${outY - 70}" x2="${width - 15}" y2="${outY - 55}" stroke="#111"/>`;
 
   circuits.forEach((circuit, index) => {
-    const x = left + index * gap;
+    const x = firstX + index * gap;
     svg += svgText(x - 13, busY + 18, circuit.fase, 19, "middle", "900");
     svg += `<line x1="${x}" y1="${busY}" x2="${x}" y2="${busY + 72}" stroke="#111" stroke-width="2"/>`;
     svg += breakerSymbol(x, busY + 96, circuit.aut);
@@ -157,7 +170,6 @@ function renderSvg(project, circuits) {
   svg += `</svg>`;
   return `<div class="svg-scroll v951-scroll">${svg}</div>`;
 }
-
 function renderTable(circuits) {
   const rows = circuits.map(c => `<tr><td>${c.numero}</td><td>${esc(c.nombre)}</td><td>${esc(c.fase)}</td><td>${esc(c.aut)}</td><td>${esc(c.dif)}</td><td>${esc(c.tipo)}</td><td>${c.w} W</td></tr>`).join("");
   return `<div class="table-scroll"><table><thead><tr><th>N°</th><th>Circuito</th><th>Fase</th><th>Automático</th><th>Diferencial</th><th>Salida</th><th>Potencia</th></tr></thead><tbody>${rows}</tbody></table></div>`;
