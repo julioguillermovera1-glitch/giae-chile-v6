@@ -105,3 +105,20 @@ Estado: terminada.
 Estado: completada.
 
 Se agrega al panel Administrador una sección exclusiva para revisar el estado real local del software y un Inspector del Sistema. Esta herramienta permite revisar proyecto activo, almacenamiento local, módulos, sesión, configuración administrativa y descargar un reporte de diagnóstico. En producción, este panel deberá conectarse con Cloudflare Workers, D1 y R2 para mostrar estado real de nube, sincronización, licencias y usuarios conectados.
+
+
+## Etapa 2.8b — Modo Desarrollador e Inspector de Originalidad
+
+Estado: terminado.
+
+Se agregó una herramienta interna visible solo para el perfil Administrador:
+
+- Modo Desarrollador dentro del Panel Administrador.
+- Inspector de Originalidad.
+- Revisión local de duplicación interna.
+- Detección de marcas de generación automática en comentarios.
+- Revisión de referencias externas no documentadas.
+- Detección de IDs HTML repetidos.
+- Reporte JSON descargable.
+
+Alcance: esta herramienta no confirma plagio contra toda internet. Funciona como control interno de calidad, originalidad, mantenimiento y dependencias.

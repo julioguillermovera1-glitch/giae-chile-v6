@@ -500,3 +500,9 @@ body{background:var(--bg);}
 .software-health{display:grid;gap:.25rem;border-radius:18px;border:1px solid var(--line);padding:1.1rem;margin:1rem 0;background:#f8fbff}.software-health strong{font-size:2.4rem;line-height:1;color:#102033}.software-health span{font-weight:900;color:#33465f}.software-health small{color:#64748b}.software-health.ok{border-color:#9dd9b4;background:#eefcf3}.software-health.warn{border-color:#f2cc75;background:#fff8e6}.software-health.danger{border-color:#f2a6a6;background:#fff1f1}.diagnostic-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;margin:1rem 0}.diagnostic-item{border:1px solid var(--line);border-radius:14px;background:#fff;padding:.9rem;display:grid;gap:.25rem}.diagnostic-item b{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.diagnostic-item.pass{border-left:5px solid #16a34a}.diagnostic-item.fail{border-left:5px solid #dc2626}.diagnostic-item strong{color:#102033}.diagnostic-item span{color:#526173;font-size:.92rem}.inspector-output{min-height:360px;max-height:520px;overflow:auto;background:#07101d;color:#e6eef8;border-radius:16px;padding:1rem;border:1px solid #23354d;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.86rem;line-height:1.45;white-space:pre-wrap}.admin-inline select{min-width:220px}
 @media(max-width:1100px){.admin-kpis{grid-template-columns:repeat(2,1fr)}.diagnostic-grid{grid-template-columns:1fr}}
 @media(max-width:650px){.admin-kpis{grid-template-columns:1fr}}
+
+/* Etapa 2.8b · Modo Desarrollador / Inspector de Originalidad */
+.originality-panel{margin-top:1rem}
+.compact-kpis{grid-template-columns:repeat(4,minmax(140px,1fr));margin:.85rem 0 1rem}
+.danger-text{color:#9f1d1d!important}
+@media(max-width:900px){.compact-kpis{grid-template-columns:1fr 1fr}}

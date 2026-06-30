@@ -90,6 +90,7 @@ export function render(host, state){
         <button data-admin-tab="sistema">Sistema</button>
         <button data-admin-tab="estado">Estado del software</button>
         <button data-admin-tab="inspector">Inspector</button>
+        <button data-admin-tab="originalidad">Originalidad</button>
       </section>
 
       <section id="admTabUsuarios" class="admin-tab-page active">
@@ -202,6 +203,23 @@ export function render(host, state){
         </div>
       </section>
 
+
+      <section id="admTabOriginalidad" class="admin-tab-page">
+        <div class="admin-card">
+          <h4>Inspector de Originalidad</h4>
+          <p class="small">Herramienta interna del Administrador / Modo Desarrollador. Revisa duplicación interna, marcas de generación automática, scripts externos y señales de riesgo dentro de los archivos cargados por GIAE. No compara contra toda internet.</p>
+          <div class="policy-box"><b>Alcance:</b> análisis local del proyecto publicado. Si el resultado indica “Revisar”, no significa plagio confirmado; significa que el administrador debe revisar el fragmento o dependencia.</div>
+          <div class="admin-inline">
+            <button id="admOriginalityScan">Ejecutar análisis</button>
+            <button id="admOriginalityDownload" class="secondary">Descargar reporte</button>
+            <button id="admOriginalityCopy" class="ghost">Copiar resumen</button>
+          </div>
+          <div id="admOriginalityResult" class="originality-panel">
+            <div class="result-box info"><b>Inspector listo.</b><br>Presiona “Ejecutar análisis” para revisar la instalación actual.</div>
+          </div>
+        </div>
+      </section>
+
       <section id="admTabSistema" class="admin-tab-page">
         <div class="admin-card">
           <h4>Política normativa estricta</h4>
@@ -242,6 +260,9 @@ function wireEvents(state){
   document.querySelector("#admDownloadDiagnostics")?.addEventListener("click", () => downloadDiagnostics(state));
   document.querySelector("#admInspectBtn")?.addEventListener("click", () => runInspector(state));
   document.querySelector("#admCopyInspect")?.addEventListener("click", () => copyInspectorOutput());
+  document.querySelector("#admOriginalityScan")?.addEventListener("click", () => runOriginalityInspector(state));
+  document.querySelector("#admOriginalityDownload")?.addEventListener("click", () => downloadOriginalityReport(state));
+  document.querySelector("#admOriginalityCopy")?.addEventListener("click", () => copyOriginalitySummary());
   paintSoftwareStatus(state, false);
   runInspector(state, "project");
 }
@@ -446,6 +467,183 @@ function buildInspectorPayload(state, target){
 function copyInspectorOutput(){
   const output = document.querySelector("#admInspectorOutput")?.textContent || "";
   navigator.clipboard?.writeText(output).then(()=>alert("Inspector copiado al portapapeles.")).catch(()=>alert("No se pudo copiar automáticamente."));
+}
+
+
+async function runOriginalityInspector(state){
+  const el = document.querySelector("#admOriginalityResult");
+  if(!el) return;
+  el.innerHTML = `<div class="result-box info"><b>Analizando archivos...</b><br>Revisando código cargado, duplicación interna, scripts externos y marcas sospechosas.</div>`;
+  const report = await buildOriginalityReport(state);
+  state.admin.lastOriginalityReport = report;
+  addLog(state, `Inspector de originalidad ejecutado. Resultado: ${report.score}%.`);
+  persist();
+  paintAudit(state);
+  paintOriginalityReport(report);
+}
+
+async function buildOriginalityReport(state){
+  const files = await loadProjectSources();
+  const warnings = [];
+  const duplicateBlocks = detectDuplicateBlocks(files);
+  const aiMarks = detectAiMarks(files);
+  const externalRefs = detectExternalReferences(files);
+  const duplicateIds = detectDuplicateIds(files);
+  const veryLargeFiles = files.filter(f => f.text.length > 120000).map(f => ({ file: f.path, bytes: f.text.length }));
+  const unknownLicenses = externalRefs.filter(ref => ref.type === "script" || ref.type === "stylesheet");
+
+  duplicateBlocks.forEach(item => warnings.push({ level: item.count >= 3 ? "medio" : "bajo", area: "Duplicación interna", detail: `${item.count} bloques similares detectados`, files: item.files }));
+  aiMarks.forEach(item => warnings.push({ level: "medio", area: "Marcas de generación", detail: item.match, files: [item.file] }));
+  externalRefs.forEach(item => warnings.push({ level: "medio", area: "Dependencia externa", detail: item.url, files: [item.file] }));
+  duplicateIds.forEach(item => warnings.push({ level: "bajo", area: "HTML", detail: `ID repetido: ${item.id}`, files: item.files }));
+  veryLargeFiles.forEach(item => warnings.push({ level: "bajo", area: "Mantenibilidad", detail: `Archivo grande: ${item.bytes} caracteres`, files: [item.file] }));
+
+  const penalties = warnings.reduce((sum, w) => sum + (w.level === "alto" ? 18 : w.level === "medio" ? 8 : 3), 0);
+  const score = Math.max(0, Math.min(100, 100 - penalties));
+  const status = score >= 90 ? "Excelente" : score >= 75 ? "Bueno con observaciones" : score >= 55 ? "Revisar" : "Riesgo alto";
+  return {
+    software: "GIAE Chile v1.0",
+    module: "Inspector de Originalidad",
+    generatedAt: new Date().toISOString(),
+    scope: "Análisis local. No compara contra bases externas ni contra toda la web.",
+    score,
+    status,
+    scannedFiles: files.map(f => ({ path: f.path, bytes: f.text.length })),
+    summary: {
+      files: files.length,
+      duplicateGroups: duplicateBlocks.length,
+      aiMarks: aiMarks.length,
+      externalReferences: externalRefs.length,
+      duplicateIds: duplicateIds.length,
+      largeFiles: veryLargeFiles.length
+    },
+    warnings,
+    recommendation: score >= 90 ? "Sin señales relevantes. Mantener revisión manual antes de publicar." : "Revisar advertencias, documentar dependencias externas y evitar bloques repetidos innecesarios."
+  };
+}
+
+async function loadProjectSources(){
+  const paths = [
+    "./index.html", "./indice.html", "./core/main.js", "./core/store.js", "./core/moduleRegistry.js", "./core/calculations.js", "./core/normativeGuard.js", "./css/platform.css",
+    "./modules/dashboard/dashboard.js", "./modules/proyecto/proyecto.js", "./modules/proyectos/proyectos.js", "./modules/cargas/cargas.js", "./modules/cuadro-carga/cuadro-carga.js", "./modules/empalme/empalme.js", "./modules/tierra/tierra.js", "./modules/unilineal/unilineal.js", "./modules/documentacion/documentacion.js", "./modules/presupuesto/presupuesto.js", "./modules/auditoria/auditoria.js", "./modules/educacion/educacion.js", "./modules/usuarios/usuarios.js", "./modules/administracion/administracion.js"
+  ];
+  const loaded = [];
+  for(const path of paths){
+    try{
+      const response = await fetch(path, { cache: "no-store" });
+      if(response.ok){ loaded.push({ path, text: await response.text() }); }
+    }catch(e){ /* en modo archivo local algunos navegadores bloquean fetch; se informa abajo */ }
+  }
+  if(!loaded.length){
+    loaded.push({ path: "estado-local", text: JSON.stringify(window.__GIAE_STATE__ || {}, null, 2) });
+  }
+  return loaded;
+}
+
+function normalizeCodeBlock(text){
+  return String(text || "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\/\/.*$/gm, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function detectDuplicateBlocks(files){
+  const blocks = new Map();
+  files.forEach(file => {
+    const lines = normalizeCodeBlock(file.text).split(/(?<=;|\}|\{)/).map(x => x.trim()).filter(x => x.length > 80);
+    lines.forEach(line => {
+      const key = line.slice(0, 220);
+      const entry = blocks.get(key) || { count: 0, files: new Set() };
+      entry.count += 1;
+      entry.files.add(file.path);
+      blocks.set(key, entry);
+    });
+  });
+  return [...blocks.entries()]
+    .filter(([,v]) => v.count > 1 && v.files.size > 1)
+    .slice(0, 20)
+    .map(([sample,v]) => ({ sample, count: v.count, files: [...v.files] }));
+}
+
+function detectAiMarks(files){
+  const patterns = [/chatgpt/i, /openai/i, /copilot/i, /generated by/i, /ai-generated/i, /creado por ia/i, /generado por ia/i];
+  const found = [];
+  files.forEach(file => {
+    const lines = file.text.split(/\n/);
+    lines.forEach((line, index) => {
+      if(patterns.some(rx => rx.test(line))){ found.push({ file: file.path, line: index + 1, match: line.trim().slice(0, 180) }); }
+    });
+  });
+  return found.slice(0, 40);
+}
+
+function detectExternalReferences(files){
+  const found = [];
+  files.forEach(file => {
+    const regex = /<(script|link)[^>]+(?:src|href)=["'](https?:\/\/[^"']+)["'][^>]*>/gi;
+    let match;
+    while((match = regex.exec(file.text))){ found.push({ file: file.path, type: match[1].toLowerCase(), url: match[2] }); }
+  });
+  return found;
+}
+
+function detectDuplicateIds(files){
+  const idMap = new Map();
+  files.filter(f => f.path.endsWith(".html")).forEach(file => {
+    const regex = /\sid=["']([^"']+)["']/gi;
+    let match;
+    while((match = regex.exec(file.text))){
+      const id = match[1];
+      const entry = idMap.get(id) || new Set();
+      entry.add(file.path);
+      idMap.set(id, entry);
+    }
+  });
+  return [...idMap.entries()].filter(([,files]) => files.size > 1).map(([id, files]) => ({ id, files: [...files] })).slice(0, 30);
+}
+
+function paintOriginalityReport(report){
+  const el = document.querySelector("#admOriginalityResult");
+  if(!el) return;
+  const statusClass = report.score >= 90 ? "ok" : report.score >= 75 ? "warn" : "danger";
+  el.innerHTML = `
+    <div class="software-health ${statusClass}">
+      <strong>${report.score}%</strong>
+      <span>${escapeHtml(report.status)}</span>
+      <small>${escapeHtml(report.scope)}</small>
+    </div>
+    <section class="admin-kpis compact-kpis">
+      <div><strong>${report.summary.files}</strong><span>Archivos revisados</span></div>
+      <div><strong>${report.summary.duplicateGroups}</strong><span>Duplicados internos</span></div>
+      <div><strong>${report.summary.aiMarks}</strong><span>Marcas IA</span></div>
+      <div><strong>${report.summary.externalReferences}</strong><span>Referencias externas</span></div>
+    </section>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>N°</th><th>Nivel</th><th>Área</th><th>Detalle</th><th>Archivos</th></tr></thead>
+        <tbody>${report.warnings.map((w,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(w.level)}</td><td>${escapeHtml(w.area)}</td><td>${escapeHtml(w.detail)}</td><td>${escapeHtml((w.files||[]).join(', '))}</td></tr>`).join("") || `<tr><td colspan="5">Sin observaciones relevantes.</td></tr>`}</tbody>
+      </table>
+    </div>
+    <div class="policy-box"><b>Recomendación:</b> ${escapeHtml(report.recommendation)}</div>
+  `;
+}
+
+function downloadOriginalityReport(state){
+  const report = state.admin?.lastOriginalityReport;
+  if(!report) return alert("Primero ejecuta el análisis de originalidad.");
+  const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "giae-inspector-originalidad.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function copyOriginalitySummary(){
+  const text = document.querySelector("#admOriginalityResult")?.innerText || "";
+  navigator.clipboard?.writeText(text).then(()=>alert("Resumen copiado al portapapeles.")).catch(()=>alert("No se pudo copiar automáticamente."));
 }
 
 function defaultLogo(){return `<svg viewBox="0 0 120 120" width="110" height="110"><rect x="10" y="10" width="100" height="100" rx="28" fill="#1456a0"/><path d="M66 18 30 68h27l-7 34 40-55H63z" fill="#10b981"/><text x="60" y="104" text-anchor="middle" fill="white" font-size="14" font-weight="800">GIAE</text></svg>`;}
