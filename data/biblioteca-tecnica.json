@@ -1,67 +1,772 @@
 {
   "meta": {
-    "nombre": "Biblioteca Técnica GIAE",
-    "version": "1.0-alpha.029",
+    "nombre": "Base de Conocimiento GIAE",
+    "version": "1.0-alpha.002.9b",
     "estado": "base_inicial",
     "autor": "Julio Guillermo Vera",
     "uso": "Fuente interna para motores de cálculo, documentación, presupuesto, auditoría y Aula Técnica.",
-    "regla": "Los datos normativos deben validarse contra RIC, IEC aplicables a instalaciones eléctricas y Decreto Supremo N°8 cuando corresponda. Si una regla no está respaldada, se marca como pendiente de revisión normativa."
+    "regla": "Los datos normativos deben validarse contra RIC, IEC aplicables a instalaciones eléctricas y Decreto Supremo N°8 cuando corresponda. Si una regla no está respaldada, se marca como pendiente de revisión normativa.",
+    "descripcion": "Base interna de conocimiento técnico, normativo y educativo para GIAE Chile.",
+    "autorIntelectual": "Julio Guillermo Vera",
+    "principio": "Ningún elemento técnico debe aprobarse sin respaldo normativo cargado y verificable."
   },
   "categorias": {
     "conductores": [
-      {"id":"cu-1-5-lh","nombre":"Conductor cobre 1,5 mm² libre de halógenos","seccion_mm2":1.5,"material":"Cobre","uso_referencial":"Circuitos de alumbrado","estado_normativo":"pendiente_revision_normativa","observacion":"Verificar método de instalación, temperatura, agrupamiento, caída de tensión y RIC aplicable."},
-      {"id":"cu-2-5-lh","nombre":"Conductor cobre 2,5 mm² libre de halógenos","seccion_mm2":2.5,"material":"Cobre","uso_referencial":"Circuitos de enchufes y uso general","estado_normativo":"pendiente_revision_normativa","observacion":"Verificar capacidad de conducción, protección asociada y condiciones reales de instalación."},
-      {"id":"cu-4-lh","nombre":"Conductor cobre 4 mm² libre de halógenos","seccion_mm2":4,"material":"Cobre","uso_referencial":"Alimentadores pequeños o cargas específicas","estado_normativo":"pendiente_revision_normativa","observacion":"No aprobar automáticamente sin revisar Ib, Iz, caída de tensión e Icc."},
-      {"id":"cu-6-lh","nombre":"Conductor cobre 6 mm² libre de halógenos","seccion_mm2":6,"material":"Cobre","uso_referencial":"Alimentadores, cargas de mayor demanda o tableros secundarios","estado_normativo":"pendiente_revision_normativa","observacion":"Validar con cálculo y normativa vigente."}
+      {
+        "id": "cu-1-5-lh",
+        "nombre": "Conductor cobre 1,5 mm² libre de halógenos",
+        "seccion_mm2": 1.5,
+        "material": "Cobre",
+        "uso_referencial": "Circuitos de alumbrado",
+        "estado_normativo": "pendiente_revision_normativa",
+        "observacion": "Verificar método de instalación, temperatura, agrupamiento, caída de tensión y RIC aplicable.",
+        "categoria": "conductores",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "cu-2-5-lh",
+        "nombre": "Conductor cobre 2,5 mm² libre de halógenos",
+        "seccion_mm2": 2.5,
+        "material": "Cobre",
+        "uso_referencial": "Circuitos de enchufes y uso general",
+        "estado_normativo": "pendiente_revision_normativa",
+        "observacion": "Verificar capacidad de conducción, protección asociada y condiciones reales de instalación.",
+        "categoria": "conductores",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "cu-4-lh",
+        "nombre": "Conductor cobre 4 mm² libre de halógenos",
+        "seccion_mm2": 4,
+        "material": "Cobre",
+        "uso_referencial": "Alimentadores pequeños o cargas específicas",
+        "estado_normativo": "pendiente_revision_normativa",
+        "observacion": "No aprobar automáticamente sin revisar Ib, Iz, caída de tensión e Icc.",
+        "categoria": "conductores",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "cu-6-lh",
+        "nombre": "Conductor cobre 6 mm² libre de halógenos",
+        "seccion_mm2": 6,
+        "material": "Cobre",
+        "uso_referencial": "Alimentadores, cargas de mayor demanda o tableros secundarios",
+        "estado_normativo": "pendiente_revision_normativa",
+        "observacion": "Validar con cálculo y normativa vigente.",
+        "categoria": "conductores",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      }
     ],
     "proteccionesTermomagneticas": [
-      {"id":"tm-6","nombre":"Interruptor automático 6 A","corriente_A":6,"uso_referencial":"Circuitos de baja carga","estado_normativo":"pendiente_revision_normativa"},
-      {"id":"tm-10","nombre":"Interruptor automático 10 A","corriente_A":10,"uso_referencial":"Circuitos de alumbrado o baja potencia","estado_normativo":"pendiente_revision_normativa"},
-      {"id":"tm-16","nombre":"Interruptor automático 16 A","corriente_A":16,"uso_referencial":"Circuitos generales según cálculo","estado_normativo":"pendiente_revision_normativa"},
-      {"id":"tm-20","nombre":"Interruptor automático 20 A","corriente_A":20,"uso_referencial":"Circuitos de mayor carga según cálculo","estado_normativo":"pendiente_revision_normativa"},
-      {"id":"tm-25","nombre":"Interruptor automático 25 A","corriente_A":25,"uso_referencial":"Alimentadores o cargas específicas","estado_normativo":"pendiente_revision_normativa"},
-      {"id":"tm-32","nombre":"Interruptor automático 32 A","corriente_A":32,"uso_referencial":"Alimentadores o cargas específicas","estado_normativo":"pendiente_revision_normativa"},
-      {"id":"tm-40","nombre":"Interruptor automático 40 A","corriente_A":40,"uso_referencial":"Alimentadores o protección general según cálculo","estado_normativo":"pendiente_revision_normativa"},
-      {"id":"tm-63","nombre":"Interruptor automático 63 A","corriente_A":63,"uso_referencial":"Protección general o alimentadores según cálculo","estado_normativo":"pendiente_revision_normativa"}
+      {
+        "id": "tm-6",
+        "nombre": "Interruptor automático 6 A",
+        "corriente_A": 6,
+        "uso_referencial": "Circuitos de baja carga",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "proteccionesTermomagneticas",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "tm-10",
+        "nombre": "Interruptor automático 10 A",
+        "corriente_A": 10,
+        "uso_referencial": "Circuitos de alumbrado o baja potencia",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "proteccionesTermomagneticas",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "tm-16",
+        "nombre": "Interruptor automático 16 A",
+        "corriente_A": 16,
+        "uso_referencial": "Circuitos generales según cálculo",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "proteccionesTermomagneticas",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "tm-20",
+        "nombre": "Interruptor automático 20 A",
+        "corriente_A": 20,
+        "uso_referencial": "Circuitos de mayor carga según cálculo",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "proteccionesTermomagneticas",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "tm-25",
+        "nombre": "Interruptor automático 25 A",
+        "corriente_A": 25,
+        "uso_referencial": "Alimentadores o cargas específicas",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "proteccionesTermomagneticas",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "tm-32",
+        "nombre": "Interruptor automático 32 A",
+        "corriente_A": 32,
+        "uso_referencial": "Alimentadores o cargas específicas",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "proteccionesTermomagneticas",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "tm-40",
+        "nombre": "Interruptor automático 40 A",
+        "corriente_A": 40,
+        "uso_referencial": "Alimentadores o protección general según cálculo",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "proteccionesTermomagneticas",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "tm-63",
+        "nombre": "Interruptor automático 63 A",
+        "corriente_A": 63,
+        "uso_referencial": "Protección general o alimentadores según cálculo",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "proteccionesTermomagneticas",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      }
     ],
     "diferenciales": [
-      {"id":"dif-30ma-ac","nombre":"Interruptor diferencial 30 mA tipo AC","sensibilidad_mA":30,"tipo":"AC","uso_referencial":"Protección adicional de personas según aplicación","estado_normativo":"pendiente_revision_normativa"},
-      {"id":"dif-30ma-a","nombre":"Interruptor diferencial 30 mA tipo A","sensibilidad_mA":30,"tipo":"A","uso_referencial":"Cargas con componentes electrónicos o corrientes pulsantes según evaluación","estado_normativo":"pendiente_revision_normativa"},
-      {"id":"dif-300ma","nombre":"Interruptor diferencial 300 mA","sensibilidad_mA":300,"tipo":"según proyecto","uso_referencial":"Protección contra fuga/incendio según diseño y selectividad","estado_normativo":"pendiente_revision_normativa"}
+      {
+        "id": "dif-30ma-ac",
+        "nombre": "Interruptor diferencial 30 mA tipo AC",
+        "sensibilidad_mA": 30,
+        "tipo": "AC",
+        "uso_referencial": "Protección adicional de personas según aplicación",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "diferenciales",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "dif-30ma-a",
+        "nombre": "Interruptor diferencial 30 mA tipo A",
+        "sensibilidad_mA": 30,
+        "tipo": "A",
+        "uso_referencial": "Cargas con componentes electrónicos o corrientes pulsantes según evaluación",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "diferenciales",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "dif-300ma",
+        "nombre": "Interruptor diferencial 300 mA",
+        "sensibilidad_mA": 300,
+        "tipo": "según proyecto",
+        "uso_referencial": "Protección contra fuga/incendio según diseño y selectividad",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "diferenciales",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      }
     ],
     "canalizaciones": [
-      {"id":"emt","nombre":"Tubería EMT","uso_referencial":"Canalización metálica en instalaciones interiores o expuestas según diseño","estado_normativo":"pendiente_revision_normativa"},
-      {"id":"pvc","nombre":"Tubería PVC eléctrica","uso_referencial":"Canalización en condiciones permitidas por normativa y ambiente","estado_normativo":"pendiente_revision_normativa"},
-      {"id":"bandeja-metalica","nombre":"Bandeja metálica","uso_referencial":"Distribución de alimentadores o circuitos en recorridos principales","estado_normativo":"pendiente_revision_normativa"},
-      {"id":"canaleta","nombre":"Canaleta eléctrica","uso_referencial":"Distribución superficial de circuitos menores según diseño","estado_normativo":"pendiente_revision_normativa"}
+      {
+        "id": "emt",
+        "nombre": "Tubería EMT",
+        "uso_referencial": "Canalización metálica en instalaciones interiores o expuestas según diseño",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "canalizaciones",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "pvc",
+        "nombre": "Tubería PVC eléctrica",
+        "uso_referencial": "Canalización en condiciones permitidas por normativa y ambiente",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "canalizaciones",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "bandeja-metalica",
+        "nombre": "Bandeja metálica",
+        "uso_referencial": "Distribución de alimentadores o circuitos en recorridos principales",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "canalizaciones",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "canaleta",
+        "nombre": "Canaleta eléctrica",
+        "uso_referencial": "Distribución superficial de circuitos menores según diseño",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "canalizaciones",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      }
     ],
     "puestaTierra": [
-      {"id":"electrodo-vertical","nombre":"Electrodo vertical de puesta a tierra","uso_referencial":"Sistema de puesta a tierra simple o complementario","estado_normativo":"requiere_medicion_terreno","observacion":"El resultado final depende de resistividad del terreno, instalación y medición real."},
-      {"id":"malla-tierra","nombre":"Malla de puesta a tierra","uso_referencial":"Instalaciones con mayores exigencias de equipotencialidad o resistencia objetivo","estado_normativo":"requiere_diseno_especifico"},
-      {"id":"union-equipotencial","nombre":"Unión equipotencial","uso_referencial":"Vinculación de masas y elementos conductores conforme diseño de seguridad","estado_normativo":"pendiente_revision_normativa"}
+      {
+        "id": "electrodo-vertical",
+        "nombre": "Electrodo vertical de puesta a tierra",
+        "uso_referencial": "Sistema de puesta a tierra simple o complementario",
+        "estado_normativo": "requiere_medicion_terreno",
+        "observacion": "El resultado final depende de resistividad del terreno, instalación y medición real.",
+        "categoria": "puestaTierra",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "malla-tierra",
+        "nombre": "Malla de puesta a tierra",
+        "uso_referencial": "Instalaciones con mayores exigencias de equipotencialidad o resistencia objetivo",
+        "estado_normativo": "requiere_diseno_especifico",
+        "categoria": "puestaTierra",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "union-equipotencial",
+        "nombre": "Unión equipotencial",
+        "uso_referencial": "Vinculación de masas y elementos conductores conforme diseño de seguridad",
+        "estado_normativo": "pendiente_revision_normativa",
+        "categoria": "puestaTierra",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      }
     ],
     "distribuidoras": [
-      {"id":"cge","nombre":"CGE","tipo":"Distribuidora eléctrica","estado":"base_inicial","observacion":"Requiere cargar tablas y criterios oficiales vigentes antes de aprobar empalmes."},
-      {"id":"copelec","nombre":"COPELEC","tipo":"Distribuidora eléctrica","estado":"base_inicial","observacion":"Requiere cargar tablas y criterios oficiales vigentes antes de aprobar empalmes."},
-      {"id":"frontel","nombre":"FRONTEL","tipo":"Distribuidora eléctrica","estado":"base_inicial","observacion":"Requiere cargar tablas y criterios oficiales vigentes antes de aprobar empalmes."},
-      {"id":"saesa","nombre":"SAESA","tipo":"Distribuidora eléctrica","estado":"base_inicial","observacion":"Requiere cargar tablas y criterios oficiales vigentes antes de aprobar empalmes."},
-      {"id":"chilquinta","nombre":"Chilquinta","tipo":"Distribuidora eléctrica","estado":"base_inicial","observacion":"Requiere cargar tablas y criterios oficiales vigentes antes de aprobar empalmes."}
+      {
+        "id": "cge",
+        "nombre": "CGE",
+        "tipo": "Distribuidora eléctrica",
+        "estado": "base_inicial",
+        "observacion": "Requiere cargar tablas y criterios oficiales vigentes antes de aprobar empalmes.",
+        "categoria": "distribuidoras",
+        "estado_conocimiento": "validado",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "copelec",
+        "nombre": "COPELEC",
+        "tipo": "Distribuidora eléctrica",
+        "estado": "base_inicial",
+        "observacion": "Requiere cargar tablas y criterios oficiales vigentes antes de aprobar empalmes.",
+        "categoria": "distribuidoras",
+        "estado_conocimiento": "validado",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "frontel",
+        "nombre": "FRONTEL",
+        "tipo": "Distribuidora eléctrica",
+        "estado": "base_inicial",
+        "observacion": "Requiere cargar tablas y criterios oficiales vigentes antes de aprobar empalmes.",
+        "categoria": "distribuidoras",
+        "estado_conocimiento": "validado",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "saesa",
+        "nombre": "SAESA",
+        "tipo": "Distribuidora eléctrica",
+        "estado": "base_inicial",
+        "observacion": "Requiere cargar tablas y criterios oficiales vigentes antes de aprobar empalmes.",
+        "categoria": "distribuidoras",
+        "estado_conocimiento": "validado",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "chilquinta",
+        "nombre": "Chilquinta",
+        "tipo": "Distribuidora eléctrica",
+        "estado": "base_inicial",
+        "observacion": "Requiere cargar tablas y criterios oficiales vigentes antes de aprobar empalmes.",
+        "categoria": "distribuidoras",
+        "estado_conocimiento": "validado",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      }
     ],
     "documentos": [
-      {"id":"memoria-tecnica","nombre":"Memoria técnica","uso":"Documentación de cálculo y criterios de diseño","estado":"plantilla_pendiente"},
-      {"id":"cuadro-carga","nombre":"Cuadro de carga","uso":"Resumen de circuitos, potencias, fases y protecciones","estado":"plantilla_pendiente"},
-      {"id":"unilineal","nombre":"Diagrama unilineal","uso":"Representación técnica del tablero y circuitos","estado":"plantilla_pendiente"},
-      {"id":"te1","nombre":"Antecedentes para TE1","uso":"Apoyo documental para declaración según corresponda","estado":"requiere_revision_sec"}
+      {
+        "id": "memoria-tecnica",
+        "nombre": "Memoria técnica",
+        "uso": "Documentación de cálculo y criterios de diseño",
+        "estado": "plantilla_pendiente",
+        "categoria": "documentos",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "cuadro-carga",
+        "nombre": "Cuadro de carga",
+        "uso": "Resumen de circuitos, potencias, fases y protecciones",
+        "estado": "plantilla_pendiente",
+        "categoria": "documentos",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "unilineal",
+        "nombre": "Diagrama unilineal",
+        "uso": "Representación técnica del tablero y circuitos",
+        "estado": "plantilla_pendiente",
+        "categoria": "documentos",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      },
+      {
+        "id": "te1",
+        "nombre": "Antecedentes para TE1",
+        "uso": "Apoyo documental para declaración según corresponda",
+        "estado": "requiere_revision_sec",
+        "categoria": "documentos",
+        "estado_conocimiento": "en_revision",
+        "ultima_revision": "pendiente",
+        "fuente_normativa": "pendiente de carga",
+        "aplicable_a": [
+          "Ingeniería",
+          "Aula Técnica",
+          "Motor Normativo"
+        ],
+        "historial": [
+          {
+            "fecha": "2026-06-30",
+            "accion": "Registro creado en Base de Conocimiento GIAE"
+          }
+        ]
+      }
     ]
   },
   "reglasSoftware": [
-    {"id":"reg-no-inventar","nombre":"No inventar datos","descripcion":"Si un dato técnico o normativo no está cargado en la biblioteca, el sistema debe informar que requiere revisión normativa.","aplica_a":["motor_normativo","auditoria","cargas","empalme","tierra","documentacion"]},
-    {"id":"reg-proyecto-activo","nombre":"Fuente única de datos","descripcion":"Los motores deben leer y escribir resultados en el Proyecto Activo, evitando cálculos contradictorios.","aplica_a":["cargas","cuadro_carga","unilineal","presupuesto","auditoria"]},
-    {"id":"reg-fundamento-visible","nombre":"Fundamento visible","descripcion":"Toda recomendación técnica debe permitir ver cálculo, criterio y fuente disponible.","aplica_a":["motor_normativo","auditoria","aula_tecnica"]}
+    {
+      "id": "reg-no-inventar",
+      "nombre": "No inventar datos",
+      "descripcion": "Si un dato técnico o normativo no está cargado en la biblioteca, el sistema debe informar que requiere revisión normativa.",
+      "aplica_a": [
+        "motor_normativo",
+        "auditoria",
+        "cargas",
+        "empalme",
+        "tierra",
+        "documentacion"
+      ]
+    },
+    {
+      "id": "reg-proyecto-activo",
+      "nombre": "Fuente única de datos",
+      "descripcion": "Los motores deben leer y escribir resultados en el Proyecto Activo, evitando cálculos contradictorios.",
+      "aplica_a": [
+        "cargas",
+        "cuadro_carga",
+        "unilineal",
+        "presupuesto",
+        "auditoria"
+      ]
+    },
+    {
+      "id": "reg-fundamento-visible",
+      "nombre": "Fundamento visible",
+      "descripcion": "Toda recomendación técnica debe permitir ver cálculo, criterio y fuente disponible.",
+      "aplica_a": [
+        "motor_normativo",
+        "auditoria",
+        "aula_tecnica"
+      ]
+    }
   ],
   "referenciasAutorizadas": [
-    {"id":"ric","nombre":"Reglamentos RIC Chile","alcance":"Instalaciones de consumo de energía eléctrica en Chile","prioridad":1,"estado":"cargar_pliegos"},
-    {"id":"iec-electrica","nombre":"Normas IEC aplicables a instalaciones eléctricas","alcance":"Referencia técnica internacional solo en materias eléctricas pertinentes","prioridad":2,"estado":"cargar_normas_autorizadas"},
-    {"id":"ds8","nombre":"Decreto Supremo N°8 de Chile","alcance":"Aplicación cuando corresponda al tipo de instalación o recinto","prioridad":3,"estado":"cargar_texto_autorizado"}
+    {
+      "id": "ric",
+      "nombre": "Reglamentos RIC Chile",
+      "alcance": "Instalaciones de consumo de energía eléctrica en Chile",
+      "prioridad": 1,
+      "estado": "cargar_pliegos"
+    },
+    {
+      "id": "iec-electrica",
+      "nombre": "Normas IEC aplicables a instalaciones eléctricas",
+      "alcance": "Referencia técnica internacional solo en materias eléctricas pertinentes",
+      "prioridad": 2,
+      "estado": "cargar_normas_autorizadas"
+    },
+    {
+      "id": "ds8",
+      "nombre": "Decreto Supremo N°8 de Chile",
+      "alcance": "Aplicación cuando corresponda al tipo de instalación o recinto",
+      "prioridad": 3,
+      "estado": "cargar_texto_autorizado"
+    }
   ]
 }

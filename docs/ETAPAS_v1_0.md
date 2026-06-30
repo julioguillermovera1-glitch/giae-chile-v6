@@ -131,3 +131,9 @@ Estado: terminada.
 Se incorpora una biblioteca técnica interna reutilizable por los futuros motores de ingeniería, documentación, presupuesto, auditoría y Aula Técnica. La biblioteca contiene catálogos iniciales de conductores, protecciones termomagnéticas, diferenciales, canalizaciones, puesta a tierra, distribuidoras y documentos técnicos.
 
 Regla principal: ningún dato debe aprobarse automáticamente si no cuenta con respaldo normativo cargado. En ese caso, GIAE debe marcar el resultado como pendiente o requiere revisión normativa.
+
+
+## Etapa 2.9b - Base de Conocimiento GIAE
+- Biblioteca Técnica evolucionada a Base de Conocimiento.
+- Incluye buscador, filtros por categoría/estado/uso y ficha técnica por elemento.
+- Mantiene regla de validación normativa estricta: RIC, IEC eléctrica aplicable y DS N°8 cuando corresponda.
