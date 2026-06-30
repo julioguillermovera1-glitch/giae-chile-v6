@@ -155,3 +155,15 @@ input, select, textarea {
   .workspace, .window-host { padding: 0; box-shadow: none; border: 0; }
   .diagram-panel { border: 0; padding: 0; }
 }
+
+.svg-scroll { width: 100%; overflow: auto; }
+.unilineal-pro-svg { width: 100%; min-width: 980px; height: auto; display: block; background: #ffffff; border-radius: 14px; }
+.result-box.danger, .danger { border-left-color: #b42318; background: #fff1f0; color: #7a271a; }
+.result-box.warn, .warn { border-left-color: #b7791f; background: #fff7e6; color: #7a4b00; }
+.result-box.ok, .ok { border-left-color: #15803d; background: #ecfdf3; color: #14532d; }
+.earth-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; margin-bottom: 1rem; }
+.earth-summary article { border: 1px solid var(--line); border-radius: 16px; padding: .9rem; background: #fff; }
+.earth-summary small { display: block; color: var(--muted); font-weight: 700; margin-bottom: .35rem; }
+.earth-summary strong { font-size: 1.2rem; }
+@media (max-width: 850px) { .earth-summary { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .earth-summary { grid-template-columns: 1fr; } }
