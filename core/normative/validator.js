@@ -79,7 +79,63 @@ function evaluateAtomic(condition, context){
     const esProteccion = ["proteccion", "protección", "pe", "tierra", "conductor de protección"].includes(funcion);
     return { result: (!esVerde || esProteccion) ? "cumple" : "no_cumple", detail: "Verde o verde/amarillo queda reservado para conductor de protección." };
   }
-  return { result: "requiere_revision", detail: "Tipo de condición no implementado." };
+
+  if(condition.tipo === "minimo_seccion_alimentador_ric3"){
+    const tipo = String(getValue(context, condition.tipoDato || "tipoAlimentacion") || "").toLowerCase().trim();
+    const seccion = Number(getValue(context, condition.seccionDato || "seccionMm2"));
+    if(!tipo || Number.isNaN(seccion)) return { result: "informacion_insuficiente", detail: "Faltan tipo de alimentador/subalimentador o sección." };
+    const minimos = condition.minimos || { alimentador: 4, subalimentador: 2.5 };
+    const minimo = Number(minimos[tipo]);
+    if(Number.isNaN(minimo)) return { result: "requiere_revision", detail: `No hay mínimo cargado para ${tipo}.` };
+    return { result: seccion >= minimo ? "cumple" : "no_cumple", detail: `${tipo}: sección ${seccion} mm², mínimo ${minimo} mm².` };
+  }
+  if(condition.tipo === "caida_tension_ric3"){
+    const alim = Number(getValue(context, condition.alimentadorDato || "caidaAlimentadorPct"));
+    const total = Number(getValue(context, condition.totalDato || "caidaTotalPct"));
+    if(Number.isNaN(alim) || Number.isNaN(total)) return { result: "informacion_insuficiente", detail: "Faltan caída de tensión del alimentador o total." };
+    const maxAlim = Number(condition.maxAlimentador ?? 3);
+    const maxTotal = Number(condition.maxTotal ?? 5);
+    const ok = alim <= maxAlim && total <= maxTotal;
+    return { result: ok ? "cumple" : "no_cumple", detail: `Caída alimentador ${alim}%/${maxAlim}%, total ${total}%/${maxTotal}%.` };
+  }
+  if(condition.tipo === "neutro_monofasico_igual_fase_ric3"){
+    const sistema = String(getValue(context, condition.sistemaDato || "sistema") || "").toLowerCase().trim();
+    const fase = Number(getValue(context, condition.faseDato || "seccionFaseMm2"));
+    const neutro = Number(getValue(context, condition.neutroDato || "seccionNeutroMm2"));
+    if(!sistema || Number.isNaN(fase) || Number.isNaN(neutro)) return { result: "informacion_insuficiente", detail: "Faltan sistema, sección de fase o sección de neutro." };
+    if(!sistema.includes("mono")) return { result: "requiere_revision", detail: "Regla ejecutable solo para alimentadores/subalimentadores monofásicos." };
+    return { result: neutro >= fase ? "cumple" : "no_cumple", detail: `Monofásico: neutro ${neutro} mm², fase ${fase} mm².` };
+  }
+  if(condition.tipo === "factor_simultaneidad_viviendas_ric3"){
+    const n = Number(getValue(context, condition.viviendasDato || "cantidadViviendas"));
+    const aplicado = Number(getValue(context, condition.factorDato || "factorSimultaneidad"));
+    if(Number.isNaN(n) || Number.isNaN(aplicado)) return { result: "informacion_insuficiente", detail: "Faltan cantidad de viviendas o factor de simultaneidad aplicado." };
+    const tabla = {1:1,2:1,3:1,4:0.95,5:0.92,6:0.90,7:0.89,8:0.88,9:0.87,10:0.85,11:0.84,12:0.83,13:0.82,14:0.81,15:0.79,16:0.78,17:0.77,18:0.76,19:0.75,20:0.74,21:0.73};
+    const requerido = n > 21 ? (15.3 + (n - 21) * 0.5) / n : tabla[Math.max(1, Math.floor(n))];
+    if(requerido === undefined) return { result: "requiere_revision", detail: "Cantidad de viviendas fuera de rango evaluable." };
+    const ok = aplicado + 0.0001 >= requerido;
+    return { result: ok ? "cumple" : "no_cumple", detail: `Fs aplicado ${aplicado}, mínimo requerido ${requerido.toFixed(3)} para ${n} vivienda(s).` };
+  }
+  if(condition.tipo === "demanda_alumbrado_ric3"){
+    const tipo = String(getValue(context, condition.tipoConsumidorDato || "tipoConsumidor") || "").toLowerCase().trim();
+    const potencia = Number(getValue(context, condition.potenciaAlumbradoKwDato || "potenciaAlumbradoKw"));
+    const demanda = Number(getValue(context, condition.demandaAlumbradoKwDato || "demandaAlumbradoKw"));
+    if(!tipo || Number.isNaN(potencia) || Number.isNaN(demanda)) return { result: "informacion_insuficiente", detail: "Faltan tipo de consumidor, potencia de alumbrado o demanda calculada." };
+    function calcDemanda(t, p){
+      if(t.includes("casa")) return Math.min(p,3)*1 + Math.max(Math.min(p,120)-3,0)*0.35 + Math.max(p-120,0)*0.25;
+      if(t.includes("hospital")) return Math.min(p,50)*0.4 + Math.max(p-50,0)*0.2;
+      if(t.includes("hotel") || t.includes("motel")) return Math.min(p,20)*0.5 + Math.max(Math.min(p,100)-20,0)*0.4 + Math.max(p-100,0)*0.3;
+      if(t.includes("bodega")) return Math.min(p,12.5)*1 + Math.max(p-12.5,0)*0.5;
+      if(t.includes("servicio")) return p;
+      if(t.includes("local") || t.includes("oficina")) return Math.min(p,50)*1 + Math.max(p-50,0)*0.8;
+      return p;
+    }
+    const requerida = calcDemanda(tipo, potencia);
+    const ok = demanda + 0.0001 >= requerida;
+    return { result: ok ? "cumple" : "no_cumple", detail: `Demanda aplicada ${demanda.toFixed(3)} kW, demanda mínima calculada ${requerida.toFixed(3)} kW.` };
+  }
+
+    return { result: "requiere_revision", detail: "Tipo de condición no implementado." };
 }
 
 export function evaluateRule(rule, context = {}){

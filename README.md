@@ -41,5 +41,10 @@ Administrador de Proyectos local agregado. Permite crear, guardar, abrir, duplic
 Incluye `data/biblioteca-tecnica.json`, `core/technicalLibrary.js` y el módulo administrativo `modules/biblioteca/biblioteca.js`. Esta base será usada por los motores de cálculo y por la auditoría normativa.
 
 
-### Etapa 3.0.2a
+### Etapa 3.0.2b
 Se incorporó el primer paquete de reglas RIC 4 para el Motor Normativo GIAE.
+
+
+## Etapa 3.0.2b
+
+Agregado paquete inicial de reglas RIC 3 para alimentadores y demanda.
