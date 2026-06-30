@@ -9,13 +9,15 @@ const title = document.querySelector("#workspaceTitle");
 const activeProfile = document.querySelector("#activeProfile");
 
 restore();
-renderMenu();
 
 if (state.profile) openPlatform();
+
+window.addEventListener("giae:admin-updated", () => renderMenu());
 
 document.querySelectorAll("[data-profile]").forEach(button => {
   button.addEventListener("click", () => {
     setProfile(button.dataset.profile);
+    markSession(button.dataset.profile);
     openPlatform();
   });
 });
@@ -25,15 +27,16 @@ document.querySelector("#saveProjectBtn").addEventListener("click", () => {
   alert("Proyecto guardado localmente en este navegador.");
 });
 
-
 const logoutBtn = document.querySelector("#logoutBtn");
 logoutBtn.addEventListener("click", () => {
+  closeSession();
   clearProfile();
   platformView.classList.add("hidden");
   loginView.classList.remove("hidden");
   activeProfile.textContent = "Sin sesión";
   host.innerHTML = "";
   title.textContent = "Inicio";
+  menu.innerHTML = "";
 });
 
 document.querySelector("#exportBtn").addEventListener("click", () => {
@@ -50,29 +53,40 @@ function openPlatform() {
   loginView.classList.add("hidden");
   platformView.classList.remove("hidden");
   activeProfile.textContent = profileLabel(state.profile);
-  openModule("proyecto");
+  renderMenu();
+  const first = availableModules()[0];
+  openModule(first?.id || "proyecto");
 }
 
-function renderMenu() {
-  menu.innerHTML = modules.map(module => `
-    <button class="menu-button" data-module="${module.id}">${module.label}</button>
-  `).join("");
-  menu.addEventListener("click", event => {
-    const button = event.target.closest("[data-module]");
-    if (!button) return;
-    openModule(button.dataset.module);
+function availableModules(){
+  return modules.filter(module => {
+    const allowed = !module.profiles || module.profiles.includes(state.profile);
+    const enabled = state.admin?.enabledModules?.[module.id] !== false;
+    return allowed && enabled;
   });
 }
 
+function renderMenu() {
+  const available = availableModules();
+  menu.innerHTML = available.map(module => `
+    <button class="menu-button" data-module="${module.id}">${module.label}</button>
+  `).join("");
+  menu.onclick = event => {
+    const button = event.target.closest("[data-module]");
+    if (!button) return;
+    openModule(button.dataset.module);
+  };
+}
+
 async function openModule(moduleId) {
-  const selected = modules.find(module => module.id === moduleId);
+  const selected = availableModules().find(module => module.id === moduleId);
   if (!selected) return;
   title.textContent = selected.label;
   document.querySelectorAll(".menu-button").forEach(button => {
     button.classList.toggle("active", button.dataset.module === moduleId);
   });
   host.innerHTML = `<div class="module-window"><p>Cargando ${selected.label}...</p></div>`;
-  const module = await import(selected.path);
+  const module = await import(selected.path + `?v=${Date.now()}`);
   module.render(host, state);
 }
 
@@ -84,4 +98,30 @@ function profileLabel(profile) {
     administrador: "Administrador"
   };
   return labels[profile] || "Sin sesión";
+}
+
+function markSession(profile){
+  state.admin = state.admin || {};
+  state.admin.sessions = state.admin.sessions || [];
+  const name = profileLabel(profile);
+  const now = new Date().toLocaleString("es-CL");
+  const existing = state.admin.sessions.find(session => session.profile === profile);
+  if(existing){
+    existing.status = "Conectado";
+    existing.lastSeen = now;
+  } else {
+    state.admin.sessions.push({ name, profile, status: "Conectado", lastSeen: now });
+  }
+  persist();
+}
+
+function closeSession(){
+  state.admin = state.admin || {};
+  state.admin.sessions = state.admin.sessions || [];
+  const current = state.admin.sessions.find(session => session.profile === state.profile);
+  if(current){
+    current.status = "Desconectado";
+    current.lastSeen = new Date().toLocaleString("es-CL");
+  }
+  persist();
 }

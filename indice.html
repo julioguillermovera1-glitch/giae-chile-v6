@@ -10,15 +10,32 @@
   <noscript>GIAE Chile necesita JavaScript habilitado para funcionar.</noscript>
 
   <section id="loginView" class="login-view">
-    <div class="brand-card">
-      <p class="eyebrow">Plataforma modular</p>
-      <h1>GIAE Chile v1.0</h1>
-      <p>Diseño, cálculo, documentación y auditoría de instalaciones eléctricas en Chile.</p>
-      <div class="profile-grid" aria-label="Tipos de usuario">
-        <button data-profile="independiente">Instalador independiente</button>
-        <button data-profile="empresa">Empresa</button>
-        <button data-profile="estudiante">Estudiante</button>
-        <button data-profile="administrador">Administrador</button>
+    <div class="login-shell">
+      <div class="login-hero">
+        <div class="giae-logo-mark" aria-label="Logo GIAE Chile">
+          <svg viewBox="0 0 120 120" role="img" aria-hidden="true">
+            <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#10b981"/><stop offset="1" stop-color="#1456a0"/></linearGradient></defs>
+            <rect x="10" y="10" width="100" height="100" rx="28" fill="url(#g)"/>
+            <path d="M66 18 30 68h27l-7 34 40-55H63z" fill="#fff"/>
+          </svg>
+        </div>
+        <p class="eyebrow">Plataforma modular eléctrica</p>
+        <h1>GIAE Chile v1.0</h1>
+        <p class="login-copy">Diseño, cálculo, documentación, administración y auditoría de instalaciones eléctricas en Chile.</p>
+        <div class="login-badges">
+          <span>Instaladores</span><span>Empresas</span><span>Estudiantes</span><span>Administrador</span>
+        </div>
+      </div>
+      <div class="brand-card">
+        <p class="eyebrow">Selecciona acceso</p>
+        <h2>Entrar a la plataforma</h2>
+        <p>Elige el perfil de trabajo. El administrador tiene panel exclusivo para gestionar usuarios, empresas, módulos y plantillas.</p>
+        <div class="profile-grid" aria-label="Tipos de usuario">
+          <button data-profile="independiente">Instalador independiente</button>
+          <button data-profile="empresa">Empresa</button>
+          <button data-profile="estudiante">Estudiante</button>
+          <button data-profile="administrador">Administrador</button>
+        </div>
       </div>
     </div>
   </section>
@@ -26,8 +43,8 @@
   <main id="platformView" class="platform hidden">
     <aside class="sidebar" aria-label="Navegación principal">
       <div class="logo-block">
-        <strong>GIAE</strong>
-        <span>Chile v1.0</span>
+        <div class="mini-logo">⚡</div>
+        <div><strong>GIAE</strong><span>Chile v1.0</span></div>
       </div>
       <nav id="moduleMenu"></nav>
     </aside>
