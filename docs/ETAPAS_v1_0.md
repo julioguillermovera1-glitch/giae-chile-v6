@@ -145,3 +145,7 @@ Estado: completada.
 Se creó el núcleo del Motor Normativo preparado para reglas RIC, IEC eléctrica aplicable y DS N°8, sin cargar textos completos de normativa. Incluye esquema de reglas, cargador, evaluador, reportes, importador y panel de administración.
 
 Regla central: GIAE no declara cumplimiento sin regla implementada, datos suficientes y referencia validada.
+
+
+## Etapa 3.0.2a – Reglas RIC 4 iniciales
+Estado: completada. Se incorporó paquete inicial de reglas de conductores, canalizaciones, materiales e identificación derivadas del RIC N°04.

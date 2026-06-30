@@ -35,6 +35,50 @@ function evaluateAtomic(condition, context){
     const maxOk = condition.max === undefined || n <= Number(condition.max);
     return { result: minOk && maxOk ? "cumple" : "no_cumple", detail: `${condition.dato} dentro de rango permitido.` };
   }
+
+  if(condition.tipo === "minimo_seccion_por_tipo_circuito"){
+    const tipo = String(getValue(context, condition.tipoDato || "tipoCircuito") || "").toLowerCase().trim();
+    const seccion = Number(getValue(context, condition.seccionDato || "seccionMm2"));
+    if(!tipo || Number.isNaN(seccion)) return { result: "informacion_insuficiente", detail: "Faltan tipo de circuito o sección del conductor." };
+    const catalogo = condition.minimos || {};
+    const minimo = Number(catalogo[tipo]);
+    if(Number.isNaN(minimo)) return { result: "requiere_revision", detail: `No hay sección mínima cargada para tipo ${tipo}.` };
+    return { result: seccion >= minimo ? "cumple" : "no_cumple", detail: `${tipo}: sección ${seccion} mm², mínimo ${minimo} mm².` };
+  }
+  if(condition.tipo === "valor_en_lista"){
+    const value = String(getValue(context, condition.dato) || "").toLowerCase().trim();
+    if(!value) return { result: "informacion_insuficiente", detail: `Falta dato ${condition.dato}.` };
+    const values = (condition.valores || []).map(v => String(v).toLowerCase());
+    return { result: values.includes(value) ? "cumple" : "no_cumple", detail: `${condition.dato} debe estar en: ${(condition.valores || []).join(", ")}.` };
+  }
+  if(condition.tipo === "valor_no_en_lista"){
+    const value = String(getValue(context, condition.dato) || "").toLowerCase().trim();
+    if(!value) return { result: "informacion_insuficiente", detail: `Falta dato ${condition.dato}.` };
+    const values = (condition.valores || []).map(v => String(v).toLowerCase());
+    return { result: !values.includes(value) ? "cumple" : "no_cumple", detail: `${condition.dato} no debe ser: ${(condition.valores || []).join(", ")}.` };
+  }
+  if(condition.tipo === "booleano_verdadero"){
+    const value = getValue(context, condition.dato);
+    if(value === undefined || value === "") return { result: "informacion_insuficiente", detail: `Falta dato ${condition.dato}.` };
+    return { result: value === true || value === "true" || value === "si" || value === "sí" ? "cumple" : "no_cumple", detail: `${condition.dato} debe estar confirmado.` };
+  }
+  if(condition.tipo === "color_conductor"){
+    const funcion = String(getValue(context, condition.funcionDato || "funcionConductor") || "").toLowerCase().trim();
+    const color = String(getValue(context, condition.colorDato || "colorConductor") || "").toLowerCase().trim();
+    if(!funcion || !color) return { result: "informacion_insuficiente", detail: "Faltan función o color del conductor." };
+    const mapa = condition.codigo || {};
+    const permitido = (mapa[funcion] || []).map(v => String(v).toLowerCase());
+    if(!permitido.length) return { result: "requiere_revision", detail: `No hay código de color cargado para ${funcion}.` };
+    return { result: permitido.includes(color) ? "cumple" : "no_cumple", detail: `${funcion}: color ${color}, permitido ${permitido.join("/")}.` };
+  }
+  if(condition.tipo === "verde_exclusivo_tierra"){
+    const funcion = String(getValue(context, condition.funcionDato || "funcionConductor") || "").toLowerCase().trim();
+    const color = String(getValue(context, condition.colorDato || "colorConductor") || "").toLowerCase().trim();
+    if(!funcion || !color) return { result: "informacion_insuficiente", detail: "Faltan función o color del conductor." };
+    const esVerde = color.includes("verde");
+    const esProteccion = ["proteccion", "protección", "pe", "tierra", "conductor de protección"].includes(funcion);
+    return { result: (!esVerde || esProteccion) ? "cumple" : "no_cumple", detail: "Verde o verde/amarillo queda reservado para conductor de protección." };
+  }
   return { result: "requiere_revision", detail: "Tipo de condición no implementado." };
 }
 

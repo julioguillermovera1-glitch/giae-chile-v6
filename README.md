@@ -39,3 +39,7 @@ Administrador de Proyectos local agregado. Permite crear, guardar, abrir, duplic
 ### Etapa 2.9 - Biblioteca Técnica GIAE
 
 Incluye `data/biblioteca-tecnica.json`, `core/technicalLibrary.js` y el módulo administrativo `modules/biblioteca/biblioteca.js`. Esta base será usada por los motores de cálculo y por la auditoría normativa.
+
+
+### Etapa 3.0.2a
+Se incorporó el primer paquete de reglas RIC 4 para el Motor Normativo GIAE.
