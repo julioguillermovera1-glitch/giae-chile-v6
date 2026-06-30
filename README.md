@@ -66,3 +66,8 @@ Incluye:
 - Comparación entre cálculo preliminar y medición real.
 
 Regla central: el cálculo de tierra en GIAE es preliminar y nunca reemplaza la medición real en terreno.
+
+
+## Etapa 4.0.1 - Motor de Cálculo de Cargas
+
+Se incorpora el primer motor de ingeniería de GIAE: cálculo de cargas, demanda, corriente, balance de fases y recomendaciones preliminares para protección, conductor y canalización.

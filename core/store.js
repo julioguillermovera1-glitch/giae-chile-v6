@@ -1,3 +1,4 @@
+import { calculateLoadProject } from "./engineering/loadEngine.js";
 const STORAGE_KEY = "giae_chile_v1_workspace";
 const LIBRARY_KEY = "giae_chile_v1_project_library";
 
@@ -13,7 +14,7 @@ function defaultProject(){
   const created = nowStamp();
   return {
     id: createProjectId(),
-    version: "1.0-alpha.027",
+    version: "1.0-alpha.040",
     name: "Proyecto sin nombre",
     code: "",
     client: "",
@@ -36,6 +37,7 @@ function defaultProject(){
       normative: "Pendiente"
     },
     loads: [],
+    loadEngine: null,
     loadBoard: [],
     protections: [],
     conductors: [],
@@ -127,7 +129,12 @@ export function addLoad(load) {
     powerW: Number(load.powerW || load.power || load.watts || 0),
     quantity: Number(load.quantity || load.qty || 1),
     phase: load.phase || "Auto",
-    type: load.type || "General"
+    type: load.type || "General",
+    demandFactor: Number(load.demandFactor ?? load.fd ?? 1),
+    simultaneityFactor: Number(load.simultaneityFactor ?? load.fs ?? 1),
+    fp: Number(load.fp ?? load.powerFactor ?? 0.95),
+    system: load.system || "auto",
+    observations: load.observations || ""
   };
   state.currentProject.loads.push(normalized);
   addHistory(`Carga agregada: ${normalized.name}`, "Cargas", false);
@@ -185,8 +192,14 @@ export function recalculateProject(){
   const p = state.currentProject;
   p.loads = Array.isArray(p.loads) ? p.loads : [];
   const totalW = p.loads.reduce((sum, load) => sum + Number(load.powerW || load.power || 0) * Number(load.quantity || 1), 0);
-  p.installedPowerKw = Number((totalW / 1000).toFixed(3));
-  p.demandPowerKw = Number((p.installedPowerKw * 0.85).toFixed(3));
+  const loadResult = calculateLoadProject(p);
+  p.loadEngine = loadResult;
+  p.loadBoard = loadResult.circuits;
+  p.protections = loadResult.circuits.map(c => ({ circuit: c.id, label: c.suggestedBreaker, ampere: c.suggestedBreakerA, differential: c.suggestedDifferential }));
+  p.conductors = loadResult.circuits.map(c => ({ circuit: c.id, sectionMm2: c.conductorSectionMm2, label: c.suggestedConductor, izA: c.conductorIzA }));
+  p.installedPowerKw = loadResult.installedKw || Number((totalW / 1000).toFixed(3));
+  p.demandPowerKw = loadResult.demandKw;
+  p.currentA = loadResult.projectCurrentA;
   p.voltage = p.supplyType === "trifasico" ? "380/220 V" : "220 V";
   p.checklist = calculateChecklist(p);
   const done = p.checklist.filter(item => item.done).length;

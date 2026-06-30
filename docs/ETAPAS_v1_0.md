@@ -160,3 +160,8 @@ Se incorporó el primer paquete de reglas derivadas del RIC N°03 para demanda, 
 
 ## Etapa 3.0.2d — Reglas RIC 6 iniciales
 Estado: Terminada. Se incorpora paquete inicial de Puesta a Tierra y Enlace Equipotencial.
+
+
+## Etapa 4.0.1 - Motor de Cálculo de Cargas
+Estado: terminado.
+Incluye gestor de cargas, cálculo de demanda, corriente, balance de fases y salida de datos al Proyecto Activo.
