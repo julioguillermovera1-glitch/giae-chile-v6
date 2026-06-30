@@ -1,8 +1,8 @@
 {
-  "version": "3.0.2c",
+  "version": "3.0.2d",
   "fuente": "RIC",
-  "paquete": "RIC 3 + RIC 4 + RIC 5 inicial",
-  "nota": "Paquete combinado de reglas iniciales RIC 3, RIC 4 y RIC 5. No contiene textos completos de normas; solo reglas de ingeniería referenciadas.",
+  "paquete": "RIC 3 + RIC 4 + RIC 5 + RIC 6 inicial",
+  "nota": "Paquete combinado de reglas iniciales RIC 3, RIC 4, RIC 5 y RIC 6. No contiene textos completos de normas; solo reglas de ingeniería referenciadas.",
   "reglas": [
     {
       "id": "RIC-00-001",
@@ -6691,6 +6691,1979 @@
           "version": "1.0.0",
           "fecha": "2026-06-30",
           "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-GEN-001",
+      "nombre": "Sistema de puesta a tierra declarado",
+      "descripcion": "Verifica que el proyecto declare la existencia de un sistema de puesta a tierra cuando corresponde a instalación de consumo.",
+      "fuente": "RIC",
+      "categoria": "Puesta a tierra",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "1.1, 1.2 y 2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "tieneSPT"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "tieneSPT"
+      },
+      "mensajes": {
+        "cumple": "Sistema de puesta a tierra declarado: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Sistema de puesta a tierra declarado: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Sistema de puesta a tierra declarado: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Sistema de puesta a tierra declarado: faltan datos para evaluar."
+      },
+      "accion": "Incorporar o declarar sistema de puesta a tierra antes de emitir documentación.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-GEN-002",
+      "nombre": "Protección de personas y equipos",
+      "descripcion": "Verifica que el diseño considere limitar tensiones respecto de tierra en masas metálicas y operación de protecciones.",
+      "fuente": "RIC",
+      "categoria": "Seguridad eléctrica",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "1.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "consideraProteccionPersonas"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "consideraProteccionPersonas"
+      },
+      "mensajes": {
+        "cumple": "Protección de personas y equipos: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Protección de personas y equipos: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Protección de personas y equipos: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Protección de personas y equipos: faltan datos para evaluar."
+      },
+      "accion": "Revisar coordinación de puesta a tierra y protecciones.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-GEN-003",
+      "nombre": "Aplicación a baja y media tensión",
+      "descripcion": "Marca si el proyecto declara el nivel de tensión para aplicar criterios del pliego.",
+      "fuente": "RIC",
+      "categoria": "Alcance",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "proyecto",
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "nivelTension"
+      ],
+      "condicion": {
+        "tipo": "valor_en_lista",
+        "dato": "nivelTension",
+        "valores": [
+          "baja tension",
+          "baja tensión",
+          "media tension",
+          "media tensión",
+          "bt",
+          "mt"
+        ]
+      },
+      "mensajes": {
+        "cumple": "Aplicación a baja y media tensión: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Aplicación a baja y media tensión: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Aplicación a baja y media tensión: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Aplicación a baja y media tensión: faltan datos para evaluar."
+      },
+      "accion": "Definir nivel de tensión del proyecto para aplicar reglas correspondientes.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-DEF-001",
+      "nombre": "SPT como conjunto de elementos",
+      "descripcion": "Verifica que el sistema de puesta a tierra se registre como conjunto de electrodos, conductores, conexiones y dispositivos asociados.",
+      "fuente": "RIC",
+      "categoria": "Puesta a tierra",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "componentesSPTRegistrados"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "componentesSPTRegistrados"
+      },
+      "mensajes": {
+        "cumple": "SPT como conjunto de elementos: cumple con el criterio implementado en GIAE.",
+        "noCumple": "SPT como conjunto de elementos: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "SPT como conjunto de elementos: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "SPT como conjunto de elementos: faltan datos para evaluar."
+      },
+      "accion": "Registrar electrodos, conductor, conexiones, cámara y elementos asociados.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-DEF-002",
+      "nombre": "Conexión directa sin fusibles ni protección",
+      "descripcion": "Verifica que la conexión a tierra se declare directa mediante conductor y sin fusible o protección intermedia.",
+      "fuente": "RIC",
+      "categoria": "Puesta a tierra",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "conexionTierraDirecta"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "conexionTierraDirecta"
+      },
+      "mensajes": {
+        "cumple": "Conexión directa sin fusibles ni protección: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Conexión directa sin fusibles ni protección: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Conexión directa sin fusibles ni protección: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Conexión directa sin fusibles ni protección: faltan datos para evaluar."
+      },
+      "accion": "Corregir conexión de puesta a tierra para que sea directa y continua.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-REF-001",
+      "nombre": "Referencia IEC 60228 para conductores",
+      "descripcion": "Permite asociar conductores de puesta a tierra con referencia IEC 60228 citada por el pliego.",
+      "fuente": "RIC",
+      "categoria": "Referencias IEC",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.4",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "biblioteca",
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "conductorReferenciaIEC60228"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "conductorReferenciaIEC60228"
+      },
+      "mensajes": {
+        "cumple": "Referencia IEC 60228 para conductores: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Referencia IEC 60228 para conductores: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Referencia IEC 60228 para conductores: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Referencia IEC 60228 para conductores: faltan datos para evaluar."
+      },
+      "accion": "Verificar que el conductor usado corresponda a especificación aplicable.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-REF-002",
+      "nombre": "Medición de resistencia de tierra con referencia técnica",
+      "descripcion": "Verifica que el proyecto registre o exija medición de resistencia a tierra con instrumento/procedimiento apropiado.",
+      "fuente": "RIC",
+      "categoria": "Medición",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.6 y 3.12",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "documentacion"
+      ],
+      "entradasRequeridas": [
+        "medicionTierraRegistrada"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "medicionTierraRegistrada"
+      },
+      "mensajes": {
+        "cumple": "Medición de resistencia de tierra con referencia técnica: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Medición de resistencia de tierra con referencia técnica: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Medición de resistencia de tierra con referencia técnica: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Medición de resistencia de tierra con referencia técnica: faltan datos para evaluar."
+      },
+      "accion": "Registrar medición de resistencia de puesta a tierra; no declarar valor final solo por cálculo.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-REF-003",
+      "nombre": "Electrodos conforme a componentes de sistema de tierra",
+      "descripcion": "Verifica que los electrodos declarados tengan tipo/material/configuración registrados.",
+      "fuente": "RIC",
+      "categoria": "Electrodos",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.9 y 4.5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "electrodosDefinidos"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "electrodosDefinidos"
+      },
+      "mensajes": {
+        "cumple": "Electrodos conforme a componentes de sistema de tierra: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Electrodos conforme a componentes de sistema de tierra: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Electrodos conforme a componentes de sistema de tierra: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Electrodos conforme a componentes de sistema de tierra: faltan datos para evaluar."
+      },
+      "accion": "Definir tipo, material, cantidad y configuración de electrodos.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-REF-004",
+      "nombre": "Conexiones permanentes calificadas",
+      "descripcion": "Verifica que las conexiones del SPT declaren método permanente y continuidad mecánica/eléctrica.",
+      "fuente": "RIC",
+      "categoria": "Conexiones",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.13",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "conexionesPermanentes"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "conexionesPermanentes"
+      },
+      "mensajes": {
+        "cumple": "Conexiones permanentes calificadas: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Conexiones permanentes calificadas: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Conexiones permanentes calificadas: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Conexiones permanentes calificadas: faltan datos para evaluar."
+      },
+      "accion": "Verificar conectores, soldadura exotérmica o método aprobado según caso.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-MED-001",
+      "nombre": "Cálculo no reemplaza medición en terreno",
+      "descripcion": "Toda estimación de resistencia de puesta a tierra debe quedar como preliminar hasta registrar medición real.",
+      "fuente": "RIC",
+      "categoria": "Medición",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.6, 3.12 y 4.5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "documentacion"
+      ],
+      "entradasRequeridas": [
+        "valorCalculadoTierra"
+      ],
+      "condicion": {
+        "tipo": "manual"
+      },
+      "mensajes": {
+        "cumple": "Cálculo no reemplaza medición en terreno: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Cálculo no reemplaza medición en terreno: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Cálculo no reemplaza medición en terreno: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Cálculo no reemplaza medición en terreno: faltan datos para evaluar."
+      },
+      "accion": "Solicitar medición real en terreno antes de declarar puesta a tierra verificada.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-MED-002",
+      "nombre": "Medición real obligatoria para estado verificado",
+      "descripcion": "La puesta a tierra solo puede considerarse verificada si existe valor de medición real registrado.",
+      "fuente": "RIC",
+      "categoria": "Medición",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.6 y 3.12",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "medicionOhm"
+      ],
+      "condicion": {
+        "tipo": "comparacion",
+        "izquierda": "medicionOhm",
+        "operador": ">",
+        "derecha": 0
+      },
+      "mensajes": {
+        "cumple": "Medición real obligatoria para estado verificado: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Medición real obligatoria para estado verificado: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Medición real obligatoria para estado verificado: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Medición real obligatoria para estado verificado: faltan datos para evaluar."
+      },
+      "accion": "Ingresar medición de resistencia de tierra obtenida en terreno.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-MED-003",
+      "nombre": "Instrumento de medición identificado",
+      "descripcion": "Verifica que el informe de tierra identifique el instrumento usado para medición.",
+      "fuente": "RIC",
+      "categoria": "Medición",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.6",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "documentacion"
+      ],
+      "entradasRequeridas": [
+        "instrumentoMedicion"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "instrumentoMedicion"
+      },
+      "mensajes": {
+        "cumple": "Instrumento de medición identificado: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Instrumento de medición identificado: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Instrumento de medición identificado: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Instrumento de medición identificado: faltan datos para evaluar."
+      },
+      "accion": "Registrar instrumento o método de medición en el informe.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-MED-004",
+      "nombre": "Fecha de medición registrada",
+      "descripcion": "Verifica que el informe de puesta a tierra tenga fecha de medición.",
+      "fuente": "RIC",
+      "categoria": "Medición",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.6",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "documentacion"
+      ],
+      "entradasRequeridas": [
+        "fechaMedicion"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "fechaMedicion"
+      },
+      "mensajes": {
+        "cumple": "Fecha de medición registrada: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Fecha de medición registrada: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Fecha de medición registrada: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Fecha de medición registrada: faltan datos para evaluar."
+      },
+      "accion": "Registrar fecha de medición para trazabilidad.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-MED-005",
+      "nombre": "Responsable de medición registrado",
+      "descripcion": "Verifica que exista responsable de la medición de tierra en el informe.",
+      "fuente": "RIC",
+      "categoria": "Medición",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.6",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "documentacion"
+      ],
+      "entradasRequeridas": [
+        "responsableMedicion"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "responsableMedicion"
+      },
+      "mensajes": {
+        "cumple": "Responsable de medición registrado: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Responsable de medición registrado: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Responsable de medición registrado: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Responsable de medición registrado: faltan datos para evaluar."
+      },
+      "accion": "Registrar profesional/responsable que realizó o verificó la medición.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-PE-001",
+      "nombre": "Conductor de protección PE presente",
+      "descripcion": "Verifica que el proyecto declare conductor de protección PE para masas de la instalación.",
+      "fuente": "RIC",
+      "categoria": "Conductor PE",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.1 y 4.5.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "conductores",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "tienePE"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "tienePE"
+      },
+      "mensajes": {
+        "cumple": "Conductor de protección PE presente: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Conductor de protección PE presente: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Conductor de protección PE presente: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Conductor de protección PE presente: faltan datos para evaluar."
+      },
+      "accion": "Incorporar conductor de protección PE donde corresponda.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-PE-002",
+      "nombre": "Continuidad del conductor PE",
+      "descripcion": "Verifica que se declare continuidad del conductor de protección.",
+      "fuente": "RIC",
+      "categoria": "Conductor PE",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.1 y 4.5.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "continuidadPE"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "continuidadPE"
+      },
+      "mensajes": {
+        "cumple": "Continuidad del conductor PE: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Continuidad del conductor PE: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Continuidad del conductor PE: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Continuidad del conductor PE: faltan datos para evaluar."
+      },
+      "accion": "Verificar continuidad eléctrica del PE en todo el recorrido.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-PE-003",
+      "nombre": "PE conectado al SPT",
+      "descripcion": "Verifica que el conductor PE esté conectado al sistema de puesta a tierra.",
+      "fuente": "RIC",
+      "categoria": "Conductor PE",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.1 y 4.5.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "peConectadoSPT"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "peConectadoSPT"
+      },
+      "mensajes": {
+        "cumple": "PE conectado al SPT: cumple con el criterio implementado en GIAE.",
+        "noCumple": "PE conectado al SPT: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "PE conectado al SPT: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "PE conectado al SPT: faltan datos para evaluar."
+      },
+      "accion": "Conectar PE al SPT según diseño del proyecto.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-PE-004",
+      "nombre": "PE identificado como conductor de protección",
+      "descripcion": "Verifica que la función del conductor esté identificada como protección.",
+      "fuente": "RIC",
+      "categoria": "Conductor PE",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "conductores",
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "funcionConductor"
+      ],
+      "condicion": {
+        "tipo": "valor_en_lista",
+        "dato": "funcionConductor",
+        "valores": [
+          "proteccion",
+          "protección",
+          "pe",
+          "tierra",
+          "conductor de protección"
+        ]
+      },
+      "mensajes": {
+        "cumple": "PE identificado como conductor de protección: cumple con el criterio implementado en GIAE.",
+        "noCumple": "PE identificado como conductor de protección: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "PE identificado como conductor de protección: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "PE identificado como conductor de protección: faltan datos para evaluar."
+      },
+      "accion": "Identificar correctamente conductor de protección.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-EQP-001",
+      "nombre": "Enlace equipotencial considerado",
+      "descripcion": "Verifica que el proyecto considere enlaces equipotenciales cuando existan masas o elementos metálicos accesibles.",
+      "fuente": "RIC",
+      "categoria": "Equipotencialidad",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "1.1, 1.2 y 4.5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones"
+      ],
+      "entradasRequeridas": [
+        "consideraEquipotencialidad"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "consideraEquipotencialidad"
+      },
+      "mensajes": {
+        "cumple": "Enlace equipotencial considerado: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Enlace equipotencial considerado: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Enlace equipotencial considerado: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Enlace equipotencial considerado: faltan datos para evaluar."
+      },
+      "accion": "Incorporar enlaces equipotenciales principales/suplementarios según corresponda.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-EQP-002",
+      "nombre": "Masas metálicas conectadas",
+      "descripcion": "Verifica que las masas metálicas de equipos sean consideradas en la equipotencialidad.",
+      "fuente": "RIC",
+      "categoria": "Equipotencialidad",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "1.2 y 4.5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "masasMetalicasConectadas"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "masasMetalicasConectadas"
+      },
+      "mensajes": {
+        "cumple": "Masas metálicas conectadas: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Masas metálicas conectadas: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Masas metálicas conectadas: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Masas metálicas conectadas: faltan datos para evaluar."
+      },
+      "accion": "Conectar masas metálicas al sistema de protección/equipotencialidad.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-EQP-003",
+      "nombre": "Canalizaciones metálicas consideradas",
+      "descripcion": "Verifica que canalizaciones metálicas accesibles se consideren dentro del sistema de protección.",
+      "fuente": "RIC",
+      "categoria": "Equipotencialidad",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "canalizaciones"
+      ],
+      "entradasRequeridas": [
+        "canalizacionesMetalicasConsideradas"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "canalizacionesMetalicasConsideradas"
+      },
+      "mensajes": {
+        "cumple": "Canalizaciones metálicas consideradas: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Canalizaciones metálicas consideradas: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Canalizaciones metálicas consideradas: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Canalizaciones metálicas consideradas: faltan datos para evaluar."
+      },
+      "accion": "Verificar continuidad y conexión de canalizaciones metálicas cuando corresponda.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-EQP-004",
+      "nombre": "Elementos conductores ajenos revisados",
+      "descripcion": "Verifica que se revisen elementos conductores ajenos accesibles simultáneamente.",
+      "fuente": "RIC",
+      "categoria": "Equipotencialidad",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "1.1 y 1.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "elementosConductoresAjenosRevisados"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "elementosConductoresAjenosRevisados"
+      },
+      "mensajes": {
+        "cumple": "Elementos conductores ajenos revisados: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Elementos conductores ajenos revisados: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Elementos conductores ajenos revisados: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Elementos conductores ajenos revisados: faltan datos para evaluar."
+      },
+      "accion": "Revisar cañerías, estructuras y elementos metálicos que deban equipotencializarse.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-ELE-001",
+      "nombre": "Tipo de electrodo definido",
+      "descripcion": "Verifica que el diseño especifique tipo de electrodo o malla/anillo.",
+      "fuente": "RIC",
+      "categoria": "Electrodos",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "tipoElectrodo"
+      ],
+      "condicion": {
+        "tipo": "valor_en_lista",
+        "dato": "tipoElectrodo",
+        "valores": [
+          "electrodo vertical",
+          "malla",
+          "malla de tierra",
+          "anillo",
+          "anillo perimetral",
+          "existente a verificar"
+        ]
+      },
+      "mensajes": {
+        "cumple": "Tipo de electrodo definido: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Tipo de electrodo definido: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Tipo de electrodo definido: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Tipo de electrodo definido: faltan datos para evaluar."
+      },
+      "accion": "Definir tipo de electrodo o sistema equivalente.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-ELE-002",
+      "nombre": "Cantidad de electrodos definida",
+      "descripcion": "Verifica que la cantidad de electrodos sea mayor a cero cuando se use electrodo vertical.",
+      "fuente": "RIC",
+      "categoria": "Electrodos",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "cantidadElectrodos"
+      ],
+      "condicion": {
+        "tipo": "comparacion",
+        "izquierda": "cantidadElectrodos",
+        "operador": ">",
+        "derecha": 0
+      },
+      "mensajes": {
+        "cumple": "Cantidad de electrodos definida: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Cantidad de electrodos definida: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Cantidad de electrodos definida: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Cantidad de electrodos definida: faltan datos para evaluar."
+      },
+      "accion": "Registrar cantidad de electrodos considerados.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-ELE-003",
+      "nombre": "Longitud de electrodo definida",
+      "descripcion": "Verifica que el diseño registre longitud de electrodo para estimación.",
+      "fuente": "RIC",
+      "categoria": "Electrodos",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "longitudElectrodoM"
+      ],
+      "condicion": {
+        "tipo": "comparacion",
+        "izquierda": "longitudElectrodoM",
+        "operador": ">",
+        "derecha": 0
+      },
+      "mensajes": {
+        "cumple": "Longitud de electrodo definida: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Longitud de electrodo definida: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Longitud de electrodo definida: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Longitud de electrodo definida: faltan datos para evaluar."
+      },
+      "accion": "Registrar longitud del electrodo para trazabilidad del cálculo.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-ELE-004",
+      "nombre": "Material del electrodo definido",
+      "descripcion": "Verifica que el material del electrodo esté documentado.",
+      "fuente": "RIC",
+      "categoria": "Electrodos",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.1 y 3.9",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "biblioteca"
+      ],
+      "entradasRequeridas": [
+        "materialElectrodo"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "materialElectrodo"
+      },
+      "mensajes": {
+        "cumple": "Material del electrodo definido: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Material del electrodo definido: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Material del electrodo definido: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Material del electrodo definido: faltan datos para evaluar."
+      },
+      "accion": "Registrar material del electrodo y verificar compatibilidad/corrosión.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-ELE-005",
+      "nombre": "Cámara o registro del SPT",
+      "descripcion": "Verifica que se declare cámara/camarilla de registro cuando corresponde inspección o medición.",
+      "fuente": "RIC",
+      "categoria": "Electrodos",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "documentacion"
+      ],
+      "entradasRequeridas": [
+        "camaraRegistro"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "camaraRegistro"
+      },
+      "mensajes": {
+        "cumple": "Cámara o registro del SPT: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Cámara o registro del SPT: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Cámara o registro del SPT: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Cámara o registro del SPT: faltan datos para evaluar."
+      },
+      "accion": "Incorporar cámara de registro para inspección/medición del SPT.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-ELE-006",
+      "nombre": "Corrosión del suelo evaluada",
+      "descripcion": "Verifica si se consideró corrosividad del suelo cuando el proyecto lo requiere.",
+      "fuente": "RIC",
+      "categoria": "Electrodos",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.1 y 3.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "corrosionSueloEvaluada"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "corrosionSueloEvaluada"
+      },
+      "mensajes": {
+        "cumple": "Corrosión del suelo evaluada: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Corrosión del suelo evaluada: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Corrosión del suelo evaluada: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Corrosión del suelo evaluada: faltan datos para evaluar."
+      },
+      "accion": "Evaluar corrosión/ambiente del suelo si aplica al diseño del electrodo.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-RAY-001",
+      "nombre": "Protección contra rayos evaluada",
+      "descripcion": "Verifica que el proyecto indique si requiere evaluación de protección contra rayos.",
+      "fuente": "RIC",
+      "categoria": "Protección contra rayos",
+      "estado": "en_revision",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "1.1 y 3.7-3.10",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "evaluacionRayos"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "evaluacionRayos"
+      },
+      "mensajes": {
+        "cumple": "Protección contra rayos evaluada: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Protección contra rayos evaluada: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Protección contra rayos evaluada: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Protección contra rayos evaluada: faltan datos para evaluar."
+      },
+      "accion": "Evaluar necesidad de protección contra rayos según características del proyecto.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-SPD-001",
+      "nombre": "Protección contra sobretensiones considerada",
+      "descripcion": "Verifica que se considere coordinación con dispositivos de protección contra sobretensiones si corresponde.",
+      "fuente": "RIC",
+      "categoria": "Sobretensiones",
+      "estado": "en_revision",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.5",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "proteccionSobretensionesConsiderada"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "proteccionSobretensionesConsiderada"
+      },
+      "mensajes": {
+        "cumple": "Protección contra sobretensiones considerada: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Protección contra sobretensiones considerada: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Protección contra sobretensiones considerada: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Protección contra sobretensiones considerada: faltan datos para evaluar."
+      },
+      "accion": "Revisar necesidad de DPS y coordinación con SPT.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-DIS-001",
+      "nombre": "Diseño preliminar separado de verificación final",
+      "descripcion": "Verifica que el diseño de tierra distinga resultado calculado de medición real.",
+      "fuente": "RIC",
+      "categoria": "Diseño de tierra",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.6 y 3.12",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "documentacion"
+      ],
+      "entradasRequeridas": [
+        "separaCalculoYMedicion"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "separaCalculoYMedicion"
+      },
+      "mensajes": {
+        "cumple": "Diseño preliminar separado de verificación final: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Diseño preliminar separado de verificación final: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Diseño preliminar separado de verificación final: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Diseño preliminar separado de verificación final: faltan datos para evaluar."
+      },
+      "accion": "Mostrar cálculo preliminar y medición real como datos separados.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-DIS-002",
+      "nombre": "Resistividad del terreno registrada",
+      "descripcion": "Verifica que el cálculo preliminar use resistividad del terreno documentada o valor de diseño declarado.",
+      "fuente": "RIC",
+      "categoria": "Diseño de tierra",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.12",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "resistividadOhmM"
+      ],
+      "condicion": {
+        "tipo": "comparacion",
+        "izquierda": "resistividadOhmM",
+        "operador": ">",
+        "derecha": 0
+      },
+      "mensajes": {
+        "cumple": "Resistividad del terreno registrada: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Resistividad del terreno registrada: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Resistividad del terreno registrada: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Resistividad del terreno registrada: faltan datos para evaluar."
+      },
+      "accion": "Registrar resistividad medida o valor preliminar asumido.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-DIS-003",
+      "nombre": "Configuración recomendada documentada",
+      "descripcion": "Verifica que la configuración propuesta del SPT quede documentada.",
+      "fuente": "RIC",
+      "categoria": "Diseño de tierra",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "documentacion"
+      ],
+      "entradasRequeridas": [
+        "configuracionSPT"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "configuracionSPT"
+      },
+      "mensajes": {
+        "cumple": "Configuración recomendada documentada: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Configuración recomendada documentada: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Configuración recomendada documentada: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Configuración recomendada documentada: faltan datos para evaluar."
+      },
+      "accion": "Documentar configuración: electrodo, malla, anillo, conductor y registros.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-DIS-004",
+      "nombre": "Estado de tierra no verificable solo por estimación",
+      "descripcion": "Si no hay medición real, el estado máximo debe ser preliminar/requiere medición.",
+      "fuente": "RIC",
+      "categoria": "Diseño de tierra",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.6 y 3.12",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "estadoTierra"
+      ],
+      "condicion": {
+        "tipo": "valor_no_en_lista",
+        "dato": "estadoTierra",
+        "valores": [
+          "verificada",
+          "cumple final",
+          "certificada"
+        ]
+      },
+      "mensajes": {
+        "cumple": "Estado de tierra no verificable solo por estimación: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Estado de tierra no verificable solo por estimación: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Estado de tierra no verificable solo por estimación: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Estado de tierra no verificable solo por estimación: faltan datos para evaluar."
+      },
+      "accion": "No marcar como verificada sin medición real registrada.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-DIS-005",
+      "nombre": "Medición dentro de objetivo definido",
+      "descripcion": "Verifica que la medición ingresada sea menor o igual al objetivo definido por el proyecto.",
+      "fuente": "RIC",
+      "categoria": "Medición",
+      "estado": "en_revision",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.6 y criterio de diseño GIAE",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "medicionOhm",
+        "objetivoOhm"
+      ],
+      "condicion": {
+        "tipo": "comparacion",
+        "izquierda": "medicionOhm",
+        "operador": "<=",
+        "derechaDato": "objetivoOhm"
+      },
+      "mensajes": {
+        "cumple": "Medición dentro de objetivo definido: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Medición dentro de objetivo definido: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Medición dentro de objetivo definido: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Medición dentro de objetivo definido: faltan datos para evaluar."
+      },
+      "accion": "Si la medición supera el objetivo, rediseñar o mejorar SPT.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-DIS-006",
+      "nombre": "Comparación diseño versus medición",
+      "descripcion": "Verifica que exista comparación entre resistencia estimada y medición de terreno.",
+      "fuente": "RIC",
+      "categoria": "Medición",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.6 y 3.12",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "comparacionDisenoMedicion"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "comparacionDisenoMedicion"
+      },
+      "mensajes": {
+        "cumple": "Comparación diseño versus medición: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Comparación diseño versus medición: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Comparación diseño versus medición: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Comparación diseño versus medición: faltan datos para evaluar."
+      },
+      "accion": "Comparar estimación GIAE con medición real y registrar observaciones.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-DOC-001",
+      "nombre": "Informe de puesta a tierra generado",
+      "descripcion": "Verifica que exista informe o ficha de puesta a tierra del proyecto.",
+      "fuente": "RIC",
+      "categoria": "Documentación",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "1.1, 1.2 y 3.6",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "documentacion",
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "informeTierra"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "informeTierra"
+      },
+      "mensajes": {
+        "cumple": "Informe de puesta a tierra generado: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Informe de puesta a tierra generado: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Informe de puesta a tierra generado: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Informe de puesta a tierra generado: faltan datos para evaluar."
+      },
+      "accion": "Generar informe de puesta a tierra con cálculo, medición y observaciones.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-DOC-002",
+      "nombre": "Observaciones de terreno registradas",
+      "descripcion": "Verifica que se registren observaciones de terreno que afecten el diseño de tierra.",
+      "fuente": "RIC",
+      "categoria": "Documentación",
+      "estado": "validada",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.12",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "documentacion"
+      ],
+      "entradasRequeridas": [
+        "observacionesTerreno"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "observacionesTerreno"
+      },
+      "mensajes": {
+        "cumple": "Observaciones de terreno registradas: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Observaciones de terreno registradas: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Observaciones de terreno registradas: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Observaciones de terreno registradas: faltan datos para evaluar."
+      },
+      "accion": "Registrar humedad, tipo de suelo, obstáculos, mejoras o limitaciones.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-DOC-003",
+      "nombre": "Fotografía o respaldo de medición",
+      "descripcion": "Permite exigir respaldo documental de la medición cuando la empresa lo configure.",
+      "fuente": "RIC",
+      "categoria": "Documentación",
+      "estado": "en_revision",
+      "severidad": "menor",
+      "prioridad": 70,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "3.6",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "documentacion"
+      ],
+      "entradasRequeridas": [
+        "respaldoMedicion"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "respaldoMedicion"
+      },
+      "mensajes": {
+        "cumple": "Fotografía o respaldo de medición: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Fotografía o respaldo de medición: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Fotografía o respaldo de medición: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Fotografía o respaldo de medición: faltan datos para evaluar."
+      },
+      "accion": "Adjuntar respaldo de medición cuando corresponda.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-AUD-001",
+      "nombre": "Auditoría de SPT incompleto",
+      "descripcion": "Detecta cuando el proyecto tiene potencia/cargas pero no tiene SPT registrado.",
+      "fuente": "RIC",
+      "categoria": "Auditoría",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "1.1 y 2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "auditoria",
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "potenciaInstaladaW",
+        "tieneSPT"
+      ],
+      "condicion": {
+        "tipo": "manual"
+      },
+      "mensajes": {
+        "cumple": "Auditoría de SPT incompleto: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Auditoría de SPT incompleto: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Auditoría de SPT incompleto: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Auditoría de SPT incompleto: faltan datos para evaluar."
+      },
+      "accion": "Si existe proyecto eléctrico, revisar que el SPT esté definido.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-AUD-002",
+      "nombre": "Coordinación RIC 5 y RIC 6",
+      "descripcion": "Verifica coordinación entre medidas de protección RIC 5 y sistema de puesta a tierra RIC 6.",
+      "fuente": "RIC",
+      "categoria": "Auditoría",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "RIC 5 punto 5.1 y RIC 6 objetivo 1.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "coordinacionRIC5RIC6"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "coordinacionRIC5RIC6"
+      },
+      "mensajes": {
+        "cumple": "Coordinación RIC 5 y RIC 6: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Coordinación RIC 5 y RIC 6: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Coordinación RIC 5 y RIC 6: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Coordinación RIC 5 y RIC 6: faltan datos para evaluar."
+      },
+      "accion": "Validar que diferenciales/protecciones se coordinen con SPT.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-SIS-001",
+      "nombre": "Esquema de conexión a tierra declarado",
+      "descripcion": "Verifica que se declare esquema TT, TN-S, TN-C-S, TN-C o IT cuando se evalúe protección asociada a tierra.",
+      "fuente": "RIC",
+      "categoria": "Esquemas de tierra",
+      "estado": "en_revision",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "Coordinación con RIC 5 y RIC 6",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones"
+      ],
+      "entradasRequeridas": [
+        "esquemaTierra"
+      ],
+      "condicion": {
+        "tipo": "valor_en_lista",
+        "dato": "esquemaTierra",
+        "valores": [
+          "tt",
+          "tn-s",
+          "tn-c",
+          "tn-c-s",
+          "it"
+        ]
+      },
+      "mensajes": {
+        "cumple": "Esquema de conexión a tierra declarado: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Esquema de conexión a tierra declarado: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Esquema de conexión a tierra declarado: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Esquema de conexión a tierra declarado: faltan datos para evaluar."
+      },
+      "accion": "Definir esquema de conexión a tierra del proyecto.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-SIS-002",
+      "nombre": "Bajada TP y TS identificada",
+      "descripcion": "Verifica que el proyecto distinga tierra de protección y tierra de servicio cuando corresponda.",
+      "fuente": "RIC",
+      "categoria": "Puesta a tierra",
+      "estado": "en_revision",
+      "severidad": "importante",
+      "prioridad": 40,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "4.5.1 y coordinación con esquemas",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "tpTsIdentificadas"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "tpTsIdentificadas"
+      },
+      "mensajes": {
+        "cumple": "Bajada TP y TS identificada: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Bajada TP y TS identificada: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Bajada TP y TS identificada: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Bajada TP y TS identificada: faltan datos para evaluar."
+      },
+      "accion": "Identificar TP/TS y puntos de unión según esquema del proyecto.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC6-EDU-001",
+      "nombre": "Advertencia educativa de seguridad",
+      "descripcion": "Para Aula Técnica, el contenido sobre tierra debe indicar que mediciones y conexiones deben ser revisadas por profesional competente.",
+      "fuente": "RIC",
+      "categoria": "Aula Técnica",
+      "estado": "en_revision",
+      "severidad": "menor",
+      "prioridad": 70,
+      "referencia": {
+        "documento": "RIC N°06 - Puesta a tierra y enlace equipotencial",
+        "apartado": "Criterio de seguridad GIAE respaldado en RIC 6",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "educacion",
+        "tierra"
+      ],
+      "entradasRequeridas": [
+        "advertenciaEducativaTierra"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "advertenciaEducativaTierra"
+      },
+      "mensajes": {
+        "cumple": "Advertencia educativa de seguridad: cumple con el criterio implementado en GIAE.",
+        "noCumple": "Advertencia educativa de seguridad: no cumple con el criterio implementado en GIAE.",
+        "requiereRevision": "Advertencia educativa de seguridad: requiere revisión normativa/profesional o medición en terreno.",
+        "informacionInsuficiente": "Advertencia educativa de seguridad: faltan datos para evaluar."
+      },
+      "accion": "Agregar advertencia clara en material educativo.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 6 del Motor Normativo GIAE."
         }
       ]
     }

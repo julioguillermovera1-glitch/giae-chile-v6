@@ -156,3 +156,7 @@ Estado: completada. Se incorporó paquete inicial de reglas de conductores, cana
 Estado: completada.
 
 Se incorporó el primer paquete de reglas derivadas del RIC N°03 para demanda, alimentadores, subalimentadores, caída de tensión, neutro monofásico, shaft vertical y simultaneidad de conjuntos de viviendas. Las reglas no reproducen el texto completo del pliego; quedan modeladas como criterios de ingeniería con referencia normativa y estado de validación.
+
+
+## Etapa 3.0.2d — Reglas RIC 6 iniciales
+Estado: Terminada. Se incorpora paquete inicial de Puesta a Tierra y Enlace Equipotencial.

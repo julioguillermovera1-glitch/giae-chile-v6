@@ -52,3 +52,17 @@ Agregado paquete inicial de reglas RIC 3 para alimentadores y demanda.
 
 ## Etapa 3.0.2c
 Se agrega paquete inicial de reglas RIC 5: seguridad eléctrica, diferenciales, tensiones de seguridad, esquemas TT/TN/IT y corte automático.
+
+
+## Etapa 3.0.2d — Reglas RIC 6 iniciales
+
+Se incorpora el paquete inicial de reglas de ingeniería para Puesta a Tierra y Enlace Equipotencial.
+
+Incluye:
+- Sistema de puesta a tierra y componentes SPT.
+- Conductor PE, continuidad y enlace equipotencial.
+- Electrodos, cámara de registro y documentación.
+- Medición real en terreno como requisito para estado verificado.
+- Comparación entre cálculo preliminar y medición real.
+
+Regla central: el cálculo de tierra en GIAE es preliminar y nunca reemplaza la medición real en terreno.

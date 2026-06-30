@@ -104,11 +104,11 @@ export async function render(host, state){
   host.innerHTML = `<section class="module-window real-workspace normative-workspace">
     <div class="workspace-title-row">
       <div>
-        <p class="eyebrow">Etapa 3.0.2c</p>
+        <p class="eyebrow">Etapa 3.0.2d</p>
         <h3>Motor Normativo GIAE</h3>
-        <p>Motor de reglas con paquetes iniciales RIC 3, RIC 4 y RIC 5. No contiene textos completos de normas; trabaja con reglas de ingeniería referenciadas.</p>
+        <p>Motor de reglas con paquetes iniciales RIC 3, RIC 4, RIC 5 y RIC 6. No contiene textos completos de normas; trabaja con reglas de ingeniería referenciadas.</p>
       </div>
-      <div class="status-strip"><span>v3.0.2c</span><span>${summary.total} reglas</span><span>${summary.diagnostics.length} diagnósticos</span></div>
+      <div class="status-strip"><span>v3.0.2d</span><span>${summary.total} reglas</span><span>${summary.diagnostics.length} diagnósticos</span></div>
     </div>
 
     <div class="result-box warning">
