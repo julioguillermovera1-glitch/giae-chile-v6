@@ -1,45 +1,9 @@
-# GIAE Chile v1.0 - Base original
+# GIAE Chile v1.0 - Corrección Unilineal, Tierra y Sesión
 
-Base inicial modular para una plataforma de cálculo, documentación, presupuesto y auditoría de instalaciones eléctricas en Chile.
+Base original de GIAE Chile v1.0 con tres correcciones:
 
-## Estado
+1. Unilineal restaurado al estilo v9.5.1, con dibujo SVG automático, barra, fases, TP/TS, automáticos tipo media luna y diferenciales P/D.
+2. Puesta a tierra automática: calcula resistencia estimada, objetivo preliminar, recomienda cantidad de electrodos, sistema a instalar y conductor PE referencial.
+3. Sesión/perfil: se agrega botón Cerrar sesión para volver a seleccionar Instalador independiente, Empresa o Estudiante.
 
-Prototipo estructural original. No es una versión normativa final ni certifica proyectos eléctricos.
-
-## Principios
-
-- Cada módulo es independiente.
-- La plataforma no es una página larga: funciona con ventanas internas.
-- El código se crea desde cero para evitar plagio.
-- Los módulos técnicos deben validarse antes del lanzamiento v1.0.
-
-## Perfiles previstos
-
-- Instalador independiente
-- Empresa
-- Estudiante
-
-## Módulos base
-
-- Proyecto
-- Usuarios
-- Cargas
-- Cuadro de carga
-- Empalme
-- Puesta a tierra
-- Documentación
-- Presupuesto
-- Auditoría
-- Educación
-
-
-## Actualización módulo Unilineal
-
-Se incorpora un módulo independiente de unilineal automático. Genera una imagen SVG original según las cargas registradas en el cuadro de carga y permite descargar o imprimir el diagrama.
-
-
-## Actualización módulos técnicos
-
-- Unilineal independiente con trazado SVG automático adaptado a cargas/cuadro de carga.
-- Puesta a tierra independiente con cálculo preliminar automático, guardado en proyecto y descarga de informe.
-- Ambos módulos mantienen separación funcional y no modifican otros módulos sin acción del usuario.
+Nota: los cálculos son preliminares y deben validarse con normativa vigente, medición real y revisión de instalador autorizado.

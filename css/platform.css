@@ -167,3 +167,8 @@ input, select, textarea {
 .earth-summary strong { font-size: 1.2rem; }
 @media (max-width: 850px) { .earth-summary { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 520px) { .earth-summary { grid-template-columns: 1fr; } }
+button.danger { background: #a32323; color: #fff; border-left: 0; }
+.table-scroll { width: 100%; overflow: auto; }
+.table-scroll table { width: 100%; border-collapse: collapse; background: #fff; }
+.table-scroll th, .table-scroll td { border: 1px solid var(--line); padding: .65rem; text-align: left; }
+.table-scroll th { background: #f1f6fb; }

@@ -1,5 +1,5 @@
 import { modules } from "./moduleRegistry.js";
-import { restore, setProfile, state, persist } from "./store.js";
+import { restore, setProfile, clearProfile, state, persist } from "./store.js";
 
 const loginView = document.querySelector("#loginView");
 const platformView = document.querySelector("#platformView");
@@ -23,6 +23,17 @@ document.querySelectorAll("[data-profile]").forEach(button => {
 document.querySelector("#saveProjectBtn").addEventListener("click", () => {
   persist();
   alert("Proyecto guardado localmente en este navegador.");
+});
+
+
+const logoutBtn = document.querySelector("#logoutBtn");
+logoutBtn.addEventListener("click", () => {
+  clearProfile();
+  platformView.classList.add("hidden");
+  loginView.classList.remove("hidden");
+  activeProfile.textContent = "Sin sesión";
+  host.innerHTML = "";
+  title.textContent = "Inicio";
 });
 
 document.querySelector("#exportBtn").addEventListener("click", () => {

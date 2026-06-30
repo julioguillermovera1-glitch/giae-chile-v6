@@ -18,6 +18,11 @@ export function setProfile(profile) {
   persist();
 }
 
+export function clearProfile() {
+  state.profile = null;
+  persist();
+}
+
 export function updateProject(patch) {
   state.currentProject = { ...state.currentProject, ...patch };
   persist();
