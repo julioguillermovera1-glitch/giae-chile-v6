@@ -444,3 +444,31 @@ body{background:var(--bg);}
 .import-label{display:inline-flex;align-items:center;border:1px solid var(--line);background:#f4f7fb;color:var(--brand-primary);border-radius:10px;padding:10px 14px;font-weight:900;cursor:pointer;margin:0}
 .import-label:hover{background:#e7eef8}
 @media(max-width:760px){.split-head{display:block}.project-state-card{margin-top:12px}.project-kpis{grid-template-columns:1fr!important}}
+
+/* Etapa 2.6 · Workspaces reales */
+.workspace-tabs{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#f8fbff;
+  box-shadow:0 8px 20px rgba(16,32,51,.05);
+}
+.workspace-tabs.hidden{display:none!important}
+.workspace-tab{
+  border:1px solid #d8e3ef;
+  background:white;
+  color:#102033;
+  border-radius:12px;
+  padding:8px 12px;
+  min-width:150px;
+  text-align:left;
+  display:grid;
+  gap:2px;
+  cursor:pointer;
+}
+.workspace-tab span{font-weight:900}.workspace-tab small{color:#64748b;font-weight:700}.workspace-tab.active{background:#102033;color:white;border-color:#102033}.workspace-tab.active small{color:#d7e4f2}.workspace-tab.minimized{opacity:.78}
+.window-host{position:relative;display:block}.internal-window{display:none}.internal-window.active{display:block}.internal-window.minimized{display:none!important}.module-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}.workspace-title-row{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;margin-bottom:1rem}.workspace-title-row p{margin:.35rem 0 0;color:#526173}.data-table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:white}.data-table-wrap table{margin:0}.status-strip{display:flex;gap:10px;flex-wrap:wrap;margin:.8rem 0}.status-strip span{border:1px solid #d8e3ef;background:#f8fbff;border-radius:999px;padding:.45rem .7rem;font-weight:800;color:#33465f;font-size:.9rem}.form-grid.compact{grid-template-columns:1.4fr .7fr .7fr .7fr .7fr}.muted-panel{background:#f8fbff;border:1px solid var(--line);border-radius:16px;padding:1rem;color:#40536a}.workspace-empty{border:1px dashed #b9c7d8;border-radius:16px;background:#f9fbfd;padding:1.2rem;color:#526173}.module-window .primary-action{background:var(--brand-primary);color:#fff}
+@media(max-width:900px){.form-grid.compact{grid-template-columns:1fr}.workspace-title-row{display:grid}.workspace-tab{min-width:130px}.status-strip{display:grid}.status-strip span{border-radius:12px}}

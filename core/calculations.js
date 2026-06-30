@@ -7,7 +7,7 @@ export function currentThreePhase(powerW, voltage = 380, powerFactor = 1) {
 }
 
 export function totalPower(loads) {
-  return loads.reduce((sum, item) => sum + Number(item.powerW || 0), 0);
+  return loads.reduce((sum, item) => sum + Number(item.powerW || 0) * Number(item.quantity || 1), 0);
 }
 
 export function applyDiversity(powerW, factor) {

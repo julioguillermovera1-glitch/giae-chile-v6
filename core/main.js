@@ -5,6 +5,7 @@ const loginView = document.querySelector("#loginView");
 const platformView = document.querySelector("#platformView");
 const menu = document.querySelector("#moduleMenu");
 const host = document.querySelector("#windowHost");
+const workspaceTabs = document.querySelector("#workspaceTabs");
 const openWindows = new Map();
 let activeWindowId = null;
 const title = document.querySelector("#workspaceTitle");
@@ -17,6 +18,7 @@ applyBranding();
 if (state.profile) openPlatform();
 window.GIAE = window.GIAE || {};
 window.GIAE.openModule = openModule;
+window.GIAE.refreshActiveModule = refreshActiveModule;
 
 window.addEventListener("giae:admin-updated", () => { applyBranding(); renderMenu(); });
 
@@ -45,7 +47,9 @@ logoutBtn.addEventListener("click", () => {
   activeWindowId = null;
   title.textContent = "Inicio";
   menu.innerHTML = "";
+  if(workspaceTabs) workspaceTabs.innerHTML = "";
   updateStatusLine();
+  refreshActiveModule();
 });
 
 document.querySelector("#exportBtn").addEventListener("click", () => {
@@ -151,6 +155,7 @@ async function openModule(moduleId) {
   host.appendChild(windowEl);
   openWindows.set(moduleId, { element: windowEl, module: selected });
   bindWindowControls(windowEl, moduleId);
+  renderWorkspaceTabs();
   activateWindow(moduleId);
 
   const body = windowEl.querySelector(".internal-window-body");
@@ -159,6 +164,7 @@ async function openModule(moduleId) {
   module.render(body, state);
   windowEl.classList.remove("loading");
   updateStatusLine();
+  renderWorkspaceTabs();
 }
 
 function bindWindowControls(windowEl, moduleId){
@@ -187,6 +193,7 @@ function activateWindow(moduleId){
     button.classList.toggle("active", button.dataset.module === moduleId);
   });
   updateStatusLine();
+  renderWorkspaceTabs();
 }
 
 function minimizeWindow(moduleId){
@@ -199,6 +206,7 @@ function minimizeWindow(moduleId){
   } else {
     activateWindow(moduleId);
   }
+  renderWorkspaceTabs();
 }
 
 function closeWindow(moduleId){
@@ -216,6 +224,36 @@ function closeWindow(moduleId){
     }
   }
   updateStatusLine();
+  renderWorkspaceTabs();
+}
+
+
+function renderWorkspaceTabs(){
+  if(!workspaceTabs) return;
+  const entries = Array.from(openWindows.entries());
+  workspaceTabs.classList.toggle("hidden", entries.length === 0);
+  workspaceTabs.innerHTML = entries.map(([id, record]) => `
+    <button type="button" class="workspace-tab ${id === activeWindowId ? "active" : ""} ${record.element.classList.contains("minimized") ? "minimized" : ""}" data-tab-window="${id}">
+      <span>${record.module.label}</span>
+      <small>${record.element.classList.contains("minimized") ? "Minimizado" : id === activeWindowId ? "Activo" : "Abierto"}</small>
+    </button>
+  `).join("");
+  workspaceTabs.querySelectorAll("[data-tab-window]").forEach(button => {
+    button.addEventListener("click", () => activateWindow(button.dataset.tabWindow));
+  });
+}
+
+function refreshActiveModule(){
+  if(!activeWindowId) return;
+  const record = openWindows.get(activeWindowId);
+  if(!record) return;
+  const body = record.element.querySelector(".internal-window-body");
+  import(record.module.path + `?v=${Date.now()}`).then(module => {
+    body.innerHTML = "";
+    module.render(body, state);
+    updateStatusLine();
+    renderWorkspaceTabs();
+  });
 }
 
 function profileLabel(profile) {

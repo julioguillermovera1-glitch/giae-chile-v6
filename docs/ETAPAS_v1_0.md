@@ -78,3 +78,17 @@ Funciones agregadas:
 
 Regla de etapa:
 Todos los módulos técnicos deberán leer y escribir datos mediante el Proyecto Activo, evitando duplicar información.
+
+## Etapa 2.6 - Workspaces reales
+Estado: Terminada.
+
+Cambios:
+- Los módulos ya no quedan como cambios de título sobre el mismo contenido.
+- Solo el workspace activo queda visible en el área de trabajo.
+- Se agregó barra de ventanas abiertas para activar módulos ya cargados.
+- Se agregó contenido funcional al workspace Cargas, conectado al Proyecto Activo.
+- Cargas actualiza potencia, cantidad, fase y tipo para alimentar cuadro, tierra, empalme y unilineal.
+- Se corrigió el cálculo de potencia total considerando cantidad por carga.
+
+Criterio de cierre:
+Al seleccionar un botón del menú lateral, debe abrirse o activarse el módulo correspondiente, no solo cambiar el encabezado.
