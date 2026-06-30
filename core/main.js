@@ -5,6 +5,8 @@ const loginView = document.querySelector("#loginView");
 const platformView = document.querySelector("#platformView");
 const menu = document.querySelector("#moduleMenu");
 const host = document.querySelector("#windowHost");
+const openWindows = new Map();
+let activeWindowId = null;
 const title = document.querySelector("#workspaceTitle");
 const activeProfile = document.querySelector("#activeProfile");
 const projectStatusLine = document.querySelector("#projectStatusLine");
@@ -39,6 +41,8 @@ logoutBtn.addEventListener("click", () => {
   loginView.classList.remove("hidden");
   activeProfile.textContent = "Sin sesión";
   host.innerHTML = "";
+  openWindows.clear();
+  activeWindowId = null;
   title.textContent = "Inicio";
   menu.innerHTML = "";
   updateStatusLine();
@@ -112,13 +116,97 @@ function renderMenu() {
 async function openModule(moduleId) {
   const selected = availableModules().find(module => module.id === moduleId);
   if (!selected) return;
+
+  if (openWindows.has(moduleId)) {
+    activateWindow(moduleId);
+    return;
+  }
+
+  const windowEl = document.createElement("article");
+  windowEl.className = "internal-window loading";
+  windowEl.dataset.windowId = moduleId;
+  windowEl.innerHTML = `
+    <header class="internal-window-titlebar">
+      <div>
+        <span class="window-caption">Módulo</span>
+        <strong>${selected.label}</strong>
+      </div>
+      <div class="window-actions">
+        <button type="button" class="window-control" data-window-action="minimize" aria-label="Minimizar">–</button>
+        <button type="button" class="window-control" data-window-action="close" aria-label="Cerrar">×</button>
+      </div>
+    </header>
+    <section class="internal-window-body">
+      <div class="module-window"><p>Cargando ${selected.label}...</p></div>
+    </section>`;
+
+  host.appendChild(windowEl);
+  openWindows.set(moduleId, { element: windowEl, module: selected });
+  bindWindowControls(windowEl, moduleId);
+  activateWindow(moduleId);
+
+  const body = windowEl.querySelector(".internal-window-body");
+  const module = await import(selected.path + `?v=${Date.now()}`);
+  body.innerHTML = "";
+  module.render(body, state);
+  windowEl.classList.remove("loading");
+  updateStatusLine();
+}
+
+function bindWindowControls(windowEl, moduleId){
+  windowEl.addEventListener("mousedown", () => activateWindow(moduleId));
+  windowEl.querySelectorAll("[data-window-action]").forEach(button => {
+    button.addEventListener("click", event => {
+      event.stopPropagation();
+      const action = button.dataset.windowAction;
+      if(action === "close") closeWindow(moduleId);
+      if(action === "minimize") minimizeWindow(moduleId);
+    });
+  });
+}
+
+function activateWindow(moduleId){
+  const record = openWindows.get(moduleId);
+  if(!record) return;
+  activeWindowId = moduleId;
+  openWindows.forEach((item, id) => {
+    item.element.classList.toggle("active", id === moduleId);
+    item.element.classList.remove("minimized");
+  });
+  const selected = record.module;
   title.textContent = selected.label;
   document.querySelectorAll(".menu-button").forEach(button => {
     button.classList.toggle("active", button.dataset.module === moduleId);
   });
-  host.innerHTML = `<div class="module-window"><p>Cargando ${selected.label}...</p></div>`;
-  const module = await import(selected.path + `?v=${Date.now()}`);
-  module.render(host, state);
+  updateStatusLine();
+}
+
+function minimizeWindow(moduleId){
+  const record = openWindows.get(moduleId);
+  if(!record) return;
+  record.element.classList.toggle("minimized");
+  if(record.element.classList.contains("minimized")){
+    title.textContent = "Escritorio";
+    document.querySelectorAll(".menu-button").forEach(button => button.classList.remove("active"));
+  } else {
+    activateWindow(moduleId);
+  }
+}
+
+function closeWindow(moduleId){
+  const record = openWindows.get(moduleId);
+  if(!record) return;
+  record.element.remove();
+  openWindows.delete(moduleId);
+  if(activeWindowId === moduleId){
+    const next = Array.from(openWindows.keys()).pop();
+    if(next) activateWindow(next);
+    else {
+      activeWindowId = null;
+      title.textContent = "Escritorio";
+      document.querySelectorAll(".menu-button").forEach(button => button.classList.remove("active"));
+    }
+  }
   updateStatusLine();
 }
 

@@ -48,3 +48,15 @@ Cambios incorporados:
 - Los grupos solo muestran módulos permitidos según el perfil activo.
 - Se mantiene la independencia de módulos.
 - Se evita mostrar demasiados botones sueltos en pantalla.
+
+## Etapa 2.4 - Sistema de ventanas internas
+Estado: Terminada.
+
+Cambios:
+- Los módulos se abren como ventanas internas dentro del área de trabajo.
+- Cada ventana tiene barra de título, botón minimizar y botón cerrar.
+- El menú activa ventanas ya abiertas en vez de recargar todo el escritorio.
+- La impresión prioriza la ventana activa para evitar mezclar módulos.
+
+Criterio de término:
+- Un módulo puede abrirse, activarse, minimizarse y cerrarse sin cerrar sesión.
