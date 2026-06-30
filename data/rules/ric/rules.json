@@ -1,8 +1,8 @@
 {
-  "version": "3.0.2b",
+  "version": "3.0.2c",
   "fuente": "RIC",
-  "paquete": "RIC 3 + RIC 4 inicial",
-  "nota": "Paquete combinado de reglas iniciales RIC 3 y RIC 4. No contiene textos completos de normas; solo reglas de ingeniería referenciadas.",
+  "paquete": "RIC 3 + RIC 4 + RIC 5 inicial",
+  "nota": "Paquete combinado de reglas iniciales RIC 3, RIC 4 y RIC 5. No contiene textos completos de normas; solo reglas de ingeniería referenciadas.",
   "reglas": [
     {
       "id": "RIC-00-001",
@@ -4240,6 +4240,2457 @@
           "fecha": "2026-06-30",
           "autor": "Julio Guillermo Vera",
           "cambio": "Regla inicial incorporada al paquete RIC 3."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-GEN-001",
+      "nombre": "Sistema de puesta a tierra obligatorio",
+      "descripcion": "Toda instalación de consumo considerada por el pliego debe disponer de sistema de puesta a tierra coordinado con RIC 6.",
+      "fuente": "RIC",
+      "categoria": "Seguridad eléctrica",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "tieneSPT"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "tieneSPT"
+      },
+      "mensajes": {
+        "cumple": "El proyecto declara sistema de puesta a tierra.",
+        "noCumple": "El proyecto no declara sistema de puesta a tierra.",
+        "requiereRevision": "Sistema de puesta a tierra obligatorio: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Sistema de puesta a tierra obligatorio: faltan datos para evaluar."
+      },
+      "accion": "Incorporar o verificar sistema de puesta a tierra según RIC 6.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-GEN-002",
+      "nombre": "Minimización de contacto directo e indirecto",
+      "descripcion": "La instalación debe disponerse para minimizar riesgos por contacto directo o indirecto, temperaturas excesivas y arcos.",
+      "fuente": "RIC",
+      "categoria": "Seguridad eléctrica",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "5.3",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "auditoria",
+        "protecciones"
+      ],
+      "entradasRequeridas": [
+        "riesgoContactoControlado"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "riesgoContactoControlado"
+      },
+      "mensajes": {
+        "cumple": "Se declara control de riesgos de contacto y condiciones peligrosas.",
+        "noCumple": "No se ha declarado control de riesgos de contacto y condiciones peligrosas.",
+        "requiereRevision": "Minimización de contacto directo e indirecto: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Minimización de contacto directo e indirecto: faltan datos para evaluar."
+      },
+      "accion": "Revisar aislamiento, envolventes, barreras, protecciones y condiciones de operación.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-GEN-003",
+      "nombre": "Protección contra sobrecorrientes",
+      "descripcion": "Personas, animales y cosas deben estar protegidos contra daños por temperaturas excesivas o esfuerzos electromecánicos por sobrecorrientes.",
+      "fuente": "RIC",
+      "categoria": "Seguridad eléctrica",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "5.4",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "cuadro-carga",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "proteccionSobrecorriente"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "proteccionSobrecorriente"
+      },
+      "mensajes": {
+        "cumple": "El circuito declara protección contra sobrecorriente.",
+        "noCumple": "El circuito no declara protección contra sobrecorriente.",
+        "requiereRevision": "Protección contra sobrecorrientes: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protección contra sobrecorrientes: faltan datos para evaluar."
+      },
+      "accion": "Definir fusible o interruptor automático compatible con el circuito.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TEN-001",
+      "nombre": "Tensión segura máxima en lugar seco CA",
+      "descripcion": "Para lugar seco en corriente alterna se considera límite de seguridad de 50 V.",
+      "fuente": "RIC",
+      "categoria": "Tensiones de seguridad",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "5.8",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "ambiente",
+        "tensionContactoCA"
+      ],
+      "condicion": {
+        "tipo": "rango",
+        "dato": "tensionContactoCA",
+        "max": 50
+      },
+      "mensajes": {
+        "cumple": "La tensión de contacto CA está dentro del límite para lugar seco, si el ambiente corresponde.",
+        "noCumple": "La tensión de contacto CA supera 50 V.",
+        "requiereRevision": "Tensión segura máxima en lugar seco CA: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Tensión segura máxima en lugar seco CA: faltan datos para evaluar."
+      },
+      "accion": "Reducir tensión de contacto o aplicar medidas de protección adecuadas.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TEN-002",
+      "nombre": "Tensión segura máxima en lugar seco CC",
+      "descripcion": "Para lugar seco en corriente continua se considera límite de seguridad de 120 V.",
+      "fuente": "RIC",
+      "categoria": "Tensiones de seguridad",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "5.8",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "ambiente",
+        "tensionContactoCC"
+      ],
+      "condicion": {
+        "tipo": "rango",
+        "dato": "tensionContactoCC",
+        "max": 120
+      },
+      "mensajes": {
+        "cumple": "La tensión de contacto CC está dentro del límite para lugar seco, si el ambiente corresponde.",
+        "noCumple": "La tensión de contacto CC supera 120 V.",
+        "requiereRevision": "Tensión segura máxima en lugar seco CC: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Tensión segura máxima en lugar seco CC: faltan datos para evaluar."
+      },
+      "accion": "Reducir tensión de contacto o aplicar medidas de protección adecuadas.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TEN-003",
+      "nombre": "Tensión segura máxima en lugar húmedo CA",
+      "descripcion": "Para lugar húmedo o mojado en corriente alterna se considera límite de seguridad de 24 V.",
+      "fuente": "RIC",
+      "categoria": "Tensiones de seguridad",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "5.8",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "ambiente",
+        "tensionContactoCA"
+      ],
+      "condicion": {
+        "tipo": "rango",
+        "dato": "tensionContactoCA",
+        "max": 24
+      },
+      "mensajes": {
+        "cumple": "La tensión de contacto CA está dentro del límite para lugar húmedo, si el ambiente corresponde.",
+        "noCumple": "La tensión de contacto CA supera 24 V para lugar húmedo.",
+        "requiereRevision": "Tensión segura máxima en lugar húmedo CA: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Tensión segura máxima en lugar húmedo CA: faltan datos para evaluar."
+      },
+      "accion": "Aplicar medidas de protección reforzadas, revisar diferencial y puesta a tierra.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TEN-004",
+      "nombre": "Tensión segura máxima en lugar húmedo CC",
+      "descripcion": "Para lugar húmedo o mojado en corriente continua se considera límite de seguridad de 60 V.",
+      "fuente": "RIC",
+      "categoria": "Tensiones de seguridad",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "5.8",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "ambiente",
+        "tensionContactoCC"
+      ],
+      "condicion": {
+        "tipo": "rango",
+        "dato": "tensionContactoCC",
+        "max": 60
+      },
+      "mensajes": {
+        "cumple": "La tensión de contacto CC está dentro del límite para lugar húmedo, si el ambiente corresponde.",
+        "noCumple": "La tensión de contacto CC supera 60 V para lugar húmedo.",
+        "requiereRevision": "Tensión segura máxima en lugar húmedo CC: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Tensión segura máxima en lugar húmedo CC: faltan datos para evaluar."
+      },
+      "accion": "Aplicar medidas de protección reforzadas, revisar esquema y aislamiento.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TEN-005",
+      "nombre": "Piso aislante 380/220 V",
+      "descripcion": "Para instalaciones 380/220 V y 50 Hz se considera piso aislante si supera 50.000 ohm.",
+      "fuente": "RIC",
+      "categoria": "Tensiones de seguridad",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "5.9",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "resistenciaPisoOhm"
+      ],
+      "condicion": {
+        "tipo": "comparacion",
+        "izquierda": "resistenciaPisoOhm",
+        "operador": ">",
+        "derecha": 50000
+      },
+      "mensajes": {
+        "cumple": "El piso supera el valor referencial para considerarse aislante.",
+        "noCumple": "El piso no supera el valor referencial para considerarse aislante.",
+        "requiereRevision": "Piso aislante 380/220 V: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Piso aislante 380/220 V: faltan datos para evaluar."
+      },
+      "accion": "No considerar el piso como aislante; aplicar medidas de protección correspondientes.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CD-001",
+      "nombre": "Protección por aislamiento de partes activas",
+      "descripcion": "Las partes activas deben estar recubiertas por aislamiento que no se retire sin destruirlo.",
+      "fuente": "RIC",
+      "categoria": "Contacto directo",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 61,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "7.4",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "partesActivasAisladas"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "partesActivasAisladas"
+      },
+      "mensajes": {
+        "cumple": "Protección por aislamiento de partes activas: declarado.",
+        "noCumple": "Protección por aislamiento de partes activas: no declarado o no comprobado.",
+        "requiereRevision": "Protección por aislamiento de partes activas: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protección por aislamiento de partes activas: faltan datos para evaluar."
+      },
+      "accion": "Implementar o verificar esta medida antes de declarar cumplimiento.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CD-002",
+      "nombre": "Protección por barreras o envolventes",
+      "descripcion": "Las partes activas deben quedar dentro de envolventes o detrás de barreras adecuadas.",
+      "fuente": "RIC",
+      "categoria": "Contacto directo",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 62,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "7.5",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "barrerasEnvolventes"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "barrerasEnvolventes"
+      },
+      "mensajes": {
+        "cumple": "Protección por barreras o envolventes: declarado.",
+        "noCumple": "Protección por barreras o envolventes: no declarado o no comprobado.",
+        "requiereRevision": "Protección por barreras o envolventes: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protección por barreras o envolventes: faltan datos para evaluar."
+      },
+      "accion": "Implementar o verificar esta medida antes de declarar cumplimiento.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CD-003",
+      "nombre": "Protección por obstáculos",
+      "descripcion": "Los obstáculos sólo aplican en recintos de servicio eléctrico accesibles a personal autorizado.",
+      "fuente": "RIC",
+      "categoria": "Contacto directo",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 63,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "7.6",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "obstaculosPersonalAutorizado"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "obstaculosPersonalAutorizado"
+      },
+      "mensajes": {
+        "cumple": "Protección por obstáculos: declarado.",
+        "noCumple": "Protección por obstáculos: no declarado o no comprobado.",
+        "requiereRevision": "Protección por obstáculos: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protección por obstáculos: faltan datos para evaluar."
+      },
+      "accion": "Implementar o verificar esta medida antes de declarar cumplimiento.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CD-004",
+      "nombre": "Puesta fuera de alcance por alejamiento",
+      "descripcion": "La puesta fuera de alcance impide contactos fortuitos y aplica en recintos de servicio eléctrico autorizados.",
+      "fuente": "RIC",
+      "categoria": "Contacto directo",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 64,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "7.7",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "fueraAlcance"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "fueraAlcance"
+      },
+      "mensajes": {
+        "cumple": "Puesta fuera de alcance por alejamiento: declarado.",
+        "noCumple": "Puesta fuera de alcance por alejamiento: no declarado o no comprobado.",
+        "requiereRevision": "Puesta fuera de alcance por alejamiento: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Puesta fuera de alcance por alejamiento: faltan datos para evaluar."
+      },
+      "accion": "Implementar o verificar esta medida antes de declarar cumplimiento.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CD-005",
+      "nombre": "Protección complementaria por diferencial",
+      "descripcion": "El protector diferencial complementa otras medidas de protección contra contacto directo.",
+      "fuente": "RIC",
+      "categoria": "Contacto directo",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 65,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "7.8",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "diferencialComplementario"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "diferencialComplementario"
+      },
+      "mensajes": {
+        "cumple": "Protección complementaria por diferencial: declarado.",
+        "noCumple": "Protección complementaria por diferencial: no declarado o no comprobado.",
+        "requiereRevision": "Protección complementaria por diferencial: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protección complementaria por diferencial: faltan datos para evaluar."
+      },
+      "accion": "Implementar o verificar esta medida antes de declarar cumplimiento.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CD-006",
+      "nombre": "Protección directa sobre 50 V secos y 24 V húmedos",
+      "descripcion": "Si hay partes energizadas sobre 50 V en seco o 24 V en húmedo, deben existir medidas de protección contra contacto directo.",
+      "fuente": "RIC",
+      "categoria": "Contacto directo",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "7.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "proteccionContactoDirecto"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "proteccionContactoDirecto"
+      },
+      "mensajes": {
+        "cumple": "Existe medida de protección contra contacto directo.",
+        "noCumple": "No existe medida declarada contra contacto directo.",
+        "requiereRevision": "Protección directa sobre 50 V secos y 24 V húmedos: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protección directa sobre 50 V secos y 24 V húmedos: faltan datos para evaluar."
+      },
+      "accion": "Aplicar al menos una medida de protección directa: aislamiento, barrera, envolvente, alejamiento u otra permitida.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CD-007",
+      "nombre": "Protector diferencial no reemplaza protección completa",
+      "descripcion": "El uso de diferencial no constituye por sí solo una medida completa contra contacto directo.",
+      "fuente": "RIC",
+      "categoria": "Contacto directo",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "7.8.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "tieneMedidaContactoDirectoAdicional"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "tieneMedidaContactoDirectoAdicional"
+      },
+      "mensajes": {
+        "cumple": "El diferencial se complementa con otra medida de protección.",
+        "noCumple": "El diferencial se usa sin medida complementaria declarada.",
+        "requiereRevision": "Protector diferencial no reemplaza protección completa: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protector diferencial no reemplaza protección completa: faltan datos para evaluar."
+      },
+      "accion": "Agregar aislamiento, envolvente, barrera o medida equivalente.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-DIF-001",
+      "nombre": "Diferencial complementario máximo 30 mA",
+      "descripcion": "Para protección complementaria por diferencial, la sensibilidad debe ser inferior o igual a 30 mA.",
+      "fuente": "RIC",
+      "categoria": "Diferenciales",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "7.8.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "cuadro-carga",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "sensibilidadDifMa"
+      ],
+      "condicion": {
+        "tipo": "rango",
+        "dato": "sensibilidadDifMa",
+        "max": 30
+      },
+      "mensajes": {
+        "cumple": "La sensibilidad diferencial es igual o inferior a 30 mA.",
+        "noCumple": "La sensibilidad diferencial supera 30 mA.",
+        "requiereRevision": "Diferencial complementario máximo 30 mA: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Diferencial complementario máximo 30 mA: faltan datos para evaluar."
+      },
+      "accion": "Seleccionar diferencial con sensibilidad igual o inferior a 30 mA cuando aplique.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-DIF-002",
+      "nombre": "Diferencial tipo A para corrientes no senoidales pulsantes",
+      "descripcion": "Cuando se prevean corrientes diferenciales no senoidales pulsantes, se debe usar diferencial clase A.",
+      "fuente": "RIC",
+      "categoria": "Diferenciales",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "7.8.3",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "tipoDiferencial"
+      ],
+      "condicion": {
+        "tipo": "valor_en_lista",
+        "dato": "tipoDiferencial",
+        "valores": [
+          "A",
+          "B",
+          "F"
+        ]
+      },
+      "mensajes": {
+        "cumple": "El diferencial seleccionado es compatible con corrientes no senoidales pulsantes.",
+        "noCumple": "El diferencial seleccionado no es compatible con corrientes no senoidales pulsantes.",
+        "requiereRevision": "Diferencial tipo A para corrientes no senoidales pulsantes: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Diferencial tipo A para corrientes no senoidales pulsantes: faltan datos para evaluar."
+      },
+      "accion": "Usar diferencial clase A o superior según la carga.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-DIF-003",
+      "nombre": "Diferencial tipo B para corrientes de falla CC o CA sin paso por cero",
+      "descripcion": "Para cargas que puedan no tener paso por cero o generar falla CC, se debe usar diferencial clase B.",
+      "fuente": "RIC",
+      "categoria": "Diferenciales",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "7.8.3",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "tipoDiferencial"
+      ],
+      "condicion": {
+        "tipo": "valor_en_lista",
+        "dato": "tipoDiferencial",
+        "valores": [
+          "B"
+        ]
+      },
+      "mensajes": {
+        "cumple": "El diferencial seleccionado es clase B.",
+        "noCumple": "El diferencial seleccionado no es clase B.",
+        "requiereRevision": "Diferencial tipo B para corrientes de falla CC o CA sin paso por cero: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Diferencial tipo B para corrientes de falla CC o CA sin paso por cero: faltan datos para evaluar."
+      },
+      "accion": "Usar diferencial clase B si la carga puede generar corrientes de falla CC o CA sin paso por cero.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-ESQ-001",
+      "nombre": "Esquema de conexión TN-S",
+      "descripcion": "El esquema de conexión declarado debe corresponder a una de las configuraciones reconocidas por el pliego.",
+      "fuente": "RIC",
+      "categoria": "Esquemas de conexión a tierra",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 70,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "6.3 a 6.7",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "esquemaTierra"
+      ],
+      "condicion": {
+        "tipo": "valor_en_lista",
+        "dato": "esquemaTierra",
+        "valores": [
+          "TN-S",
+          "TN-C",
+          "TN-C-S",
+          "TT",
+          "IT"
+        ]
+      },
+      "mensajes": {
+        "cumple": "El esquema de tierra declarado está dentro de los esquemas reconocidos.",
+        "noCumple": "El esquema de tierra declarado no está dentro de los esquemas reconocidos.",
+        "requiereRevision": "Esquema de conexión TN-S: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Esquema de conexión TN-S: faltan datos para evaluar."
+      },
+      "accion": "Seleccionar y documentar esquema TN-S, TT, IT u otro permitido según condiciones técnicas.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-ESQ-002",
+      "nombre": "Esquema de conexión TN-C",
+      "descripcion": "El esquema de conexión declarado debe corresponder a una de las configuraciones reconocidas por el pliego.",
+      "fuente": "RIC",
+      "categoria": "Esquemas de conexión a tierra",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 70,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "6.3 a 6.7",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "esquemaTierra"
+      ],
+      "condicion": {
+        "tipo": "valor_en_lista",
+        "dato": "esquemaTierra",
+        "valores": [
+          "TN-S",
+          "TN-C",
+          "TN-C-S",
+          "TT",
+          "IT"
+        ]
+      },
+      "mensajes": {
+        "cumple": "El esquema de tierra declarado está dentro de los esquemas reconocidos.",
+        "noCumple": "El esquema de tierra declarado no está dentro de los esquemas reconocidos.",
+        "requiereRevision": "Esquema de conexión TN-C: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Esquema de conexión TN-C: faltan datos para evaluar."
+      },
+      "accion": "Seleccionar y documentar esquema TN-S, TT, IT u otro permitido según condiciones técnicas.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-ESQ-003",
+      "nombre": "Esquema de conexión TN-C-S",
+      "descripcion": "El esquema de conexión declarado debe corresponder a una de las configuraciones reconocidas por el pliego.",
+      "fuente": "RIC",
+      "categoria": "Esquemas de conexión a tierra",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 70,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "6.3 a 6.7",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "esquemaTierra"
+      ],
+      "condicion": {
+        "tipo": "valor_en_lista",
+        "dato": "esquemaTierra",
+        "valores": [
+          "TN-S",
+          "TN-C",
+          "TN-C-S",
+          "TT",
+          "IT"
+        ]
+      },
+      "mensajes": {
+        "cumple": "El esquema de tierra declarado está dentro de los esquemas reconocidos.",
+        "noCumple": "El esquema de tierra declarado no está dentro de los esquemas reconocidos.",
+        "requiereRevision": "Esquema de conexión TN-C-S: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Esquema de conexión TN-C-S: faltan datos para evaluar."
+      },
+      "accion": "Seleccionar y documentar esquema TN-S, TT, IT u otro permitido según condiciones técnicas.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-ESQ-004",
+      "nombre": "Esquema de conexión TT",
+      "descripcion": "El esquema de conexión declarado debe corresponder a una de las configuraciones reconocidas por el pliego.",
+      "fuente": "RIC",
+      "categoria": "Esquemas de conexión a tierra",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 70,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "6.3 a 6.7",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "esquemaTierra"
+      ],
+      "condicion": {
+        "tipo": "valor_en_lista",
+        "dato": "esquemaTierra",
+        "valores": [
+          "TN-S",
+          "TN-C",
+          "TN-C-S",
+          "TT",
+          "IT"
+        ]
+      },
+      "mensajes": {
+        "cumple": "El esquema de tierra declarado está dentro de los esquemas reconocidos.",
+        "noCumple": "El esquema de tierra declarado no está dentro de los esquemas reconocidos.",
+        "requiereRevision": "Esquema de conexión TT: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Esquema de conexión TT: faltan datos para evaluar."
+      },
+      "accion": "Seleccionar y documentar esquema TN-S, TT, IT u otro permitido según condiciones técnicas.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-ESQ-005",
+      "nombre": "Esquema de conexión IT",
+      "descripcion": "El esquema de conexión declarado debe corresponder a una de las configuraciones reconocidas por el pliego.",
+      "fuente": "RIC",
+      "categoria": "Esquemas de conexión a tierra",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 70,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "6.3 a 6.7",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "esquemaTierra"
+      ],
+      "condicion": {
+        "tipo": "valor_en_lista",
+        "dato": "esquemaTierra",
+        "valores": [
+          "TN-S",
+          "TN-C",
+          "TN-C-S",
+          "TT",
+          "IT"
+        ]
+      },
+      "mensajes": {
+        "cumple": "El esquema de tierra declarado está dentro de los esquemas reconocidos.",
+        "noCumple": "El esquema de tierra declarado no está dentro de los esquemas reconocidos.",
+        "requiereRevision": "Esquema de conexión IT: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Esquema de conexión IT: faltan datos para evaluar."
+      },
+      "accion": "Seleccionar y documentar esquema TN-S, TT, IT u otro permitido según condiciones técnicas.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-ESQ-006",
+      "nombre": "Red pública BT normalmente esquema TT",
+      "descripcion": "Para instalaciones alimentadas directamente desde red pública de baja tensión, el esquema de red de distribución corresponde a TT.",
+      "fuente": "RIC",
+      "categoria": "Esquemas de conexión a tierra",
+      "estado": "en_revision",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "6.7.1.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "empalme",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "alimentacionRedPublicaBT",
+        "esquemaTierra"
+      ],
+      "condicion": {
+        "tipo": "manual"
+      },
+      "mensajes": {
+        "cumple": "La condición de esquema TT debe verificarse con datos del empalme.",
+        "noCumple": "La condición de esquema TT no puede declararse automáticamente sin contexto.",
+        "requiereRevision": "Red pública BT normalmente esquema TT: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Red pública BT normalmente esquema TT: faltan datos para evaluar."
+      },
+      "accion": "Si proviene de red pública BT, considerar esquema TT salvo configuración justificada/documentada.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-ESQ-007",
+      "nombre": "Uso restringido de TN-C",
+      "descripcion": "El esquema TN-C solo debe usarse en casos técnicamente justificados donde no sea posible TN-S.",
+      "fuente": "RIC",
+      "categoria": "Esquemas de conexión a tierra",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "6.4.4 y 6.7.1.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "esquemaTierra"
+      ],
+      "condicion": {
+        "tipo": "valor_no_en_lista",
+        "dato": "esquemaTierra",
+        "valores": [
+          "TN-C"
+        ]
+      },
+      "mensajes": {
+        "cumple": "No se declaró esquema TN-C como solución general.",
+        "noCumple": "Se declaró esquema TN-C; requiere justificación técnica.",
+        "requiereRevision": "Uso restringido de TN-C: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Uso restringido de TN-C: faltan datos para evaluar."
+      },
+      "accion": "Registrar justificación técnica o usar TN-S, TT o IT según corresponda.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-ESQ-008",
+      "nombre": "Uso restringido de TN-C-S",
+      "descripcion": "El esquema TN-C-S solo debe usarse en casos técnicamente justificados donde no sea posible TN-S.",
+      "fuente": "RIC",
+      "categoria": "Esquemas de conexión a tierra",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "6.4.5 y 6.7.1.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "esquemaTierra"
+      ],
+      "condicion": {
+        "tipo": "valor_no_en_lista",
+        "dato": "esquemaTierra",
+        "valores": [
+          "TN-C-S"
+        ]
+      },
+      "mensajes": {
+        "cumple": "No se declaró esquema TN-C-S como solución general.",
+        "noCumple": "Se declaró esquema TN-C-S; requiere justificación técnica.",
+        "requiereRevision": "Uso restringido de TN-C-S: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Uso restringido de TN-C-S: faltan datos para evaluar."
+      },
+      "accion": "Registrar justificación técnica o usar TN-S, TT o IT según corresponda.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CI-001",
+      "nombre": "Protección contra contacto indirecto",
+      "descripcion": "Debe limitarse el tiempo de falla o mantener tensiones de contacto dentro de los valores de seguridad.",
+      "fuente": "RIC",
+      "categoria": "Contacto indirecto",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "5.6",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "proteccionContactoIndirecto"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "proteccionContactoIndirecto"
+      },
+      "mensajes": {
+        "cumple": "Existe estrategia declarada contra contacto indirecto.",
+        "noCumple": "No existe estrategia declarada contra contacto indirecto.",
+        "requiereRevision": "Protección contra contacto indirecto: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protección contra contacto indirecto: faltan datos para evaluar."
+      },
+      "accion": "Definir puesta a tierra, corte automático, diferencial o medida de protección aplicable.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CI-002",
+      "nombre": "Verificación de aislamiento",
+      "descripcion": "La primera medida contra contactos indirectos es mantener el aislamiento en valores adecuados.",
+      "fuente": "RIC",
+      "categoria": "Contacto indirecto",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.1 y 8.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "auditoria",
+        "documentacion"
+      ],
+      "entradasRequeridas": [
+        "medicionAislamientoRealizada"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "medicionAislamientoRealizada"
+      },
+      "mensajes": {
+        "cumple": "Existe verificación de aislamiento declarada.",
+        "noCumple": "No existe verificación de aislamiento declarada.",
+        "requiereRevision": "Verificación de aislamiento: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Verificación de aislamiento: faltan datos para evaluar."
+      },
+      "accion": "Realizar medición de aislamiento según el procedimiento aplicable y registrar resultado.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CI-003",
+      "nombre": "Protección clase B con tierra y corte automático",
+      "descripcion": "Los sistemas de protección clase B exigen puesta a tierra o puesta a neutro asociada a dispositivo de corte automático.",
+      "fuente": "RIC",
+      "categoria": "Contacto indirecto",
+      "estado": "en_revision",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.5 y 8.7.3",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "tieneSPT",
+        "corteAutomatico"
+      ],
+      "condicion": {
+        "tipo": "manual"
+      },
+      "mensajes": {
+        "cumple": "La protección clase B debe verificarse mediante puesta a tierra y corte automático.",
+        "noCumple": "No puede declararse protección clase B sin tierra y corte automático.",
+        "requiereRevision": "Protección clase B con tierra y corte automático: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protección clase B con tierra y corte automático: faltan datos para evaluar."
+      },
+      "accion": "Verificar puesta a tierra de masas y dispositivo de corte automático.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TN-001",
+      "nombre": "TN: condición Zs x Ia ≤ UL",
+      "descripcion": "En esquema TN debe verificarse que el bucle de defecto permita corte automático dentro del límite de tensión de contacto.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.6.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "productoZsIa",
+        "ul"
+      ],
+      "condicion": {
+        "tipo": "comparacion",
+        "izquierda": "productoZsIa",
+        "operador": "<=",
+        "derechaDato": "ul"
+      },
+      "mensajes": {
+        "cumple": "Se cumple la condición Zs x Ia ≤ UL.",
+        "noCumple": "No se cumple la condición Zs x Ia ≤ UL.",
+        "requiereRevision": "TN: condición Zs x Ia ≤ UL: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "TN: condición Zs x Ia ≤ UL: faltan datos para evaluar."
+      },
+      "accion": "Revisar impedancia de bucle, protección o esquema de conexión.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TN-002",
+      "nombre": "TN: dispositivos admitidos",
+      "descripcion": "En esquema TN se usan protecciones de máxima corriente y diferenciales de sensibilidad no superior a 30 mA.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.6.3",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "sensibilidadDifMa"
+      ],
+      "condicion": {
+        "tipo": "rango",
+        "dato": "sensibilidadDifMa",
+        "max": 30
+      },
+      "mensajes": {
+        "cumple": "El diferencial no supera 30 mA para esquema TN cuando aplica.",
+        "noCumple": "El diferencial supera 30 mA para esquema TN cuando aplica.",
+        "requiereRevision": "TN: dispositivos admitidos: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "TN: dispositivos admitidos: faltan datos para evaluar."
+      },
+      "accion": "Seleccionar diferencial de sensibilidad no superior a 30 mA cuando corresponda.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TN-003",
+      "nombre": "TN-C: no usar diferencial",
+      "descripcion": "Cuando neutro y protección son comunes en TN-C, no puede usarse protector diferencial.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "en_revision",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.6.4",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "esquemaTierra",
+        "usaDiferencial"
+      ],
+      "condicion": {
+        "tipo": "manual"
+      },
+      "mensajes": {
+        "cumple": "La restricción de diferencial en TN-C debe validarse con el esquema declarado.",
+        "noCumple": "No debe utilizarse diferencial si el esquema es TN-C.",
+        "requiereRevision": "TN-C: no usar diferencial: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "TN-C: no usar diferencial: faltan datos para evaluar."
+      },
+      "accion": "Si el esquema es TN-C, retirar diferencial o rediseñar a esquema admisible.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TN-004",
+      "nombre": "TN-S: neutro y protección separados",
+      "descripcion": "En TN-S el neutro y el conductor de protección son distintos en todo el esquema.",
+      "fuente": "RIC",
+      "categoria": "Esquemas de conexión a tierra",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "6.4.3",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "neutroProteccionSeparados"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "neutroProteccionSeparados"
+      },
+      "mensajes": {
+        "cumple": "Neutro y protección se declaran separados.",
+        "noCumple": "No se declara separación entre neutro y protección.",
+        "requiereRevision": "TN-S: neutro y protección separados: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "TN-S: neutro y protección separados: faltan datos para evaluar."
+      },
+      "accion": "Verificar esquema y separación de conductores N y PE.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TT-001",
+      "nombre": "TT: condición RA x Ia ≤ UL",
+      "descripcion": "En esquema TT debe verificarse que RA por Ia no supere la tensión de contacto límite.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.7.3",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "productoRaIa",
+        "ul"
+      ],
+      "condicion": {
+        "tipo": "comparacion",
+        "izquierda": "productoRaIa",
+        "operador": "<=",
+        "derechaDato": "ul"
+      },
+      "mensajes": {
+        "cumple": "Se cumple la condición RA x Ia ≤ UL.",
+        "noCumple": "No se cumple la condición RA x Ia ≤ UL.",
+        "requiereRevision": "TT: condición RA x Ia ≤ UL: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "TT: condición RA x Ia ≤ UL: faltan datos para evaluar."
+      },
+      "accion": "Mejorar puesta a tierra o seleccionar protección diferencial adecuada.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TT-002",
+      "nombre": "TT: masas interconectadas a una misma toma",
+      "descripcion": "En TT, las masas protegidas por un mismo dispositivo deben interconectarse y unirse a la misma toma de tierra.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.7.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "masasInterconectadas"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "masasInterconectadas"
+      },
+      "mensajes": {
+        "cumple": "Las masas se declaran interconectadas a la misma toma.",
+        "noCumple": "Las masas no se declaran interconectadas.",
+        "requiereRevision": "TT: masas interconectadas a una misma toma: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "TT: masas interconectadas a una misma toma: faltan datos para evaluar."
+      },
+      "accion": "Interconectar masas y conductor de protección según el esquema TT.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TT-003",
+      "nombre": "TT: diferencial máximo 30 mA",
+      "descripcion": "En TT se deben utilizar protectores diferenciales de sensibilidad no superior a 30 mA.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.7.4",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "sensibilidadDifMa"
+      ],
+      "condicion": {
+        "tipo": "rango",
+        "dato": "sensibilidadDifMa",
+        "max": 30
+      },
+      "mensajes": {
+        "cumple": "El protector diferencial no supera 30 mA.",
+        "noCumple": "El protector diferencial supera 30 mA.",
+        "requiereRevision": "TT: diferencial máximo 30 mA: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "TT: diferencial máximo 30 mA: faltan datos para evaluar."
+      },
+      "accion": "Seleccionar protector diferencial de sensibilidad no superior a 30 mA.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TT-004",
+      "nombre": "TT: protección de máxima corriente condicionada",
+      "descripcion": "En TT, dispositivos de máxima corriente son aplicables cuando RA tiene un valor muy bajo.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.7.4",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "raBajaVerificada"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "raBajaVerificada"
+      },
+      "mensajes": {
+        "cumple": "Se declara RA muy baja para uso de protección de máxima corriente en TT.",
+        "noCumple": "No se verifica RA muy baja para justificar protección solo por máxima corriente en TT.",
+        "requiereRevision": "TT: protección de máxima corriente condicionada: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "TT: protección de máxima corriente condicionada: faltan datos para evaluar."
+      },
+      "accion": "Usar diferencial adecuado o verificar RA mediante medición/cálculo.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-IT-001",
+      "nombre": "IT: instalación aislada o mediante impedancia",
+      "descripcion": "En IT la instalación debe estar aislada de tierra o conectada mediante impedancia suficientemente alta.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.8.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "itAisladoOImpedancia"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "itAisladoOImpedancia"
+      },
+      "mensajes": {
+        "cumple": "El esquema IT declara aislamiento o impedancia adecuada.",
+        "noCumple": "El esquema IT no declara aislamiento ni impedancia.",
+        "requiereRevision": "IT: instalación aislada o mediante impedancia: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "IT: instalación aislada o mediante impedancia: faltan datos para evaluar."
+      },
+      "accion": "Documentar el aislamiento de tierra o impedancia del esquema IT.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-IT-002",
+      "nombre": "IT: ningún conductor activo directo a tierra",
+      "descripcion": "En IT ningún conductor activo debe conectarse directamente a tierra en la instalación.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.8.3",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "activoDirectoTierra"
+      ],
+      "condicion": {
+        "tipo": "valor_no_en_lista",
+        "dato": "activoDirectoTierra",
+        "valores": [
+          "true",
+          "si",
+          "sí"
+        ]
+      },
+      "mensajes": {
+        "cumple": "No se declara conductor activo conectado directamente a tierra.",
+        "noCumple": "Se declara conductor activo conectado directamente a tierra.",
+        "requiereRevision": "IT: ningún conductor activo directo a tierra: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "IT: ningún conductor activo directo a tierra: faltan datos para evaluar."
+      },
+      "accion": "Corregir esquema IT o documentar cambio de esquema.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-IT-003",
+      "nombre": "IT: masas conectadas a tierra",
+      "descripcion": "En IT las masas deben conectarse a tierra individualmente o por grupos.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.8.4",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "masasConectadasTierra"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "masasConectadasTierra"
+      },
+      "mensajes": {
+        "cumple": "Las masas se declaran conectadas a tierra.",
+        "noCumple": "Las masas no se declaran conectadas a tierra.",
+        "requiereRevision": "IT: masas conectadas a tierra: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "IT: masas conectadas a tierra: faltan datos para evaluar."
+      },
+      "accion": "Conectar masas a tierra individualmente o por grupos.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-IT-004",
+      "nombre": "IT: condición RA x Id ≤ UL",
+      "descripcion": "En IT debe verificarse RA por Id contra la tensión límite.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.8.5",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "tierra",
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "productoRaId",
+        "ul"
+      ],
+      "condicion": {
+        "tipo": "comparacion",
+        "izquierda": "productoRaId",
+        "operador": "<=",
+        "derechaDato": "ul"
+      },
+      "mensajes": {
+        "cumple": "Se cumple la condición RA x Id ≤ UL.",
+        "noCumple": "No se cumple la condición RA x Id ≤ UL.",
+        "requiereRevision": "IT: condición RA x Id ≤ UL: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "IT: condición RA x Id ≤ UL: faltan datos para evaluar."
+      },
+      "accion": "Revisar resistencia de puesta a tierra, corriente de defecto o esquema.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-IT-005",
+      "nombre": "IT: monitor permanente de aislamiento",
+      "descripcion": "En IT se debe utilizar controlador o monitor permanente de aislamiento.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.8.6 y 8.7.8.7",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "monitorAislamiento"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "monitorAislamiento"
+      },
+      "mensajes": {
+        "cumple": "Se declara monitor permanente de aislamiento.",
+        "noCumple": "No se declara monitor permanente de aislamiento.",
+        "requiereRevision": "IT: monitor permanente de aislamiento: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "IT: monitor permanente de aislamiento: faltan datos para evaluar."
+      },
+      "accion": "Incorporar monitor permanente con señal acústica o visual.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CLA-001",
+      "nombre": "Protección clase A: Transformador de aislación",
+      "descripcion": "Medida clase A de protección contra contactos indirectos: Transformador de aislación.",
+      "fuente": "RIC",
+      "categoria": "Protección clase A",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 85,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.6.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "usaTransformadorAislacion"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "usaTransformadorAislacion"
+      },
+      "mensajes": {
+        "cumple": "Se declara Transformador de aislación.",
+        "noCumple": "No se declara Transformador de aislación.",
+        "requiereRevision": "Protección clase A: Transformador de aislación: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protección clase A: Transformador de aislación: faltan datos para evaluar."
+      },
+      "accion": "Aplicar solo cuando corresponda y documentar condiciones técnicas.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CLA-002",
+      "nombre": "Protección clase A: Tensiones extra bajas",
+      "descripcion": "Medida clase A de protección contra contactos indirectos: Tensiones extra bajas.",
+      "fuente": "RIC",
+      "categoria": "Protección clase A",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 85,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.6.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "usaTensionExtraBaja"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "usaTensionExtraBaja"
+      },
+      "mensajes": {
+        "cumple": "Se declara Tensiones extra bajas.",
+        "noCumple": "No se declara Tensiones extra bajas.",
+        "requiereRevision": "Protección clase A: Tensiones extra bajas: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protección clase A: Tensiones extra bajas: faltan datos para evaluar."
+      },
+      "accion": "Aplicar solo cuando corresponda y documentar condiciones técnicas.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CLA-003",
+      "nombre": "Protección clase A: Doble aislación o clase II",
+      "descripcion": "Medida clase A de protección contra contactos indirectos: Doble aislación o clase II.",
+      "fuente": "RIC",
+      "categoria": "Protección clase A",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 85,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.6.3",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "usaDobleAislacion"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "usaDobleAislacion"
+      },
+      "mensajes": {
+        "cumple": "Se declara Doble aislación o clase II.",
+        "noCumple": "No se declara Doble aislación o clase II.",
+        "requiereRevision": "Protección clase A: Doble aislación o clase II: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protección clase A: Doble aislación o clase II: faltan datos para evaluar."
+      },
+      "accion": "Aplicar solo cuando corresponda y documentar condiciones técnicas.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CLA-004",
+      "nombre": "Protección clase A: Conexiones equipotenciales",
+      "descripcion": "Medida clase A de protección contra contactos indirectos: Conexiones equipotenciales.",
+      "fuente": "RIC",
+      "categoria": "Protección clase A",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 85,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.6.4",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "usaEquipotencialidad"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "usaEquipotencialidad"
+      },
+      "mensajes": {
+        "cumple": "Se declara Conexiones equipotenciales.",
+        "noCumple": "No se declara Conexiones equipotenciales.",
+        "requiereRevision": "Protección clase A: Conexiones equipotenciales: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protección clase A: Conexiones equipotenciales: faltan datos para evaluar."
+      },
+      "accion": "Aplicar solo cuando corresponda y documentar condiciones técnicas.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-CLA-005",
+      "nombre": "Protección clase A: Locales no conductores",
+      "descripcion": "Medida clase A de protección contra contactos indirectos: Locales no conductores.",
+      "fuente": "RIC",
+      "categoria": "Protección clase A",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 85,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.6.5",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "tierra",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "localNoConductor"
+      ],
+      "condicion": {
+        "tipo": "booleano_verdadero",
+        "dato": "localNoConductor"
+      },
+      "mensajes": {
+        "cumple": "Se declara Locales no conductores.",
+        "noCumple": "No se declara Locales no conductores.",
+        "requiereRevision": "Protección clase A: Locales no conductores: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Protección clase A: Locales no conductores: faltan datos para evaluar."
+      },
+      "accion": "Aplicar solo cuando corresponda y documentar condiciones técnicas.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-IP-001",
+      "nombre": "Envolventes mínimo IP2X",
+      "descripcion": "Partes activas en envolventes o barreras deben tener como mínimo grado de protección IP2X.",
+      "fuente": "RIC",
+      "categoria": "Contacto directo",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "7.5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "gradoIP"
+      ],
+      "condicion": {
+        "tipo": "valor_en_lista",
+        "dato": "gradoIP",
+        "valores": [
+          "IP2X",
+          "IP3X",
+          "IP4X",
+          "IP5X",
+          "IP6X",
+          "IPXXB",
+          "IPXXD"
+        ]
+      },
+      "mensajes": {
+        "cumple": "El grado IP declarado es compatible con la protección mínima.",
+        "noCumple": "El grado IP declarado no cumple el mínimo esperado.",
+        "requiereRevision": "Envolventes mínimo IP2X: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Envolventes mínimo IP2X: faltan datos para evaluar."
+      },
+      "accion": "Seleccionar envolvente o barrera con grado de protección compatible.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-IP-002",
+      "nombre": "Superficies horizontales accesibles IP4X o IPXXD",
+      "descripcion": "Superficies superiores de barreras o envolventes horizontales fácilmente accesibles deben responder como mínimo a IP4X o IPXXD.",
+      "fuente": "RIC",
+      "categoria": "Contacto directo",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "7.5.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "gradoIPHorizontal"
+      ],
+      "condicion": {
+        "tipo": "valor_en_lista",
+        "dato": "gradoIPHorizontal",
+        "valores": [
+          "IP4X",
+          "IP5X",
+          "IP6X",
+          "IPXXD"
+        ]
+      },
+      "mensajes": {
+        "cumple": "El grado IP horizontal declarado es compatible.",
+        "noCumple": "El grado IP horizontal declarado no cumple el mínimo esperado.",
+        "requiereRevision": "Superficies horizontales accesibles IP4X o IPXXD: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "Superficies horizontales accesibles IP4X o IPXXD: faltan datos para evaluar."
+      },
+      "accion": "Usar envolvente horizontal con IP4X o IPXXD como mínimo.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TIEMPO-001",
+      "nombre": "TN 220 V: tiempo máximo 0,4 s",
+      "descripcion": "Para TN con U0 220 V CA, el tiempo de interrupción indicado es 0,4 s.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.6.2 Tabla 5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "tiempoInterrupcionS"
+      ],
+      "condicion": {
+        "tipo": "rango",
+        "dato": "tiempoInterrupcionS",
+        "max": 0.4
+      },
+      "mensajes": {
+        "cumple": "El tiempo de interrupción no supera 0,4 s.",
+        "noCumple": "El tiempo de interrupción supera 0,4 s.",
+        "requiereRevision": "TN 220 V: tiempo máximo 0,4 s: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "TN 220 V: tiempo máximo 0,4 s: faltan datos para evaluar."
+      },
+      "accion": "Seleccionar protección que opere dentro del tiempo máximo para la tensión correspondiente.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TIEMPO-002",
+      "nombre": "TN 380 V: tiempo máximo 0,2 s",
+      "descripcion": "Para TN con U0 380 V CA, el tiempo de interrupción indicado es 0,2 s.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "critico",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.6.2 Tabla 5.1",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "tiempoInterrupcionS"
+      ],
+      "condicion": {
+        "tipo": "rango",
+        "dato": "tiempoInterrupcionS",
+        "max": 0.2
+      },
+      "mensajes": {
+        "cumple": "El tiempo de interrupción no supera 0,2 s.",
+        "noCumple": "El tiempo de interrupción supera 0,2 s.",
+        "requiereRevision": "TN 380 V: tiempo máximo 0,2 s: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "TN 380 V: tiempo máximo 0,2 s: faltan datos para evaluar."
+      },
+      "accion": "Seleccionar protección que opere dentro del tiempo máximo para la tensión correspondiente.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TIEMPO-003",
+      "nombre": "IT 230/400 con neutro distribuido: tiempo máximo 0,8 s",
+      "descripcion": "Para IT 230/400 con neutro distribuido, la tabla 5.2 indica 0,8 s.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.8.8 Tabla 5.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "tiempoInterrupcionS"
+      ],
+      "condicion": {
+        "tipo": "rango",
+        "dato": "tiempoInterrupcionS",
+        "max": 0.8
+      },
+      "mensajes": {
+        "cumple": "El tiempo de interrupción no supera 0,8 s.",
+        "noCumple": "El tiempo de interrupción supera 0,8 s.",
+        "requiereRevision": "IT 230/400 con neutro distribuido: tiempo máximo 0,8 s: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "IT 230/400 con neutro distribuido: tiempo máximo 0,8 s: faltan datos para evaluar."
+      },
+      "accion": "Verificar condiciones de segundo defecto y protección aplicable.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
+        }
+      ]
+    },
+    {
+      "id": "RIC5-TIEMPO-004",
+      "nombre": "IT 230/400 con neutro no distribuido: tiempo máximo 0,4 s",
+      "descripcion": "Para IT 230/400 con neutro no distribuido, la tabla 5.2 indica 0,4 s.",
+      "fuente": "RIC",
+      "categoria": "Corte automático",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 50,
+      "referencia": {
+        "documento": "RIC N°05 - Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+        "apartado": "8.7.8.8 Tabla 5.2",
+        "nota": "Regla de ingeniería derivada del pliego. No reproduce texto completo."
+      },
+      "aplicaA": [
+        "protecciones",
+        "auditoria"
+      ],
+      "entradasRequeridas": [
+        "tiempoInterrupcionS"
+      ],
+      "condicion": {
+        "tipo": "rango",
+        "dato": "tiempoInterrupcionS",
+        "max": 0.4
+      },
+      "mensajes": {
+        "cumple": "El tiempo de interrupción no supera 0,4 s.",
+        "noCumple": "El tiempo de interrupción supera 0,4 s.",
+        "requiereRevision": "IT 230/400 con neutro no distribuido: tiempo máximo 0,4 s: requiere revisión normativa o profesional.",
+        "informacionInsuficiente": "IT 230/400 con neutro no distribuido: tiempo máximo 0,4 s: faltan datos para evaluar."
+      },
+      "accion": "Verificar condiciones de segundo defecto y protección aplicable.",
+      "version": "1.0.0",
+      "creadoPor": "Julio Guillermo Vera",
+      "creadoEn": "2026-06-30",
+      "actualizadoEn": "2026-06-30",
+      "historial": [
+        {
+          "version": "1.0.0",
+          "fecha": "2026-06-30",
+          "accion": "Regla inicial incorporada al paquete RIC 5 del Motor Normativo GIAE."
         }
       ]
     }

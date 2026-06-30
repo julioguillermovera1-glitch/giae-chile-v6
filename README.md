@@ -48,3 +48,7 @@ Se incorporó el primer paquete de reglas RIC 4 para el Motor Normativo GIAE.
 ## Etapa 3.0.2b
 
 Agregado paquete inicial de reglas RIC 3 para alimentadores y demanda.
+
+
+## Etapa 3.0.2c
+Se agrega paquete inicial de reglas RIC 5: seguridad eléctrica, diferenciales, tensiones de seguridad, esquemas TT/TN/IT y corte automático.
