@@ -9,30 +9,57 @@
 <body>
   <noscript>GIAE Chile necesita JavaScript habilitado para funcionar.</noscript>
 
-  <section id="loginView" class="login-view">
-    <div class="login-shell">
-      <div class="login-hero">
-        <div class="giae-logo-mark" data-brand-logo aria-label="Logo GIAE Chile"></div>
-        <p class="eyebrow">Plataforma modular eléctrica</p>
-        <h1><span data-brand-name>GIAE Chile</span> v1.0</h1>
-        <p class="login-copy">Diseño, cálculo, documentación, administración y auditoría de instalaciones eléctricas en Chile.</p>
-        <div class="login-badges">
-          <span>Instaladores</span><span>Empresas</span><span>Estudiantes</span><span>Aula técnica libre</span>
+  <section id="loginView" class="login-view start-screen">
+    <div class="start-shell">
+      <header class="start-header">
+        <div class="start-brand">
+          <div class="giae-logo-mark" data-brand-logo aria-label="Logo GIAE Chile"></div>
+          <div>
+            <p class="eyebrow">Plataforma Integral para Proyectos Eléctricos</p>
+            <h1><span data-brand-name>GIAE Chile</span></h1>
+            <p class="version-line">Versión 1.0 · Build alpha 002.1</p>
+          </div>
         </div>
-      </div>
-      <div class="brand-card">
-        <p class="eyebrow">Selecciona acceso</p>
-        <h2>Entrar a la plataforma</h2>
-        <p>Elige el perfil de trabajo. El administrador tiene panel exclusivo para gestionar usuarios, empresas, módulos y plantillas.</p>
-        <div class="profile-grid" aria-label="Tipos de usuario">
-          <button data-profile="independiente">Instalador independiente</button>
-          <button data-profile="empresa">Empresa</button>
-          <button data-profile="estudiante">Estudiante</button>
-          <button data-profile="administrador">Administrador</button>
-          <button data-profile="aula" class="public-access">Aula Técnica - Acceso libre</button>
+        <div class="start-status">
+          <span>Chile</span>
+          <span>RIC · IEC eléctrica · DS N°8</span>
         </div>
-      </div>
-        <footer class="login-footer">Diseñado y desarrollado por Julio Guillermo Vera · © 2026 GIAE Chile. Todos los derechos reservados.</footer>
+      </header>
+
+      <main class="start-main">
+        <section class="start-panel intro-panel">
+          <p class="eyebrow">Inicio</p>
+          <h2>Ingeniería, gestión y formación técnica en una sola plataforma.</h2>
+          <p>GIAE Chile organiza el trabajo eléctrico por módulos independientes, conectados por un proyecto activo y guiados por normativa autorizada.</p>
+          <div class="start-note">
+            <strong>Regla técnica:</strong>
+            <span>Si no existe respaldo normativo cargado, el sistema no inventa una respuesta. Solicita revisión profesional o normativa.</span>
+          </div>
+        </section>
+
+        <section class="start-panel access-panel">
+          <p class="eyebrow">Acceso</p>
+          <h2>Selecciona un perfil</h2>
+          <p>Elige el espacio de trabajo correspondiente. El Aula Técnica es gratuita y no requiere licencia.</p>
+          <div class="profile-grid professional-access" aria-label="Tipos de usuario">
+            <button data-profile="empresa">Empresa</button>
+            <button data-profile="independiente">Instalador independiente</button>
+            <button data-profile="estudiante">Estudiante</button>
+            <button data-profile="administrador">Administrador</button>
+            <button data-profile="aula" class="public-access">Aula Técnica · Acceso libre</button>
+          </div>
+        </section>
+      </main>
+
+      <section class="start-links" aria-label="Información del sistema">
+        <article><strong>Proyecto activo</strong><span>Base común para cargas, unilineal, tierra, documentación y presupuesto.</span></article>
+        <article><strong>Marca por empresa</strong><span>Logo, colores y plantillas propias para cada organización.</span></article>
+        <article><strong>Formación comunitaria</strong><span>Educación técnica libre, con línea para pueblos originarios.</span></article>
+      </section>
+
+      <footer class="official-footer">
+        Diseñado y desarrollado por Julio Guillermo Vera · © 2026 GIAE Chile. Todos los derechos reservados.
+      </footer>
     </div>
   </section>
 
@@ -60,6 +87,10 @@
       </header>
 
       <section id="windowHost" class="window-host"></section>
+      <footer class="platform-footer">
+        <span id="projectStatusLine">Proyecto activo: sin proyecto cargado</span>
+        <span>Diseñado y desarrollado por Julio Guillermo Vera · © 2026 GIAE Chile. Todos los derechos reservados.</span>
+      </footer>
     </section>
   </main>
 

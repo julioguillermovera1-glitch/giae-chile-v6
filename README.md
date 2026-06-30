@@ -22,3 +22,7 @@ Se agregó el módulo independiente `modules/administracion`, con gestión local
 Se incorpora un módulo educativo gratuito, sin licencia pagada y sin registro obligatorio. Su finalidad es enseñar conceptos básicos sobre empalmes, materiales, cotizaciones y seguridad eléctrica para personas, estudiantes, comunidades rurales y comunidades mapuche.
 
 Este módulo no reemplaza a un instalador autorizado ni entrega aprobación técnica para ejecutar obras reales. Todo proyecto real debe revisarse conforme a la normativa aplicable y por personal competente.
+
+
+## Avance Etapa 2.1
+Pantalla de inicio profesional terminada. Se incorpora pie oficial: Diseñado y desarrollado por Julio Guillermo Vera · © 2026 GIAE Chile. Todos los derechos reservados.

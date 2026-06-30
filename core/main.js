@@ -7,6 +7,7 @@ const menu = document.querySelector("#moduleMenu");
 const host = document.querySelector("#windowHost");
 const title = document.querySelector("#workspaceTitle");
 const activeProfile = document.querySelector("#activeProfile");
+const projectStatusLine = document.querySelector("#projectStatusLine");
 
 restore();
 applyBranding();
@@ -38,6 +39,7 @@ logoutBtn.addEventListener("click", () => {
   host.innerHTML = "";
   title.textContent = "Inicio";
   menu.innerHTML = "";
+  updateStatusLine();
 });
 
 document.querySelector("#exportBtn").addEventListener("click", () => {
@@ -58,6 +60,7 @@ function openPlatform() {
   document.querySelector("#saveProjectBtn").classList.toggle("hidden", state.profile === "aula");
   document.querySelector("#exportBtn").classList.toggle("hidden", state.profile === "aula");
   renderMenu();
+  updateStatusLine();
   const first = availableModules()[0];
   openModule(first?.id || "proyecto");
 }
@@ -92,6 +95,7 @@ async function openModule(moduleId) {
   host.innerHTML = `<div class="module-window"><p>Cargando ${selected.label}...</p></div>`;
   const module = await import(selected.path + `?v=${Date.now()}`);
   module.render(host, state);
+  updateStatusLine();
 }
 
 function profileLabel(profile) {
@@ -150,6 +154,18 @@ function applyBranding(){
   nameNodes.forEach(node => node.textContent = brand.name || state.admin?.company?.name || "GIAE Chile");
 }
 
+function updateStatusLine(){
+  if(!projectStatusLine) return;
+  const p = state.currentProject || {};
+  const name = p.name || p.nombre || p.projectName || "sin proyecto cargado";
+  const company = state.admin?.company?.name || state.companyBrand?.name || "GIAE Chile";
+  projectStatusLine.textContent = `Proyecto activo: ${name} · Empresa: ${company} · Normativa: RIC · IEC eléctrica · DS N°8`;
+}
+
 function defaultLogoMarkup(){
-  return `<svg viewBox="0 0 120 120" role="img" aria-hidden="true"><rect x="10" y="10" width="100" height="100" rx="24" fill="currentColor"/><path d="M30 72h25l-5 28 40-52H65l7-28z" fill="#fff"/></svg>`;
+  return `<svg viewBox="0 0 120 120" role="img" aria-hidden="true" class="giae-monogram">
+    <rect x="12" y="12" width="96" height="96" rx="18" fill="none" stroke="currentColor" stroke-width="8"/>
+    <path d="M76 39H51c-13 0-23 10-23 23s10 23 23 23h25V66H58" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M84 85V39" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+  </svg>`;
 }
