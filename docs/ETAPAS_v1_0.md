@@ -100,3 +100,8 @@ Estado: terminada.
 - Importación/exportación `.giae`.
 - Duplicar, renombrar, archivar y eliminar proyectos.
 - Preparación documental para Cloudflare D1/R2.
+
+## Etapa 2.8 - Estado del software e Inspector
+Estado: completada.
+
+Se agrega al panel Administrador una sección exclusiva para revisar el estado real local del software y un Inspector del Sistema. Esta herramienta permite revisar proyecto activo, almacenamiento local, módulos, sesión, configuración administrativa y descargar un reporte de diagnóstico. En producción, este panel deberá conectarse con Cloudflare Workers, D1 y R2 para mostrar estado real de nube, sincronización, licencias y usuarios conectados.

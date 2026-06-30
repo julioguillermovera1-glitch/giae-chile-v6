@@ -77,6 +77,8 @@ export function render(host, state){
         <div><strong>${state.admin.sessions.filter(s => s.status === "Conectado").length}</strong><span>Usuarios conectados</span></div>
         <div><strong>${Object.values(state.admin.enabledModules).filter(Boolean).length}</strong><span>Módulos activos</span></div>
         <div><strong>${state.admin.templates.length}</strong><span>Plantillas</span></div>
+        <div><strong>${systemScore(state)}%</strong><span>Salud del sistema</span></div>
+        <div><strong>${countLocalProjects(state)}</strong><span>Proyectos locales</span></div>
       </section>
 
       <section class="admin-tabs" aria-label="Secciones de administración">
@@ -86,6 +88,8 @@ export function render(host, state){
         <button data-admin-tab="modulos">Módulos</button>
         <button data-admin-tab="plantillas">Plantillas</button>
         <button data-admin-tab="sistema">Sistema</button>
+        <button data-admin-tab="estado">Estado del software</button>
+        <button data-admin-tab="inspector">Inspector</button>
       </section>
 
       <section id="admTabUsuarios" class="admin-tab-page active">
@@ -165,6 +169,39 @@ export function render(host, state){
         </div>
       </section>
 
+
+
+      <section id="admTabEstado" class="admin-tab-page">
+        <div class="admin-card">
+          <h4>Estado real del software</h4>
+          <p class="small">Panel interno para revisar la salud de GIAE en esta instalación. En la versión nube podrá conectarse a Cloudflare D1, R2 y Workers.</p>
+          <div id="admSoftwareStatus"></div>
+          <div class="row-actions" style="margin-top:1rem">
+            <button id="admRunDiagnostics">Ejecutar diagnóstico</button>
+            <button id="admDownloadDiagnostics" class="secondary">Descargar reporte</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="admTabInspector" class="admin-tab-page">
+        <div class="admin-card">
+          <h4>Inspector del sistema</h4>
+          <p class="small">Herramienta del administrador para inspeccionar proyecto activo, almacenamiento local, módulos, sesión y configuración sin alterar los cálculos.</p>
+          <div class="admin-inline">
+            <select id="admInspectorTarget">
+              <option value="project">Proyecto activo</option>
+              <option value="storage">Almacenamiento local</option>
+              <option value="modules">Módulos</option>
+              <option value="session">Sesión</option>
+              <option value="all">Todo el estado</option>
+            </select>
+            <button id="admInspectBtn">Inspeccionar</button>
+            <button id="admCopyInspect" class="secondary">Copiar</button>
+          </div>
+          <pre id="admInspectorOutput" class="inspector-output">Selecciona una sección y presiona Inspeccionar.</pre>
+        </div>
+      </section>
+
       <section id="admTabSistema" class="admin-tab-page">
         <div class="admin-card">
           <h4>Política normativa estricta</h4>
@@ -201,6 +238,12 @@ function wireEvents(state){
   document.querySelector("#admLogo").addEventListener("change", event => loadLogo(event, state));
   document.querySelector("#admAddUser").addEventListener("click", () => addUser(state));
   document.querySelector("#admAddTemplate").addEventListener("click", () => addTemplate(state));
+  document.querySelector("#admRunDiagnostics")?.addEventListener("click", () => paintSoftwareStatus(state, true));
+  document.querySelector("#admDownloadDiagnostics")?.addEventListener("click", () => downloadDiagnostics(state));
+  document.querySelector("#admInspectBtn")?.addEventListener("click", () => runInspector(state));
+  document.querySelector("#admCopyInspect")?.addEventListener("click", () => copyInspectorOutput());
+  paintSoftwareStatus(state, false);
+  runInspector(state, "project");
 }
 
 function showTab(tab){
@@ -290,6 +333,121 @@ function loadLogo(event,state){ const file=event.target.files?.[0]; if(!file)ret
 function downloadBackup(state){ saveAdminForm(state,false); const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}); const url=URL.createObjectURL(blob); const link=document.createElement("a"); link.href=url; link.download="giae-respaldo-administracion.json"; link.click(); URL.revokeObjectURL(url); }
 function addLog(state,text){ ensureAdminData(state); state.admin.auditLog.unshift({date:new Date().toLocaleString("es-CL"),text}); state.admin.auditLog=state.admin.auditLog.slice(0,50); }
 function paintAudit(state){ const rows=(state.admin.auditLog||[]).map((l,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(l.date)}</td><td>${escapeHtml(l.text)}</td></tr>`).join(""); const el=document.querySelector("#admAuditLog"); if(el) el.innerHTML=`<div class="table-scroll"><table><thead><tr><th>N°</th><th>Fecha</th><th>Acción</th></tr></thead><tbody>${rows||`<tr><td colspan="3">Sin acciones registradas.</td></tr>`}</tbody></table></div>`; }
+
+function countLocalProjects(state){
+  return Array.isArray(state.projectLibrary) ? state.projectLibrary.length : 0;
+}
+
+function systemScore(state){
+  return buildDiagnostics(state).score;
+}
+
+function buildDiagnostics(state){
+  const checks = [];
+  const add = (name, ok, detail, level="info") => checks.push({ name, ok: Boolean(ok), detail, level });
+  const p = state.currentProject || {};
+  add("Sesión activa", Boolean(state.profile), state.profile ? `Perfil: ${state.profile}` : "Sin perfil activo", "critico");
+  add("Proyecto activo", Boolean(p.id), p.id ? `${p.name || "Sin nombre"} · ${p.id}` : "No existe proyecto activo", "critico");
+  add("Biblioteca de proyectos", Array.isArray(state.projectLibrary), `${countLocalProjects(state)} proyecto(s) locales`, "medio");
+  add("Módulos registrados", Object.keys(moduleLabels).length >= 10, `${Object.keys(moduleLabels).length} módulos base`, "medio");
+  add("Política normativa estricta", state.normativePolicy?.noInventar === true, "No inventar datos: " + (state.normativePolicy?.noInventar ? "activo" : "inactivo"), "critico");
+  add("Fuentes normativas permitidas", Array.isArray(state.normativePolicy?.allowedSources) && state.normativePolicy.allowedSources.includes("RIC") && state.normativePolicy.allowedSources.includes("IEC"), (state.normativePolicy?.allowedSources || []).join(" · ") || "Sin fuentes", "critico");
+  add("Empresa / marca", Boolean(state.admin?.company?.name || state.companyBrand?.name), state.admin?.company?.name || state.companyBrand?.name || "Sin empresa configurada", "medio");
+  add("Usuarios administrativos", Array.isArray(state.admin?.users) && state.admin.users.length > 0, `${state.admin?.users?.length || 0} usuario(s)`, "medio");
+  add("Plantillas", Array.isArray(state.admin?.templates) && state.admin.templates.length > 0, `${state.admin?.templates?.length || 0} plantilla(s)`, "bajo");
+  add("Guardado local", storageAvailable(), storageAvailable() ? "localStorage disponible" : "localStorage no disponible", "critico");
+  const okCount = checks.filter(c => c.ok).length;
+  const score = Math.round((okCount / checks.length) * 100);
+  return { date: new Date().toLocaleString("es-CL"), version: p.version || "1.0-alpha", score, checks };
+}
+
+function storageAvailable(){
+  try{
+    const key="giae_test_storage";
+    localStorage.setItem(key,"1");
+    localStorage.removeItem(key);
+    return true;
+  }catch(e){ return false; }
+}
+
+function paintSoftwareStatus(state, log=false){
+  const el = document.querySelector("#admSoftwareStatus");
+  if(!el) return;
+  const report = buildDiagnostics(state);
+  const statusClass = report.score >= 85 ? "ok" : report.score >= 65 ? "warn" : "danger";
+  el.innerHTML = `
+    <div class="software-health ${statusClass}">
+      <strong>${report.score}%</strong>
+      <span>Salud general del software</span>
+      <small>Última revisión: ${escapeHtml(report.date)}</small>
+    </div>
+    <div class="diagnostic-grid">
+      ${report.checks.map(check => `
+        <article class="diagnostic-item ${check.ok ? "pass" : "fail"}">
+          <b>${check.ok ? "Correcto" : "Revisar"}</b>
+          <strong>${escapeHtml(check.name)}</strong>
+          <span>${escapeHtml(check.detail)}</span>
+        </article>`).join("")}
+    </div>
+    <div class="policy-box"><b>Nota:</b> este estado es local del navegador. En producción se complementará con estado real de servidor, D1, R2, Workers, licencias y sincronización.</div>
+  `;
+  if(log){ addLog(state, `Diagnóstico ejecutado. Salud del sistema: ${report.score}%.`); persist(); paintAudit(state); }
+}
+
+function downloadDiagnostics(state){
+  const payload = {
+    software: "GIAE Chile v1.0",
+    type: "reporte-diagnostico-administrador",
+    generatedAt: new Date().toISOString(),
+    diagnostics: buildDiagnostics(state),
+    inspector: buildInspectorPayload(state, "all")
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "giae-diagnostico-software.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function runInspector(state, forcedTarget=null){
+  const target = forcedTarget || document.querySelector("#admInspectorTarget")?.value || "project";
+  const output = document.querySelector("#admInspectorOutput");
+  if(!output) return;
+  output.textContent = JSON.stringify(buildInspectorPayload(state, target), null, 2);
+}
+
+function buildInspectorPayload(state, target){
+  const localKeys = [];
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const key = localStorage.key(i);
+      if(key && key.toLowerCase().includes("giae")) localKeys.push({ key, bytes: (localStorage.getItem(key) || "").length });
+    }
+  }catch(e){ localKeys.push({ error: "No se pudo leer localStorage" }); }
+  const payloads = {
+    project: state.currentProject || {},
+    storage: { available: storageAvailable(), giaeKeys: localKeys, projectLibraryCount: countLocalProjects(state) },
+    modules: { labels: moduleLabels, enabled: state.admin?.enabledModules || {}, activeProfile: state.profile },
+    session: { profile: state.profile, company: state.admin?.company?.name || state.companyBrand?.name || "", sessions: state.admin?.sessions || [] },
+    all: {
+      session: { profile: state.profile, company: state.admin?.company?.name || state.companyBrand?.name || "" },
+      diagnostics: buildDiagnostics(state),
+      project: state.currentProject || {},
+      storage: { available: storageAvailable(), giaeKeys: localKeys, projectLibraryCount: countLocalProjects(state) },
+      modules: { labels: moduleLabels, enabled: state.admin?.enabledModules || {} },
+      admin: { users: state.admin?.users || [], templates: state.admin?.templates || [], auditLog: state.admin?.auditLog || [] }
+    }
+  };
+  return payloads[target] || payloads.project;
+}
+
+function copyInspectorOutput(){
+  const output = document.querySelector("#admInspectorOutput")?.textContent || "";
+  navigator.clipboard?.writeText(output).then(()=>alert("Inspector copiado al portapapeles.")).catch(()=>alert("No se pudo copiar automáticamente."));
+}
+
 function defaultLogo(){return `<svg viewBox="0 0 120 120" width="110" height="110"><rect x="10" y="10" width="100" height="100" rx="28" fill="#1456a0"/><path d="M66 18 30 68h27l-7 34 40-55H63z" fill="#10b981"/><text x="60" y="104" text-anchor="middle" fill="white" font-size="14" font-weight="800">GIAE</text></svg>`;}
 function capitalize(t){return t.charAt(0).toUpperCase()+t.slice(1)}
 function escapeHtml(value){return String(value??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
