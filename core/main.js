@@ -13,6 +13,8 @@ restore();
 applyBranding();
 
 if (state.profile) openPlatform();
+window.GIAE = window.GIAE || {};
+window.GIAE.openModule = openModule;
 
 window.addEventListener("giae:admin-updated", () => { applyBranding(); renderMenu(); });
 

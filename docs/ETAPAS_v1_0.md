@@ -23,3 +23,19 @@ Incluye:
 
 Siguiente etapa sugerida:
 - Etapa 2.2: Dashboard por perfil.
+
+
+## Etapa 2.2 - Dashboard por perfil
+Estado: Terminada en este paquete.
+
+Incluye:
+- Dashboard inicial por perfil.
+- Panel administrador con usuarios conectados, usuarios registrados, módulos activos y estado normativo.
+- Panel empresa con accesos a proyecto, trabajadores, presupuestos y documentación.
+- Panel instalador independiente con accesos a proyecto, cargas, unilineal y presupuesto.
+- Panel estudiante con continuidad de aprendizaje y práctica.
+- Panel Aula Técnica con acceso libre, sin pago ni registro obligatorio.
+- Accesos rápidos conectados a módulos existentes.
+
+Siguiente etapa sugerida:
+- Etapa 2.3: Menú lateral profesional agrupado por áreas.

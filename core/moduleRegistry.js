@@ -1,4 +1,5 @@
 export const modules = [
+  { id: "dashboard", label: "Dashboard", path: "../modules/dashboard/dashboard.js", profiles: ["administrador", "empresa", "independiente", "estudiante", "aula"] },
   { id: "proyecto", label: "Proyecto", path: "../modules/proyecto/proyecto.js", profiles: ["independiente", "empresa", "estudiante"] },
   { id: "usuarios", label: "Usuarios", path: "../modules/usuarios/usuarios.js", profiles: ["empresa"] },
   { id: "administracion", label: "Administración", path: "../modules/administracion/administracion.js", profiles: ["administrador"] },
