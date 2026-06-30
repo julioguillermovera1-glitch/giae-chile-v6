@@ -55,6 +55,8 @@ function openPlatform() {
   loginView.classList.add("hidden");
   platformView.classList.remove("hidden");
   activeProfile.textContent = profileLabel(state.profile);
+  document.querySelector("#saveProjectBtn").classList.toggle("hidden", state.profile === "aula");
+  document.querySelector("#exportBtn").classList.toggle("hidden", state.profile === "aula");
   renderMenu();
   const first = availableModules()[0];
   openModule(first?.id || "proyecto");
@@ -97,7 +99,8 @@ function profileLabel(profile) {
     independiente: "Instalador independiente",
     empresa: "Empresa",
     estudiante: "Estudiante",
-    administrador: "Administrador"
+    administrador: "Administrador",
+    aula: "Aula Técnica - Acceso libre"
   };
   return labels[profile] || "Sin sesión";
 }

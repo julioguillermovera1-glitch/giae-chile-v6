@@ -15,3 +15,10 @@ Se agregó el módulo independiente `modules/administracion`, con gestión local
 - Empresas: logo propio, colores propios y plantillas editables de cotización/trabajo.
 - Autoría: Julio Guillermo Vera como autor intelectual y director del proyecto.
 - Motor normativo: modo estricto basado solo en RIC, IEC y Decreto de Ley N°8 de Chile. Sin datos inventados.
+
+
+## Aula Técnica - Acceso libre
+
+Se incorpora un módulo educativo gratuito, sin licencia pagada y sin registro obligatorio. Su finalidad es enseñar conceptos básicos sobre empalmes, materiales, cotizaciones y seguridad eléctrica para personas, estudiantes, comunidades rurales y comunidades mapuche.
+
+Este módulo no reemplaza a un instalador autorizado ni entrega aprobación técnica para ejecutar obras reales. Todo proyecto real debe revisarse conforme a la normativa aplicable y por personal competente.
