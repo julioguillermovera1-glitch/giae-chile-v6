@@ -71,3 +71,17 @@ Regla central: el cálculo de tierra en GIAE es preliminar y nunca reemplaza la 
 ## Etapa 4.0.1 - Motor de Cálculo de Cargas
 
 Se incorpora el primer motor de ingeniería de GIAE: cálculo de cargas, demanda, corriente, balance de fases y recomendaciones preliminares para protección, conductor y canalización.
+
+## Etapa 4.0.2 - Motor de Ingeniería Eléctrica
+
+Se incorpora el Motor de Ingeniería Eléctrica como capa sobre el Motor de Cargas. Este motor genera datos reutilizables para cuadro de carga, protecciones, conductores, canalizaciones, unilineal, presupuesto, auditoría y documentación.
+
+Incluye:
+- Cálculo de caída de tensión preliminar por circuito.
+- Selección de poder de corte preliminar según Icc declarada o valor por defecto.
+- Nivel de confianza de cada recomendación: validada preliminar, requiere revisión o información insuficiente.
+- Salidas estructuradas para cuadro de carga automático.
+- Materiales técnicos consolidados para presupuesto.
+- Trazabilidad técnica ampliada.
+
+Regla central: cada cálculo debe existir una sola vez y quedar almacenado en el Proyecto Activo.

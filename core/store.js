@@ -1,4 +1,5 @@
 import { calculateLoadProject } from "./engineering/loadEngine.js";
+import { calculateElectricalProject } from "./engineering/electricalEngine.js";
 const STORAGE_KEY = "giae_chile_v1_workspace";
 const LIBRARY_KEY = "giae_chile_v1_project_library";
 
@@ -38,10 +39,12 @@ function defaultProject(){
     },
     loads: [],
     loadEngine: null,
+    electricalEngine: null,
     loadBoard: [],
     protections: [],
     conductors: [],
     conduits: [],
+    engineeringMaterials: [],
     grounding: null,
     connection: null,
     unilineal: null,
@@ -193,21 +196,27 @@ export function recalculateProject(){
   p.loads = Array.isArray(p.loads) ? p.loads : [];
   const totalW = p.loads.reduce((sum, load) => sum + Number(load.powerW || load.power || 0) * Number(load.quantity || 1), 0);
   const loadResult = calculateLoadProject(p);
+  const electricalResult = calculateElectricalProject(p);
   p.loadEngine = loadResult;
-  p.loadBoard = loadResult.circuits;
-  p.protections = loadResult.circuits.map(c => ({ circuit: c.id, label: c.suggestedBreaker, ampere: c.suggestedBreakerA, differential: c.suggestedDifferential }));
-  p.conductors = loadResult.circuits.map(c => ({ circuit: c.id, sectionMm2: c.conductorSectionMm2, label: c.suggestedConductor, izA: c.conductorIzA }));
-  p.installedPowerKw = loadResult.installedKw || Number((totalW / 1000).toFixed(3));
-  p.demandPowerKw = loadResult.demandKw;
-  p.currentA = loadResult.projectCurrentA;
+  p.electricalEngine = electricalResult;
+  p.loadBoard = electricalResult.loadBoard;
+  p.protections = electricalResult.protections;
+  p.conductors = electricalResult.conductors;
+  p.conduits = electricalResult.conduits;
+  p.engineeringMaterials = electricalResult.materials;
+  p.installedPowerKw = electricalResult.summary.installedKw || Number((totalW / 1000).toFixed(3));
+  p.demandPowerKw = electricalResult.summary.demandKw;
+  p.currentA = electricalResult.summary.projectCurrentA;
+  p.engineeringStatus = electricalResult.summary.status;
   p.voltage = p.supplyType === "trifasico" ? "380/220 V" : "220 V";
   p.checklist = calculateChecklist(p);
   const done = p.checklist.filter(item => item.done).length;
   const total = p.checklist.length || 1;
+  const criticalEngine = (electricalResult.observations || []).some(item => item.level === "critico");
   p.progress = {
     engineering: Math.round((done / total) * 100),
     documentation: Math.round((p.checklist.filter(item => ["documentacion", "auditoria", "presupuesto"].includes(item.id) && item.done).length / 3) * 100),
-    normative: (Array.isArray(p.audit) && p.audit.some(item => item.level === "critico")) ? "Con observaciones" : "Sin observaciones críticas"
+    normative: criticalEngine || (Array.isArray(p.audit) && p.audit.some(item => item.level === "critico")) ? "Con observaciones" : "Sin observaciones críticas"
   };
   return p;
 }

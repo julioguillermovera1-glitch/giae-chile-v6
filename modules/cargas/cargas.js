@@ -1,5 +1,6 @@
 import { addLoad, clearLoads, persist, addHistory, recalculateProject } from "../../core/store.js";
 import { calculateLoadProject } from "../../core/engineering/loadEngine.js";
+import { calculateElectricalProject } from "../../core/engineering/electricalEngine.js";
 
 function esc(value=""){
   return String(value).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
@@ -7,13 +8,14 @@ function esc(value=""){
 function kw(w){ return (Number(w || 0) / 1000).toFixed(3).replace(".", ","); }
 function num(n, d=2){ return Number(n || 0).toLocaleString("es-CL", { maximumFractionDigits:d, minimumFractionDigits:d }); }
 
-function summaryCards(engine){
+function summaryCards(engine, electrical){
+  const summary = electrical?.summary || {};
   return `
     <div class="kpi-grid engineering-kpis">
       <div class="kpi-card"><span>Potencia instalada</span><strong>${kw(engine.installedW)} kW</strong></div>
       <div class="kpi-card"><span>Demanda calculada</span><strong>${kw(engine.demandW)} kW</strong></div>
       <div class="kpi-card"><span>Corriente proyecto</span><strong>${num(engine.projectCurrentA)} A</strong></div>
-      <div class="kpi-card"><span>Estado</span><strong>${esc(engine.status)}</strong></div>
+      <div class="kpi-card"><span>Estado ingeniería</span><strong>${esc(summary.status || engine.status)}</strong></div>
     </div>`;
 }
 
@@ -47,7 +49,7 @@ function rows(circuits){
       <td>${esc(item.phase || "Auto")}</td>
       <td><strong>${esc(item.suggestedBreaker)}</strong><br><small>${esc(item.suggestedDifferential)}</small></td>
       <td><strong>${esc(item.suggestedConductor)}</strong><br><small>Iz preliminar ${num(item.conductorIzA)} A</small></td>
-      <td>${esc(item.suggestedConduit)}</td>
+      <td>${esc(item.suggestedConduit)}<br><small>ΔV ${num(item.voltageDropPercent || 0)} % · ${esc(item.confidence?.label || "Preliminar")}</small></td>
       <td><button class="ghost danger-text" data-delete-load="${index}">Quitar</button></td>
     </tr>`).join("");
 }
@@ -66,6 +68,18 @@ function traceFor(circuit){
   </details>`;
 }
 
+
+function materialsBox(electrical){
+  const materials = electrical?.materials || [];
+  if(!materials.length) return "";
+  return `<div class="dashboard-card"><h4>Materiales técnicos generados</h4>
+    <div class="data-table-wrap"><table><thead><tr><th>Familia</th><th>Elemento</th><th>Cantidad</th><th>Circuitos</th></tr></thead><tbody>
+      ${materials.map(m => `<tr><td>${esc(m.family)}</td><td>${esc(m.item)}</td><td>${num(m.qty, m.unit === "m" ? 1 : 0)} ${esc(m.unit)}</td><td>${esc((m.circuits || []).join(", "))}</td></tr>`).join("")}
+    </tbody></table></div>
+    <p class="muted">Estos datos quedan disponibles para presupuesto, documentación y auditoría.</p>
+  </div>`;
+}
+
 function traceTable(circuits){
   if(!circuits.length) return "";
   return `<div class="dashboard-card"><h4>Trazabilidad normativa aplicada</h4>
@@ -77,24 +91,25 @@ export function render(host, state) {
   const project = state.currentProject;
   recalculateProject();
   const engine = project.loadEngine || calculateLoadProject(project);
-  const circuits = engine.circuits || [];
+  const electrical = project.electricalEngine || calculateElectricalProject(project);
+  const circuits = electrical.circuits || engine.circuits || [];
 
   host.innerHTML = `
     <section class="module-window real-workspace cargas-workspace">
       <div class="workspace-title-row">
         <div>
-          <p class="eyebrow">Motor de ingeniería · Etapa 4.0.1</p>
-          <h3>Motor de Cálculo de Cargas</h3>
-          <p>Registra cargas, calcula potencia instalada, demanda, corriente, balance de fases y recomendaciones preliminares para conductor, protección y canalización.</p>
+          <p class="eyebrow">Motor de ingeniería · Etapa 4.0.2</p>
+          <h3>Motor de Ingeniería Eléctrica</h3>
+          <p>Registra cargas y genera datos técnicos reutilizables: cuadro de carga, protecciones, conductores, canalizaciones, caída de tensión, presupuesto y trazabilidad normativa.</p>
         </div>
         <div class="status-strip">
           <span>Proyecto: ${esc(project.name)}</span>
-          <span>Versión motor: ${esc(engine.version)}</span>
+          <span>Versión motor: ${esc(electrical.version || engine.version)}</span>
           <span>Circuitos: ${circuits.length}</span>
         </div>
       </div>
 
-      ${summaryCards(engine)}
+      ${summaryCards(engine, electrical)}
       ${validationList(engine)}
 
       <div class="dashboard-card">
@@ -124,6 +139,8 @@ export function render(host, state) {
       </div>
 
       ${balanceBox(engine, project)}
+
+      ${materialsBox(electrical)}
 
       ${circuits.length ? `
         <div class="data-table-wrap wide-table">

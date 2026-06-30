@@ -1,21 +1,51 @@
-import { totalPower, currentSinglePhase, currentThreePhase, suggestBreaker } from "../../core/calculations.js";
+function esc(value=""){
+  return String(value).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
+function num(value, digits=2){
+  return Number(value || 0).toLocaleString("es-CL", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+}
+function kw(value){ return (Number(value || 0) / 1000).toLocaleString("es-CL", { minimumFractionDigits: 3, maximumFractionDigits: 3 }); }
+
+function rows(board){
+  return board.map(row => `<tr>
+    <td>${row.number}</td>
+    <td><strong>${esc(row.description)}</strong><br><small>${esc(row.type)}</small></td>
+    <td>${row.quantity}</td>
+    <td>${Number(row.unitPowerW || 0).toLocaleString("es-CL")} W</td>
+    <td>${kw(row.installedW)} kW</td>
+    <td>${kw(row.demandW)} kW</td>
+    <td>${num(row.currentA)} A</td>
+    <td>${esc(row.phase)}</td>
+    <td>${esc(row.protection)}<br><small>${esc(row.differential)}</small></td>
+    <td>${esc(row.conductor)}<br><small>Iz ${num(row.conductorIzA)} A · ΔV ${num(row.voltageDropPercent)}%</small></td>
+    <td>${esc(row.conduit)}</td>
+    <td>${esc(row.confidence)}</td>
+  </tr>`).join("");
+}
 
 export function render(host, state) {
   const project = state.currentProject;
-  const power = totalPower(project.loads || []);
-  const current = project.supplyType === "trifasico" ? currentThreePhase(power) : currentSinglePhase(power);
-  const breaker = suggestBreaker(current);
+  const engine = project.electricalEngine;
+  const board = project.loadBoard || [];
   host.innerHTML = `
-    <section class="module-window">
-      <div>
-        <p class="eyebrow">Módulo independiente</p>
-        <h3>Cuadro de carga preliminar</h3>
-        <p>Resume cargas y calcula corriente base. La validación normativa queda en Auditoría/Motor RIC.</p>
+    <section class="module-window real-workspace">
+      <div class="workspace-title-row">
+        <div>
+          <p class="eyebrow">Motor de Ingeniería · Etapa 4.0.2</p>
+          <h3>Cuadro de carga automático</h3>
+          <p>Este cuadro se genera desde el Motor de Ingeniería Eléctrica. No duplica cálculos: lee los resultados del Proyecto Activo.</p>
+        </div>
+        <div class="status-strip"><span>${esc(engine?.version || "Sin motor")}</span><span>${board.length} circuitos</span></div>
       </div>
-      <div class="card-grid">
-        <article class="card"><h4>Potencia total</h4><p>${power} W</p></article>
-        <article class="card"><h4>Corriente estimada</h4><p>${current} A</p></article>
-        <article class="card"><h4>Protección sugerida</h4><p>${breaker ? breaker + " A" : "Revisar"}</p></article>
+      <div class="kpi-grid engineering-kpis">
+        <div class="kpi-card"><span>Potencia instalada</span><strong>${num(project.installedPowerKw,3)} kW</strong></div>
+        <div class="kpi-card"><span>Demanda</span><strong>${num(project.demandPowerKw,3)} kW</strong></div>
+        <div class="kpi-card"><span>Corriente proyecto</span><strong>${num(project.currentA)} A</strong></div>
+        <div class="kpi-card"><span>Estado</span><strong>${esc(project.engineeringStatus || "Pendiente")}</strong></div>
       </div>
+      ${board.length ? `<div class="data-table-wrap wide-table"><table>
+        <thead><tr><th>N°</th><th>Carga</th><th>Cant.</th><th>W unidad</th><th>Instalada</th><th>Demanda</th><th>Ib</th><th>Fase</th><th>Protección</th><th>Conductor</th><th>Canalización</th><th>Confianza</th></tr></thead>
+        <tbody>${rows(board)}</tbody>
+      </table></div>` : `<div class="workspace-empty">No hay cargas calculadas. Agrega cargas en el Motor de Ingeniería.</div>`}
     </section>`;
 }
