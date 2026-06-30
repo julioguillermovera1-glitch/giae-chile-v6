@@ -1,6 +1,7 @@
 export const modules = [
   { id: "proyecto", label: "Proyecto", path: "../modules/proyecto/proyecto.js" },
   { id: "usuarios", label: "Usuarios", path: "../modules/usuarios/usuarios.js" },
+  { id: "administracion", label: "Administración", path: "../modules/administracion/administracion.js" },
   { id: "cargas", label: "Cargas", path: "../modules/cargas/cargas.js" },
   { id: "cuadro-carga", label: "Cuadro de carga", path: "../modules/cuadro-carga/cuadro-carga.js" },
   { id: "empalme", label: "Empalme", path: "../modules/empalme/empalme.js" },

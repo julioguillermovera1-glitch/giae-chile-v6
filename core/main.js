@@ -80,7 +80,8 @@ function profileLabel(profile) {
   const labels = {
     independiente: "Instalador independiente",
     empresa: "Empresa",
-    estudiante: "Estudiante"
+    estudiante: "Estudiante",
+    administrador: "Administrador"
   };
   return labels[profile] || "Sin sesión";
 }
