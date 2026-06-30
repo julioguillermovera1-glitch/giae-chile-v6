@@ -133,3 +133,25 @@ input, select, textarea {
   .profile-grid, .card-grid, .form-grid { grid-template-columns: 1fr; }
   .topbar { align-items: flex-start; flex-direction: column; }
 }
+
+
+.diagram-panel {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #f8fbff;
+  padding: 1rem;
+  overflow: auto;
+}
+.unilineal-svg {
+  width: 100%;
+  min-width: 720px;
+  height: auto;
+  display: block;
+}
+@media print {
+  body { background: white; }
+  .sidebar, .topbar, .top-actions, .login-view { display: none !important; }
+  .platform { display: block; }
+  .workspace, .window-host { padding: 0; box-shadow: none; border: 0; }
+  .diagram-panel { border: 0; padding: 0; }
+}

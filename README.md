@@ -31,3 +31,8 @@ Prototipo estructural original. No es una versión normativa final ni certifica 
 - Presupuesto
 - Auditoría
 - Educación
+
+
+## Actualización módulo Unilineal
+
+Se incorpora un módulo independiente de unilineal automático. Genera una imagen SVG original según las cargas registradas en el cuadro de carga y permite descargar o imprimir el diagrama.
