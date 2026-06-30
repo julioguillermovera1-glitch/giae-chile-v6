@@ -1,17 +1,33 @@
-# GIAE Chile v3.2.0 - Reorganización de Arquitectura
+# GIAE Chile v1.0 - Base original
 
-Creado por Julio Vera Concha.
+Base inicial modular para una plataforma de cálculo, documentación, presupuesto y auditoría de instalaciones eléctricas en Chile.
 
-Base: GIAE Chile v3.1.0 Inspector Inteligente.
+## Estado
 
-## Funciones
-- Detecta duplicados visibles del menú.
-- Propone menú por categorías.
-- Revisa documentos estándar pendientes.
-- Detecta documentos heredados.
-- Genera plan de limpieza seguro.
-- Reporte HTML descargable.
-- Registro de estándar de menú.
+Prototipo estructural original. No es una versión normativa final ni certifica proyectos eléctricos.
 
-## Regla
-No eliminar funciones automáticamente. Toda limpieza debe hacerse con respaldo, prueba y compatibilidad.
+## Principios
+
+- Cada módulo es independiente.
+- La plataforma no es una página larga: funciona con ventanas internas.
+- El código se crea desde cero para evitar plagio.
+- Los módulos técnicos deben validarse antes del lanzamiento v1.0.
+
+## Perfiles previstos
+
+- Instalador independiente
+- Empresa
+- Estudiante
+
+## Módulos base
+
+- Proyecto
+- Usuarios
+- Cargas
+- Cuadro de carga
+- Empalme
+- Puesta a tierra
+- Documentación
+- Presupuesto
+- Auditoría
+- Educación

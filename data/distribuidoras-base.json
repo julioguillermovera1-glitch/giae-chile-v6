@@ -1,0 +1,9 @@
+{
+  "nota": "Archivo creado desde cero para estructura v1.0. No contiene reglas copiadas; se completará con datos autorizados y verificables.",
+  "distribuidoras": [
+    { "id": "cge", "nombre": "CGE", "estado": "pendiente_reglas" },
+    { "id": "copelec", "nombre": "Copelec", "estado": "pendiente_reglas" },
+    { "id": "frontel", "nombre": "Frontel", "estado": "pendiente_reglas" },
+    { "id": "saesa", "nombre": "Saesa", "estado": "pendiente_reglas" }
+  ]
+}
