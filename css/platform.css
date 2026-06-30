@@ -279,3 +279,55 @@ body{background:var(--bg);}
 /* Etapa 2.2 - Dashboard por perfil */
 .dashboard-module .module-head{margin-bottom:1rem}
 .dashboard-grid{display:grid;gap:1rem;margin:1rem 0}.dashboard-grid.kpi-row{grid-template-columns:repeat(4,minmax(0,1fr))}.dashboard-grid.two{grid-template-columns:1fr 1fr}.dashboard-grid article,.dashboard-card{border:1px solid var(--line);background:#fff;border-radius:18px;padding:1rem;box-shadow:0 10px 24px rgba(16,32,51,.04)}.dashboard-grid.kpi-row article{background:#f8fbff}.dashboard-grid small{display:block;color:var(--muted);font-weight:800;margin-bottom:.35rem}.dashboard-grid strong{font-size:1.15rem}.dashboard-card h4{margin:.1rem 0 .8rem}.dashboard-card p{margin:.55rem 0;color:#31435a}.dash-action{width:100%;display:grid;gap:.2rem;text-align:left;background:#102033;color:white;border:0;border-radius:12px;margin:.5rem 0;padding:.85rem 1rem}.dash-action strong{font-size:1rem}.dash-action span{color:#d7e4f2;font-weight:600}.dash-action:hover{background:#1456a0}.dashboard-notice{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:12px;padding:.85rem;margin-top:1rem;font-weight:700}.aula-free-row article{border-color:#9fc5ff;background:#eff6ff}@media(max-width:900px){.dashboard-grid.kpi-row,.dashboard-grid.two{grid-template-columns:1fr}.dash-action{min-height:auto}}
+
+/* Etapa 2.3 · Menú lateral agrupado */
+#moduleMenu {
+  display: grid;
+  gap: .75rem;
+}
+.menu-group {
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255,255,255,.025);
+}
+.menu-group-title {
+  width: 100%;
+  border: 0;
+  background: rgba(255,255,255,.055);
+  color: #dbe7f7;
+  padding: .72rem .8rem;
+  text-align: left;
+  font-size: .78rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.menu-chevron {
+  transition: transform .16s ease;
+  color: #9db6d8;
+}
+.menu-group.open .menu-chevron {
+  transform: rotate(180deg);
+}
+.menu-group-body {
+  display: none;
+  padding: .45rem;
+  gap: .35rem;
+}
+.menu-group.open .menu-group-body {
+  display: grid;
+}
+.menu-button {
+  border-radius: 10px;
+  padding: .7rem .75rem;
+  border-color: rgba(255,255,255,.10);
+  color: #ffffff;
+}
+.menu-button.active {
+  background: rgba(255,255,255,.15);
+  border-color: rgba(255,255,255,.22);
+}

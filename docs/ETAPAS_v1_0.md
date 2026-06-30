@@ -39,3 +39,12 @@ Incluye:
 
 Siguiente etapa sugerida:
 - Etapa 2.3: Menú lateral profesional agrupado por áreas.
+
+## Etapa 2.3 - Menú lateral agrupado por áreas
+**Estado:** Terminada
+
+Cambios incorporados:
+- Menú lateral organizado por áreas: Inicio, Proyecto, Ingeniería, Documentación, Educación y Administración.
+- Los grupos solo muestran módulos permitidos según el perfil activo.
+- Se mantiene la independencia de módulos.
+- Se evita mostrar demasiados botones sueltos en pantalla.

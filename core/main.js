@@ -1,4 +1,4 @@
-import { modules } from "./moduleRegistry.js";
+import { modules, menuGroups } from "./moduleRegistry.js";
 import { restore, setProfile, clearProfile, state, persist } from "./store.js";
 
 const loginView = document.querySelector("#loginView");
@@ -77,12 +77,34 @@ function availableModules(){
 
 function renderMenu() {
   const available = availableModules();
-  menu.innerHTML = available.map(module => `
-    <button class="menu-button" data-module="${module.id}">${module.label}</button>
+  const grouped = menuGroups.map(group => ({
+    ...group,
+    modules: available.filter(module => module.group === group.id)
+  })).filter(group => group.modules.length);
+
+  menu.innerHTML = grouped.map((group, index) => `
+    <section class="menu-group ${index === 0 ? "open" : ""}" data-group="${group.id}">
+      <button class="menu-group-title" type="button" data-toggle-group="${group.id}" aria-expanded="${index === 0 ? "true" : "false"}">
+        <span>${group.label}</span><span class="menu-chevron">▾</span>
+      </button>
+      <div class="menu-group-body">
+        ${group.modules.map(module => `<button class="menu-button" data-module="${module.id}">${module.label}</button>`).join("")}
+      </div>
+    </section>
   `).join("");
+
   menu.onclick = event => {
+    const toggle = event.target.closest("[data-toggle-group]");
+    if (toggle) {
+      const group = toggle.closest(".menu-group");
+      const isOpen = group.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(isOpen));
+      return;
+    }
     const button = event.target.closest("[data-module]");
     if (!button) return;
+    const group = button.closest(".menu-group");
+    if (group && !group.classList.contains("open")) group.classList.add("open");
     openModule(button.dataset.module);
   };
 }
