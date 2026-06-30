@@ -34,3 +34,8 @@ GIAE Chile no debe inventar datos técnicos ni normativos. Toda recomendación d
 
 ## Etapa 2.7
 Administrador de Proyectos local agregado. Permite crear, guardar, abrir, duplicar, importar, exportar, archivar y eliminar proyectos `.giae`. La estructura queda preparada para Cloudflare D1/R2.
+
+
+### Etapa 2.9 - Biblioteca Técnica GIAE
+
+Incluye `data/biblioteca-tecnica.json`, `core/technicalLibrary.js` y el módulo administrativo `modules/biblioteca/biblioteca.js`. Esta base será usada por los motores de cálculo y por la auditoría normativa.

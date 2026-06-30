@@ -12,7 +12,8 @@ const moduleLabels = {
   documentacion: "Documentación",
   presupuesto: "Presupuesto",
   auditoria: "Auditoría",
-  educacion: "Educación"
+  educacion: "Educación",
+  biblioteca: "Biblioteca técnica"
 };
 
 function ensureAdminData(state){

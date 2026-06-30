@@ -122,3 +122,12 @@ Se agregó una herramienta interna visible solo para el perfil Administrador:
 - Reporte JSON descargable.
 
 Alcance: esta herramienta no confirma plagio contra toda internet. Funciona como control interno de calidad, originalidad, mantenimiento y dependencias.
+
+
+## Etapa 2.9 - Biblioteca Técnica GIAE
+
+Estado: terminada.
+
+Se incorpora una biblioteca técnica interna reutilizable por los futuros motores de ingeniería, documentación, presupuesto, auditoría y Aula Técnica. La biblioteca contiene catálogos iniciales de conductores, protecciones termomagnéticas, diferenciales, canalizaciones, puesta a tierra, distribuidoras y documentos técnicos.
+
+Regla principal: ningún dato debe aprobarse automáticamente si no cuenta con respaldo normativo cargado. En ese caso, GIAE debe marcar el resultado como pendiente o requiere revisión normativa.
