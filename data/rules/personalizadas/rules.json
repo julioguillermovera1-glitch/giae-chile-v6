@@ -1,0 +1,28 @@
+{
+  "version": "3.0.1",
+  "fuente": "INTERNA",
+  "nota": "Reglas propias de control interno GIAE. Deben mantenerse separadas de RIC, IEC y DS8.",
+  "reglas": [
+    {
+      "id": "GIAE-GEN-001",
+      "nombre": "No inventar cumplimiento normativo",
+      "descripcion": "Si una evaluación no tiene regla cargada o datos suficientes, el sistema debe solicitar revisión normativa.",
+      "fuente": "INTERNA",
+      "categoria": "General",
+      "estado": "validada",
+      "severidad": "advertencia",
+      "prioridad": 1,
+      "referencia": { "documento": "Política técnica GIAE", "apartado": "Principio de no invención", "nota": "Regla interna de seguridad del software." },
+      "aplicaA": ["general"],
+      "entradasRequeridas": [],
+      "condicion": { "tipo": "manual", "expresion": "requiere_revision" },
+      "mensajes": {
+        "cumple": "La evaluación cuenta con respaldo suficiente.",
+        "noCumple": "La evaluación intenta declarar cumplimiento sin respaldo.",
+        "requiereRevision": "No existe respaldo normativo suficiente para emitir recomendación automática.",
+        "informacionInsuficiente": "Faltan datos del proyecto para evaluar."
+      },
+      "accion": "Cargar regla normativa validada o derivar a revisión profesional."
+    }
+  ]
+}

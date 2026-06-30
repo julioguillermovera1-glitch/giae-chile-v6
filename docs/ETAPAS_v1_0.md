@@ -137,3 +137,11 @@ Regla principal: ningún dato debe aprobarse automáticamente si no cuenta con r
 - Biblioteca Técnica evolucionada a Base de Conocimiento.
 - Incluye buscador, filtros por categoría/estado/uso y ficha técnica por elemento.
 - Mantiene regla de validación normativa estricta: RIC, IEC eléctrica aplicable y DS N°8 cuando corresponda.
+
+
+## Etapa 3.0.1 — Motor Normativo GIAE
+Estado: completada.
+
+Se creó el núcleo del Motor Normativo preparado para reglas RIC, IEC eléctrica aplicable y DS N°8, sin cargar textos completos de normativa. Incluye esquema de reglas, cargador, evaluador, reportes, importador y panel de administración.
+
+Regla central: GIAE no declara cumplimiento sin regla implementada, datos suficientes y referencia validada.

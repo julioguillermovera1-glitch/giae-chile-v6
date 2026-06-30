@@ -1,0 +1,49 @@
+{
+  "version": "3.0.1",
+  "fuente": "RIC",
+  "nota": "Paquete inicial estructural. No contiene textos completos de los RIC. Las reglas quedan en borrador o revisión hasta validación documental.",
+  "reglas": [
+    {
+      "id": "RIC-02-001",
+      "nombre": "Coordinación básica Ib ≤ In ≤ Iz",
+      "descripcion": "Verifica que la corriente de diseño, protección y capacidad del conductor mantengan una coordinación técnica básica.",
+      "fuente": "RIC",
+      "categoria": "Protecciones",
+      "estado": "en_revision",
+      "severidad": "critico",
+      "prioridad": 10,
+      "referencia": { "documento": "RIC aplicable", "apartado": "Pendiente de carga", "nota": "Regla de ingeniería preparada para asociar referencia exacta." },
+      "aplicaA": ["cargas", "cuadro-carga", "protecciones", "auditoria"],
+      "entradasRequeridas": ["ib", "in", "iz"],
+      "condicion": { "tipo": "comparacion", "izquierda": "ib", "operador": "<=", "derechaDato": "in" },
+      "mensajes": {
+        "cumple": "La corriente de diseño no supera la protección seleccionada. Falta verificar In ≤ Iz con regla complementaria.",
+        "noCumple": "La corriente de diseño supera la protección seleccionada.",
+        "requiereRevision": "La regla necesita revisión normativa antes de cerrar cumplimiento.",
+        "informacionInsuficiente": "Faltan Ib, In o Iz para evaluar la coordinación."
+      },
+      "accion": "Revisar la protección o recalcular el circuito antes de emitir documentación."
+    },
+    {
+      "id": "RIC-06-001",
+      "nombre": "Puesta a tierra requiere medición en terreno",
+      "descripcion": "Evita declarar cumplimiento final de puesta a tierra solo con cálculo preliminar.",
+      "fuente": "RIC",
+      "categoria": "Puesta a tierra",
+      "estado": "en_revision",
+      "severidad": "advertencia",
+      "prioridad": 30,
+      "referencia": { "documento": "RIC aplicable", "apartado": "Pendiente de carga", "nota": "Debe asociarse al pliego exacto de tierra." },
+      "aplicaA": ["tierra", "auditoria", "documentacion"],
+      "entradasRequeridas": ["tierra.medicionRealOhm"],
+      "condicion": { "tipo": "rango", "dato": "tierra.medicionRealOhm", "min": 0.1, "max": 1000 },
+      "mensajes": {
+        "cumple": "Existe una medición real de puesta a tierra registrada para revisión técnica.",
+        "noCumple": "La medición real informada está fuera de rango técnico preliminar.",
+        "requiereRevision": "La puesta a tierra requiere revisión profesional y medición en terreno.",
+        "informacionInsuficiente": "No hay medición real de puesta a tierra registrada. Solo puede emitirse cálculo preliminar."
+      },
+      "accion": "Registrar medición real en terreno y respaldo del instalador autorizado."
+    }
+  ]
+}
