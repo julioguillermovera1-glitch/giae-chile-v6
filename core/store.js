@@ -2,6 +2,7 @@ import { calculateLoadProject } from "./engineering/loadEngine.js";
 import { calculateElectricalProject } from "./engineering/electricalEngine.js";
 import { calculatePanelProject } from "./engineering/panelEngine.js";
 import { calculateDocumentationProject } from "./documentationEngine.js";
+import { runProjectEngine, createProjectRevision } from "./projectEngine.js";
 const STORAGE_KEY = "giae_chile_v1_workspace";
 const LIBRARY_KEY = "giae_chile_v1_project_library";
 
@@ -62,6 +63,8 @@ function defaultProject(){
     history: [
       { date: created, action: "Proyecto activo creado", module: "Sistema" }
     ],
+    revisions: [],
+    gpe: null,
     createdAt: created,
     updatedAt: created
   };
@@ -231,7 +234,15 @@ export function recalculateProject(){
     documentation: Math.round((p.checklist.filter(item => ["documentacion", "auditoria", "presupuesto"].includes(item.id) && item.done).length / 3) * 100),
     normative: criticalEngine || (Array.isArray(p.audit) && p.audit.some(item => item.level === "critico")) ? "Con observaciones" : "Sin observaciones críticas"
   };
+  p.gpe = runProjectEngine(p);
   return p;
+}
+
+export function createRevision(reason = "Revisión creada"){
+  recalculateProject();
+  const revision = createProjectRevision(state.currentProject, reason);
+  persist();
+  return revision;
 }
 
 
@@ -347,7 +358,7 @@ export function exportProjectById(projectId){
   const project = state.projectLibrary.find(project => project.id === projectId) || state.currentProject;
   return {
     fileType: "GIAE_PROJECT",
-    fileVersion: "1.0-alpha.027",
+    fileVersion: "1.0-alpha.050",
     exportedAt: nowStamp(),
     author: "Julio Guillermo Vera",
     project: normalizeProject(project)
@@ -370,7 +381,7 @@ export function exportProjectFile(){
   recalculateProject();
   return {
     fileType: "GIAE_PROJECT",
-    fileVersion: "1.0-alpha.027",
+    fileVersion: "1.0-alpha.050",
     exportedAt: nowStamp(),
     author: "Julio Guillermo Vera",
     project: state.currentProject

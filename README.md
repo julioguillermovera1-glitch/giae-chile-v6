@@ -100,3 +100,8 @@ Se reemplaza el enfoque limitado a TE1 por un Motor Documental preparado para di
 ## Etapa 5.0 · Motor de Tableros Inteligente
 
 Se agrega el módulo Tableros dentro de Ingeniería, conectado al Proyecto Activo y al Motor de Ingeniería Eléctrica.
+
+
+## Etapa 6.0 — GIAE Project Engine
+
+Se agrega el GPE como núcleo de proyecto inteligente: estado, dependencias, auditoría continua, revisiones y diagnóstico descargable.
