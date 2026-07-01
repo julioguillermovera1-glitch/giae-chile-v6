@@ -15,7 +15,7 @@ function defaultProject(){
   const created = nowStamp();
   return {
     id: createProjectId(),
-    version: "1.0-alpha.040",
+    version: "1.0-alpha.043",
     name: "Proyecto sin nombre",
     code: "",
     client: "",
@@ -45,6 +45,7 @@ function defaultProject(){
     conductors: [],
     conduits: [],
     engineeringMaterials: [],
+    phaseBalance: null,
     grounding: null,
     connection: null,
     unilineal: null,
@@ -204,6 +205,7 @@ export function recalculateProject(){
   p.conductors = electricalResult.conductors;
   p.conduits = electricalResult.conduits;
   p.engineeringMaterials = electricalResult.materials;
+  p.phaseBalance = electricalResult.phaseBalance;
   p.installedPowerKw = electricalResult.summary.installedKw || Number((totalW / 1000).toFixed(3));
   p.demandPowerKw = electricalResult.summary.demandKw;
   p.currentA = electricalResult.summary.projectCurrentA;

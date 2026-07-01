@@ -16,6 +16,7 @@ export const modules = [
 
   { id: "cargas", label: "Cargas", group: "ingenieria", path: "../modules/cargas/cargas.js", profiles: ["independiente", "empresa", "estudiante"] },
   { id: "cuadro-carga", label: "Cuadro de carga", group: "ingenieria", path: "../modules/cuadro-carga/cuadro-carga.js", profiles: ["independiente", "empresa", "estudiante"] },
+  { id: "balance", label: "Balance de fases", group: "ingenieria", path: "../modules/balance/balance.js", profiles: ["independiente", "empresa", "estudiante"] },
   { id: "empalme", label: "Empalme", group: "ingenieria", path: "../modules/empalme/empalme.js", profiles: ["independiente", "empresa", "estudiante"] },
   { id: "tierra", label: "Puesta a tierra", group: "ingenieria", path: "../modules/tierra/tierra.js", profiles: ["independiente", "empresa", "estudiante"] },
   { id: "unilineal", label: "Unilineal", group: "ingenieria", path: "../modules/unilineal/unilineal.js", profiles: ["independiente", "empresa", "estudiante"] },

@@ -5,6 +5,7 @@
 // auditoría y documentación.
 
 import { calculateLoadProject } from "./loadEngine.js";
+import { calculatePhaseBalance } from "./phaseBalanceEngine.js";
 
 const DEFAULT_LENGTH_M = 20;
 const COPPER_RESISTANCE = {
@@ -213,6 +214,7 @@ function aggregateStatus(circuits, loadResult){
 export function calculateElectricalProject(project = {}){
   const loadResult = calculateLoadProject(project);
   const circuits = (loadResult.circuits || []).map((circuit, index) => enrichCircuit(circuit, project, index));
+  const phaseBalance = calculatePhaseBalance(circuits, project);
   const loadBoard = circuits.map(c => c.loadBoardRow);
   const protections = circuits.map(c => c.protection);
   const conductors = circuits.map(c => c.conductor);
@@ -224,7 +226,7 @@ export function calculateElectricalProject(project = {}){
     if(c.confidence.level === "informacion_insuficiente") observations.push({ level: "informacion", circuit: c.id, message: c.confidence.reason });
   });
   return {
-    version: "4.0.2",
+    version: "4.0.3",
     generatedAt: new Date().toISOString(),
     loadResult,
     summary: {
@@ -234,6 +236,7 @@ export function calculateElectricalProject(project = {}){
       projectCurrentA: loadResult.projectCurrentA,
       maxCircuitCurrentA: loadResult.maxCircuitCurrentA,
       balance: loadResult.balance,
+      phaseBalance,
       status: aggregateStatus(circuits, loadResult)
     },
     circuits,
@@ -243,7 +246,8 @@ export function calculateElectricalProject(project = {}){
     conduits,
     materials,
     observations: [...(loadResult.validations || []), ...observations],
-    normativeTrace: circuits.flatMap(c => c.engineeringTrace || []),
+    phaseBalance,
+    normativeTrace: [...circuits.flatMap(c => c.engineeringTrace || []), ...(phaseBalance.trace || [])],
     outputs: {
       loadBoardReady: loadBoard.length > 0,
       unilinealReady: circuits.length > 0,
