@@ -1,25 +1,18 @@
-# GIAE Chile v1.0 · NORMA-CHILE v1.1
+# GIAE Chile v1.0 - Etapa 10.0
 
-Sprint creado: **Motor de Reglas NORMA-CHILE**.
+## Auditoría Integral del Proyecto
 
-## Incluye
+Esta versión incorpora el módulo de Auditoría Integral como control final del proyecto antes de exportar documentación o presupuesto.
 
-- DS N°8 + RIC 1 al 19 catalogados.
-- Motor `NormaChileRuleEngine`.
-- Biblioteca de reglas iniciales v1.1.
-- Biblioteca de definiciones normativas.
-- Biblioteca de cobertura normativa.
-- Biblioteca de relaciones entre reglas y motores GIAE.
-- Editor Normativo actualizado en `index.html` / `indice.html`.
+### Incluye
+- Revisión cruzada de Proyecto Activo, cargas, ingeniería, balance, tableros, puesta a tierra, empalme, unilineal, documentación y presupuesto.
+- Puntaje general de preparación.
+- Estado por áreas.
+- Observaciones críticas, altas, medias y bajas.
+- Próximas acciones recomendadas.
+- Exportación de informe JSON y TXT.
 
-## Regla de arquitectura
+### Principio técnico
+La auditoría no reemplaza la revisión profesional ni las mediciones de terreno. Solo evalúa datos disponibles, motores implementados y reglas cargadas en GIAE.
 
-Ningún motor de GIAE debe contener decisiones técnicas escondidas en el código. Toda validación debe consultar NORMA-CHILE y registrar ID de regla, origen, versión y referencia.
-
-## Archivos clave
-
-- `core/norma-chile/reglaEngine.js`
-- `data/norma-chile/reglas/ric/reglas-norma-chile-v11.json`
-- `data/norma-chile/definiciones/diccionario-normativo-v11.json`
-- `data/norma-chile/tablas/cobertura-normativa-v11.json`
-- `data/norma-chile/relaciones/motores-reglas.json`
+Diseñado y desarrollado por Julio Guillermo Vera · © 2026 GIAE Chile. Todos los derechos reservados.

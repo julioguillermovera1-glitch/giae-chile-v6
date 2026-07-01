@@ -1,81 +1,100 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-CL">
 <head>
-<meta charset="utf-8">
-<title>GIAE · NORMA-CHILE v1.1</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<style>
-:root{--bg:#f6f7f9;--ink:#182536;--muted:#5f6f82;--line:#dbe2ea;--panel:#fff;--brand:#142132}
-*{box-sizing:border-box} body{font-family:Arial, sans-serif;background:var(--bg);color:var(--ink);margin:0} header{background:var(--brand);color:white;padding:26px 30px} main{padding:24px;max-width:1240px;margin:auto}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 1px 2px #0001}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.badge{display:inline-block;padding:4px 9px;border-radius:999px;background:#edf2f7;margin:3px;font-size:12px}.ok{background:#e8f5ee}.warn{background:#fff5d6}.crit{background:#ffe8e8} h1,h2{margin-top:0} input,select{padding:10px;border:1px solid #cfd6df;border-radius:8px;width:100%} table{width:100%;border-collapse:collapse;background:white} td,th{padding:10px;border-bottom:1px solid #e6ebf2;text-align:left;font-size:14px;vertical-align:top} small{color:var(--muted)} .toolbar{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}.mono{font-family:Consolas,monospace}.kpi strong{font-size:26px}.footer{color:var(--muted);font-size:12px;text-align:center;margin:26px 0}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GIAE Chile v1.0</title>
+  <link rel="stylesheet" href="css/platform.css" />
 </head>
 <body>
-<header>
-<h1>NORMA-CHILE v1.1 · Motor de Reglas</h1>
-<p>Base normativa digital para GIAE · DS N°8 + RIC 1 al 19 · Reglas, definiciones, tablas y relaciones.</p>
-</header>
-<main>
-<section class="card">
-<h2>Estado del motor</h2>
-<div class="grid kpi">
-<div><strong id="docs">0</strong><br><small>Documentos catalogados</small></div>
-<div><strong id="rules">0</strong><br><small>Reglas estructuradas</small></div>
-<div><strong id="defs">0</strong><br><small>Definiciones base</small></div>
-<div><strong id="relations">0</strong><br><small>Motores relacionados</small></div>
-</div>
-</section>
-<section class="card">
-<h2>Editor Normativo</h2>
-<div class="toolbar">
-<input id="q" placeholder="Buscar por ID, RIC, categoría, motor, referencia...">
-<select id="origen"><option value="">Todos los orígenes</option></select>
-<select id="motor"><option value="">Todos los motores</option></select>
-</div>
-</section>
-<section class="card">
-<h2>Biblioteca de Reglas</h2>
-<table><thead><tr><th>ID</th><th>Origen</th><th>Categoría</th><th>Validación</th><th>Severidad</th><th>Motores</th><th>Estado</th></tr></thead><tbody id="tbody"></tbody></table>
-</section>
-<section class="card">
-<h2>Biblioteca de Cobertura Normativa</h2>
-<div id="coverage" class="grid"></div>
-</section>
-<section class="card">
-<h2>Biblioteca de Definiciones</h2>
-<table><thead><tr><th>Término</th><th>Fuente</th><th>Uso</th><th>Estado</th></tr></thead><tbody id="defbody"></tbody></table>
-</section>
-<div class="footer">Diseñado y desarrollado por Julio Guillermo Vera © 2026 GIAE Chile. Todos los derechos reservados.</div>
-</main>
-<script src="core/norma-chile/normaChile.js"></script>
-<script src="core/norma-chile/reglaEngine.js"></script>
-<script>
-let reglas=[], definiciones=[], cobertura=[], relaciones={};
-async function loadJSON(path, fallback){ try{ const r=await fetch(path); if(!r.ok) throw new Error(path); return await r.json(); }catch(e){ return fallback; } }
-async function init(){
- const st=await NormaChile.cargar();
- const reglasBase=NormaChile.reglas || [];
- const reglasV11=await loadJSON('data/norma-chile/reglas/ric/reglas-norma-chile-v11.json', []);
- reglas=[...reglasBase.map(x=>normalizarBase(x)), ...reglasV11];
- definiciones=await loadJSON('data/norma-chile/definiciones/diccionario-normativo-v11.json', []);
- const cov=await loadJSON('data/norma-chile/tablas/cobertura-normativa-v11.json', {documentos:[]}); cobertura=cov.documentos||[];
- relaciones=await loadJSON('data/norma-chile/relaciones/motores-reglas.json', {motores:{}});
- NormaChileRuleEngine.cargar(reglas);
- docs.textContent=st.documentos; rules.textContent=reglas.length; defs.textContent=definiciones.length; relations.textContent=Object.keys(relaciones.motores||{}).length;
- cargarFiltros(); render(); renderDefs(); renderCoverage();
-}
-function normalizarBase(r){return {id:r.id, origen:r.origen||'DS8', documento:r.documento||'DS8', categoria:r.categoria||'', validacion:r.validacion||r.mensaje_usuario||'', severidad:r.nivel||'informativa', motores:r.motores||['Auditoría'], estado:r.estado||'base', referencia:r.referencia||''};}
-function cargarFiltros(){
- [...new Set(reglas.map(r=>r.origen).filter(Boolean))].sort().forEach(o=>origen.innerHTML+=`<option>${o}</option>`);
- const motors=[...new Set(reglas.flatMap(r=>r.motores||[]))].sort(); motors.forEach(m=>motor.innerHTML+=`<option>${m}</option>`);
-}
-function render(){
- const text=q.value.toLowerCase(), org=origen.value, mot=motor.value;
- const list=reglas.filter(r=>(!org||r.origen===org)&&(!mot||(r.motores||[]).includes(mot))&&JSON.stringify(r).toLowerCase().includes(text));
- tbody.innerHTML=list.map(r=>`<tr><td class="mono">${r.id}</td><td>${r.origen}</td><td>${r.categoria||''}</td><td>${r.validacion||r.mensaje_usuario||''}<br><small>${r.referencia||''}</small></td><td><span class="badge ${r.severidad==='critica'?'crit':r.severidad==='advertencia'?'warn':'ok'}">${r.severidad||'info'}</span></td><td>${(r.motores||[]).join('<br>')}</td><td>${r.estado||''}</td></tr>`).join('');
-}
-function renderDefs(){defbody.innerHTML=definiciones.map(d=>`<tr><td>${d.termino}</td><td>${d.fuente}</td><td>${d.uso}</td><td>${d.estado}</td></tr>`).join('');}
-function renderCoverage(){coverage.innerHTML=cobertura.map(d=>`<div class="card"><b>${d.id}</b><br><small>${d.nombre}</small><br><span class="badge">${d.cobertura}</span><span class="badge ${d.estado==='pendiente_reglas'?'warn':'ok'}">${d.estado}</span></div>`).join('');}
-[q,origen,motor].forEach(el=>el.addEventListener('input',render)); init();
-</script>
+  <noscript>GIAE Chile necesita JavaScript habilitado para funcionar.</noscript>
+
+  <section id="loginView" class="login-view start-screen">
+    <div class="start-shell">
+      <header class="start-header">
+        <div class="start-brand">
+          <div class="giae-logo-mark" data-brand-logo aria-label="Logo GIAE Chile"></div>
+          <div>
+            <p class="eyebrow">Plataforma Integral para Proyectos Eléctricos</p>
+            <h1><span data-brand-name>GIAE Chile</span></h1>
+            <p class="version-line">Versión 1.0 · Build alpha 007.1 · NORMA integrada</p>
+          </div>
+        </div>
+        <div class="start-status">
+          <span>Chile</span>
+          <span>RIC · IEC eléctrica · DS N°8</span>
+        </div>
+      </header>
+
+      <main class="start-main">
+        <section class="start-panel intro-panel">
+          <p class="eyebrow">Inicio</p>
+          <h2>Ingeniería, gestión y formación técnica en una sola plataforma.</h2>
+          <p>GIAE Chile organiza el trabajo eléctrico por módulos independientes, conectados por un proyecto activo y guiados por normativa autorizada.</p>
+          <div class="start-note">
+            <strong>Regla técnica:</strong>
+            <span>Si no existe respaldo normativo cargado, el sistema no inventa una respuesta. Solicita revisión profesional o normativa.</span>
+          </div>
+        </section>
+
+        <section class="start-panel access-panel">
+          <p class="eyebrow">Acceso</p>
+          <h2>Selecciona un perfil</h2>
+          <p>Elige el espacio de trabajo correspondiente. El Aula Técnica es gratuita y no requiere licencia.</p>
+          <div class="profile-grid professional-access" aria-label="Tipos de usuario">
+            <button data-profile="empresa">Empresa</button>
+            <button data-profile="independiente">Instalador independiente</button>
+            <button data-profile="estudiante">Estudiante</button>
+            <button data-profile="administrador">Administrador</button>
+            <button data-profile="aula" class="public-access">Aula Técnica · Acceso libre</button>
+          </div>
+        </section>
+      </main>
+
+      <section class="start-links" aria-label="Información del sistema">
+        <article><strong>Proyecto activo</strong><span>Base común para cargas, unilineal, tierra, documentación y presupuesto.</span></article>
+        <article><strong>Marca por empresa</strong><span>Logo, colores y plantillas propias para cada organización.</span></article>
+        <article><strong>Formación comunitaria</strong><span>Educación técnica libre, con línea para pueblos originarios.</span></article>
+      </section>
+
+      <footer class="official-footer">
+        Diseñado y desarrollado por Julio Guillermo Vera · © 2026 GIAE Chile. Todos los derechos reservados.
+      </footer>
+    </div>
+  </section>
+
+  <main id="platformView" class="platform hidden">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <div class="logo-block">
+        <div class="mini-logo" data-brand-logo></div>
+        <div><strong data-brand-name>GIAE Chile</strong><span>v1.0</span></div>
+      </div>
+      <nav id="moduleMenu"></nav>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Espacio de trabajo</p>
+          <h2 id="workspaceTitle">Inicio</h2>
+        </div>
+        <div class="top-actions">
+          <span id="activeProfile" class="pill">Sin sesión</span>
+          <button id="saveProjectBtn">Guardar</button>
+          <button id="exportBtn">Exportar</button>
+          <button id="logoutBtn" class="danger">Cerrar sesión</button>
+        </div>
+      </header>
+
+      <section id="workspaceTabs" class="workspace-tabs" aria-label="Ventanas abiertas"></section>
+      <section id="windowHost" class="window-host"></section>
+      <footer class="platform-footer">
+        <span id="projectStatusLine">Proyecto activo: sin proyecto cargado</span>
+        <span>Diseñado y desarrollado por Julio Guillermo Vera · © 2026 GIAE Chile. Todos los derechos reservados.</span>
+      </footer>
+    </section>
+  </main>
+
+  <script type="module" src="core/main.js"></script>
 </body>
 </html>

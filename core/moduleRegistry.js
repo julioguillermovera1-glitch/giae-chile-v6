@@ -32,5 +32,6 @@ export const modules = [
   { id: "administracion", label: "Panel administrador", group: "administracion", path: "../modules/administracion/administracion.js", profiles: ["administrador"] },
   { id: "biblioteca", label: "Base de conocimiento", group: "administracion", path: "../modules/biblioteca/biblioteca.js", profiles: ["administrador"] },
   { id: "componentes", label: "BUCE · Componentes eléctricos", group: "administracion", path: "../modules/componentes/componentes.js", profiles: ["administrador"] },
-  { id: "normativo", label: "Motor normativo", group: "administracion", path: "../modules/normativo/normativo.js", profiles: ["administrador"] }
+  { id: "normativo", label: "Motor normativo", group: "administracion", path: "../modules/normativo/normativo.js", profiles: ["administrador"] },
+  { id: "norma-chile", label: "NORMA-CHILE", group: "administracion", path: "../modules/norma-chile/norma-chile.js", profiles: ["administrador"] }
 ];
