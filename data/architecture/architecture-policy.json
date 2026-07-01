@@ -1,0 +1,17 @@
+{
+  "version": "0.9.0.013",
+  "duplicate_detection": {
+    "rule": "No marcar duplicado por nombre parecido ni por estructura similar.",
+    "real_duplicate": "Mismo contenido normalizado y mismo hash SHA-256.",
+    "near_duplicate": "Solo se informa como requiere_revision, nunca como error automático.",
+    "default_mode": "exact_hash_only"
+  },
+  "obsolete_norms": {
+    "NCh4": {
+      "status": "obsoleta",
+      "active_validation": false,
+      "replacement_basis": ["DS N°8", "RIC 1-19"],
+      "note": "No usar NCh4 para validar proyectos nuevos. Solo conservar como referencia histórica si fuese necesario."
+    }
+  }
+}
