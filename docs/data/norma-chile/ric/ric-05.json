@@ -1,0 +1,10 @@
+{
+  "id": "RIC-05",
+  "numero": 5,
+  "materia": "Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+  "estado": "vigente",
+  "marco_legal": "DS8",
+  "usar_para_validacion": true,
+  "reglas_extraidas": [],
+  "cobertura": "pendiente"
+}

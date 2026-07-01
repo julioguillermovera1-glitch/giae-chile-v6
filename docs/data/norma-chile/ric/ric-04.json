@@ -1,0 +1,10 @@
+{
+  "id": "RIC-04",
+  "numero": 4,
+  "materia": "Conductores, materiales y sistemas de canalización",
+  "estado": "vigente",
+  "marco_legal": "DS8",
+  "usar_para_validacion": true,
+  "reglas_extraidas": [],
+  "cobertura": "pendiente"
+}

@@ -1,0 +1,11 @@
+{
+  "catalogo": "NORMA-CHILE",
+  "version_actual": "0.9.0.007",
+  "historial": [
+    {
+      "version": "0.9.0.007",
+      "fecha": "2026-07-01",
+      "cambio": "Se crea Catálogo Maestro Normativo y se excluye NCh4 como norma activa de validación."
+    }
+  ]
+}

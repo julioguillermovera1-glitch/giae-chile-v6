@@ -1,0 +1,10 @@
+{
+  "id": "RIC-17",
+  "numero": 17,
+  "materia": "Operación y mantenimiento",
+  "estado": "vigente",
+  "marco_legal": "DS8",
+  "usar_para_validacion": true,
+  "reglas_extraidas": [],
+  "cobertura": "pendiente"
+}

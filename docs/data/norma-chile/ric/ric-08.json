@@ -1,0 +1,10 @@
+{
+  "id": "RIC-08",
+  "numero": 8,
+  "materia": "Sistemas de emergencia",
+  "estado": "vigente",
+  "marco_legal": "DS8",
+  "usar_para_validacion": true,
+  "reglas_extraidas": [],
+  "cobertura": "pendiente"
+}

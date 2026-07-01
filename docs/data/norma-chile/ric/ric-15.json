@@ -1,0 +1,10 @@
+{
+  "id": "RIC-15",
+  "numero": 15,
+  "materia": "Infraestructura para la recarga de vehículos eléctricos",
+  "estado": "vigente",
+  "marco_legal": "DS8",
+  "usar_para_validacion": true,
+  "reglas_extraidas": [],
+  "cobertura": "pendiente"
+}

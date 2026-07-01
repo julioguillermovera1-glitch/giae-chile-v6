@@ -1,0 +1,27 @@
+{
+  "id": "DS8",
+  "tipo": "marco_legal",
+  "estado": "vigente",
+  "rol": "Base reglamentaria superior de NORMA-CHILE",
+  "relaciona_con": [
+    "RIC-01",
+    "RIC-02",
+    "RIC-03",
+    "RIC-04",
+    "RIC-05",
+    "RIC-06",
+    "RIC-07",
+    "RIC-08",
+    "RIC-09",
+    "RIC-10",
+    "RIC-11",
+    "RIC-12",
+    "RIC-13",
+    "RIC-14",
+    "RIC-15",
+    "RIC-16",
+    "RIC-17",
+    "RIC-18",
+    "RIC-19"
+  ]
+}

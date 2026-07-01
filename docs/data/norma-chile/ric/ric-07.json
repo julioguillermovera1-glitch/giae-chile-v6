@@ -1,0 +1,10 @@
+{
+  "id": "RIC-07",
+  "numero": 7,
+  "materia": "Instalaciones de equipos",
+  "estado": "vigente",
+  "marco_legal": "DS8",
+  "usar_para_validacion": true,
+  "reglas_extraidas": [],
+  "cobertura": "pendiente"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "RIC-09",
+  "numero": 9,
+  "materia": "Sistemas de autogeneración",
+  "estado": "vigente",
+  "marco_legal": "DS8",
+  "usar_para_validacion": true,
+  "reglas_extraidas": [],
+  "cobertura": "pendiente"
+}

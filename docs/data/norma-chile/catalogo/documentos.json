@@ -1,0 +1,150 @@
+[
+  {
+    "id": "DS8",
+    "titulo": "Reglamento de Seguridad de las Instalaciones de Consumo de Energía Eléctrica",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ds8.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-01",
+    "titulo": "Pliego Técnico Normativo RIC N°01",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-01.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-02",
+    "titulo": "Pliego Técnico Normativo RIC N°02",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-02.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-03",
+    "titulo": "Pliego Técnico Normativo RIC N°03",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-03.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-04",
+    "titulo": "Pliego Técnico Normativo RIC N°04",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-04.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-05",
+    "titulo": "Pliego Técnico Normativo RIC N°05",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-05.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-06",
+    "titulo": "Pliego Técnico Normativo RIC N°06",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-06.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-07",
+    "titulo": "Pliego Técnico Normativo RIC N°07",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-07.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-08",
+    "titulo": "Pliego Técnico Normativo RIC N°08",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-08.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-09",
+    "titulo": "Pliego Técnico Normativo RIC N°09",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-09.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-10",
+    "titulo": "Pliego Técnico Normativo RIC N°10",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-10.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-11",
+    "titulo": "Pliego Técnico Normativo RIC N°11",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-11.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-12",
+    "titulo": "Pliego Técnico Normativo RIC N°12",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-12.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-13",
+    "titulo": "Pliego Técnico Normativo RIC N°13",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-13.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-14",
+    "titulo": "Pliego Técnico Normativo RIC N°14",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-14.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-15",
+    "titulo": "Pliego Técnico Normativo RIC N°15",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-15.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-16",
+    "titulo": "Pliego Técnico Normativo RIC N°16",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-16.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-17",
+    "titulo": "Pliego Técnico Normativo RIC N°17",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-17.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-18",
+    "titulo": "Pliego Técnico Normativo RIC N°18",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-18.pdf",
+    "valida": true
+  },
+  {
+    "id": "RIC-19",
+    "titulo": "Pliego Técnico Normativo RIC N°19",
+    "estado": "vigente",
+    "archivo": "data/norma-chile/documentos/ric-19.pdf",
+    "valida": true
+  },
+  {
+    "id": "NCH4",
+    "titulo": "NCh4",
+    "estado": "obsoleta",
+    "archivo": null,
+    "valida": false,
+    "nota": "No usar como norma activa de validación; reemplazada por DS N°8 y RIC."
+  }
+]

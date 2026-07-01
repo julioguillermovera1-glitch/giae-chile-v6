@@ -1,0 +1,12 @@
+{
+  "nombre": "Política normativa GIAE",
+  "regla_principal": "GIAE valida proyectos nuevos solo con DS N°8, RIC vigentes y referencias citadas expresamente por ellos.",
+  "normas_excluidas": [
+    {
+      "id": "NCH4",
+      "razon": "obsoleta/reemplazada por RIC",
+      "usar_para_validacion": false
+    }
+  ],
+  "mensaje_usuario": "La NCh4 no se utiliza como norma de validación en GIAE porque fue reemplazada por el marco normativo vigente DS N°8 y RIC."
+}
