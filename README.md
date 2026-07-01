@@ -1,23 +1,15 @@
-# GIAE Chile v1.0 - Etapa 10.0
+# GIAE Chile v1.0 · NORMA-CHILE v1.3 RIC 18
 
-## Auditoría Integral del Proyecto
+Versión integrada y reparada. NORMA-CHILE se mantiene dentro de Administración y no reemplaza la aplicación principal.
 
-Esta versión incorpora el módulo de Auditoría Integral como control final del proyecto antes de exportar documentación o presupuesto.
+## Agregado
 
-### Incluye
-- Revisión cruzada de Proyecto Activo, cargas, ingeniería, balance, tableros, puesta a tierra, empalme, unilineal, documentación y presupuesto.
-- Puntaje general de preparación.
-- Estado por áreas.
-- Observaciones críticas, altas, medias y bajas.
-- Próximas acciones recomendadas.
-- Exportación de informe JSON y TXT.
+- 19 reglas iniciales RIC 18 para presentación de proyectos.
+- Tabla de documentos requeridos por RIC 18.
+- Validador documental RIC 18 dentro de Administración → NORMA-CHILE.
+- Diagnóstico normativo v1.3.
+- Cobertura RIC 18 actualizada como parcial.
 
-### Principio técnico
-La auditoría no reemplaza la revisión profesional ni las mediciones de terreno. Solo evalúa datos disponibles, motores implementados y reglas cargadas en GIAE.
+## Principio
 
-Diseñado y desarrollado por Julio Guillermo Vera · © 2026 GIAE Chile. Todos los derechos reservados.
-
-
-## NORMA-CHILE v1.2
-
-Se agrega panel de cobertura RIC 1–19, relaciones DS8 → RIC → motores y diagnóstico normativo descargable.
+GIAE no copia normas completas: estructura reglas, referencias y trazabilidad para uso interno del Motor Normativo Chile.

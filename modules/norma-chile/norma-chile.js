@@ -88,23 +88,25 @@ function renderDefinitions(definiciones){
 }
 export async function render(host, state){
   host.innerHTML = `<section class="module-window real-workspace"><p>Cargando NORMA-CHILE...</p></section>`;
-  const [catalogo, ds8, reglasV11, definiciones, coberturaData, relacionesBase, relacionesV12] = await Promise.all([
+  const [catalogo, ds8, reglasV11, ric18Rules, ric18Docs, definiciones, coberturaData, relacionesBase, relacionesV12] = await Promise.all([
     loadJSON("data/norma-chile/catalogo-normativo.json", { documentos: [] }),
     loadJSON("data/norma-chile/reglas/ds8/reglas-ds8-base.json", { reglas: [] }),
     loadJSON("data/norma-chile/reglas/ric/reglas-norma-chile-v11.json", []),
+    loadJSON("data/norma-chile/reglas/ric/reglas-ric18-v13.json", []),
+    loadJSON("data/norma-chile/tablas/documentos-ric18-v13.json", { documentos_requeridos: [] }),
     loadJSON("data/norma-chile/definiciones/diccionario-normativo-v11.json", []),
     loadJSON("data/norma-chile/tablas/cobertura-normativa-v12.json", { documentos: [] }),
     loadJSON("data/norma-chile/relaciones/motores-reglas.json", { motores: {} }),
     loadJSON("data/norma-chile/relaciones/ds8-ric-motores-v12.json", { relaciones: [] })
   ]);
-  const reglas = [...(ds8.reglas || []).map(normalizeBaseRule), ...(Array.isArray(reglasV11) ? reglasV11 : [])];
+  const reglas = [...(ds8.reglas || []).map(normalizeBaseRule), ...(Array.isArray(reglasV11) ? reglasV11 : []), ...(Array.isArray(ric18Rules) ? ric18Rules : [])];
   const documentos = coberturaData.documentos || [];
   const relaciones = relacionesV12.relaciones || [];
   const motores = [...new Set(documentos.flatMap(d => d.motores || []))].filter(Boolean).sort();
   const origenes = [...new Set(reglas.map(r => r.origen).filter(Boolean))].sort();
   const diag = {
     fecha: new Date().toISOString(),
-    version: "1.2.0",
+    version: "1.3.0",
     documentos_catalogados: catalogo.documentos?.length || 0,
     documentos_cobertura: documentos.length,
     reglas_estructuradas: reglas.length,
@@ -119,15 +121,16 @@ export async function render(host, state){
     <div class="workspace-title-row">
       <div>
         <p class="eyebrow">Administrador · Motor Normativo Chile</p>
-        <h3>NORMA-CHILE v1.2 · Cobertura RIC completa</h3>
-        <p>Panel integrado para controlar DS N°8, RIC 1 al 19, reglas, cobertura y relación con motores GIAE.</p>
+        <h3>NORMA-CHILE v1.3 · RIC 18 Presentación de Proyectos</h3>
+        <p>Panel integrado para controlar DS N°8, RIC 1 al 19, cobertura y reglas RIC 18 para presentación de proyectos.</p>
       </div>
-      <div class="status-strip"><span>DS N°8</span><span>RIC 1–19</span><span>v1.2</span></div>
+      <div class="status-strip"><span>DS N°8</span><span>RIC 1–19</span><span>v1.3</span></div>
     </div>
 
     <section class="admin-kpis compact-kpis">
       <div><strong>${diag.documentos_catalogados}</strong><span>Documentos catalogados</span></div>
       <div><strong>${diag.reglas_estructuradas}</strong><span>Reglas estructuradas</span></div>
+      <div><strong>${Array.isArray(ric18Rules) ? ric18Rules.length : 0}</strong><span>Reglas RIC 18</span></div>
       <div><strong>${diag.documentos_pendientes}</strong><span>RIC pendientes</span></div>
       <div><strong>${diag.motores_relacionados}</strong><span>Motores relacionados</span></div>
     </section>
@@ -136,6 +139,25 @@ export async function render(host, state){
       <h4>Diagnóstico Normativo</h4>
       <p>La cobertura muestra qué documentos tienen reglas iniciales y cuáles están pendientes de extracción técnica. Esto evita que GIAE emita recomendaciones sin respaldo implementado.</p>
       <div class="module-toolbar"><button id="downloadNormaBtn" class="secondary">Descargar diagnóstico normativo</button></div>
+    </section>
+
+
+
+    <section class="admin-card">
+      <h4>RIC 18 · Validador documental inicial</h4>
+      <p>Estas reglas revisan la base documental de un proyecto antes de exportar: memoria, planos, cálculos, cuadro de carga, puesta a tierra, informe de imágenes y responsable técnico.</p>
+      <div class="grid three">
+        <label>Potencia declarada kW<input id="ric18Kw" type="number" min="0" step="0.1" value="12"></label>
+        <label>Tipo de proyecto<select id="ric18Tipo"><option value="normal">Normal</option><option value="edificio">Edificio o conjunto habitacional</option><option value="reunion">Lugar de reunión de personas</option><option value="explosivo">Ambiente explosivo</option><option value="mt">Empalme media tensión</option></select></label>
+        <label>Documentos disponibles<select id="ric18DocsMode"><option value="basico">Básico</option><option value="completo">Completo</option><option value="incompleto">Incompleto</option></select></label>
+      </div>
+      <div class="module-toolbar"><button id="runRic18Validator" class="primary">Validar RIC 18</button><button id="downloadRic18Rules" class="secondary">Descargar reglas RIC 18</button></div>
+      <div id="ric18Result"></div>
+      <h5>Documentos requeridos por RIC 18</h5>
+      <div class="data-table-wrap"><table>
+        <thead><tr><th>Documento</th><th>Estado</th><th>Referencia</th></tr></thead>
+        <tbody>${(ric18Docs.documentos_requeridos || []).map(d => `<tr><td>${esc(d.nombre)}</td><td>${badge(d.estado)}</td><td>${esc(d.referencia)}</td></tr>`).join("")}</tbody>
+      </table></div>
     </section>
 
     <section class="admin-card">
@@ -206,12 +228,37 @@ export async function render(host, state){
   [q, origen, motor].forEach(el => el.addEventListener(el.tagName === "INPUT" ? "input" : "change", applyRules));
   applyRules();
 
+
+  const ric18Result = host.querySelector("#ric18Result");
+  function renderRic18Validation(){
+    const kw = Number(host.querySelector("#ric18Kw")?.value || 0);
+    const tipo = host.querySelector("#ric18Tipo")?.value || "normal";
+    const mode = host.querySelector("#ric18DocsMode")?.value || "basico";
+    const memoriaObligatoria = kw > 10 || ["edificio", "reunion", "explosivo", "mt"].includes(tipo);
+    const checks = [
+      { id:"memoria", nombre:"Memoria explicativa", ok: !memoriaObligatoria || mode === "completo", severidad: memoriaObligatoria ? "critica" : "info", regla:"CHL-RIC18-MEM-001" },
+      { id:"planos", nombre:"Planos", ok: mode !== "incompleto", severidad:"critica", regla:"CHL-RIC18-DOC-001" },
+      { id:"cuadro", nombre:"Cuadro de cargas", ok: mode !== "incompleto", severidad:"critica", regla:"CHL-RIC18-CARG-001" },
+      { id:"alimentadores", nombre:"Resumen alimentadores/subalimentadores", ok: mode === "completo", severidad:"critica", regla:"CHL-RIC18-ALI-001" },
+      { id:"imagenes", nombre:"Informe de imágenes", ok: !memoriaObligatoria || mode === "completo", severidad:"advertencia", regla:"CHL-RIC18-IMG-001" },
+      { id:"tierra", nombre:"Datos de puesta a tierra", ok: mode === "completo", severidad:"critica", regla:"CHL-RIC18-TIE-001" }
+    ];
+    const pendientes = checks.filter(c=>!c.ok);
+    ric18Result.innerHTML = `<div class="data-table-wrap"><table>
+      <thead><tr><th>Validación</th><th>Estado</th><th>Regla</th><th>Severidad</th></tr></thead>
+      <tbody>${checks.map(c=>`<tr><td>${esc(c.nombre)}</td><td>${c.ok ? badge("Cumple","ok") : badge("Pendiente","warning")}</td><td><code>${esc(c.regla)}</code></td><td>${badge(c.severidad)}</td></tr>`).join("")}</tbody>
+    </table></div><p><strong>Resultado:</strong> ${pendientes.length ? `${pendientes.length} observación(es) RIC 18 antes de exportar.` : "Proyecto documentalmente completo para esta validación base."}</p>`;
+  }
+  host.querySelector("#runRic18Validator")?.addEventListener("click", renderRic18Validation);
+  host.querySelector("#downloadRic18Rules")?.addEventListener("click", () => downloadJson("reglas-ric18-v1-3.json", ric18Rules));
+  renderRic18Validation();
+
   host.querySelector("#downloadNormaBtn").addEventListener("click", () => {
-    downloadJson("diagnostico-norma-chile-v1-2.json", {
+    downloadJson("diagnostico-norma-chile-v1-3.json", {
       ...diag,
       documentos,
       relaciones,
-      nota: "NORMA-CHILE v1.2 integrado en Administración. No reemplaza la aplicación principal."
+      nota: "NORMA-CHILE v1.3 integrado en Administración con reglas RIC 18. No reemplaza la aplicación principal."
     });
   });
 }

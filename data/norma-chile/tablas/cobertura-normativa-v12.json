@@ -330,9 +330,9 @@
       "documento": "RIC N°18",
       "materia": "Presentación de proyectos",
       "categoria": "Presentación de proyectos",
-      "estado": "pendiente",
-      "avance": "0%",
-      "reglas_estructuradas": 0,
+      "estado": "parcial",
+      "avance": "20%",
+      "reglas_estructuradas": 19,
       "prioridad": "Alta",
       "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
       "motores": [
@@ -340,7 +340,7 @@
         "Documentación",
         "Auditoría"
       ],
-      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "proximo_trabajo": "Ampliar reglas de planos, memoria, informe de imágenes y anexos RIC 18.",
       "estado_validacion": "requiere extracción normativa"
     },
     {
