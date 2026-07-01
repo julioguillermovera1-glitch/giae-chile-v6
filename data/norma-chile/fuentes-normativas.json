@@ -1,0 +1,163 @@
+{
+  "version": "NORMA-CHILE-1.0.0",
+  "actualizadoEn": "2026-07-01",
+  "responsable": "Julio Guillermo Vera Concha",
+  "principio": "Ningún motor debe emitir decisión técnica sin referencia normativa registrada.",
+  "fuentes": [
+    {
+      "id": "CHL-DS8",
+      "tipo": "Marco legal",
+      "nombre": "Decreto Supremo N°8/2019",
+      "estado": "integrado_inicial",
+      "prioridad": 1,
+      "reglasCargadas": 32
+    },
+    {
+      "id": "CHL-RIC01",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Empalmes",
+      "estado": "parcialmente_integrado",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC02",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Tableros eléctricos",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC03",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Alimentadores y demanda de una instalación",
+      "estado": "parcialmente_integrado",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC04",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Conductores, materiales y sistemas de canalización",
+      "estado": "parcialmente_integrado",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC05",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+      "estado": "parcialmente_integrado",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC06",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Puesta a tierra y enlace equipotencial",
+      "estado": "parcialmente_integrado",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC07",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Instalaciones de equipos",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC08",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Sistemas de emergencia",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC09",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Sistemas de autogeneración",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC10",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Instalaciones de uso general",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC11",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Instalaciones especiales",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC12",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Instalaciones en ambientes explosivos",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC13",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Subestaciones y salas eléctricas",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC14",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Exigencias de eficiencia energética para edificios",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC15",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Infraestructura para la recarga de vehículos eléctricos",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC16",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Subsistemas de distribución",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC17",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Operación y mantenimiento",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC18",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Presentación de proyectos",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "CHL-RIC19",
+      "tipo": "Pliego Técnico Normativo",
+      "nombre": "Puesta en servicio",
+      "estado": "pendiente",
+      "prioridad": 2
+    },
+    {
+      "id": "IEC",
+      "tipo": "Norma internacional",
+      "nombre": "Normas IEC eléctricas aplicables",
+      "estado": "preparado",
+      "prioridad": 3
+    },
+    {
+      "id": "GIAE",
+      "tipo": "Reglas internas",
+      "nombre": "Reglas internas del software GIAE",
+      "estado": "preparado",
+      "prioridad": 4
+    }
+  ]
+}

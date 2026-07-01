@@ -1,0 +1,93 @@
+{
+  "version": "1.0.0",
+  "articulos": [
+    {
+      "articulo": "1",
+      "titulo": "Objetivo y alcance",
+      "motor": "GPE / Auditoría",
+      "reglas": [
+        "DS8-ART01-001",
+        "DS8-ART01-002"
+      ]
+    },
+    {
+      "articulo": "2",
+      "titulo": "Ambientes costeros y agentes químicos",
+      "motor": "Proyecto / Materiales",
+      "reglas": [
+        "DS8-ART02-001",
+        "DS8-ART02-002"
+      ]
+    },
+    {
+      "articulo": "3",
+      "titulo": "Lugar de reunión de personas",
+      "motor": "Proyecto / Auditoría",
+      "reglas": [
+        "DS8-ART03-001",
+        "DS8-ART03-002"
+      ]
+    },
+    {
+      "articulo": "4",
+      "titulo": "Terminología",
+      "motor": "Base de Conocimiento",
+      "reglas": [
+        "DS8-ART04-001"
+      ]
+    },
+    {
+      "articulo": "5-11",
+      "titulo": "Responsabilidades",
+      "motor": "Documentación / Auditoría",
+      "reglas": [
+        "DS8-ART05-001",
+        "DS8-ART05-002",
+        "DS8-ART06-001",
+        "DS8-ART06-002",
+        "DS8-ART07-001",
+        "DS8-ART07-002",
+        "DS8-ART08-001",
+        "DS8-ART09-001",
+        "DS8-ART10-001",
+        "DS8-ART11-001"
+      ]
+    },
+    {
+      "articulo": "12",
+      "titulo": "Pliegos de normas técnicas RIC 1-19",
+      "motor": "Motor Normativo Chile",
+      "reglas": [
+        "DS8-ART12-001"
+      ]
+    },
+    {
+      "articulo": "13-19",
+      "titulo": "Documentación, factibilidad y puesta en servicio",
+      "motor": "Centro Documental / Empalmes",
+      "reglas": [
+        "DS8-ART13-001",
+        "DS8-ART14-001",
+        "DS8-ART15-001",
+        "DS8-ART16-001",
+        "DS8-ART17-001",
+        "DS8-ART18-001",
+        "DS8-ART18-002",
+        "DS8-ART19-001"
+      ]
+    },
+    {
+      "articulo": "20-24 y transitorio",
+      "titulo": "Fiscalización, sanciones y vigencia",
+      "motor": "Auditoría / Versionado Normativo",
+      "reglas": [
+        "DS8-ART20-001",
+        "DS8-ART21-001",
+        "DS8-ART22-001",
+        "DS8-ART23-001",
+        "DS8-ART24-001",
+        "DS8-TRANS-001"
+      ]
+    }
+  ]
+}

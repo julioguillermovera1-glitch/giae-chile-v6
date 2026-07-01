@@ -95,7 +95,7 @@ function renderEvaluation(report){
 }
 
 export async function render(host, state){
-  host.innerHTML = `<section class="module-window real-workspace"><p>Cargando Motor Normativo GIAE...</p></section>`;
+  host.innerHTML = `<section class="module-window real-workspace"><p>Cargando Motor Normativo Chile...</p></section>`;
   const engine = await getNormativeEngine();
   const summary = await normativeSummary();
   const sources = [...new Set(engine.rules.map(rule => rule.fuente))];
@@ -104,11 +104,11 @@ export async function render(host, state){
   host.innerHTML = `<section class="module-window real-workspace normative-workspace">
     <div class="workspace-title-row">
       <div>
-        <p class="eyebrow">Etapa 3.0.2d</p>
-        <h3>Motor Normativo GIAE</h3>
-        <p>Motor de reglas con paquetes iniciales RIC 3, RIC 4, RIC 5 y RIC 6. No contiene textos completos de normas; trabaja con reglas de ingeniería referenciadas.</p>
+        <p class="eyebrow">NORMA-CHILE · Sprint DS8-01</p>
+        <h3>Motor Normativo Chile</h3>
+        <p>Motor normativo chileno con DS N°8 como marco legal y paquetes RIC/IEC preparados. No contiene textos completos de normas; trabaja con reglas de ingeniería referenciadas, trazables y versionadas.</p>
       </div>
-      <div class="status-strip"><span>v3.0.2d</span><span>${summary.total} reglas</span><span>${summary.diagnostics.length} diagnósticos</span></div>
+      <div class="status-strip"><span>NORMA-CHILE</span><span>${summary.total} reglas</span><span>${summary.diagnostics.length} diagnósticos</span></div>
     </div>
 
     <div class="result-box warning">
@@ -206,7 +206,7 @@ export async function render(host, state){
 
   host.querySelector("#downloadNormativeReportBtn").addEventListener("click", () => {
     if(!lastReport){ alert("Primero ejecuta una validación."); return; }
-    downloadJson("reporte-motor-normativo-giae.json", lastReport);
+    downloadJson("reporte-motor-normativo-chile.json", lastReport);
   });
 
   host.querySelector("#normImportFile").addEventListener("change", async event => {
