@@ -1,0 +1,86 @@
+{
+  "documento": "RIC 19",
+  "titulo": "Puesta en servicio",
+  "estado": "vigente",
+  "fuente_principal": "DS N°8 + RIC 19",
+  "politica_normativa": {
+    "nch4": {
+      "estado": "obsoleta",
+      "usar_para_validacion": false,
+      "motivo": "La NCh4 fue reemplazada por el marco vigente DS N°8 y RIC."
+    }
+  },
+  "reglas": [
+    {
+      "id": "CHL-RIC19-PES-001",
+      "categoria": "puesta_en_servicio",
+      "tipo": "documental",
+      "criticidad": "critica",
+      "estado": "vigente",
+      "referencia": "RIC 19",
+      "nombre": "Carpeta técnica previa a puesta en servicio",
+      "verifica": "Que el proyecto cuente con antecedentes técnicos completos antes de iniciar el proceso de puesta en servicio.",
+      "evidencia_requerida": ["memoria_tecnica", "planos", "cuadro_cargas", "unilineal"],
+      "mensaje_incumple": "La carpeta técnica no cuenta con todos los antecedentes mínimos para iniciar revisión de puesta en servicio.",
+      "como_corregir": "Completar memoria técnica, planos, cuadro de cargas y diagrama unilineal antes de continuar.",
+      "aplica_a": ["auditoria", "documentacion", "inspector_tecnico"]
+    },
+    {
+      "id": "CHL-RIC19-ENS-001",
+      "categoria": "ensayos",
+      "tipo": "verificacion",
+      "criticidad": "critica",
+      "estado": "vigente",
+      "referencia": "RIC 19",
+      "nombre": "Registro de verificaciones y ensayos",
+      "verifica": "Que existan registros de verificaciones previas a la puesta en servicio.",
+      "evidencia_requerida": ["informe_verificacion", "fecha_verificacion", "responsable_tecnico"],
+      "mensaje_incumple": "No se encontraron registros de verificaciones o ensayos previos.",
+      "como_corregir": "Incorporar informe de verificaciones con fecha, responsable técnico y resultados.",
+      "aplica_a": ["auditoria", "inspector_tecnico"]
+    },
+    {
+      "id": "CHL-RIC19-TIE-001",
+      "categoria": "puesta_tierra",
+      "tipo": "verificacion",
+      "criticidad": "critica",
+      "estado": "vigente",
+      "referencia": "RIC 19 + RIC 6",
+      "nombre": "Datos de puesta a tierra para puesta en servicio",
+      "verifica": "Que existan antecedentes de puesta a tierra y medición asociados al proyecto.",
+      "evidencia_requerida": ["resistencia_tierra", "metodo_medicion", "conductor_pe"],
+      "mensaje_incumple": "Faltan datos de puesta a tierra o medición asociados al proyecto.",
+      "como_corregir": "Registrar resistencia de tierra, método de medición y conductor de protección utilizado.",
+      "aplica_a": ["tierra", "auditoria", "inspector_tecnico"]
+    },
+    {
+      "id": "CHL-RIC19-PRO-001",
+      "categoria": "protecciones",
+      "tipo": "verificacion",
+      "criticidad": "alta",
+      "estado": "vigente",
+      "referencia": "RIC 19 + RIC 5",
+      "nombre": "Verificación de protecciones",
+      "verifica": "Que la carpeta contenga respaldo de protecciones instaladas y coherencia con el cuadro de cargas.",
+      "evidencia_requerida": ["automaticos", "diferenciales", "cuadro_cargas"],
+      "mensaje_incumple": "No existe evidencia suficiente de protecciones o no coincide con el cuadro de cargas.",
+      "como_corregir": "Actualizar cuadro de cargas y listado de protecciones, verificando coherencia entre ambos.",
+      "aplica_a": ["tableros", "auditoria", "inspector_tecnico"]
+    },
+    {
+      "id": "CHL-RIC19-DEC-001",
+      "categoria": "declaracion",
+      "tipo": "documental",
+      "criticidad": "alta",
+      "estado": "vigente",
+      "referencia": "RIC 19",
+      "nombre": "Antecedentes para declaración oficial",
+      "verifica": "Que existan antecedentes técnicos preparados para ser ingresados en la plataforma oficial por el instalador autorizado.",
+      "evidencia_requerida": ["datos_instalador", "datos_propietario", "datos_instalacion", "potencia_declarada"],
+      "mensaje_incumple": "Faltan antecedentes técnicos para que el instalador autorizado pueda realizar la declaración oficial.",
+      "como_corregir": "Completar datos de instalador, propietario, instalación y potencia antes de presentar.",
+      "nota": "GIAE no genera certificados oficiales TE. Solo prepara y revisa antecedentes técnicos.",
+      "aplica_a": ["documentacion", "inspector_tecnico"]
+    }
+  ]
+}
