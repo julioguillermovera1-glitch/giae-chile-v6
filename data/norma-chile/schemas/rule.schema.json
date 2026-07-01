@@ -1,0 +1,20 @@
+{
+  "schema": "GIAE-NORMA-CHILE-RULE-1.0",
+  "required": [
+    "id",
+    "origin",
+    "document",
+    "category",
+    "title",
+    "type",
+    "severity",
+    "status",
+    "version",
+    "reference",
+    "engines"
+  ],
+  "statuses": ["validada", "activa", "en_revision", "obsoleta"],
+  "origins": ["DS8", "RIC", "IEC", "GIAE"],
+  "severities": ["informativa", "advertencia", "critica", "bloqueante"],
+  "evaluationModes": ["manual_review", "field_exists", "equals"]
+}

@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "definitions": [
+    {
+      "term": "Instalación de consumo de energía eléctrica",
+      "source": "DS8",
+      "reference": "DS N°8, Art. 4",
+      "summary": "Conjunto de aparatos, equipos, canalizaciones y circuitos eléctricos asociados destinados a utilizar energía eléctrica."
+    },
+    {
+      "term": "Proyecto",
+      "source": "RIC18",
+      "reference": "RIC 18, Terminología",
+      "summary": "Conjunto de planos y memoria explicativa que indican características técnicas, constructivas, materiales y condiciones del proyecto eléctrico."
+    }
+  ]
+}

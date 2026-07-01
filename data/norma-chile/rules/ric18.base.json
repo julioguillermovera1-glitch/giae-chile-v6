@@ -1,0 +1,42 @@
+{
+  "pack": "NORMA-CHILE-RIC18-BASE-001",
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "CHL-RIC18-DOC-001",
+      "origin": "RIC",
+      "document": "RIC18",
+      "category": "Presentación de proyectos",
+      "title": "Memoria explicativa",
+      "type": "obligatoria",
+      "severity": "critica",
+      "status": "validada",
+      "version": "1.0",
+      "reference": "RIC 18, presentación de proyectos",
+      "engines": ["Documentacion", "Auditoria", "GPE"],
+      "evaluation": { "mode": "field_exists", "field": "documents.memoria" },
+      "messages": {
+        "ok": "La memoria explicativa está disponible.",
+        "error": "Falta memoria explicativa del proyecto."
+      }
+    },
+    {
+      "id": "CHL-RIC18-DOC-002",
+      "origin": "RIC",
+      "document": "RIC18",
+      "category": "Presentación de proyectos",
+      "title": "Planos del proyecto",
+      "type": "obligatoria",
+      "severity": "critica",
+      "status": "validada",
+      "version": "1.0",
+      "reference": "RIC 18, planos y presentación",
+      "engines": ["Documentacion", "Unilineal", "Auditoria"],
+      "evaluation": { "mode": "field_exists", "field": "documents.planos" },
+      "messages": {
+        "ok": "Los planos del proyecto están disponibles.",
+        "error": "Faltan planos del proyecto."
+      }
+    }
+  ]
+}

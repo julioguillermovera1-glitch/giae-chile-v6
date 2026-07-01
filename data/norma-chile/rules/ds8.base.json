@@ -1,0 +1,59 @@
+{
+  "pack": "NORMA-CHILE-DS8-BASE-001",
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "CHL-DS8-ART01-001",
+      "origin": "DS8",
+      "document": "DS8",
+      "category": "Marco legal",
+      "title": "Proyecto sujeto al Reglamento de Seguridad",
+      "type": "obligatoria",
+      "severity": "critica",
+      "status": "validada",
+      "version": "1.0",
+      "reference": "DS N°8, Art. 1",
+      "engines": ["GPE", "Auditoria", "Documentacion"],
+      "evaluation": { "mode": "manual_review" },
+      "messages": {
+        "review": "El proyecto queda sujeto al marco de seguridad del DS N°8."
+      }
+    },
+    {
+      "id": "CHL-DS8-ART07-001",
+      "origin": "DS8",
+      "document": "DS8",
+      "category": "Proyecto técnico",
+      "title": "Existencia de proyecto técnicamente elaborado",
+      "type": "bloqueante",
+      "severity": "bloqueante",
+      "status": "validada",
+      "version": "1.0",
+      "reference": "DS N°8, Art. 7",
+      "engines": ["GPE", "Auditoria", "Documentacion"],
+      "evaluation": { "mode": "field_exists", "field": "project.id" },
+      "messages": {
+        "ok": "Existe un proyecto activo para la instalación.",
+        "error": "No existe proyecto activo. No se debe emitir documentación final."
+      }
+    },
+    {
+      "id": "CHL-DS8-ART08-001",
+      "origin": "DS8",
+      "document": "DS8",
+      "category": "Responsable técnico",
+      "title": "Instalador autorizado responsable",
+      "type": "bloqueante",
+      "severity": "bloqueante",
+      "status": "validada",
+      "version": "1.0",
+      "reference": "DS N°8, Art. 8",
+      "engines": ["Usuarios", "Documentacion", "Auditoria"],
+      "evaluation": { "mode": "field_exists", "field": "project.installer.name" },
+      "messages": {
+        "ok": "El proyecto registra responsable técnico.",
+        "error": "Falta registrar instalador o responsable técnico autorizado."
+      }
+    }
+  ]
+}
