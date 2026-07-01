@@ -1,0 +1,183 @@
+{
+  "paquete": "NORMA-CHILE-DS8-BASE",
+  "version": "1.0",
+  "reglas": [
+    {
+      "id": "CHL-DS8-ART01-001",
+      "origen": "DS8",
+      "documento": "Decreto Supremo N°8",
+      "articulo_o_apartado": "Artículo 1",
+      "categoria": "Marco legal",
+      "subcategoria": "Objetivo y alcance",
+      "condicion": "Todo proyecto corresponde a instalación de consumo de energía eléctrica dentro del alcance de GIAE.",
+      "accion": "Aplicar marco de seguridad para diseño, construcción, puesta en servicio, operación, reparación y mantenimiento.",
+      "mensaje_usuario": "El proyecto queda sujeto al marco de seguridad del DS N°8.",
+      "nivel": "obligatoria",
+      "estado": "validada",
+      "version": "1.0",
+      "fecha_revision": "2026-07-01",
+      "motores": [
+        "GPE",
+        "Auditoría",
+        "Documentación"
+      ],
+      "referencia": "DS N°8, Art. 1",
+      "no_copiar_texto_norma": true
+    },
+    {
+      "id": "CHL-DS8-ART03-001",
+      "origen": "DS8",
+      "documento": "Decreto Supremo N°8",
+      "articulo_o_apartado": "Artículo 3",
+      "categoria": "Clasificación de recinto",
+      "subcategoria": "Lugar de reunión de personas",
+      "condicion": "capacidad_personas >= 100 o tipo_recinto en lista_lugares_reunion",
+      "accion": "Activar reglas especiales para lugares de reunión de personas en los motores que corresponda.",
+      "mensaje_usuario": "El recinto puede clasificar como lugar de reunión de personas; GIAE activará exigencias especiales aplicables.",
+      "nivel": "obligatoria",
+      "estado": "validada",
+      "version": "1.0",
+      "fecha_revision": "2026-07-01",
+      "motores": [
+        "Proyecto Activo",
+        "Cargas",
+        "Conductores",
+        "Documentación",
+        "Auditoría"
+      ],
+      "referencia": "DS N°8, Art. 3",
+      "no_copiar_texto_norma": true
+    },
+    {
+      "id": "CHL-DS8-ART07-001",
+      "origen": "DS8",
+      "documento": "Decreto Supremo N°8",
+      "articulo_o_apartado": "Artículo 7",
+      "categoria": "Proyecto técnico",
+      "subcategoria": "Existencia de proyecto",
+      "condicion": "proyecto.documentacion.minima_incompleta == true",
+      "accion": "Marcar proyecto como incompleto hasta contar con antecedentes técnicos mínimos.",
+      "mensaje_usuario": "El proyecto debe contar con documentación técnica suficiente antes de emitirse.",
+      "nivel": "bloqueante",
+      "estado": "validada",
+      "version": "1.0",
+      "fecha_revision": "2026-07-01",
+      "motores": [
+        "GPE",
+        "Auditoría",
+        "Centro Documental"
+      ],
+      "referencia": "DS N°8, Art. 7",
+      "no_copiar_texto_norma": true
+    },
+    {
+      "id": "CHL-DS8-ART08-001",
+      "origen": "DS8",
+      "documento": "Decreto Supremo N°8",
+      "articulo_o_apartado": "Artículo 8",
+      "categoria": "Responsable técnico",
+      "subcategoria": "Instalador autorizado",
+      "condicion": "proyecto.instalador.clase_sec ausente o no compatible",
+      "accion": "Solicitar datos del instalador autorizado y validar compatibilidad con el tipo de instalación.",
+      "mensaje_usuario": "Debe indicar instalador autorizado/clase correspondiente antes de generar documentación oficial.",
+      "nivel": "bloqueante",
+      "estado": "validada",
+      "version": "1.0",
+      "fecha_revision": "2026-07-01",
+      "motores": [
+        "Documentación",
+        "Auditoría",
+        "Usuarios"
+      ],
+      "referencia": "DS N°8, Art. 8",
+      "no_copiar_texto_norma": true
+    },
+    {
+      "id": "CHL-DS8-ART12-001",
+      "origen": "DS8",
+      "documento": "Decreto Supremo N°8",
+      "articulo_o_apartado": "Artículo 12",
+      "categoria": "Índice normativo",
+      "subcategoria": "RIC 1 al 19",
+      "condicion": "motor requiere validacion_normativa_chilena",
+      "accion": "Resolver reglas aplicables desde catálogo RIC asociado al tipo de cálculo o documento.",
+      "mensaje_usuario": "GIAE consulta los pliegos RIC correspondientes al tipo de validación.",
+      "nivel": "obligatoria",
+      "estado": "validada",
+      "version": "1.0",
+      "fecha_revision": "2026-07-01",
+      "motores": [
+        "Motor Normativo Chile",
+        "Todos"
+      ],
+      "referencia": "DS N°8, Art. 12",
+      "no_copiar_texto_norma": true
+    },
+    {
+      "id": "CHL-DS8-ART16-001",
+      "origen": "DS8",
+      "documento": "Decreto Supremo N°8",
+      "articulo_o_apartado": "Artículo 16",
+      "categoria": "Puesta en servicio",
+      "subcategoria": "Declaración SEC",
+      "condicion": "proyecto.requiere_puesta_servicio == true",
+      "accion": "Derivar al Centro Documental y reglas RIC 19 para antecedentes de puesta en servicio.",
+      "mensaje_usuario": "La instalación/modificación debe evaluarse para declaración y puesta en servicio conforme a RIC 19.",
+      "nivel": "obligatoria",
+      "estado": "validada",
+      "version": "1.0",
+      "fecha_revision": "2026-07-01",
+      "motores": [
+        "Centro Documental",
+        "Auditoría",
+        "Puesta en Servicio"
+      ],
+      "referencia": "DS N°8, Art. 16",
+      "no_copiar_texto_norma": true
+    },
+    {
+      "id": "CHL-DS8-ART18-001",
+      "origen": "DS8",
+      "documento": "Decreto Supremo N°8",
+      "articulo_o_apartado": "Artículo 18",
+      "categoria": "Modificaciones",
+      "subcategoria": "Cambio de diseño o topología",
+      "condicion": "proyecto.tipo_trabajo == 'modificacion'",
+      "accion": "Clasificar modificación y exigir revisión documental/normativa correspondiente.",
+      "mensaje_usuario": "La modificación debe evaluarse como cambio de instalación y puede requerir declaración ante SEC.",
+      "nivel": "obligatoria",
+      "estado": "validada",
+      "version": "1.0",
+      "fecha_revision": "2026-07-01",
+      "motores": [
+        "GPE",
+        "Documentación",
+        "Auditoría"
+      ],
+      "referencia": "DS N°8, Art. 18",
+      "no_copiar_texto_norma": true
+    },
+    {
+      "id": "CHL-DS8-ART20-001",
+      "origen": "DS8",
+      "documento": "Decreto Supremo N°8",
+      "articulo_o_apartado": "Artículo 20",
+      "categoria": "Fiscalización",
+      "subcategoria": "SEC",
+      "condicion": "proyecto.estado == 'emision_documental'",
+      "accion": "Mantener trazabilidad de reglas aplicadas y documentos generados para fiscalización.",
+      "mensaje_usuario": "GIAE conservará trazabilidad normativa para respaldar auditorías y revisiones.",
+      "nivel": "informativa",
+      "estado": "validada",
+      "version": "1.0",
+      "fecha_revision": "2026-07-01",
+      "motores": [
+        "Auditoría",
+        "Centro Documental",
+        "Historial"
+      ],
+      "referencia": "DS N°8, Art. 20",
+      "no_copiar_texto_norma": true
+    }
+  ]
+}

@@ -1,0 +1,346 @@
+{
+  "nombre": "NORMA-CHILE",
+  "version": "1.0-base",
+  "fecha": "2026-07-01",
+  "documentos": [
+    {
+      "id": "CHL-DS8-2019",
+      "nombre": "Decreto Supremo N°8",
+      "tipo": "DS8",
+      "categoria": "Marco legal",
+      "materia": "Reglamento de seguridad de las instalaciones de consumo de energía eléctrica",
+      "estado_implementacion": "activo",
+      "prioridad_giae": "Alta",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Todos"
+      ]
+    },
+    {
+      "id": "CHL-RIC01",
+      "nombre": "RIC N°01",
+      "tipo": "RIC",
+      "categoria": "Empalmes",
+      "materia": "Empalmes",
+      "estado_implementacion": "pendiente_reglas_completas",
+      "prioridad_giae": "Alta",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Empalmes",
+        "Documentación",
+        "Auditoría"
+      ]
+    },
+    {
+      "id": "CHL-RIC02",
+      "nombre": "RIC N°02",
+      "tipo": "RIC",
+      "categoria": "Tableros eléctricos",
+      "materia": "Tableros eléctricos",
+      "estado_implementacion": "pendiente_reglas_completas",
+      "prioridad_giae": "Alta",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Tableros",
+        "Unilineal",
+        "Auditoría"
+      ]
+    },
+    {
+      "id": "CHL-RIC03",
+      "nombre": "RIC N°03",
+      "tipo": "RIC",
+      "categoria": "Alimentadores y demanda",
+      "materia": "Alimentadores y demanda de una instalación",
+      "estado_implementacion": "reglas_iniciales",
+      "prioridad_giae": "Alta",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Cargas",
+        "Ingeniería",
+        "Alimentadores",
+        "Auditoría"
+      ]
+    },
+    {
+      "id": "CHL-RIC04",
+      "nombre": "RIC N°04",
+      "tipo": "RIC",
+      "categoria": "Conductores y canalizaciones",
+      "materia": "Conductores, materiales y sistemas de canalización",
+      "estado_implementacion": "reglas_iniciales",
+      "prioridad_giae": "Alta",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Conductores",
+        "Canalizaciones",
+        "Presupuesto",
+        "Unilineal"
+      ]
+    },
+    {
+      "id": "CHL-RIC05",
+      "nombre": "RIC N°05",
+      "tipo": "RIC",
+      "categoria": "Protección contra tensiones peligrosas",
+      "materia": "Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+      "estado_implementacion": "reglas_iniciales",
+      "prioridad_giae": "Alta",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Protecciones",
+        "Seguridad",
+        "Tierra",
+        "Auditoría"
+      ]
+    },
+    {
+      "id": "CHL-RIC06",
+      "nombre": "RIC N°06",
+      "tipo": "RIC",
+      "categoria": "Puesta a tierra",
+      "materia": "Puesta a tierra y enlace equipotencial",
+      "estado_implementacion": "reglas_iniciales",
+      "prioridad_giae": "Alta",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Puesta a Tierra",
+        "Protecciones",
+        "Auditoría"
+      ]
+    },
+    {
+      "id": "CHL-RIC07",
+      "nombre": "RIC N°07",
+      "tipo": "RIC",
+      "categoria": "Instalación de equipos",
+      "materia": "Instalaciones de equipos",
+      "estado_implementacion": "catalogado",
+      "prioridad_giae": "Media",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Equipos",
+        "BUCE",
+        "Auditoría"
+      ]
+    },
+    {
+      "id": "CHL-RIC08",
+      "nombre": "RIC N°08",
+      "tipo": "RIC",
+      "categoria": "Sistemas de emergencia",
+      "materia": "Sistemas de emergencia",
+      "estado_implementacion": "catalogado",
+      "prioridad_giae": "Media",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Emergencia",
+        "Documentación",
+        "Auditoría"
+      ]
+    },
+    {
+      "id": "CHL-RIC09",
+      "nombre": "RIC N°09",
+      "tipo": "RIC",
+      "categoria": "Autogeneración",
+      "materia": "Sistemas de autogeneración",
+      "estado_implementacion": "catalogado",
+      "prioridad_giae": "Media",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Autogeneración",
+        "Empalmes",
+        "Protecciones"
+      ]
+    },
+    {
+      "id": "CHL-RIC10",
+      "nombre": "RIC N°10",
+      "tipo": "RIC",
+      "categoria": "Uso general",
+      "materia": "Instalaciones de uso general",
+      "estado_implementacion": "catalogado",
+      "prioridad_giae": "Alta",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Uso General",
+        "Cargas",
+        "Circuitos"
+      ]
+    },
+    {
+      "id": "CHL-RIC11",
+      "nombre": "RIC N°11",
+      "tipo": "RIC",
+      "categoria": "Instalaciones especiales",
+      "materia": "Instalaciones especiales",
+      "estado_implementacion": "catalogado",
+      "prioridad_giae": "Alta",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Instalaciones Especiales",
+        "Seguridad",
+        "Documentación"
+      ]
+    },
+    {
+      "id": "CHL-RIC12",
+      "nombre": "RIC N°12",
+      "tipo": "RIC",
+      "categoria": "Ambientes explosivos",
+      "materia": "Instalaciones en ambientes explosivos",
+      "estado_implementacion": "catalogado",
+      "prioridad_giae": "Media",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Ambientes Explosivos",
+        "Seguridad",
+        "Auditoría"
+      ]
+    },
+    {
+      "id": "CHL-RIC13",
+      "nombre": "RIC N°13",
+      "tipo": "RIC",
+      "categoria": "Subestaciones y salas eléctricas",
+      "materia": "Subestaciones y salas eléctricas",
+      "estado_implementacion": "catalogado",
+      "prioridad_giae": "Media",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Subestaciones",
+        "Salas Eléctricas",
+        "Tierra"
+      ]
+    },
+    {
+      "id": "CHL-RIC14",
+      "nombre": "RIC N°14",
+      "tipo": "RIC",
+      "categoria": "Eficiencia energética edificios",
+      "materia": "Exigencias de eficiencia energética para edificios",
+      "estado_implementacion": "catalogado",
+      "prioridad_giae": "Media",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Eficiencia Energética",
+        "Edificios"
+      ]
+    },
+    {
+      "id": "CHL-RIC15",
+      "nombre": "RIC N°15",
+      "tipo": "RIC",
+      "categoria": "Recarga vehículos eléctricos",
+      "materia": "Infraestructura para la recarga de vehículos eléctricos",
+      "estado_implementacion": "catalogado",
+      "prioridad_giae": "Media",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Electromovilidad",
+        "Empalmes",
+        "Protecciones"
+      ]
+    },
+    {
+      "id": "CHL-RIC16",
+      "nombre": "RIC N°16",
+      "tipo": "RIC",
+      "categoria": "Subsistemas de distribución",
+      "materia": "Subsistemas de distribución",
+      "estado_implementacion": "catalogado",
+      "prioridad_giae": "Baja",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Subsistemas Distribución",
+        "Empalmes"
+      ]
+    },
+    {
+      "id": "CHL-RIC17",
+      "nombre": "RIC N°17",
+      "tipo": "RIC",
+      "categoria": "Operación y mantenimiento",
+      "materia": "Operación y mantenimiento",
+      "estado_implementacion": "catalogado",
+      "prioridad_giae": "Media",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Operación",
+        "Mantenimiento",
+        "Auditoría"
+      ]
+    },
+    {
+      "id": "CHL-RIC18",
+      "nombre": "RIC N°18",
+      "tipo": "RIC",
+      "categoria": "Presentación de proyectos",
+      "materia": "Presentación de proyectos",
+      "estado_implementacion": "catalogado",
+      "prioridad_giae": "Alta",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Presentación Proyectos",
+        "Documentación",
+        "Auditoría"
+      ]
+    },
+    {
+      "id": "CHL-RIC19",
+      "nombre": "RIC N°19",
+      "tipo": "RIC",
+      "categoria": "Puesta en servicio",
+      "materia": "Puesta en servicio",
+      "estado_implementacion": "catalogado",
+      "prioridad_giae": "Alta",
+      "version_norma": "según documento cargado",
+      "fecha_catalogacion": "2026-07-01",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores_relacionados": [
+        "Puesta en Servicio",
+        "Documentación",
+        "Ensayos"
+      ]
+    }
+  ]
+}

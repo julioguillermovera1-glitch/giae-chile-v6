@@ -1,18 +1,22 @@
-# GIAE Chile v1.0 - Etapa 10.0
+# GIAE · NORMA-CHILE v1.0-base
 
-## Auditoría Integral del Proyecto
+Este paquete crea la base normativa digital inicial de GIAE.
 
-Esta versión incorpora el módulo de Auditoría Integral como control final del proyecto antes de exportar documentación o presupuesto.
+## Incluye
 
-### Incluye
-- Revisión cruzada de Proyecto Activo, cargas, ingeniería, balance, tableros, puesta a tierra, empalme, unilineal, documentación y presupuesto.
-- Puntaje general de preparación.
-- Estado por áreas.
-- Observaciones críticas, altas, medias y bajas.
-- Próximas acciones recomendadas.
-- Exportación de informe JSON y TXT.
+- Catálogo DS N°8 + RIC 1 al 19.
+- Esquema estándar de reglas `regla-norma-chile.schema.json`.
+- Reglas DS8 iniciales.
+- Índice RIC 1–19 para extracción progresiva de reglas.
+- Diccionario base de definiciones.
+- Core `NormaChile` para consulta, búsqueda, evaluación base y trazabilidad.
 
-### Principio técnico
-La auditoría no reemplaza la revisión profesional ni las mediciones de terreno. Solo evalúa datos disponibles, motores implementados y reglas cargadas en GIAE.
+## Regla de arquitectura
 
-Diseñado y desarrollado por Julio Guillermo Vera · © 2026 GIAE Chile. Todos los derechos reservados.
+Ningún motor de GIAE debe tomar decisiones técnicas con reglas escondidas en el código.  
+Toda validación debe consultar NORMA-CHILE.
+
+## Estado
+
+Esta entrega NO contiene todos los miles de requisitos técnicos de los RIC completos.
+Es el esqueleto robusto para empezar la extracción ordenada por documento y apartado.

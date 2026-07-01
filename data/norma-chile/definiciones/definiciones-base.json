@@ -1,0 +1,51 @@
+{
+  "version": "1.0-base",
+  "definiciones": [
+    {
+      "termino": "Instalación de Consumo de Energía Eléctrica",
+      "origen": "DS8",
+      "referencia": "Art. 4",
+      "uso_giae": [
+        "Proyecto Activo",
+        "Auditoría"
+      ]
+    },
+    {
+      "termino": "Proyecto",
+      "origen": "RIC18",
+      "referencia": "Terminología",
+      "uso_giae": [
+        "Centro Documental",
+        "Presentación de proyectos"
+      ]
+    },
+    {
+      "termino": "Puesta en servicio",
+      "origen": "DS8/RIC19",
+      "referencia": "DS8 Art. 16-19; RIC19",
+      "uso_giae": [
+        "Centro Documental",
+        "Auditoría"
+      ]
+    },
+    {
+      "termino": "Lugar de reunión de personas",
+      "origen": "DS8",
+      "referencia": "Art. 3",
+      "uso_giae": [
+        "Clasificación de recinto",
+        "Conductores",
+        "Documentación"
+      ]
+    },
+    {
+      "termino": "Instalador eléctrico",
+      "origen": "DS8/RIC19",
+      "referencia": "Responsabilidades y terminología",
+      "uso_giae": [
+        "Usuarios",
+        "Documentación"
+      ]
+    }
+  ]
+}

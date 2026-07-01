@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GIAE NORMA-CHILE Regla",
+  "type": "object",
+  "required": [
+    "id",
+    "origen",
+    "documento",
+    "categoria",
+    "condicion",
+    "accion",
+    "estado",
+    "version",
+    "motores"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Ej: CHL-RIC04-CON-001"
+    },
+    "origen": {
+      "enum": [
+        "DS8",
+        "RIC",
+        "IEC",
+        "GIAE"
+      ]
+    },
+    "documento": {
+      "type": "string"
+    },
+    "articulo_o_apartado": {
+      "type": "string"
+    },
+    "categoria": {
+      "type": "string"
+    },
+    "subcategoria": {
+      "type": "string"
+    },
+    "condicion": {
+      "type": "string"
+    },
+    "accion": {
+      "type": "string"
+    },
+    "mensaje_usuario": {
+      "type": "string"
+    },
+    "nivel": {
+      "enum": [
+        "obligatoria",
+        "advertencia",
+        "informativa",
+        "bloqueante"
+      ]
+    },
+    "estado": {
+      "enum": [
+        "validada",
+        "en_revision",
+        "obsoleta",
+        "pendiente_fuente"
+      ]
+    },
+    "version": {
+      "type": "string"
+    },
+    "fecha_revision": {
+      "type": "string"
+    },
+    "motores": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "referencia": {
+      "type": "string"
+    },
+    "no_copiar_texto_norma": {
+      "type": "boolean"
+    }
+  }
+}

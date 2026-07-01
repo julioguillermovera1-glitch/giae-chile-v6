@@ -1,0 +1,254 @@
+{
+  "paquete": "INDICE-RIC-1-19",
+  "version": "1.0-base",
+  "items": [
+    {
+      "id": "CHL-RIC01-INDEX",
+      "documento": "RIC N°01",
+      "materia": "Empalmes",
+      "estado": "pendiente_reglas_completas",
+      "prioridad": "Alta",
+      "motores": [
+        "Empalmes",
+        "Documentación",
+        "Auditoría"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC02-INDEX",
+      "documento": "RIC N°02",
+      "materia": "Tableros eléctricos",
+      "estado": "pendiente_reglas_completas",
+      "prioridad": "Alta",
+      "motores": [
+        "Tableros",
+        "Unilineal",
+        "Auditoría"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC03-INDEX",
+      "documento": "RIC N°03",
+      "materia": "Alimentadores y demanda de una instalación",
+      "estado": "reglas_iniciales",
+      "prioridad": "Alta",
+      "motores": [
+        "Cargas",
+        "Ingeniería",
+        "Alimentadores",
+        "Auditoría"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC04-INDEX",
+      "documento": "RIC N°04",
+      "materia": "Conductores, materiales y sistemas de canalización",
+      "estado": "reglas_iniciales",
+      "prioridad": "Alta",
+      "motores": [
+        "Conductores",
+        "Canalizaciones",
+        "Presupuesto",
+        "Unilineal"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC05-INDEX",
+      "documento": "RIC N°05",
+      "materia": "Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+      "estado": "reglas_iniciales",
+      "prioridad": "Alta",
+      "motores": [
+        "Protecciones",
+        "Seguridad",
+        "Tierra",
+        "Auditoría"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC06-INDEX",
+      "documento": "RIC N°06",
+      "materia": "Puesta a tierra y enlace equipotencial",
+      "estado": "reglas_iniciales",
+      "prioridad": "Alta",
+      "motores": [
+        "Puesta a Tierra",
+        "Protecciones",
+        "Auditoría"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC07-INDEX",
+      "documento": "RIC N°07",
+      "materia": "Instalaciones de equipos",
+      "estado": "catalogado",
+      "prioridad": "Media",
+      "motores": [
+        "Equipos",
+        "BUCE",
+        "Auditoría"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC08-INDEX",
+      "documento": "RIC N°08",
+      "materia": "Sistemas de emergencia",
+      "estado": "catalogado",
+      "prioridad": "Media",
+      "motores": [
+        "Emergencia",
+        "Documentación",
+        "Auditoría"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC09-INDEX",
+      "documento": "RIC N°09",
+      "materia": "Sistemas de autogeneración",
+      "estado": "catalogado",
+      "prioridad": "Media",
+      "motores": [
+        "Autogeneración",
+        "Empalmes",
+        "Protecciones"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC10-INDEX",
+      "documento": "RIC N°10",
+      "materia": "Instalaciones de uso general",
+      "estado": "catalogado",
+      "prioridad": "Alta",
+      "motores": [
+        "Uso General",
+        "Cargas",
+        "Circuitos"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC11-INDEX",
+      "documento": "RIC N°11",
+      "materia": "Instalaciones especiales",
+      "estado": "catalogado",
+      "prioridad": "Alta",
+      "motores": [
+        "Instalaciones Especiales",
+        "Seguridad",
+        "Documentación"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC12-INDEX",
+      "documento": "RIC N°12",
+      "materia": "Instalaciones en ambientes explosivos",
+      "estado": "catalogado",
+      "prioridad": "Media",
+      "motores": [
+        "Ambientes Explosivos",
+        "Seguridad",
+        "Auditoría"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC13-INDEX",
+      "documento": "RIC N°13",
+      "materia": "Subestaciones y salas eléctricas",
+      "estado": "catalogado",
+      "prioridad": "Media",
+      "motores": [
+        "Subestaciones",
+        "Salas Eléctricas",
+        "Tierra"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC14-INDEX",
+      "documento": "RIC N°14",
+      "materia": "Exigencias de eficiencia energética para edificios",
+      "estado": "catalogado",
+      "prioridad": "Media",
+      "motores": [
+        "Eficiencia Energética",
+        "Edificios"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC15-INDEX",
+      "documento": "RIC N°15",
+      "materia": "Infraestructura para la recarga de vehículos eléctricos",
+      "estado": "catalogado",
+      "prioridad": "Media",
+      "motores": [
+        "Electromovilidad",
+        "Empalmes",
+        "Protecciones"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC16-INDEX",
+      "documento": "RIC N°16",
+      "materia": "Subsistemas de distribución",
+      "estado": "catalogado",
+      "prioridad": "Baja",
+      "motores": [
+        "Subsistemas Distribución",
+        "Empalmes"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC17-INDEX",
+      "documento": "RIC N°17",
+      "materia": "Operación y mantenimiento",
+      "estado": "catalogado",
+      "prioridad": "Media",
+      "motores": [
+        "Operación",
+        "Mantenimiento",
+        "Auditoría"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC18-INDEX",
+      "documento": "RIC N°18",
+      "materia": "Presentación de proyectos",
+      "estado": "catalogado",
+      "prioridad": "Alta",
+      "motores": [
+        "Presentación Proyectos",
+        "Documentación",
+        "Auditoría"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    },
+    {
+      "id": "CHL-RIC19-INDEX",
+      "documento": "RIC N°19",
+      "materia": "Puesta en servicio",
+      "estado": "catalogado",
+      "prioridad": "Alta",
+      "motores": [
+        "Puesta en Servicio",
+        "Documentación",
+        "Ensayos"
+      ],
+      "siguiente_accion": "Extraer reglas técnicas por capítulos y apartados"
+    }
+  ]
+}
