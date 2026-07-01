@@ -2,65 +2,80 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>GIAE · NORMA-CHILE v1.0</title>
+<title>GIAE · NORMA-CHILE v1.1</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-body{font-family:Arial, sans-serif;background:#f6f7f9;color:#1d2733;margin:0}
-header{background:#142132;color:white;padding:24px}
-main{padding:24px;max-width:1200px;margin:auto}
-.card{background:white;border:1px solid #d9dee7;border-radius:12px;padding:18px;margin:14px 0;box-shadow:0 1px 2px #0001}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#edf2f7;margin:3px;font-size:12px}
-h1,h2{margin-top:0}
-input,select{padding:10px;border:1px solid #cfd6df;border-radius:8px;width:100%;box-sizing:border-box}
-table{width:100%;border-collapse:collapse;background:white}
-td,th{padding:10px;border-bottom:1px solid #e6ebf2;text-align:left;font-size:14px}
-small{color:#5c6978}
+:root{--bg:#f6f7f9;--ink:#182536;--muted:#5f6f82;--line:#dbe2ea;--panel:#fff;--brand:#142132}
+*{box-sizing:border-box} body{font-family:Arial, sans-serif;background:var(--bg);color:var(--ink);margin:0} header{background:var(--brand);color:white;padding:26px 30px} main{padding:24px;max-width:1240px;margin:auto}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 1px 2px #0001}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.badge{display:inline-block;padding:4px 9px;border-radius:999px;background:#edf2f7;margin:3px;font-size:12px}.ok{background:#e8f5ee}.warn{background:#fff5d6}.crit{background:#ffe8e8} h1,h2{margin-top:0} input,select{padding:10px;border:1px solid #cfd6df;border-radius:8px;width:100%} table{width:100%;border-collapse:collapse;background:white} td,th{padding:10px;border-bottom:1px solid #e6ebf2;text-align:left;font-size:14px;vertical-align:top} small{color:var(--muted)} .toolbar{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}.mono{font-family:Consolas,monospace}.kpi strong{font-size:26px}.footer{color:var(--muted);font-size:12px;text-align:center;margin:26px 0}
 </style>
 </head>
 <body>
 <header>
-<h1>NORMA-CHILE v1.0</h1>
-<p>Base normativa digital para GIAE · DS N°8 + RIC 1 al 19</p>
+<h1>NORMA-CHILE v1.1 · Motor de Reglas</h1>
+<p>Base normativa digital para GIAE · DS N°8 + RIC 1 al 19 · Reglas, definiciones, tablas y relaciones.</p>
 </header>
 <main>
 <section class="card">
-<h2>Estado</h2>
-<div class="grid">
+<h2>Estado del motor</h2>
+<div class="grid kpi">
 <div><strong id="docs">0</strong><br><small>Documentos catalogados</small></div>
-<div><strong id="rules">0</strong><br><small>Reglas DS8 iniciales</small></div>
-<div><strong id="rics">0</strong><br><small>RIC indexados</small></div>
+<div><strong id="rules">0</strong><br><small>Reglas estructuradas</small></div>
+<div><strong id="defs">0</strong><br><small>Definiciones base</small></div>
+<div><strong id="relations">0</strong><br><small>Motores relacionados</small></div>
 </div>
 </section>
 <section class="card">
-<h2>Buscar regla</h2>
-<input id="q" placeholder="Ej: Artículo 7, documentación, SEC, lugar de reunión...">
+<h2>Editor Normativo</h2>
+<div class="toolbar">
+<input id="q" placeholder="Buscar por ID, RIC, categoría, motor, referencia...">
+<select id="origen"><option value="">Todos los orígenes</option></select>
+<select id="motor"><option value="">Todos los motores</option></select>
+</div>
 </section>
 <section class="card">
-<h2>Reglas base DS N°8</h2>
-<table><thead><tr><th>ID</th><th>Categoría</th><th>Nivel</th><th>Mensaje</th><th>Referencia</th></tr></thead><tbody id="tbody"></tbody></table>
+<h2>Biblioteca de Reglas</h2>
+<table><thead><tr><th>ID</th><th>Origen</th><th>Categoría</th><th>Validación</th><th>Severidad</th><th>Motores</th><th>Estado</th></tr></thead><tbody id="tbody"></tbody></table>
 </section>
 <section class="card">
-<h2>Catálogo RIC 1 al 19</h2>
-<div id="ricList" class="grid"></div>
+<h2>Biblioteca de Cobertura Normativa</h2>
+<div id="coverage" class="grid"></div>
 </section>
+<section class="card">
+<h2>Biblioteca de Definiciones</h2>
+<table><thead><tr><th>Término</th><th>Fuente</th><th>Uso</th><th>Estado</th></tr></thead><tbody id="defbody"></tbody></table>
+</section>
+<div class="footer">Diseñado y desarrollado por Julio Guillermo Vera © 2026 GIAE Chile. Todos los derechos reservados.</div>
 </main>
 <script src="core/norma-chile/normaChile.js"></script>
+<script src="core/norma-chile/reglaEngine.js"></script>
 <script>
+let reglas=[], definiciones=[], cobertura=[], relaciones={};
+async function loadJSON(path, fallback){ try{ const r=await fetch(path); if(!r.ok) throw new Error(path); return await r.json(); }catch(e){ return fallback; } }
 async function init(){
  const st=await NormaChile.cargar();
- docs.textContent=st.documentos; rules.textContent=st.reglas; rics.textContent=st.ric;
- render(NormaChile.reglas);
- ricList.innerHTML = NormaChile.ricIndex.map(r=>`<div class="card"><b>${r.documento}</b><br><small>${r.materia}</small><br><span class="badge">${r.estado}</span><span class="badge">${r.prioridad}</span></div>`).join('');
+ const reglasBase=NormaChile.reglas || [];
+ const reglasV11=await loadJSON('data/norma-chile/reglas/ric/reglas-norma-chile-v11.json', []);
+ reglas=[...reglasBase.map(x=>normalizarBase(x)), ...reglasV11];
+ definiciones=await loadJSON('data/norma-chile/definiciones/diccionario-normativo-v11.json', []);
+ const cov=await loadJSON('data/norma-chile/tablas/cobertura-normativa-v11.json', {documentos:[]}); cobertura=cov.documentos||[];
+ relaciones=await loadJSON('data/norma-chile/relaciones/motores-reglas.json', {motores:{}});
+ NormaChileRuleEngine.cargar(reglas);
+ docs.textContent=st.documentos; rules.textContent=reglas.length; defs.textContent=definiciones.length; relations.textContent=Object.keys(relaciones.motores||{}).length;
+ cargarFiltros(); render(); renderDefs(); renderCoverage();
 }
-function render(list){
- tbody.innerHTML=list.map(r=>`<tr><td>${r.id}</td><td>${r.categoria}</td><td>${r.nivel}</td><td>${r.mensaje_usuario}</td><td>${r.referencia}</td></tr>`).join('');
+function normalizarBase(r){return {id:r.id, origen:r.origen||'DS8', documento:r.documento||'DS8', categoria:r.categoria||'', validacion:r.validacion||r.mensaje_usuario||'', severidad:r.nivel||'informativa', motores:r.motores||['Auditoría'], estado:r.estado||'base', referencia:r.referencia||''};}
+function cargarFiltros(){
+ [...new Set(reglas.map(r=>r.origen).filter(Boolean))].sort().forEach(o=>origen.innerHTML+=`<option>${o}</option>`);
+ const motors=[...new Set(reglas.flatMap(r=>r.motores||[]))].sort(); motors.forEach(m=>motor.innerHTML+=`<option>${m}</option>`);
 }
-q.addEventListener('input',e=>{
- const v=e.target.value.toLowerCase();
- render(NormaChile.reglas.filter(r=>JSON.stringify(r).toLowerCase().includes(v)));
-});
-init();
+function render(){
+ const text=q.value.toLowerCase(), org=origen.value, mot=motor.value;
+ const list=reglas.filter(r=>(!org||r.origen===org)&&(!mot||(r.motores||[]).includes(mot))&&JSON.stringify(r).toLowerCase().includes(text));
+ tbody.innerHTML=list.map(r=>`<tr><td class="mono">${r.id}</td><td>${r.origen}</td><td>${r.categoria||''}</td><td>${r.validacion||r.mensaje_usuario||''}<br><small>${r.referencia||''}</small></td><td><span class="badge ${r.severidad==='critica'?'crit':r.severidad==='advertencia'?'warn':'ok'}">${r.severidad||'info'}</span></td><td>${(r.motores||[]).join('<br>')}</td><td>${r.estado||''}</td></tr>`).join('');
+}
+function renderDefs(){defbody.innerHTML=definiciones.map(d=>`<tr><td>${d.termino}</td><td>${d.fuente}</td><td>${d.uso}</td><td>${d.estado}</td></tr>`).join('');}
+function renderCoverage(){coverage.innerHTML=cobertura.map(d=>`<div class="card"><b>${d.id}</b><br><small>${d.nombre}</small><br><span class="badge">${d.cobertura}</span><span class="badge ${d.estado==='pendiente_reglas'?'warn':'ok'}">${d.estado}</span></div>`).join('');}
+[q,origen,motor].forEach(el=>el.addEventListener('input',render)); init();
 </script>
 </body>
 </html>

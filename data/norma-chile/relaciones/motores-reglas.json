@@ -1,0 +1,12 @@
+{
+  "version": "1.1.0",
+  "descripcion": "Relación entre reglas NORMA-CHILE y motores GIAE.",
+  "motores": {
+    "GPE": ["CHL-DS8-MAR-0001", "CHL-RIC11-ESP-0001"],
+    "Ingeniería": ["CHL-RIC10-ILU-0001", "CHL-RIC15-VE-0001"],
+    "Documentación": ["CHL-RIC18-PRO-0001", "CHL-RIC19-PES-0001", "CHL-RIC15-VE-0001"],
+    "Auditoría": ["CHL-DS8-MAR-0001", "CHL-RIC18-PRO-0001", "CHL-RIC19-PES-0001", "CHL-RIC10-ILU-0001", "CHL-RIC11-ESP-0001"],
+    "Unilineal": ["CHL-RIC10-ILU-0001"],
+    "Empalmes": ["CHL-RIC15-VE-0001"]
+  }
+}

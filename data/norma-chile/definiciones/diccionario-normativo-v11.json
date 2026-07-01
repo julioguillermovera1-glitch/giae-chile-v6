@@ -1,0 +1,7 @@
+[
+  {"termino":"Proyecto", "fuente":"RIC18", "uso":"Documentación, Auditoría, GPE", "estado":"base"},
+  {"termino":"Puesta en servicio", "fuente":"RIC19", "uso":"Documentación, Auditoría", "estado":"base"},
+  {"termino":"Instalación especial", "fuente":"RIC11", "uso":"GPE, Auditoría", "estado":"base"},
+  {"termino":"Infraestructura de recarga de vehículos eléctricos", "fuente":"RIC15", "uso":"Ingeniería, Empalmes, Documentación", "estado":"base"},
+  {"termino":"Instalación de consumo de energía eléctrica", "fuente":"DS8", "uso":"Marco legal, todos los motores", "estado":"base"}
+]

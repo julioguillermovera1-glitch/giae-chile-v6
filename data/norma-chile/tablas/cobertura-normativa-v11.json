@@ -1,0 +1,25 @@
+{
+  "version": "1.1.0",
+  "documentos": [
+    {"id":"DS8", "nombre":"Decreto Supremo N°8", "cobertura":"base", "estado":"iniciado"},
+    {"id":"RIC01", "nombre":"Empalmes", "cobertura":"base", "estado":"iniciado"},
+    {"id":"RIC02", "nombre":"Tableros eléctricos", "cobertura":"base", "estado":"iniciado"},
+    {"id":"RIC03", "nombre":"Alimentadores y demanda", "cobertura":"base", "estado":"iniciado"},
+    {"id":"RIC04", "nombre":"Conductores y canalizaciones", "cobertura":"base", "estado":"iniciado"},
+    {"id":"RIC05", "nombre":"Protecciones contra tensiones peligrosas", "cobertura":"base", "estado":"iniciado"},
+    {"id":"RIC06", "nombre":"Puesta a tierra", "cobertura":"base", "estado":"iniciado"},
+    {"id":"RIC07", "nombre":"Instalaciones de equipos", "cobertura":"catalogado", "estado":"pendiente_reglas"},
+    {"id":"RIC08", "nombre":"Sistemas de emergencia", "cobertura":"catalogado", "estado":"pendiente_reglas"},
+    {"id":"RIC09", "nombre":"Sistemas de autogeneración", "cobertura":"catalogado", "estado":"pendiente_reglas"},
+    {"id":"RIC10", "nombre":"Instalaciones de uso general", "cobertura":"reglas_iniciales", "estado":"iniciado"},
+    {"id":"RIC11", "nombre":"Instalaciones especiales", "cobertura":"reglas_iniciales", "estado":"iniciado"},
+    {"id":"RIC12", "nombre":"Ambientes explosivos", "cobertura":"catalogado", "estado":"pendiente_reglas"},
+    {"id":"RIC13", "nombre":"Subestaciones y salas eléctricas", "cobertura":"catalogado", "estado":"pendiente_reglas"},
+    {"id":"RIC14", "nombre":"Eficiencia energética para edificios", "cobertura":"catalogado", "estado":"pendiente_reglas"},
+    {"id":"RIC15", "nombre":"Recarga de vehículos eléctricos", "cobertura":"reglas_iniciales", "estado":"iniciado"},
+    {"id":"RIC16", "nombre":"Subsistemas de distribución", "cobertura":"catalogado", "estado":"pendiente_reglas"},
+    {"id":"RIC17", "nombre":"Operación y mantenimiento", "cobertura":"catalogado", "estado":"pendiente_reglas"},
+    {"id":"RIC18", "nombre":"Presentación de proyectos", "cobertura":"reglas_iniciales", "estado":"iniciado"},
+    {"id":"RIC19", "nombre":"Puesta en servicio", "cobertura":"reglas_iniciales", "estado":"iniciado"}
+  ]
+}
