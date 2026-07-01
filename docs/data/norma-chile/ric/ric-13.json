@@ -1,0 +1,10 @@
+{
+  "id": "RIC-13",
+  "numero": 13,
+  "materia": "Subestaciones y salas eléctricas",
+  "estado": "vigente",
+  "marco_legal": "DS8",
+  "usar_para_validacion": true,
+  "reglas_extraidas": [],
+  "cobertura": "pendiente"
+}

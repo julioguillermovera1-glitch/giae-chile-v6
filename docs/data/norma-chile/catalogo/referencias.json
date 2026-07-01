@@ -1,0 +1,12 @@
+{
+  "version": "0.9.0.007",
+  "politica": "Las referencias IEC, ISO o NCh solo se incorporan si el DS N°8 o un RIC vigente las cita expresamente.",
+  "referencias_excluidas": [
+    {
+      "id": "NCH4",
+      "estado": "obsoleta",
+      "usar_para_validacion": false
+    }
+  ],
+  "referencias_activas": []
+}

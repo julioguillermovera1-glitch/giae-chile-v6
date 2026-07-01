@@ -1,0 +1,162 @@
+{
+  "id": "NORMA-CHILE-CATALOGO-MAESTRO",
+  "version": "0.9.0.007",
+  "nombre": "Catálogo Maestro Normativo NORMA-CHILE",
+  "descripcion": "Fuente única de verdad normativa para GIAE. Usa DS N°8 y RIC vigentes como base principal.",
+  "politica_normativa": {
+    "base_principal": [
+      "DS N°8",
+      "RIC 1-19 vigentes"
+    ],
+    "referencias_permitidas": "IEC, ISO o NCh solo cuando sean vigentes y estén citadas expresamente por DS N°8 o un RIC vigente.",
+    "normas_obsoletas": "No se usan para validar proyectos nuevos. Solo pueden conservarse como referencia histórica.",
+    "nch4": {
+      "estado": "obsoleta",
+      "usar_para_validacion": false,
+      "motivo": "Reemplazada por el marco normativo vigente DS N°8 y Pliegos Técnicos Normativos RIC.",
+      "uso_permitido": "histórico/referencial, no normativo activo"
+    }
+  },
+  "fuentes": [
+    {
+      "id": "DS8",
+      "tipo": "decreto",
+      "nombre": "Decreto Supremo N°8",
+      "estado": "vigente",
+      "rol": "marco legal"
+    },
+    {
+      "id": "RIC-01",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°01",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-02",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°02",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-03",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°03",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-04",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°04",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-05",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°05",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-06",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°06",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-07",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°07",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-08",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°08",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-09",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°09",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-10",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°10",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-11",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°11",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-12",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°12",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-13",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°13",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-14",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°14",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-15",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°15",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-16",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°16",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-17",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°17",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-18",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°18",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    },
+    {
+      "id": "RIC-19",
+      "tipo": "ric",
+      "nombre": "Pliego Técnico Normativo RIC N°19",
+      "estado": "vigente",
+      "rol": "pliego técnico"
+    }
+  ]
+}
