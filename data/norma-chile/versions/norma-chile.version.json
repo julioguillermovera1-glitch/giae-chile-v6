@@ -1,0 +1,7 @@
+{
+  "name": "NORMA-CHILE",
+  "version": "0.9.0.001",
+  "status": "base_rule_engine",
+  "createdBy": "Julio Guillermo Vera Concha",
+  "description": "Primer sprint real del Rule Engine y estructura normativa para GIAE."
+}

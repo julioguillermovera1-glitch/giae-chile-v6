@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0",
+  "relations": [
+    {
+      "engine": "Documentacion",
+      "uses": ["DS8", "RIC18", "RIC19"],
+      "description": "Genera y valida documentos del proyecto antes de exportar."
+    },
+    {
+      "engine": "Auditoria",
+      "uses": ["DS8", "RIC01", "RIC02", "RIC03", "RIC04", "RIC05", "RIC06", "RIC18", "RIC19"],
+      "description": "Evalúa coherencia técnica, normativa y documental del proyecto."
+    },
+    {
+      "engine": "Ingenieria",
+      "uses": ["RIC03", "RIC04", "RIC05", "RIC06", "RIC10"],
+      "description": "Calcula cargas, demanda, conductores, protecciones y validaciones técnicas."
+    }
+  ]
+}
