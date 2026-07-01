@@ -1,0 +1,219 @@
+{
+  "meta": {
+    "nombre": "Biblioteca Universal de Componentes Eléctricos GIAE",
+    "sigla": "BUCE",
+    "version": "1.0-alpha",
+    "etapa": "7.0-base",
+    "descripcion": "Catálogo central de objetos eléctricos reutilizable por tableros, unilineal, presupuesto, documentación, auditoría y Aula Técnica.",
+    "autor": "Julio Guillermo Vera",
+    "regla": "Todo componente debe conservar trazabilidad normativa. Si falta respaldo, el estado debe quedar como requiere revisión normativa."
+  },
+  "familias": {
+    "protecciones": [
+      {
+        "id": "BUCE-PROT-MCB-1P-C10-10KA",
+        "nombre": "Interruptor automático 1P 10 A curva C",
+        "tipo": "interruptor_automatico",
+        "categoria": "protecciones",
+        "polos": 1,
+        "corriente_A": 10,
+        "curva": "C",
+        "poder_corte_kA": 10,
+        "uso": ["alumbrado", "circuito_final"],
+        "simboloIEC": "SYM-MCB-1P",
+        "usaEn": ["tablero", "unilineal", "presupuesto", "documentacion"],
+        "compatibilidad": {"conductores_mm2_min": 1.5, "sistemas": ["monofasico", "trifasico"]},
+        "referencias": ["RIC 2", "RIC 4", "RIC 5"],
+        "estado": "requiere_revision_normativa",
+        "observacion": "Valor comercial base. Validar poder de corte con Icc del proyecto."
+      },
+      {
+        "id": "BUCE-PROT-MCB-1P-C16-10KA",
+        "nombre": "Interruptor automático 1P 16 A curva C",
+        "tipo": "interruptor_automatico",
+        "categoria": "protecciones",
+        "polos": 1,
+        "corriente_A": 16,
+        "curva": "C",
+        "poder_corte_kA": 10,
+        "uso": ["enchufes", "circuito_final"],
+        "simboloIEC": "SYM-MCB-1P",
+        "usaEn": ["tablero", "unilineal", "presupuesto", "documentacion"],
+        "compatibilidad": {"conductores_mm2_min": 2.5, "sistemas": ["monofasico", "trifasico"]},
+        "referencias": ["RIC 2", "RIC 4", "RIC 5"],
+        "estado": "requiere_revision_normativa",
+        "observacion": "Recomendación preliminar. Validar Iz, caída de tensión e Icc."
+      },
+      {
+        "id": "BUCE-PROT-RCD-2P-40A-30MA-A",
+        "nombre": "Protector diferencial 2P 40 A 30 mA tipo A",
+        "tipo": "protector_diferencial",
+        "categoria": "protecciones",
+        "polos": 2,
+        "corriente_A": 40,
+        "sensibilidad_mA": 30,
+        "clase": "A",
+        "uso": ["proteccion_complementaria", "monofasico"],
+        "simboloIEC": "SYM-RCD-2P",
+        "usaEn": ["tablero", "unilineal", "presupuesto", "documentacion"],
+        "compatibilidad": {"sistemas": ["monofasico"], "aguas_abajo": ["interruptor_automatico"]},
+        "referencias": ["RIC 5"],
+        "estado": "requiere_revision_normativa",
+        "observacion": "Aplicar según esquema de conexión y tipo de carga."
+      },
+      {
+        "id": "BUCE-PROT-RCD-4P-63A-30MA-A",
+        "nombre": "Protector diferencial 4P 63 A 30 mA tipo A",
+        "tipo": "protector_diferencial",
+        "categoria": "protecciones",
+        "polos": 4,
+        "corriente_A": 63,
+        "sensibilidad_mA": 30,
+        "clase": "A",
+        "uso": ["proteccion_complementaria", "trifasico"],
+        "simboloIEC": "SYM-RCD-4P",
+        "usaEn": ["tablero", "unilineal", "presupuesto", "documentacion"],
+        "compatibilidad": {"sistemas": ["trifasico"], "aguas_abajo": ["interruptor_automatico"]},
+        "referencias": ["RIC 5"],
+        "estado": "requiere_revision_normativa",
+        "observacion": "Validar selectividad y coordinación con protecciones aguas arriba."
+      }
+    ],
+    "conductores": [
+      {
+        "id": "BUCE-COND-CU-LSHF-1_5",
+        "nombre": "Conductor cobre 1,5 mm² libre de halógenos",
+        "tipo": "conductor",
+        "categoria": "conductores",
+        "material": "cobre",
+        "seccion_mm2": 1.5,
+        "aislacion": "libre_halogenos",
+        "uso": ["alumbrado"],
+        "simboloIEC": "SYM-CONDUCTOR",
+        "usaEn": ["unilineal", "presupuesto", "documentacion", "aula_tecnica"],
+        "compatibilidad": {"circuitos": ["iluminacion"], "proteccion_max_preliminar_A": 10},
+        "referencias": ["RIC 4"],
+        "estado": "validado_por_regla_inicial",
+        "observacion": "Sección mínima de alumbrado incorporada en reglas RIC 4 iniciales."
+      },
+      {
+        "id": "BUCE-COND-CU-LSHF-2_5",
+        "nombre": "Conductor cobre 2,5 mm² libre de halógenos",
+        "tipo": "conductor",
+        "categoria": "conductores",
+        "material": "cobre",
+        "seccion_mm2": 2.5,
+        "aislacion": "libre_halogenos",
+        "uso": ["enchufes", "mixto", "subalimentador_minimo"],
+        "simboloIEC": "SYM-CONDUCTOR",
+        "usaEn": ["unilineal", "presupuesto", "documentacion", "aula_tecnica"],
+        "compatibilidad": {"circuitos": ["enchufes", "mixto"], "proteccion_max_preliminar_A": 16},
+        "referencias": ["RIC 4"],
+        "estado": "validado_por_regla_inicial",
+        "observacion": "Sección mínima de enchufes, circuitos mixtos y subalimentadores incorporada en reglas RIC 4 iniciales."
+      },
+      {
+        "id": "BUCE-COND-CU-LSHF-4",
+        "nombre": "Conductor cobre 4 mm² libre de halógenos",
+        "tipo": "conductor",
+        "categoria": "conductores",
+        "material": "cobre",
+        "seccion_mm2": 4,
+        "aislacion": "libre_halogenos",
+        "uso": ["alimentador_minimo"],
+        "simboloIEC": "SYM-CONDUCTOR",
+        "usaEn": ["unilineal", "presupuesto", "documentacion"],
+        "compatibilidad": {"circuitos": ["alimentador"], "proteccion_max_preliminar_A": 25},
+        "referencias": ["RIC 3", "RIC 4"],
+        "estado": "validado_por_regla_inicial",
+        "observacion": "Sección mínima de alimentador incorporada en reglas RIC 3/RIC 4 iniciales."
+      }
+    ],
+    "canalizaciones": [
+      {
+        "id": "BUCE-CAN-EMT-20",
+        "nombre": "Tubería EMT 20 mm",
+        "tipo": "canalizacion",
+        "categoria": "canalizaciones",
+        "material": "metalica",
+        "diametro_mm": 20,
+        "uso": ["derivaciones", "circuitos_finales"],
+        "simboloIEC": "SYM-CANALIZACION",
+        "usaEn": ["presupuesto", "documentacion", "aula_tecnica"],
+        "compatibilidad": {"ambientes": ["interior", "visible"], "conductores": ["1.5", "2.5"]},
+        "referencias": ["RIC 4"],
+        "estado": "requiere_revision_normativa",
+        "observacion": "Validar ocupación, ambiente e instalación."
+      },
+      {
+        "id": "BUCE-CAN-EMT-32",
+        "nombre": "Tubería EMT 32 mm",
+        "tipo": "canalizacion",
+        "categoria": "canalizaciones",
+        "material": "metalica",
+        "diametro_mm": 32,
+        "uso": ["alimentacion_tableros", "subalimentadores"],
+        "simboloIEC": "SYM-CANALIZACION",
+        "usaEn": ["presupuesto", "documentacion"],
+        "compatibilidad": {"ambientes": ["interior", "visible"], "conductores": ["4", "6", "10"]},
+        "referencias": ["RIC 4"],
+        "estado": "requiere_revision_normativa",
+        "observacion": "Validar ocupación por cantidad de conductores y sección."
+      }
+    ],
+    "tableros": [
+      {
+        "id": "BUCE-TAB-GAB-24MOD",
+        "nombre": "Gabinete tablero 24 módulos",
+        "tipo": "gabinete_tablero",
+        "categoria": "tableros",
+        "modulos": 24,
+        "uso": ["tablero_distribucion"],
+        "simboloIEC": "SYM-TABLER0",
+        "usaEn": ["tablero", "presupuesto", "documentacion"],
+        "compatibilidad": {"reserva_recomendada": true},
+        "referencias": ["RIC 2"],
+        "estado": "requiere_revision_normativa",
+        "observacion": "Seleccionar según cantidad de protecciones y reserva."
+      },
+      {
+        "id": "BUCE-BAR-PE",
+        "nombre": "Barra de protección PE",
+        "tipo": "barra",
+        "categoria": "tableros",
+        "uso": ["puesta_tierra", "tablero"],
+        "simboloIEC": "SYM-BARRA-PE",
+        "usaEn": ["tablero", "unilineal", "presupuesto", "documentacion"],
+        "compatibilidad": {"sistemas": ["monofasico", "trifasico"]},
+        "referencias": ["RIC 2", "RIC 6"],
+        "estado": "requiere_revision_normativa",
+        "observacion": "Debe integrarse con conductor PE y sistema de puesta a tierra."
+      }
+    ],
+    "tierra": [
+      {
+        "id": "BUCE-TIE-ELECTRODO-CU",
+        "nombre": "Electrodo de puesta a tierra cobreado",
+        "tipo": "electrodo_tierra",
+        "categoria": "tierra",
+        "uso": ["sistema_puesta_tierra"],
+        "simboloIEC": "SYM-TIERRA",
+        "usaEn": ["tierra", "unilineal", "presupuesto", "documentacion", "aula_tecnica"],
+        "compatibilidad": {"requiere_medicion_terreno": true},
+        "referencias": ["RIC 6"],
+        "estado": "requiere_revision_normativa",
+        "observacion": "El diseño es preliminar; la resistencia final debe medirse en terreno."
+      }
+    ]
+  },
+  "simbolos": {
+    "SYM-MCB-1P": {"nombre": "Interruptor automático 1P", "tipo": "proteccion", "formato": "svg", "estado": "base"},
+    "SYM-RCD-2P": {"nombre": "Protector diferencial 2P", "tipo": "proteccion", "formato": "svg", "estado": "base"},
+    "SYM-RCD-4P": {"nombre": "Protector diferencial 4P", "tipo": "proteccion", "formato": "svg", "estado": "base"},
+    "SYM-CONDUCTOR": {"nombre": "Conductor", "tipo": "linea", "formato": "svg", "estado": "base"},
+    "SYM-CANALIZACION": {"nombre": "Canalización", "tipo": "material", "formato": "svg", "estado": "base"},
+    "SYM-TABLER0": {"nombre": "Tablero", "tipo": "envolvente", "formato": "svg", "estado": "base"},
+    "SYM-BARRA-PE": {"nombre": "Barra PE", "tipo": "barra", "formato": "svg", "estado": "base"},
+    "SYM-TIERRA": {"nombre": "Tierra", "tipo": "referencia", "formato": "svg", "estado": "base"}
+  }
+}
