@@ -533,3 +533,13 @@ body{background:var(--bg);}
 .progress-line{height:7px;background:#e5ecf4;border-radius:999px;overflow:hidden;margin:12px 0 6px}
 .progress-line span{display:block;height:100%;background:var(--accent);border-radius:999px}
 .documentation-center .notice-warn{margin:14px 0}
+
+
+/* Etapa 5.0 · Motor de Tableros Inteligente */
+.panel-workspace .panel-group-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.panel-group-card{border-left:4px solid var(--accent,#1456a0)}
+.panel-group-card h4{margin-top:0}.panel-group-card p{margin:.4rem 0}.panel-group-card small{display:block;margin-top:8px;color:#64748b}
+.panel-bars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}
+.panel-bars div{border:1px solid var(--line,#d9e2ec);border-radius:14px;background:#f8fbff;padding:12px;display:grid;gap:4px}
+.panel-bars strong{color:#102033}.panel-bars span{color:#33465f}.panel-bars small{color:#64748b;font-weight:700}
+@media(max-width:900px){.panel-workspace .panel-group-grid,.panel-bars{grid-template-columns:1fr}}

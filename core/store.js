@@ -1,5 +1,6 @@
 import { calculateLoadProject } from "./engineering/loadEngine.js";
 import { calculateElectricalProject } from "./engineering/electricalEngine.js";
+import { calculatePanelProject } from "./engineering/panelEngine.js";
 import { calculateDocumentationProject } from "./documentationEngine.js";
 const STORAGE_KEY = "giae_chile_v1_workspace";
 const LIBRARY_KEY = "giae_chile_v1_project_library";
@@ -47,6 +48,9 @@ function defaultProject(){
     conduits: [],
     engineeringMaterials: [],
     phaseBalance: null,
+    panelEngine: null,
+    panel: null,
+    panelMaterials: [],
     grounding: null,
     connection: null,
     unilineal: null,
@@ -208,6 +212,10 @@ export function recalculateProject(){
   p.conduits = electricalResult.conduits;
   p.engineeringMaterials = electricalResult.materials;
   p.phaseBalance = electricalResult.phaseBalance;
+  const panelResult = calculatePanelProject(p);
+  p.panelEngine = panelResult;
+  p.panel = panelResult;
+  p.panelMaterials = panelResult.materials || [];
   p.documentationEngine = calculateDocumentationProject(p);
   p.installedPowerKw = electricalResult.summary.installedKw || Number((totalW / 1000).toFixed(3));
   p.demandPowerKw = electricalResult.summary.demandKw;
