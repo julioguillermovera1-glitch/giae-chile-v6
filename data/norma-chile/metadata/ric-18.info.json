@@ -1,0 +1,17 @@
+{
+  "id": "RIC-18",
+  "titulo": "Presentación de Proyectos",
+  "estado": "vigente",
+  "versionGIAE": "0.9.0.009",
+  "uso": "Revisión documental y técnica previa de carpetas de proyectos eléctricos.",
+  "reglasIncluidas": 14,
+  "normasExcluidas": [
+    {
+      "id": "NCh4",
+      "estado": "obsoleta",
+      "validacionActiva": false,
+      "motivo": "Reemplazada por DS N°8 y RIC vigentes para validación de proyectos nuevos."
+    }
+  ],
+  "notas": "No se incorporan textos completos del RIC. Se modelan requisitos estructurados para validación técnica."
+}

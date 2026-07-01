@@ -1,0 +1,369 @@
+{
+  "schemaVersion": "0.9.0.009",
+  "documento": "RIC-18",
+  "titulo": "Presentación de Proyectos",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 18",
+  "politicaNormativa": {
+    "usarNCh4ComoValidacion": false,
+    "nota": "NCh4 queda excluida como norma activa de validación. Solo se aceptan DS N°8, RIC vigentes y normas citadas expresamente por los RIC vigentes."
+  },
+  "reglas": [
+    {
+      "id": "CHL-RIC18-DOC-001",
+      "documento": "RIC 18",
+      "numeral": "6.1.1",
+      "categoria": "documentacion",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Partes mínimas del proyecto",
+      "verifica": "Que el proyecto disponga de memoria explicativa, planos, informe de verificación inicial e informe de imágenes cuando corresponda.",
+      "validacion": {
+        "tipo": "documentos_requeridos",
+        "campos": [
+          "memoriaExplicativa",
+          "planos",
+          "informeVerificacionInicial",
+          "informeImagenes"
+        ]
+      },
+      "evidencia": {
+        "si_falta": "La carpeta no contiene todas las partes mínimas esperadas para presentación de proyecto."
+      },
+      "correccion": "Completar la carpeta técnica con los documentos faltantes antes de presentarla.",
+      "motores": [
+        "giae-inspector",
+        "documentacion",
+        "auditoria"
+      ]
+    },
+    {
+      "id": "CHL-RIC18-MEM-001",
+      "documento": "RIC 18",
+      "numeral": "6.2.1",
+      "categoria": "memoria",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Exigencia de memoria explicativa",
+      "verifica": "Si el proyecto requiere memoria explicativa según potencia, tipo de instalación, edificio, local de reunión, ambiente explosivo o empalme MT.",
+      "validacion": {
+        "tipo": "condicional_memoria",
+        "condiciones": [
+          "potenciaDeclaradaMayor10kW",
+          "edificioOConjuntoHabitacional",
+          "localReunionPersonas",
+          "ambienteExplosivo",
+          "empalmeMediaTension"
+        ]
+      },
+      "evidencia": {
+        "si_falta": "El proyecto cumple una condición que exige memoria explicativa, pero no se encontró el documento."
+      },
+      "correccion": "Agregar memoria explicativa con descripción, criterios de diseño y cálculos justificativos.",
+      "motores": [
+        "giae-inspector",
+        "documentacion",
+        "auditoria"
+      ]
+    },
+    {
+      "id": "CHL-RIC18-MEM-002",
+      "documento": "RIC 18",
+      "numeral": "6.2.2",
+      "categoria": "memoria",
+      "tipo": "obligatoria_si_memoria",
+      "criticidad": "media",
+      "titulo": "Descripción de la obra",
+      "verifica": "Que la memoria indique finalidad de la instalación, ubicación, funcionamiento y criterios de diseño.",
+      "validacion": {
+        "tipo": "contenido_memoria",
+        "campos": [
+          "finalidad",
+          "ubicacion",
+          "funcionamiento",
+          "criteriosDiseno"
+        ]
+      },
+      "evidencia": {
+        "si_falta": "La memoria explicativa no contiene descripción suficiente de la obra."
+      },
+      "correccion": "Completar la descripción de la obra con finalidad, ubicación, funcionamiento y criterios de diseño.",
+      "motores": [
+        "giae-inspector",
+        "documentacion"
+      ]
+    },
+    {
+      "id": "CHL-RIC18-CAL-001",
+      "documento": "RIC 18",
+      "numeral": "6.2.3",
+      "categoria": "calculos",
+      "tipo": "obligatoria_si_memoria",
+      "criticidad": "alta",
+      "titulo": "Cálculos justificativos",
+      "verifica": "Que existan memorias de cálculo con datos eléctricos necesarios para interpretar y ejecutar el proyecto.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "memoriasCalculo"
+      },
+      "evidencia": {
+        "si_falta": "No se encontró memoria de cálculo justificativa."
+      },
+      "correccion": "Incorporar memorias de cálculo con potencias, corrientes, cortocircuito, caída de tensión y demás antecedentes aplicables.",
+      "motores": [
+        "giae-inspector",
+        "engineering",
+        "auditoria"
+      ]
+    },
+    {
+      "id": "CHL-RIC18-PLAN-001",
+      "documento": "RIC 18",
+      "numeral": "6.1.1.2",
+      "categoria": "planos",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Planos del proyecto",
+      "verifica": "Que exista carpeta de planos eléctricos del proyecto.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "planos"
+      },
+      "evidencia": {
+        "si_falta": "No se encontraron planos del proyecto."
+      },
+      "correccion": "Agregar planos eléctricos actualizados y coherentes con memoria, cuadro de cargas y unilineal.",
+      "motores": [
+        "giae-inspector",
+        "documentacion",
+        "unilineal"
+      ]
+    },
+    {
+      "id": "CHL-RIC18-PLAN-002",
+      "documento": "RIC 18",
+      "numeral": "6.3.19",
+      "categoria": "planos",
+      "tipo": "formato",
+      "criticidad": "media",
+      "titulo": "Formato gráfico de planos",
+      "verifica": "Que dibujo, escritura y acotamientos de planos usen criterios de dibujo técnico aplicables citados por RIC 18.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "formatoPlanos"
+      },
+      "evidencia": {
+        "si_falta": "No hay evidencia de revisión formal de formato de planos."
+      },
+      "correccion": "Revisar legibilidad, acotamientos, rótulos y presentación de planos antes de entregar carpeta.",
+      "motores": [
+        "giae-inspector",
+        "documentacion"
+      ]
+    },
+    {
+      "id": "CHL-RIC18-CARG-001",
+      "documento": "RIC 18",
+      "numeral": "6.3.16",
+      "categoria": "cuadro_cargas",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Cuadro de cargas",
+      "verifica": "Que el proyecto incluya detalle de consumos en cuadro de cargas.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "cuadroCargas"
+      },
+      "evidencia": {
+        "si_falta": "No se encontró cuadro de cargas."
+      },
+      "correccion": "Generar o incorporar cuadro de cargas de alumbrado, fuerza o climatización según corresponda.",
+      "motores": [
+        "giae-inspector",
+        "engineering",
+        "documentacion"
+      ]
+    },
+    {
+      "id": "CHL-RIC18-CARG-002",
+      "documento": "RIC 18",
+      "numeral": "6.3.17",
+      "categoria": "cuadro_cargas",
+      "tipo": "condicional",
+      "criticidad": "media",
+      "titulo": "Cuadro resumen de cargas",
+      "verifica": "Si existe más de un cuadro de carga, debe existir cuadro resumen de cargas.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "numeroCuadrosCarga > 1",
+        "campo": "cuadroResumenCargas"
+      },
+      "evidencia": {
+        "si_falta": "Hay más de un cuadro de carga, pero no se encontró cuadro resumen."
+      },
+      "correccion": "Agregar cuadro resumen de cargas consolidado.",
+      "motores": [
+        "giae-inspector",
+        "engineering",
+        "documentacion"
+      ]
+    },
+    {
+      "id": "CHL-RIC18-ALI-001",
+      "documento": "RIC 18",
+      "numeral": "6.3.18",
+      "categoria": "alimentadores",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Resumen de alimentadores y subalimentadores",
+      "verifica": "Que el proyecto incluya resumen de alimentadores y subalimentadores.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "resumenAlimentadores"
+      },
+      "evidencia": {
+        "si_falta": "No se encontró resumen de alimentadores y subalimentadores."
+      },
+      "correccion": "Incorporar resumen con origen, destino, sección, canalización, longitud, protección y caída de tensión cuando aplique.",
+      "motores": [
+        "giae-inspector",
+        "engineering",
+        "documentacion"
+      ]
+    },
+    {
+      "id": "CHL-RIC18-TEC-001",
+      "documento": "RIC 18",
+      "numeral": "6.3.15.2",
+      "categoria": "conductores_canalizaciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Datos de conductores y canalizaciones",
+      "verifica": "Que se indiquen cantidad, longitud, disposición, sección y capacidad de transporte de conductores/canalizaciones de acometida, alimentadores y subalimentadores.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": [
+          "cantidad",
+          "longitud",
+          "disposicion",
+          "seccion",
+          "capacidadTransporte"
+        ]
+      },
+      "evidencia": {
+        "si_falta": "Faltan datos técnicos de conductores o canalizaciones."
+      },
+      "correccion": "Completar datos técnicos de conductores y canalizaciones en memoria, planos o resumen correspondiente.",
+      "motores": [
+        "giae-inspector",
+        "engineering",
+        "documentacion",
+        "presupuesto"
+      ]
+    },
+    {
+      "id": "CHL-RIC18-PROT-001",
+      "documento": "RIC 18",
+      "numeral": "6.3.15.3",
+      "categoria": "protecciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Datos de protecciones",
+      "verifica": "Que se especifiquen tipo de protección, corriente nominal, poder de ruptura, curva, marca/modelo y número de polos cuando corresponda.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": [
+          "tipoProteccion",
+          "corrienteNominal",
+          "poderRuptura",
+          "curva",
+          "polos"
+        ]
+      },
+      "evidencia": {
+        "si_falta": "Faltan datos técnicos de una o más protecciones."
+      },
+      "correccion": "Completar especificación de protecciones en cuadro de cargas, memoria y unilineal.",
+      "motores": [
+        "giae-inspector",
+        "tableros",
+        "unilineal",
+        "documentacion"
+      ]
+    },
+    {
+      "id": "CHL-RIC18-TIE-001",
+      "documento": "RIC 18",
+      "numeral": "6.3.15.6",
+      "categoria": "puesta_tierra",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Sistema de puesta a tierra",
+      "verifica": "Que se indique resistencia de puesta a tierra y características técnicas de sus elementos, incluyendo instrumento usado en medición cuando corresponda.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": [
+          "resistenciaPuestaTierra",
+          "elementosTierra",
+          "instrumentoMedicion"
+        ]
+      },
+      "evidencia": {
+        "si_falta": "Faltan datos de puesta a tierra o de la medición asociada."
+      },
+      "correccion": "Completar informe de puesta a tierra con resistencia medida, elementos, conductor PE, equipotencialidad e instrumento utilizado.",
+      "motores": [
+        "giae-inspector",
+        "tierra",
+        "documentacion",
+        "auditoria"
+      ]
+    },
+    {
+      "id": "CHL-RIC18-IMG-001",
+      "documento": "RIC 18",
+      "numeral": "6.4.1",
+      "categoria": "informe_imagenes",
+      "tipo": "condicional",
+      "criticidad": "media",
+      "titulo": "Informe de imágenes",
+      "verifica": "Si el proyecto requiere memoria explicativa, debe existir informe de imágenes.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "requiereMemoriaExplicativa === true",
+        "campo": "informeImagenes"
+      },
+      "evidencia": {
+        "si_falta": "El proyecto requiere memoria explicativa, pero no tiene informe de imágenes."
+      },
+      "correccion": "Agregar informe de imágenes con respaldo gráfico de la instalación ejecutada cuando corresponda.",
+      "motores": [
+        "giae-inspector",
+        "documentacion"
+      ]
+    },
+    {
+      "id": "CHL-RIC18-SI-001",
+      "documento": "RIC 18",
+      "numeral": "5.7",
+      "categoria": "unidades",
+      "tipo": "formal",
+      "criticidad": "baja",
+      "titulo": "Uso del Sistema Internacional",
+      "verifica": "Que el proyecto use unidades del Sistema Internacional.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "unidadesSI"
+      },
+      "evidencia": {
+        "si_falta": "No hay confirmación de uso consistente de unidades SI."
+      },
+      "correccion": "Normalizar unidades técnicas del proyecto al Sistema Internacional.",
+      "motores": [
+        "giae-inspector",
+        "documentacion",
+        "auditoria"
+      ]
+    }
+  ]
+}
