@@ -16,3 +16,8 @@ Esta versión incorpora el módulo de Auditoría Integral como control final del
 La auditoría no reemplaza la revisión profesional ni las mediciones de terreno. Solo evalúa datos disponibles, motores implementados y reglas cargadas en GIAE.
 
 Diseñado y desarrollado por Julio Guillermo Vera · © 2026 GIAE Chile. Todos los derechos reservados.
+
+
+## NORMA-CHILE v1.2
+
+Se agrega panel de cobertura RIC 1–19, relaciones DS8 → RIC → motores y diagnóstico normativo descargable.

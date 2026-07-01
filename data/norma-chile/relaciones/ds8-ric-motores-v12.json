@@ -1,0 +1,272 @@
+{
+  "version": "1.2.0",
+  "relaciones": [
+    {
+      "id": "REL-DS8-RIC01",
+      "marco_legal": "DS8",
+      "documento": "RIC01",
+      "materia": "Empalmes",
+      "motores": [
+        "Empalmes",
+        "Documentación",
+        "Auditoría"
+      ],
+      "estado": "base",
+      "reglas": 8,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC02",
+      "marco_legal": "DS8",
+      "documento": "RIC02",
+      "materia": "Tableros eléctricos",
+      "motores": [
+        "Tableros",
+        "Unilineal",
+        "Auditoría"
+      ],
+      "estado": "base",
+      "reglas": 12,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC03",
+      "marco_legal": "DS8",
+      "documento": "RIC03",
+      "materia": "Alimentadores y demanda de una instalación",
+      "motores": [
+        "Cargas",
+        "Ingeniería",
+        "Alimentadores",
+        "Auditoría"
+      ],
+      "estado": "avanzado",
+      "reglas": 58,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC04",
+      "marco_legal": "DS8",
+      "documento": "RIC04",
+      "materia": "Conductores, materiales y sistemas de canalización",
+      "motores": [
+        "Conductores",
+        "Canalizaciones",
+        "Presupuesto",
+        "Unilineal"
+      ],
+      "estado": "parcial",
+      "reglas": 39,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC05",
+      "marco_legal": "DS8",
+      "documento": "RIC05",
+      "materia": "Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+      "motores": [
+        "Protecciones",
+        "Seguridad",
+        "Tierra",
+        "Auditoría"
+      ],
+      "estado": "avanzado",
+      "reglas": 53,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC06",
+      "marco_legal": "DS8",
+      "documento": "RIC06",
+      "materia": "Puesta a tierra y enlace equipotencial",
+      "motores": [
+        "Puesta a Tierra",
+        "Protecciones",
+        "Auditoría"
+      ],
+      "estado": "parcial",
+      "reglas": 44,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC07",
+      "marco_legal": "DS8",
+      "documento": "RIC07",
+      "materia": "Instalaciones de equipos",
+      "motores": [
+        "Equipos",
+        "BUCE",
+        "Auditoría"
+      ],
+      "estado": "pendiente",
+      "reglas": 0,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC08",
+      "marco_legal": "DS8",
+      "documento": "RIC08",
+      "materia": "Sistemas de emergencia",
+      "motores": [
+        "Emergencia",
+        "Documentación",
+        "Auditoría"
+      ],
+      "estado": "pendiente",
+      "reglas": 0,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC09",
+      "marco_legal": "DS8",
+      "documento": "RIC09",
+      "materia": "Sistemas de autogeneración",
+      "motores": [
+        "Autogeneración",
+        "Empalmes",
+        "Protecciones"
+      ],
+      "estado": "pendiente",
+      "reglas": 0,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC10",
+      "marco_legal": "DS8",
+      "documento": "RIC10",
+      "materia": "Instalaciones de uso general",
+      "motores": [
+        "Uso General",
+        "Cargas",
+        "Circuitos"
+      ],
+      "estado": "pendiente",
+      "reglas": 0,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC11",
+      "marco_legal": "DS8",
+      "documento": "RIC11",
+      "materia": "Instalaciones especiales",
+      "motores": [
+        "Instalaciones Especiales",
+        "Seguridad",
+        "Documentación"
+      ],
+      "estado": "pendiente",
+      "reglas": 0,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC12",
+      "marco_legal": "DS8",
+      "documento": "RIC12",
+      "materia": "Instalaciones en ambientes explosivos",
+      "motores": [
+        "Ambientes Explosivos",
+        "Seguridad",
+        "Auditoría"
+      ],
+      "estado": "pendiente",
+      "reglas": 0,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC13",
+      "marco_legal": "DS8",
+      "documento": "RIC13",
+      "materia": "Subestaciones y salas eléctricas",
+      "motores": [
+        "Subestaciones",
+        "Salas Eléctricas",
+        "Tierra"
+      ],
+      "estado": "pendiente",
+      "reglas": 0,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC14",
+      "marco_legal": "DS8",
+      "documento": "RIC14",
+      "materia": "Exigencias de eficiencia energética para edificios",
+      "motores": [
+        "Eficiencia Energética",
+        "Edificios"
+      ],
+      "estado": "pendiente",
+      "reglas": 0,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC15",
+      "marco_legal": "DS8",
+      "documento": "RIC15",
+      "materia": "Infraestructura para la recarga de vehículos eléctricos",
+      "motores": [
+        "Electromovilidad",
+        "Empalmes",
+        "Protecciones"
+      ],
+      "estado": "pendiente",
+      "reglas": 0,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC16",
+      "marco_legal": "DS8",
+      "documento": "RIC16",
+      "materia": "Subsistemas de distribución",
+      "motores": [
+        "Subsistemas Distribución",
+        "Empalmes"
+      ],
+      "estado": "pendiente",
+      "reglas": 0,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC17",
+      "marco_legal": "DS8",
+      "documento": "RIC17",
+      "materia": "Operación y mantenimiento",
+      "motores": [
+        "Operación",
+        "Mantenimiento",
+        "Auditoría"
+      ],
+      "estado": "pendiente",
+      "reglas": 0,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC18",
+      "marco_legal": "DS8",
+      "documento": "RIC18",
+      "materia": "Presentación de proyectos",
+      "motores": [
+        "Presentación Proyectos",
+        "Documentación",
+        "Auditoría"
+      ],
+      "estado": "pendiente",
+      "reglas": 0,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    },
+    {
+      "id": "REL-DS8-RIC19",
+      "marco_legal": "DS8",
+      "documento": "RIC19",
+      "materia": "Puesta en servicio",
+      "motores": [
+        "Puesta en Servicio",
+        "Documentación",
+        "Ensayos"
+      ],
+      "estado": "pendiente",
+      "reglas": 0,
+      "uso_en_giae": "Validación normativa, auditoría y documentación según tipo de proyecto."
+    }
+  ]
+}

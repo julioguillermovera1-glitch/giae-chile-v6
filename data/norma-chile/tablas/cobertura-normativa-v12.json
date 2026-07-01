@@ -1,0 +1,365 @@
+{
+  "version": "1.2.0",
+  "fecha": "2026-07-01",
+  "documentos": [
+    {
+      "id": "DS8",
+      "documento": "Decreto Supremo N°8",
+      "materia": "Reglamento de seguridad de las instalaciones de consumo de energía eléctrica",
+      "categoria": "Marco legal",
+      "estado": "base legal",
+      "avance": "40%",
+      "reglas_estructuradas": 30,
+      "prioridad": "Alta",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Todos"
+      ],
+      "proximo_trabajo": "Ampliar validaciones y trazabilidad",
+      "estado_validacion": "reglas iniciales disponibles"
+    },
+    {
+      "id": "RIC01",
+      "documento": "RIC N°01",
+      "materia": "Empalmes",
+      "categoria": "Empalmes",
+      "estado": "base",
+      "avance": "15%",
+      "reglas_estructuradas": 8,
+      "prioridad": "Alta",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Empalmes",
+        "Documentación",
+        "Auditoría"
+      ],
+      "proximo_trabajo": "Ampliar validaciones y trazabilidad",
+      "estado_validacion": "reglas iniciales disponibles"
+    },
+    {
+      "id": "RIC02",
+      "documento": "RIC N°02",
+      "materia": "Tableros eléctricos",
+      "categoria": "Tableros eléctricos",
+      "estado": "base",
+      "avance": "15%",
+      "reglas_estructuradas": 12,
+      "prioridad": "Alta",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Tableros",
+        "Unilineal",
+        "Auditoría"
+      ],
+      "proximo_trabajo": "Ampliar validaciones y trazabilidad",
+      "estado_validacion": "reglas iniciales disponibles"
+    },
+    {
+      "id": "RIC03",
+      "documento": "RIC N°03",
+      "materia": "Alimentadores y demanda de una instalación",
+      "categoria": "Alimentadores y demanda",
+      "estado": "avanzado",
+      "avance": "60%",
+      "reglas_estructuradas": 58,
+      "prioridad": "Alta",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Cargas",
+        "Ingeniería",
+        "Alimentadores",
+        "Auditoría"
+      ],
+      "proximo_trabajo": "Ampliar validaciones y trazabilidad",
+      "estado_validacion": "reglas iniciales disponibles"
+    },
+    {
+      "id": "RIC04",
+      "documento": "RIC N°04",
+      "materia": "Conductores, materiales y sistemas de canalización",
+      "categoria": "Conductores y canalizaciones",
+      "estado": "parcial",
+      "avance": "35%",
+      "reglas_estructuradas": 39,
+      "prioridad": "Alta",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Conductores",
+        "Canalizaciones",
+        "Presupuesto",
+        "Unilineal"
+      ],
+      "proximo_trabajo": "Ampliar validaciones y trazabilidad",
+      "estado_validacion": "reglas iniciales disponibles"
+    },
+    {
+      "id": "RIC05",
+      "documento": "RIC N°05",
+      "materia": "Medidas de protección contra tensiones peligrosas y descargas eléctricas",
+      "categoria": "Protección contra tensiones peligrosas",
+      "estado": "avanzado",
+      "avance": "60%",
+      "reglas_estructuradas": 53,
+      "prioridad": "Alta",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Protecciones",
+        "Seguridad",
+        "Tierra",
+        "Auditoría"
+      ],
+      "proximo_trabajo": "Ampliar validaciones y trazabilidad",
+      "estado_validacion": "reglas iniciales disponibles"
+    },
+    {
+      "id": "RIC06",
+      "documento": "RIC N°06",
+      "materia": "Puesta a tierra y enlace equipotencial",
+      "categoria": "Puesta a tierra",
+      "estado": "parcial",
+      "avance": "35%",
+      "reglas_estructuradas": 44,
+      "prioridad": "Alta",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Puesta a Tierra",
+        "Protecciones",
+        "Auditoría"
+      ],
+      "proximo_trabajo": "Ampliar validaciones y trazabilidad",
+      "estado_validacion": "reglas iniciales disponibles"
+    },
+    {
+      "id": "RIC07",
+      "documento": "RIC N°07",
+      "materia": "Instalaciones de equipos",
+      "categoria": "Instalación de equipos",
+      "estado": "pendiente",
+      "avance": "0%",
+      "reglas_estructuradas": 0,
+      "prioridad": "Media",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Equipos",
+        "BUCE",
+        "Auditoría"
+      ],
+      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "estado_validacion": "requiere extracción normativa"
+    },
+    {
+      "id": "RIC08",
+      "documento": "RIC N°08",
+      "materia": "Sistemas de emergencia",
+      "categoria": "Sistemas de emergencia",
+      "estado": "pendiente",
+      "avance": "0%",
+      "reglas_estructuradas": 0,
+      "prioridad": "Media",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Emergencia",
+        "Documentación",
+        "Auditoría"
+      ],
+      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "estado_validacion": "requiere extracción normativa"
+    },
+    {
+      "id": "RIC09",
+      "documento": "RIC N°09",
+      "materia": "Sistemas de autogeneración",
+      "categoria": "Autogeneración",
+      "estado": "pendiente",
+      "avance": "0%",
+      "reglas_estructuradas": 0,
+      "prioridad": "Media",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Autogeneración",
+        "Empalmes",
+        "Protecciones"
+      ],
+      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "estado_validacion": "requiere extracción normativa"
+    },
+    {
+      "id": "RIC10",
+      "documento": "RIC N°10",
+      "materia": "Instalaciones de uso general",
+      "categoria": "Uso general",
+      "estado": "pendiente",
+      "avance": "0%",
+      "reglas_estructuradas": 0,
+      "prioridad": "Alta",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Uso General",
+        "Cargas",
+        "Circuitos"
+      ],
+      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "estado_validacion": "requiere extracción normativa"
+    },
+    {
+      "id": "RIC11",
+      "documento": "RIC N°11",
+      "materia": "Instalaciones especiales",
+      "categoria": "Instalaciones especiales",
+      "estado": "pendiente",
+      "avance": "0%",
+      "reglas_estructuradas": 0,
+      "prioridad": "Alta",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Instalaciones Especiales",
+        "Seguridad",
+        "Documentación"
+      ],
+      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "estado_validacion": "requiere extracción normativa"
+    },
+    {
+      "id": "RIC12",
+      "documento": "RIC N°12",
+      "materia": "Instalaciones en ambientes explosivos",
+      "categoria": "Ambientes explosivos",
+      "estado": "pendiente",
+      "avance": "0%",
+      "reglas_estructuradas": 0,
+      "prioridad": "Media",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Ambientes Explosivos",
+        "Seguridad",
+        "Auditoría"
+      ],
+      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "estado_validacion": "requiere extracción normativa"
+    },
+    {
+      "id": "RIC13",
+      "documento": "RIC N°13",
+      "materia": "Subestaciones y salas eléctricas",
+      "categoria": "Subestaciones y salas eléctricas",
+      "estado": "pendiente",
+      "avance": "0%",
+      "reglas_estructuradas": 0,
+      "prioridad": "Media",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Subestaciones",
+        "Salas Eléctricas",
+        "Tierra"
+      ],
+      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "estado_validacion": "requiere extracción normativa"
+    },
+    {
+      "id": "RIC14",
+      "documento": "RIC N°14",
+      "materia": "Exigencias de eficiencia energética para edificios",
+      "categoria": "Eficiencia energética edificios",
+      "estado": "pendiente",
+      "avance": "0%",
+      "reglas_estructuradas": 0,
+      "prioridad": "Media",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Eficiencia Energética",
+        "Edificios"
+      ],
+      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "estado_validacion": "requiere extracción normativa"
+    },
+    {
+      "id": "RIC15",
+      "documento": "RIC N°15",
+      "materia": "Infraestructura para la recarga de vehículos eléctricos",
+      "categoria": "Recarga vehículos eléctricos",
+      "estado": "pendiente",
+      "avance": "0%",
+      "reglas_estructuradas": 0,
+      "prioridad": "Media",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Electromovilidad",
+        "Empalmes",
+        "Protecciones"
+      ],
+      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "estado_validacion": "requiere extracción normativa"
+    },
+    {
+      "id": "RIC16",
+      "documento": "RIC N°16",
+      "materia": "Subsistemas de distribución",
+      "categoria": "Subsistemas de distribución",
+      "estado": "pendiente",
+      "avance": "0%",
+      "reglas_estructuradas": 0,
+      "prioridad": "Baja",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Subsistemas Distribución",
+        "Empalmes"
+      ],
+      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "estado_validacion": "requiere extracción normativa"
+    },
+    {
+      "id": "RIC17",
+      "documento": "RIC N°17",
+      "materia": "Operación y mantenimiento",
+      "categoria": "Operación y mantenimiento",
+      "estado": "pendiente",
+      "avance": "0%",
+      "reglas_estructuradas": 0,
+      "prioridad": "Media",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Operación",
+        "Mantenimiento",
+        "Auditoría"
+      ],
+      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "estado_validacion": "requiere extracción normativa"
+    },
+    {
+      "id": "RIC18",
+      "documento": "RIC N°18",
+      "materia": "Presentación de proyectos",
+      "categoria": "Presentación de proyectos",
+      "estado": "pendiente",
+      "avance": "0%",
+      "reglas_estructuradas": 0,
+      "prioridad": "Alta",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Presentación Proyectos",
+        "Documentación",
+        "Auditoría"
+      ],
+      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "estado_validacion": "requiere extracción normativa"
+    },
+    {
+      "id": "RIC19",
+      "documento": "RIC N°19",
+      "materia": "Puesta en servicio",
+      "categoria": "Puesta en servicio",
+      "estado": "pendiente",
+      "avance": "0%",
+      "reglas_estructuradas": 0,
+      "prioridad": "Alta",
+      "relacion_ds8": "Marco reglamentario Decreto Supremo N°8",
+      "motores": [
+        "Puesta en Servicio",
+        "Documentación",
+        "Ensayos"
+      ],
+      "proximo_trabajo": "Extraer reglas técnicas específicas",
+      "estado_validacion": "requiere extracción normativa"
+    }
+  ]
+}
