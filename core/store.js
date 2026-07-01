@@ -5,6 +5,7 @@ import { calculateConnectionProject } from "./engineering/connectionEngine.js";
 import { calculateDocumentationProject } from "./documentationEngine.js";
 import { runProjectEngine, createProjectRevision } from "./projectEngine.js";
 import { calculateCommercialProject } from "./commercial/budgetEngine.js";
+import { runIntegralAudit } from "./audit/integralAuditEngine.js";
 const STORAGE_KEY = "giae_chile_v1_workspace";
 const LIBRARY_KEY = "giae_chile_v1_project_library";
 
@@ -62,6 +63,7 @@ function defaultProject(){
     budget: [],
     commercialEngine: null,
     commercialSettings: null,
+    integralAudit: null,
     audit: [],
     checklist: [],
     history: [
@@ -240,6 +242,8 @@ export function recalculateProject(){
   };
   p.commercialEngine = calculateCommercialProject(p);
   p.budget = p.commercialEngine?.materials || [];
+  p.integralAudit = runIntegralAudit(p);
+  p.audit = p.integralAudit?.issues || [];
   p.gpe = runProjectEngine(p);
   return p;
 }

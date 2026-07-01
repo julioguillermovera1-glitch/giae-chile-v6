@@ -1,24 +1,18 @@
-# GIAE Chile v1.0 · Etapa 7.1
+# GIAE Chile v1.0 - Etapa 10.0
 
-## Motor Unilineal Profesional
+## Auditoría Integral del Proyecto
 
-Esta entrega mejora el módulo Unilineal para trabajar como un motor gráfico vivo.
+Esta versión incorpora el módulo de Auditoría Integral como control final del proyecto antes de exportar documentación o presupuesto.
 
-Incluye:
-- Unilineal generado desde Proyecto Activo.
-- Lectura de cargas, Motor de Tableros y BUCE.
-- Automático general centrado respecto al conjunto de circuitos.
-- Línea principal ajustada al último circuito.
-- Separación automática para circuitos pequeños o grandes.
-- Símbolos eléctricos vectoriales reutilizables.
-- Descarga SVG.
-- Descarga PNG.
-- Impresión ajustada a hoja.
-- Trazabilidad técnica.
+### Incluye
+- Revisión cruzada de Proyecto Activo, cargas, ingeniería, balance, tableros, puesta a tierra, empalme, unilineal, documentación y presupuesto.
+- Puntaje general de preparación.
+- Estado por áreas.
+- Observaciones críticas, altas, medias y bajas.
+- Próximas acciones recomendadas.
+- Exportación de informe JSON y TXT.
 
-Nota: el plano es preliminar y debe ser revisado por instalador autorizado antes de declarar, imprimir o entregar documentación oficial.
+### Principio técnico
+La auditoría no reemplaza la revisión profesional ni las mediciones de terreno. Solo evalúa datos disponibles, motores implementados y reglas cargadas en GIAE.
 
-
-## Etapa 8.0 — Motor de Empalmes RIC 1
-
-Se incorpora el Motor de Empalmes conectado al Proyecto Activo, con tabla normalizada inicial RIC 1, datos para documentación SEC y materiales para presupuesto.
+Diseñado y desarrollado por Julio Guillermo Vera · © 2026 GIAE Chile. Todos los derechos reservados.
