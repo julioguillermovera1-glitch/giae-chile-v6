@@ -1,0 +1,22 @@
+{
+  "source": "NORMA-CHILE",
+  "document": "RIC19",
+  "version": "seed-0.9.0.008",
+  "rules": [
+    {
+      "id": "CHL-RIC19-PES-001",
+      "document": "RIC19",
+      "chapter": "1-2",
+      "clause": "objetivo-alcance",
+      "category": "puesta_servicio",
+      "type": "required_evidence",
+      "severity": "critical",
+      "status": "active",
+      "requiredEvidence": ["ensayos", "informePuestaServicio"],
+      "engines": ["documentacion", "auditoria", "giae-inspector"],
+      "explanation": "La puesta en servicio requiere antecedentes de inspección, ensayos y registros de verificación.",
+      "correction": "Agregar checklist de ensayos, informe de puesta en servicio y evidencias de verificación antes de presentar.",
+      "reference": "RIC 19, procedimiento de puesta en servicio"
+    }
+  ]
+}

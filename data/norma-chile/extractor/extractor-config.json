@@ -1,0 +1,12 @@
+{
+  "name": "NORMA-CHILE Extractor",
+  "version": "0.9.0.008",
+  "policy": {
+    "copyFullNormText": false,
+    "requireReference": true,
+    "excludeObsoleteStandards": true,
+    "excludedActiveValidation": ["NCh4"]
+  },
+  "activeSources": ["DS8", "RIC01", "RIC02", "RIC03", "RIC04", "RIC05", "RIC06", "RIC07", "RIC08", "RIC09", "RIC10", "RIC11", "RIC12", "RIC13", "RIC14", "RIC15", "RIC16", "RIC17", "RIC18", "RIC19"],
+  "nextPriority": ["RIC18", "RIC19", "RIC10"]
+}

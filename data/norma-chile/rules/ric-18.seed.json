@@ -1,0 +1,22 @@
+{
+  "source": "NORMA-CHILE",
+  "document": "RIC18",
+  "version": "seed-0.9.0.008",
+  "rules": [
+    {
+      "id": "CHL-RIC18-DOC-001",
+      "document": "RIC18",
+      "chapter": "5",
+      "clause": "5.1",
+      "category": "documentacion",
+      "type": "required_evidence",
+      "severity": "critical",
+      "status": "active",
+      "requiredEvidence": ["memoriaTecnica", "planos"],
+      "engines": ["documentacion", "auditoria", "giae-inspector"],
+      "explanation": "El proyecto debe contar con antecedentes técnicos suficientes para describir la instalación y permitir su revisión.",
+      "correction": "Incorporar memoria técnica y planos coherentes con el proyecto activo antes de presentar la carpeta técnica.",
+      "reference": "RIC 18, exigencias generales para proyectos"
+    }
+  ]
+}
