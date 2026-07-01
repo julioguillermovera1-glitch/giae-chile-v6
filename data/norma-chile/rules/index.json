@@ -1,0 +1,107 @@
+{
+  "schema": "giae.norma-chile.rules-index.v1",
+  "sprint": "0.9.0.004",
+  "estado": "pendiente_extraccion",
+  "documentos": [
+    {
+      "id": "DS8",
+      "rules_file": "data/norma-chile/rules/ds8.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC01",
+      "rules_file": "data/norma-chile/rules/ric01.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC02",
+      "rules_file": "data/norma-chile/rules/ric02.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC03",
+      "rules_file": "data/norma-chile/rules/ric03.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC04",
+      "rules_file": "data/norma-chile/rules/ric04.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC05",
+      "rules_file": "data/norma-chile/rules/ric05.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC06",
+      "rules_file": "data/norma-chile/rules/ric06.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC07",
+      "rules_file": "data/norma-chile/rules/ric07.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC08",
+      "rules_file": "data/norma-chile/rules/ric08.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC09",
+      "rules_file": "data/norma-chile/rules/ric09.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC10",
+      "rules_file": "data/norma-chile/rules/ric10.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC11",
+      "rules_file": "data/norma-chile/rules/ric11.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC12",
+      "rules_file": "data/norma-chile/rules/ric12.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC13",
+      "rules_file": "data/norma-chile/rules/ric13.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC14",
+      "rules_file": "data/norma-chile/rules/ric14.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC15",
+      "rules_file": "data/norma-chile/rules/ric15.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC16",
+      "rules_file": "data/norma-chile/rules/ric16.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC17",
+      "rules_file": "data/norma-chile/rules/ric17.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC18",
+      "rules_file": "data/norma-chile/rules/ric18.json",
+      "estado": "pendiente"
+    },
+    {
+      "id": "RIC19",
+      "rules_file": "data/norma-chile/rules/ric19.json",
+      "estado": "pendiente"
+    }
+  ]
+}
