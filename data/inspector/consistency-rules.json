@@ -1,0 +1,96 @@
+{
+  "version": "0.9.0.012",
+  "name": "Reglas de Consistencia Documental GIAE",
+  "policy": {
+    "description": "Estas reglas comparan información generada por motores GIAE y documentos internos. No reemplazan revisión SEC ni generan formularios oficiales.",
+    "activeNormativeBase": ["DS8", "RIC 1-19"],
+    "excludedActiveNorms": ["NCh4"]
+  },
+  "rules": [
+    {
+      "id": "GIAE-CONS-CIR-001",
+      "title": "Circuitos en unilineal deben coincidir con cuadro de cargas",
+      "category": "circuitos",
+      "severity": "critical",
+      "leftPath": "unilineal.circuitos",
+      "rightPath": "cuadroCarga.circuitos",
+      "leftLabel": "Circuitos en unilineal",
+      "rightLabel": "Circuitos en cuadro de cargas",
+      "operator": "sameLength",
+      "failureMessage": "La cantidad de circuitos del unilineal no coincide con el cuadro de cargas.",
+      "correction": "Regenerar el unilineal desde Proyecto Activo o actualizar el cuadro de cargas para que ambos coincidan.",
+      "reference": "RIC 18 · Consistencia de antecedentes de proyecto"
+    },
+    {
+      "id": "GIAE-CONS-POT-001",
+      "title": "Potencia de memoria debe coincidir con potencia calculada",
+      "category": "potencia",
+      "severity": "major",
+      "leftPath": "memoria.potenciaInstaladaW",
+      "rightPath": "ingenieria.potenciaInstaladaW",
+      "leftLabel": "Potencia en memoria",
+      "rightLabel": "Potencia calculada",
+      "operator": "numberEquals",
+      "tolerance": 1,
+      "failureMessage": "La potencia indicada en memoria no coincide con la potencia calculada por el motor de ingeniería.",
+      "correction": "Actualizar la memoria técnica usando los datos del Motor de Ingeniería.",
+      "reference": "RIC 18 · Memoria y cálculos del proyecto"
+    },
+    {
+      "id": "GIAE-CONS-EMP-001",
+      "title": "Tipo de empalme debe coincidir con tipo de proyecto",
+      "category": "empalme",
+      "severity": "critical",
+      "leftPath": "empalme.tipoSistema",
+      "rightPath": "proyecto.tipoSistema",
+      "leftLabel": "Tipo de empalme",
+      "rightLabel": "Tipo de proyecto",
+      "operator": "equals",
+      "failureMessage": "El tipo de empalme no coincide con el tipo de sistema definido para el proyecto.",
+      "correction": "Revisar si el proyecto corresponde a monofásico o trifásico y recalcular el empalme.",
+      "reference": "RIC 1 + RIC 18 · Coherencia de empalme y proyecto"
+    },
+    {
+      "id": "GIAE-CONS-TIE-001",
+      "title": "Datos de tierra deben estar presentes en memoria y módulo de tierra",
+      "category": "tierra",
+      "severity": "major",
+      "leftPath": "memoria.tierra",
+      "rightPath": "tierra",
+      "leftLabel": "Tierra en memoria",
+      "rightLabel": "Módulo de tierra",
+      "operator": "notEmptyBoth",
+      "failureMessage": "Faltan datos de puesta a tierra en memoria técnica o en el módulo de tierra.",
+      "correction": "Completar el informe de tierra y actualizar la memoria técnica con los mismos antecedentes.",
+      "reference": "RIC 6 + RIC 18 · Puesta a tierra y antecedentes del proyecto"
+    },
+    {
+      "id": "GIAE-CONS-TAB-001",
+      "title": "Circuitos del tablero deben coincidir con cuadro de cargas",
+      "category": "tablero",
+      "severity": "major",
+      "leftPath": "tablero.circuitos",
+      "rightPath": "cuadroCarga.circuitos",
+      "leftLabel": "Circuitos en tablero",
+      "rightLabel": "Circuitos en cuadro de cargas",
+      "operator": "sameLength",
+      "failureMessage": "El tablero no contiene la misma cantidad de circuitos que el cuadro de cargas.",
+      "correction": "Regenerar tablero desde Proyecto Activo y volver a ejecutar el Inspector Técnico.",
+      "reference": "RIC 2 + RIC 18 · Coherencia de tablero y antecedentes"
+    },
+    {
+      "id": "GIAE-CONS-PRE-001",
+      "title": "Presupuesto debe contener materiales técnicos del proyecto",
+      "category": "presupuesto",
+      "severity": "minor",
+      "leftPath": "presupuesto.materiales",
+      "rightPath": "materiales.tecnicos",
+      "leftLabel": "Materiales en presupuesto",
+      "rightLabel": "Materiales técnicos",
+      "operator": "notEmptyBoth",
+      "failureMessage": "El presupuesto no contiene materiales o no existe lista técnica para comparar.",
+      "correction": "Regenerar presupuesto desde BUCE y motores técnicos antes de entregar cotización.",
+      "reference": "GIAE · Consistencia comercial interna"
+    }
+  ]
+}
