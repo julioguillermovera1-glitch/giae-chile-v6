@@ -1,34 +1,19 @@
-# GIAE Chile v1.0 — Etapa 7.0 Base
+# GIAE Chile v1.0 · Etapa 7.1
 
-## BUCE · Biblioteca Universal de Componentes Eléctricos
+## Motor Unilineal Profesional
 
-Esta entrega agrega el catálogo central de objetos eléctricos de GIAE.
+Esta entrega mejora el módulo Unilineal para trabajar como un motor gráfico vivo.
 
-La BUCE no reemplaza al Motor Normativo. Su función es concentrar los componentes eléctricos reutilizables por los motores de:
+Incluye:
+- Unilineal generado desde Proyecto Activo.
+- Lectura de cargas, Motor de Tableros y BUCE.
+- Automático general centrado respecto al conjunto de circuitos.
+- Línea principal ajustada al último circuito.
+- Separación automática para circuitos pequeños o grandes.
+- Símbolos eléctricos vectoriales reutilizables.
+- Descarga SVG.
+- Descarga PNG.
+- Impresión ajustada a hoja.
+- Trazabilidad técnica.
 
-- Tableros
-- Unilineal
-- Presupuesto
-- Documentación
-- Auditoría
-- Aula Técnica
-
-## Archivos agregados
-
-- `data/componentes-electricos.json`
-- `core/componentLibrary.js`
-- `modules/componentes/componentes.js`
-
-## Acceso
-
-Perfil Administrador:
-
-Administración → BUCE · Componentes eléctricos
-
-## Regla técnica
-
-Ningún motor debe crear componentes eléctricos duplicados por su cuenta. Debe consultar la BUCE y, cuando un componente no tenga validación normativa suficiente, tratarlo como preliminar o como `requiere_revision_normativa`.
-
-## Autoría
-
-Diseñado y desarrollado por Julio Guillermo Vera · © 2026 GIAE Chile. Todos los derechos reservados.
+Nota: el plano es preliminar y debe ser revisado por instalador autorizado antes de declarar, imprimir o entregar documentación oficial.
