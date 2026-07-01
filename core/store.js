@@ -1,6 +1,7 @@
 import { calculateLoadProject } from "./engineering/loadEngine.js";
 import { calculateElectricalProject } from "./engineering/electricalEngine.js";
 import { calculatePanelProject } from "./engineering/panelEngine.js";
+import { calculateConnectionProject } from "./engineering/connectionEngine.js";
 import { calculateDocumentationProject } from "./documentationEngine.js";
 import { runProjectEngine, createProjectRevision } from "./projectEngine.js";
 const STORAGE_KEY = "giae_chile_v1_workspace";

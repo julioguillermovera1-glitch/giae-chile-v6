@@ -17,3 +17,8 @@ Incluye:
 - Trazabilidad técnica.
 
 Nota: el plano es preliminar y debe ser revisado por instalador autorizado antes de declarar, imprimir o entregar documentación oficial.
+
+
+## Etapa 8.0 — Motor de Empalmes RIC 1
+
+Se incorpora el Motor de Empalmes conectado al Proyecto Activo, con tabla normalizada inicial RIC 1, datos para documentación SEC y materiales para presupuesto.
