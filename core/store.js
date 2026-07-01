@@ -1,5 +1,6 @@
 import { calculateLoadProject } from "./engineering/loadEngine.js";
 import { calculateElectricalProject } from "./engineering/electricalEngine.js";
+import { calculateDocumentationProject } from "./documentationEngine.js";
 const STORAGE_KEY = "giae_chile_v1_workspace";
 const LIBRARY_KEY = "giae_chile_v1_project_library";
 
@@ -50,6 +51,7 @@ function defaultProject(){
     connection: null,
     unilineal: null,
     documentation: [],
+    documentationEngine: null,
     budget: [],
     audit: [],
     checklist: [],
@@ -176,7 +178,7 @@ export function calculateChecklist(project = state.currentProject){
   const hasLoadBoard = Array.isArray(project.loadBoard) ? project.loadBoard.length > 0 : hasLoads;
   const hasGrounding = Boolean(project.grounding);
   const hasUnilineal = Boolean(project.unilineal || hasLoads);
-  const hasDocs = Array.isArray(project.documentation) && project.documentation.length > 0;
+  const hasDocs = (Array.isArray(project.documentation) && project.documentation.length > 0) || Boolean(project.documentationEngine?.summary?.active);
   const hasAudit = Array.isArray(project.audit) && project.audit.length > 0;
   const hasBudget = Array.isArray(project.budget) && project.budget.length > 0;
   return [
@@ -206,6 +208,7 @@ export function recalculateProject(){
   p.conduits = electricalResult.conduits;
   p.engineeringMaterials = electricalResult.materials;
   p.phaseBalance = electricalResult.phaseBalance;
+  p.documentationEngine = calculateDocumentationProject(p);
   p.installedPowerKw = electricalResult.summary.installedKw || Number((totalW / 1000).toFixed(3));
   p.demandPowerKw = electricalResult.summary.demandKw;
   p.currentA = electricalResult.summary.projectCurrentA;

@@ -515,3 +515,21 @@ body{background:var(--bg);}
 .phase-card h4{margin-top:0}.phase-power{display:flex;justify-content:space-between;gap:10px;align-items:baseline}.phase-power strong{font-size:1.35rem}.phase-power span{font-weight:700;color:var(--muted,#5d6b7a)}
 .mini-list{display:grid;gap:6px;margin-top:10px}.mini-list span{font-size:.85rem;background:rgba(15,33,51,.05);border:1px solid rgba(15,33,51,.08);border-radius:8px;padding:6px 8px}
 @media(max-width:900px){.phase-grid{grid-template-columns:1fr}}
+
+
+/* Etapa 4.0.4 · Centro de Documentación SEC */
+.document-grid{align-items:stretch}
+.document-card{border-left:4px solid var(--line)}
+.document-card.ok{border-left-color:#1b7f4c}
+.document-card.warn{border-left-color:#b7791f}
+.document-card.danger{border-left-color:#b83232}
+.document-card.muted{border-left-color:#8a96a8}
+.document-card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.doc-status{font-size:12px;border-radius:999px;padding:6px 10px;background:#eef3f8;color:#102033;font-weight:700;white-space:nowrap}
+.doc-status.ok{background:#e3f7ea;color:#145a32}
+.doc-status.warn{background:#fff4d9;color:#7a4b00}
+.doc-status.danger{background:#ffe3e3;color:#8a1f1f}
+.doc-status.muted{background:#edf0f4;color:#556070}
+.progress-line{height:7px;background:#e5ecf4;border-radius:999px;overflow:hidden;margin:12px 0 6px}
+.progress-line span{display:block;height:100%;background:var(--accent);border-radius:999px}
+.documentation-center .notice-warn{margin:14px 0}

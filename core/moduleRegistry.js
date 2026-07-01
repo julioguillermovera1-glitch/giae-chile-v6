@@ -22,7 +22,7 @@ export const modules = [
   { id: "unilineal", label: "Unilineal", group: "ingenieria", path: "../modules/unilineal/unilineal.js", profiles: ["independiente", "empresa", "estudiante"] },
   { id: "auditoria", label: "Auditoría", group: "ingenieria", path: "../modules/auditoria/auditoria.js", profiles: ["independiente", "empresa", "estudiante"] },
 
-  { id: "documentacion", label: "Documentación", group: "documentacion", path: "../modules/documentacion/documentacion.js", profiles: ["independiente", "empresa"] },
+  { id: "documentacion", label: "Centro de Documentación SEC", group: "documentacion", path: "../modules/documentacion/documentacion.js", profiles: ["independiente", "empresa"] },
   { id: "presupuesto", label: "Presupuesto", group: "documentacion", path: "../modules/presupuesto/presupuesto.js", profiles: ["independiente", "empresa"] },
 
   { id: "educacion", label: "Aula Técnica", group: "educacion", path: "../modules/educacion/educacion.js", profiles: ["aula", "estudiante", "independiente", "empresa"] },

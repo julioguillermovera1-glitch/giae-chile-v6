@@ -90,3 +90,8 @@ Regla central: cada cálculo debe existir una sola vez y quedar almacenado en el
 ## Etapa 4.0.3
 
 Se agrega Motor de Balance de Fases y Demanda, con análisis R/S/T, desbalance, recomendaciones preliminares y asignación manual/automática de fases.
+
+
+## Etapa 4.0.4 - Centro de Documentación SEC
+
+Se reemplaza el enfoque limitado a TE1 por un Motor Documental preparado para distintos documentos eléctricos. TE1 queda activo inicialmente; TE2, TE3, TE3.4, TE4 y TE6 quedan registrados como pendientes de implementación normativa.
