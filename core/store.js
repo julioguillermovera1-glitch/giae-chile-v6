@@ -4,6 +4,7 @@ import { calculatePanelProject } from "./engineering/panelEngine.js";
 import { calculateConnectionProject } from "./engineering/connectionEngine.js";
 import { calculateDocumentationProject } from "./documentationEngine.js";
 import { runProjectEngine, createProjectRevision } from "./projectEngine.js";
+import { calculateCommercialProject } from "./commercial/budgetEngine.js";
 const STORAGE_KEY = "giae_chile_v1_workspace";
 const LIBRARY_KEY = "giae_chile_v1_project_library";
 
@@ -59,6 +60,8 @@ function defaultProject(){
     documentation: [],
     documentationEngine: null,
     budget: [],
+    commercialEngine: null,
+    commercialSettings: null,
     audit: [],
     checklist: [],
     history: [
@@ -235,6 +238,8 @@ export function recalculateProject(){
     documentation: Math.round((p.checklist.filter(item => ["documentacion", "auditoria", "presupuesto"].includes(item.id) && item.done).length / 3) * 100),
     normative: criticalEngine || (Array.isArray(p.audit) && p.audit.some(item => item.level === "critico")) ? "Con observaciones" : "Sin observaciones críticas"
   };
+  p.commercialEngine = calculateCommercialProject(p);
+  p.budget = p.commercialEngine?.materials || [];
   p.gpe = runProjectEngine(p);
   return p;
 }
