@@ -1,5 +1,6 @@
 const ENGINE_VERSION = "GPE-01.0";
 import calculateGroundingProject from "./engineering/groundingEngine.js";
+
 function stamp(){
   return new Date().toLocaleString("es-CL");
 }
