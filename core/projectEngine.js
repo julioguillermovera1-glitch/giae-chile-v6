@@ -1,5 +1,5 @@
 const ENGINE_VERSION = "GPE-01.0";
-
+import calculateGroundingProject from "../engineering/groundingEngine.js";
 function stamp(){
   return new Date().toLocaleString("es-CL");
 }
@@ -125,6 +125,7 @@ function buildNextActions(status, issues){
 
 export function runProjectEngine(project){
   const previous = project.gpe || {};
+  project.grounding = calculateGroundingProject(project);
   const status = buildModuleStatus(project);
   const issues = buildIssues(project, status);
   const dependencies = buildDependencies(project);
