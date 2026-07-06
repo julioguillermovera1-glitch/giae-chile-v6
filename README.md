@@ -96,6 +96,24 @@ Comando de revision:
 
 Esta base clasifica documentos, detecta senales y faltantes, pero aun no hace OCR ni certifica cumplimiento final.
 
+
+## Fase 4 nube, usuarios y licencias
+
+La Fase 4 inicia la base cloud-ready de GIAE:
+
+- core/cloud/cloudWorkspaceEngine.js
+- modules/nube/nube.js
+- data/cloud/cloud-contract.json
+- data/cloud/d1-schema.json
+- data/cloud/r2-assets.json
+- docs/FASE_4_NUBE_USUARIOS_LICENCIAS_GIAE.md
+- tools/phase4-cloud-readiness-check.mjs
+
+Comando de revision:
+
+    node tools/phase4-cloud-readiness-check.mjs
+
+Esta base prepara contratos, roles, licencias y paquetes de sincronizacion. Aun no autentica usuarios reales ni escribe en D1/R2.
 ## Decreto Supremo N8
 
 El PDF local indicado por el usuario quedo registrado como fuente de ingesta en:

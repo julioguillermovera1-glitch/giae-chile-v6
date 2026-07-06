@@ -1,6 +1,6 @@
 {
   "schema": "giae.diagnostico.fase1-publicable.v1",
-  "generatedAt": "2026-07-06T21:05:24.220Z",
+  "generatedAt": "2026-07-06T21:23:36.484Z",
   "score": 100,
   "status": "apto_para_prueba_manual",
   "root": "C:\\Users\\julio\\Documents\\GitHub\\giae-chile-v6",
@@ -45,7 +45,7 @@
       "name": "Rutas de modulos existentes",
       "ok": true,
       "level": "critico",
-      "detail": "22 modulo(s) revisados",
+      "detail": "23 modulo(s) revisados",
       "evidence": []
     },
     {
@@ -53,7 +53,7 @@
       "name": "Modulos exportan render",
       "ok": true,
       "level": "critico",
-      "detail": "22 modulo(s) con contrato de render",
+      "detail": "23 modulo(s) con contrato de render",
       "evidence": []
     },
     {
@@ -61,7 +61,7 @@
       "name": "Sintaxis JavaScript valida",
       "ok": true,
       "level": "critico",
-      "detail": "92 archivo(s) JS/MJS revisados",
+      "detail": "95 archivo(s) JS/MJS revisados",
       "evidence": []
     },
     {
@@ -69,7 +69,7 @@
       "name": "JSON y JSONC validos",
       "ok": true,
       "level": "critico",
-      "detail": "110 archivo(s) de datos revisados",
+      "detail": "115 archivo(s) de datos revisados",
       "evidence": []
     },
     {

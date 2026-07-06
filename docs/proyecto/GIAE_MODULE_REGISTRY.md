@@ -399,4 +399,27 @@ Estrategica
 
 ---
 
+## Nube y Licencias
+
+Estado:
+Iniciado en Fase 4
+
+Responsabilidad:
+Preparar GIAE para Cloudflare Workers, D1, R2, usuarios, licencias, permisos y sincronizacion de proyectos sin perder el modo local ni el respaldo .giae.
+
+Archivos:
+
+- core/cloud/cloudWorkspaceEngine.js
+- modules/nube/nube.js
+- data/cloud/cloud-contract.json
+- data/cloud/d1-schema.json
+- data/cloud/r2-assets.json
+
+Restriccion:
+No guardar tokens, claves ni secretos en cliente. La autenticacion real debe ocurrir en Worker.
+
+Prioridad:
+Media Alta
+
+---
 Fin del documento.

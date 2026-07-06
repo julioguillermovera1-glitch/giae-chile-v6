@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-07-06 - Inicio Fase 4 nube, usuarios y licencias
+
+- Se agrega motor cloud-ready propio para Workers, D1, R2, licencias, roles y cola sync.
+- Se agrega modulo Nube y licencias al menu Proyecto.
+- Se agregan contratos de datos para Cloudflare y modelo D1/R2.
+- Se mantiene modo local y respaldo .giae como formato portable.
+- Se agrega diagnostico Fase 4 cloud.
 ## 2026-07-06 - Inicio Fase 3 inteligencia documental
 
 - Se agrega motor propio de inteligencia documental.

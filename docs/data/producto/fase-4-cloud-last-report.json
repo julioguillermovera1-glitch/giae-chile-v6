@@ -1,0 +1,265 @@
+{
+  "schema": "giae.diagnostico.fase4-cloud.v1",
+  "generatedAt": "2026-07-06T21:23:22.544Z",
+  "score": 100,
+  "status": "apto_para_prueba_manual",
+  "root": "C:\\Users\\julio\\Documents\\GitHub\\giae-chile-v6",
+  "summary": {
+    "total": 13,
+    "ok": 13,
+    "failed": 0,
+    "criticalFails": 0,
+    "highFails": 0
+  },
+  "checks": [
+    {
+      "id": "engine-existe",
+      "name": "Motor cloud existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "core/cloud/cloudWorkspaceEngine.js",
+      "evidence": []
+    },
+    {
+      "id": "modulo-existe",
+      "name": "Modulo nube existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "modules/nube/nube.js",
+      "evidence": []
+    },
+    {
+      "id": "datos-cloud",
+      "name": "Datos cloud existen",
+      "ok": true,
+      "level": "critico",
+      "detail": "data/cloud",
+      "evidence": []
+    },
+    {
+      "id": "registro-menu",
+      "name": "Modulo registrado en menu",
+      "ok": true,
+      "level": "critico",
+      "detail": "core/moduleRegistry.js",
+      "evidence": []
+    },
+    {
+      "id": "admin-integrado",
+      "name": "Administracion reconoce Fase 4",
+      "ok": true,
+      "level": "alto",
+      "detail": "Panel administrador",
+      "evidence": []
+    },
+    {
+      "id": "sw-cache",
+      "name": "PWA cachea Fase 4",
+      "ok": true,
+      "level": "alto",
+      "detail": "sw.js",
+      "evidence": []
+    },
+    {
+      "id": "js-valido",
+      "name": "JavaScript cloud valido",
+      "ok": true,
+      "level": "critico",
+      "detail": "engine + modulo",
+      "evidence": []
+    },
+    {
+      "id": "engine-readiness",
+      "name": "Motor genera readiness y cola sync",
+      "ok": true,
+      "level": "critico",
+      "detail": "listo_para_worker / 100%",
+      "evidence": [
+        {
+          "schema": "giae.cloud.readiness.v1",
+          "generatedAt": "2026-07-06T21:23:22.539Z",
+          "score": 100,
+          "status": "listo_para_worker",
+          "license": {
+            "status": "preparacion_local",
+            "label": "Preparacion local",
+            "seats": 1
+          },
+          "summary": {
+            "total": 12,
+            "ok": 12,
+            "failed": 0,
+            "criticalFails": 0,
+            "highFails": 0
+          },
+          "checks": [
+            {
+              "id": "company",
+              "label": "Empresa o instalador identificado",
+              "ok": true,
+              "level": "alto"
+            },
+            {
+              "id": "users",
+              "label": "Modelo de usuarios local disponible",
+              "ok": true,
+              "level": "alto"
+            },
+            {
+              "id": "roles",
+              "label": "Matriz de roles declarada",
+              "ok": true,
+              "level": "critico"
+            },
+            {
+              "id": "license",
+              "label": "Estado de licencia declarado",
+              "ok": true,
+              "level": "critico"
+            },
+            {
+              "id": "project",
+              "label": "Proyecto activo con ID portable",
+              "ok": true,
+              "level": "alto"
+            },
+            {
+              "id": "d1",
+              "label": "Modelo D1 cubre datos principales",
+              "ok": true,
+              "level": "critico"
+            },
+            {
+              "id": "r2",
+              "label": "Buckets R2 cubren archivos clave",
+              "ok": true,
+              "level": "critico"
+            },
+            {
+              "id": "worker",
+              "label": "Contrato Worker tiene endpoints base",
+              "ok": true,
+              "level": "critico"
+            },
+            {
+              "id": "audit",
+              "label": "Historial local disponible para auditoria",
+              "ok": true,
+              "level": "medio"
+            },
+            {
+              "id": "queue",
+              "label": "Cola de sincronizacion preparada",
+              "ok": true,
+              "level": "alto"
+            },
+            {
+              "id": "portable",
+              "label": "Formato .giae se mantiene como respaldo",
+              "ok": true,
+              "level": "critico"
+            },
+            {
+              "id": "secrets",
+              "label": "Sin tokens ni secretos guardados en cliente",
+              "ok": true,
+              "level": "critico"
+            }
+          ]
+        },
+        {
+          "id": "sync-mr9q8njg-91soq3",
+          "status": "pendiente",
+          "operation": "project.upsert",
+          "projectId": "GIAE-DEMO",
+          "projectName": "Proyecto demo",
+          "createdAt": "06-07-2026, 5:23:22 p. m.",
+          "attempts": 0,
+          "envelope": {
+            "schema": "giae.cloud.sync-envelope.v1",
+            "createdAt": "2026-07-06T21:23:22.540Z",
+            "operation": "project.upsert",
+            "workspaceId": "workspace-local",
+            "companyId": "local-company",
+            "projectId": "GIAE-DEMO",
+            "projectName": "Proyecto demo",
+            "revision": 1,
+            "authorProfile": "administrador",
+            "apiBaseUrl": "/api/giae",
+            "d1Targets": [
+              "projects",
+              "project_revisions",
+              "audit_events",
+              "sync_queue"
+            ],
+            "r2Targets": [
+              "GIAE_PROJECT_BACKUPS"
+            ],
+            "projectSnapshot": {
+              "id": "GIAE-DEMO",
+              "name": "Proyecto demo",
+              "history": [
+                {
+                  "action": "demo"
+                }
+              ]
+            },
+            "portableBackupRequired": true,
+            "audit": {
+              "id": "audit-mr9q8njg-4y57w6",
+              "action": "Prueba Fase 4",
+              "module": "Nube y licencias",
+              "createdAt": "2026-07-06T21:23:22.540Z",
+              "note": "Paquete local preparado. El Worker debe validar permisos antes de aceptar cambios."
+            },
+            "safety": {
+              "containsSecret": false,
+              "finalComplianceCertification": false,
+              "note": "Paquete de sincronizacion. No reemplaza revision profesional ni validacion de servidor."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "contrato-valido",
+      "name": "Contrato Worker/D1/R2 valido",
+      "ok": true,
+      "level": "alto",
+      "detail": "8 endpoints / 9 tablas / 4 buckets",
+      "evidence": []
+    },
+    {
+      "id": "docs-fase4",
+      "name": "Docs y datos Fase 4 presentes",
+      "ok": true,
+      "level": "alto",
+      "detail": "docs fase 4",
+      "evidence": []
+    },
+    {
+      "id": "readme-fase4",
+      "name": "README documenta Fase 4",
+      "ok": true,
+      "level": "medio",
+      "detail": "README",
+      "evidence": []
+    },
+    {
+      "id": "wrangler-presente",
+      "name": "Wrangler mantiene publicacion Cloudflare",
+      "ok": true,
+      "level": "medio",
+      "detail": "wrangler.jsonc",
+      "evidence": []
+    },
+    {
+      "id": "sin-promesa-excesiva",
+      "name": "Fase 4 declara limites honestos",
+      "ok": true,
+      "level": "alto",
+      "detail": "limites declarados",
+      "evidence": []
+    }
+  ]
+}

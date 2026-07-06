@@ -6,6 +6,7 @@ const moduleLabels = {
   proyecto: "Proyecto activo",
   gpe: "Motor de proyecto",
   usuarios: "Usuarios empresa",
+  nube: "Nube y licencias",
   cargas: "Cargas",
   "cuadro-carga": "Cuadro de carga",
   balance: "Balance de fases",
@@ -249,6 +250,7 @@ export function render(host, state){
           <div class="policy-box"><b>Fase 1 activa:</b> docs/FASE_1_PUBLICABLE_GIAE.md y tools/phase1-publicable-check.mjs.</div>
           <div class="policy-box"><b>Fase 2 activa:</b> manifest.webmanifest, sw.js, core/pwa.js y tools/phase2-installable-check.mjs.</div>
           <div class="policy-box"><b>Fase 3 activa:</b> Lector documental, core/document-intelligence y tools/phase3-document-intelligence-check.mjs.</div>
+          <div class="policy-box"><b>Fase 4 activa:</b> Nube y licencias, core/cloud, data/cloud y tools/phase4-cloud-readiness-check.mjs.</div>
           <div class="policy-box"><b>Regla:</b> ninguna mejora debe copiar codigo externo ni prometer cumplimiento normativo sin reglas, medicion y evidencia.</div>
         </div>
       </section>

@@ -1,0 +1,44 @@
+{
+  "schema": "giae.cloud.contract.v1",
+  "actualizadoEn": "2026-07-06",
+  "estado": "preparacion_local",
+  "worker": {
+    "apiBase": "/api/giae",
+    "bindingD1": "GIAE_DB",
+    "bindingsR2": [
+      "GIAE_PROJECT_BACKUPS",
+      "GIAE_PROJECT_DOCUMENTS",
+      "GIAE_BRAND_ASSETS",
+      "GIAE_FIELD_MEDIA"
+    ],
+    "endpoints": [
+      { "id": "health", "method": "GET", "path": "/api/giae/health", "scope": "publico" },
+      { "id": "session-start", "method": "POST", "path": "/api/giae/session/start", "scope": "auth" },
+      { "id": "license-check", "method": "POST", "path": "/api/giae/license/check", "scope": "auth" },
+      { "id": "workspace-read", "method": "GET", "path": "/api/giae/workspaces/:workspaceId", "scope": "workspace.read" },
+      { "id": "project-sync", "method": "POST", "path": "/api/giae/projects/:projectId/sync", "scope": "project.write" },
+      { "id": "project-open", "method": "GET", "path": "/api/giae/projects/:projectId", "scope": "project.read" },
+      { "id": "file-presign", "method": "POST", "path": "/api/giae/files/presign", "scope": "file.write" },
+      { "id": "audit-search", "method": "GET", "path": "/api/giae/audit", "scope": "audit.read" }
+    ]
+  },
+  "roles": [
+    { "id": "owner", "nombre": "Administrador empresa", "permisos": ["workspace.manage", "license.manage", "user.manage", "project.read", "project.write", "file.write", "audit.read"] },
+    { "id": "supervisor", "nombre": "Supervisor tecnico", "permisos": ["project.read", "project.write", "file.write", "audit.read"] },
+    { "id": "installer", "nombre": "Instalador autorizado", "permisos": ["project.read", "project.write", "file.write"] },
+    { "id": "quote", "nombre": "Cotizador", "permisos": ["project.read", "budget.write"] },
+    { "id": "readonly", "nombre": "Solo lectura", "permisos": ["project.read"] },
+    { "id": "student", "nombre": "Estudiante", "permisos": ["learning.read", "demo.write"] }
+  ],
+  "licencia": {
+    "estadoInicial": "preparacion_local",
+    "planes": ["local-preparacion", "independiente", "empresa", "educacion"],
+    "regla": "La validacion comercial real vive en Worker. El navegador no debe guardar secretos."
+  },
+  "seguridad": {
+    "tokensEnCliente": false,
+    "mantieneFormatoGiae": true,
+    "requiereAuditoria": true,
+    "nota": "Fase 4 prepara contratos y paquetes. La autenticacion real queda para el Worker."
+  }
+}
