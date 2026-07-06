@@ -43,6 +43,24 @@
       "tipo": "herramienta",
       "archivo": "tools/phase1-publicable-check.mjs",
       "estado": "vigente"
+    },
+    {
+      "id": "fase-2-instalable",
+      "tipo": "instalable_local",
+      "archivo": "docs/FASE_2_INSTALABLE_GIAE.md",
+      "estado": "vigente"
+    },
+    {
+      "id": "diagnostico-fase-2",
+      "tipo": "herramienta",
+      "archivo": "tools/phase2-installable-check.mjs",
+      "estado": "vigente"
+    },
+    {
+      "id": "servidor-local-fase-2",
+      "tipo": "herramienta",
+      "archivo": "tools/local-static-server.mjs",
+      "estado": "vigente"
     }
   ]
 }

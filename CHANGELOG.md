@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-07-06 - Inicio Fase 2 instalable local
+
+- Se agrega manifest PWA para instalacion local.
+- Se agrega service worker propio con cache controlado y pagina offline.
+- Se agrega registro PWA en core/pwa.js y boton de instalacion cuando el navegador lo permita.
+- Se agregan iconos propios SVG/PNG para PC y celular.
+- Se agrega diagnostico Fase 2 instalable.
+- Se enlaza Fase 2 en README, indice y manifiesto de producto.
+
 ## 2026-07-06 - Inicio Fase 1 publicable
 
 - Se agrega checklist formal de Fase 1 publicable.

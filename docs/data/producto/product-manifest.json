@@ -24,14 +24,16 @@
     "docs/ORIGINALIDAD.md",
     "docs/CLOUDFLARE_D1_R2_PLAN.md",
     "docs/INDICE_PRODUCTO_GIAE.md",
-    "docs/FASE_1_PUBLICABLE_GIAE.md"
+    "docs/FASE_1_PUBLICABLE_GIAE.md",
+    "docs/FASE_2_INSTALABLE_GIAE.md"
   ],
   "datosEstructurados": [
     "docs/data/producto/roadmap-6-fases.json",
     "docs/data/producto/vision-giae-2.json",
     "docs/data/producto/documentos-producto.json",
     "data/norma-chile/fuentes/decreto8-local-intake.json",
-    "docs/data/producto/fase-1-publicable.json"
+    "docs/data/producto/fase-1-publicable.json",
+    "docs/data/producto/fase-2-instalable.json"
   ],
   "nota": "Los datos de producto viven temporalmente en docs/data/producto por restriccion de permisos. Cuando se autorice limpieza de data/, pueden moverse a data/producto sin cambiar su contenido.",
   "fases": [
@@ -43,6 +45,19 @@
     "fase-6"
   ],
   "herramientas": [
-    "tools/phase1-publicable-check.mjs"
-  ]
+    "tools/phase1-publicable-check.mjs",
+    "tools/phase2-installable-check.mjs",
+    "tools/local-static-server.mjs"
+  ],
+  "pwa": {
+    "manifest": "manifest.webmanifest",
+    "serviceWorker": "sw.js",
+    "registro": "core/pwa.js",
+    "offline": "offline.html",
+    "iconos": [
+      "assets/icons/giae-icon.svg",
+      "assets/icons/giae-icon-192.png",
+      "assets/icons/giae-icon-512.png"
+    ]
+  }
 }

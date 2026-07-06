@@ -1,4 +1,5 @@
 import { modules, menuGroups } from "./moduleRegistry.js";
+import { registerGiaePwa } from "./pwa.js";
 import { restore, setProfile, clearProfile, state, persist, exportProjectFile, importProjectFile, saveCurrentProjectToLibrary } from "./store.js";
 
 const loginView = document.querySelector("#loginView");
@@ -19,6 +20,7 @@ if (state.profile) openPlatform();
 window.GIAE = window.GIAE || {};
 window.GIAE.openModule = openModule;
 window.GIAE.refreshActiveModule = refreshActiveModule;
+registerGiaePwa();
 
 window.addEventListener("giae:admin-updated", () => { applyBranding(); renderMenu(); });
 
