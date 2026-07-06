@@ -1,0 +1,161 @@
+{
+  "schema": "giae.producto.roadmap.v1",
+  "actualizadoEn": "2026-07-06",
+  "fases": [
+    {
+      "id": "fase-1",
+      "nombre": "Depuracion y base publicable",
+      "versionObjetivo": "v1.0-alpha-publicable",
+      "prioridad": "muy_alta",
+      "estado": "iniciada",
+      "foco": [
+        "limpieza",
+        "una fuente de verdad",
+        "originalidad",
+        "DS8",
+        "NCh4 excluida"
+      ],
+      "entregables": [
+        "entrada oficial index/core/main/platform",
+        "legado identificado",
+        "checklist publicacion",
+        "docs alineados"
+      ],
+      "criterioSalida": [
+        "JS valido",
+        "JSON valido",
+        "sin rutas activas duplicadas",
+        "documentacion coherente"
+      ]
+    },
+    {
+      "id": "fase-2",
+      "nombre": "Version 1.0 instalable local",
+      "versionObjetivo": "v1.0",
+      "prioridad": "muy_alta",
+      "estado": "planificada",
+      "foco": [
+        "PWA",
+        "offline",
+        "exportar .giae",
+        "flujo guiado",
+        "movil"
+      ],
+      "entregables": [
+        "manifest web app",
+        "service worker propio",
+        "iconos propios",
+        "modo publicable local"
+      ],
+      "criterioSalida": [
+        "instalable desde navegador",
+        "proyecto exportable e importable",
+        "textos sin promesas excesivas"
+      ]
+    },
+    {
+      "id": "fase-3",
+      "nombre": "Inteligencia normativa y lectura documental",
+      "versionObjetivo": "v1.5",
+      "prioridad": "alta",
+      "estado": "planificada",
+      "foco": [
+        "lector PDF",
+        "lector documentos",
+        "reglas propias",
+        "trazabilidad",
+        "DS8 RIC IEC"
+      ],
+      "entregables": [
+        "motor ingestion documental",
+        "registro de fuentes",
+        "evaluador documental",
+        "reglas con datos requeridos"
+      ],
+      "criterioSalida": [
+        "documentos clasificados",
+        "reglas trazables",
+        "sin copia de textos completos"
+      ]
+    },
+    {
+      "id": "fase-4",
+      "nombre": "Nube, usuarios, licencias y colaboracion",
+      "versionObjetivo": "v1.8",
+      "prioridad": "media_alta",
+      "estado": "planificada",
+      "foco": [
+        "Cloudflare Workers",
+        "D1",
+        "R2",
+        "roles",
+        "licencias",
+        "auditoria"
+      ],
+      "entregables": [
+        "API propia",
+        "modelo de datos D1",
+        "archivos R2",
+        "autenticacion real",
+        "sincronizacion .giae"
+      ],
+      "criterioSalida": [
+        "multiusuario real",
+        "permisos por rol",
+        "historial de cambios"
+      ]
+    },
+    {
+      "id": "fase-5",
+      "nombre": "CAD electrico GIAE 2.0",
+      "versionObjetivo": "v2.0",
+      "prioridad": "estrategica",
+      "estado": "vision",
+      "foco": [
+        "CAD propio",
+        "planos electricos",
+        "capas",
+        "simbolos",
+        "circuitos inteligentes",
+        "formato abierto cuando aplique"
+      ],
+      "entregables": [
+        "formato interno de plano",
+        "editor 2D electrico",
+        "biblioteca simbolos",
+        "validacion de plano",
+        "conexion plano-calculo"
+      ],
+      "criterioSalida": [
+        "plano como fuente de datos",
+        "sin copiar AutoCAD",
+        "exportacion documentada"
+      ]
+    },
+    {
+      "id": "fase-6",
+      "nombre": "GIAE razonador tecnico 2.0",
+      "versionObjetivo": "v2.0+",
+      "prioridad": "estrategica",
+      "estado": "vision",
+      "foco": [
+        "razonamiento verificable",
+        "evidencia",
+        "preguntas inteligentes",
+        "alternativas tecnicas",
+        "memoria de proyecto"
+      ],
+      "entregables": [
+        "nucleo de razonamiento",
+        "explicaciones auditables",
+        "comparador de alternativas",
+        "bloqueos por evidencia faltante"
+      ],
+      "criterioSalida": [
+        "respuestas con evidencia",
+        "no inventa",
+        "distingue recomendacion de validacion final"
+      ]
+    }
+  ]
+}

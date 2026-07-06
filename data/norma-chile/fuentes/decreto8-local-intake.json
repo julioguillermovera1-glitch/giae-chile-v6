@@ -1,0 +1,20 @@
+{
+  "schema": "giae.norma_chile.fuente_pdf.v1",
+  "id": "CHL-DS8-LOCAL-2020-03-05",
+  "documento": "Decreto Supremo N8",
+  "archivo_origen_usuario": "C:/Users/julio/Downloads/Decreto8.pdf",
+  "fuente_detectada": "Diario Oficial de la Republica de Chile",
+  "publicacion_detectada": "Jueves 5 de Marzo de 2020",
+  "cve_detectado": "1735337",
+  "paginas": 6,
+  "bytes": 561555,
+  "estado_giae": "ingesta_local_detectada_no_convertida_a_reglas",
+  "politica": "No copiar texto completo. Convertir solo a reglas propias con referencia, datos requeridos y mensajes de evaluacion.",
+  "uso_previsto": [
+    "fase_3_lectura_documental",
+    "norma_chile",
+    "ds8",
+    "trazabilidad"
+  ],
+  "creado_en": "2026-07-06"
+}

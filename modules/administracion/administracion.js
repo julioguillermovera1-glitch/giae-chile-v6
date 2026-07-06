@@ -92,6 +92,7 @@ export function render(host, state){
         <button data-admin-tab="estado">Estado del software</button>
         <button data-admin-tab="inspector">Inspector</button>
         <button data-admin-tab="originalidad">Originalidad</button>
+        <button data-admin-tab="roadmap">Roadmap</button>
       </section>
 
       <section id="admTabUsuarios" class="admin-tab-page active">
@@ -221,10 +222,27 @@ export function render(host, state){
         </div>
       </section>
 
+      <section id="admTabRoadmap" class="admin-tab-page">
+        <div class="admin-card">
+          <h4>Roadmap oficial GIAE</h4>
+          <p class="small">Ruta incorporada al repositorio para ordenar la version publicable, GIAE 2.0, CAD electrico, lectura documental y razonamiento verificable.</p>
+          <div class="admin-kpis compact-kpis">
+            <div><strong>1</strong><span>Depuracion</span></div>
+            <div><strong>2</strong><span>v1.0 local</span></div>
+            <div><strong>3</strong><span>Documentos</span></div>
+            <div><strong>4</strong><span>Nube</span></div>
+            <div><strong>5</strong><span>CAD 2.0</span></div>
+            <div><strong>6</strong><span>Razonador</span></div>
+          </div>
+          <div class="policy-box"><b>Documentos:</b> docs/ROADMAP_6_FASES_GIAE_CHILE.md y docs/GIAE_2_0_CAD_DOCUMENTOS_RAZONAMIENTO.md.<br><b>Datos:</b> docs/data/producto/product-manifest.json y docs/data/producto/roadmap-6-fases.json.</div>
+          <div class="policy-box"><b>Regla:</b> ninguna mejora debe copiar codigo externo ni prometer cumplimiento normativo sin reglas, medicion y evidencia.</div>
+        </div>
+      </section>
+
       <section id="admTabSistema" class="admin-tab-page">
         <div class="admin-card">
           <h4>Política normativa estricta</h4>
-          <div class="policy-box"><b>Fuentes permitidas:</b> RIC, IEC y Decreto de Ley N°8 de Chile.<br><b>Regla:</b> si no hay respaldo local suficiente, GIAE debe responder “requiere revisión normativa” y nunca inventar datos.</div>
+          <div class="policy-box"><b>Fuentes permitidas:</b> RIC, IEC y Decreto Supremo N8 de Chile.<br><b>Regla:</b> si no hay respaldo local suficiente, GIAE debe responder “requiere revisión normativa” y nunca inventar datos.</div>
           <h4>Resumen del sistema</h4>
           <div class="project-summary">
             <span><b>Proyecto activo:</b> ${escapeHtml(state.currentProject.name || "Sin nombre")}</span>

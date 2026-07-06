@@ -1,0 +1,43 @@
+{
+  "schema": "giae.producto.manifest.v1",
+  "actualizadoEn": "2026-07-06",
+  "nombre": "GIAE Chile",
+  "estadoActual": "base_modular_en_depuracion_para_version_publicable",
+  "entradaOficial": {
+    "html": "index.html",
+    "script": "core/main.js",
+    "estilos": "css/platform.css"
+  },
+  "principios": [
+    "codigo propio",
+    "no copiar implementaciones externas",
+    "no copiar textos normativos completos",
+    "no inventar cumplimiento",
+    "separar calculo preliminar de verificacion real",
+    "NCh4 excluida como norma activa"
+  ],
+  "documentosOficiales": [
+    "docs/ROADMAP_6_FASES_GIAE_CHILE.md",
+    "docs/GIAE_2_0_CAD_DOCUMENTOS_RAZONAMIENTO.md",
+    "docs/PROPUESTA_PUBLICABLE_GIAE_CHILE.md",
+    "docs/DEPURACION_GIAE_2026_07_06.md",
+    "docs/ORIGINALIDAD.md",
+    "docs/CLOUDFLARE_D1_R2_PLAN.md",
+    "docs/INDICE_PRODUCTO_GIAE.md"
+  ],
+  "datosEstructurados": [
+    "docs/data/producto/roadmap-6-fases.json",
+    "docs/data/producto/vision-giae-2.json",
+    "docs/data/producto/documentos-producto.json",
+    "data/norma-chile/fuentes/decreto8-local-intake.json"
+  ],
+  "nota": "Los datos de producto viven temporalmente en docs/data/producto por restriccion de permisos. Cuando se autorice limpieza de data/, pueden moverse a data/producto sin cambiar su contenido.",
+  "fases": [
+    "fase-1",
+    "fase-2",
+    "fase-3",
+    "fase-4",
+    "fase-5",
+    "fase-6"
+  ]
+}

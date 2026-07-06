@@ -17,4 +17,4 @@ GIAE Chile v1.0 reconoce como autor intelectual y director del proyecto a Julio 
 Cada empresa usuaria podrá configurar su propio logo, colores corporativos y plantillas de cotización o trabajo. La personalización visual debe mantenerse sobria: pocos colores, buena legibilidad y estilo técnico.
 
 ## Política normativa estricta
-La plataforma debe guiar sus opiniones y validaciones únicamente por RIC, IEC y Decreto de Ley N°8 de Chile. Cuando no exista respaldo normativo local suficiente, GIAE debe indicar que requiere revisión normativa y no debe inventar datos.
+La plataforma debe guiar sus opiniones y validaciones únicamente por RIC, IEC y Decreto Supremo N8 de Chile. Cuando no exista respaldo normativo local suficiente, GIAE debe indicar que requiere revisión normativa y no debe inventar datos.

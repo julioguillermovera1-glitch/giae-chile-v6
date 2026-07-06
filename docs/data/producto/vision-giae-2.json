@@ -1,0 +1,26 @@
+{
+  "schema": "giae.producto.vision.v2",
+  "actualizadoEn": "2026-07-06",
+  "versionObjetivo": "GIAE 2.0",
+  "capacidades": {
+    "cadElectrico": {
+      "descripcion": "Editor propio de planos electricos, orientado a capas, simbolos, circuitos, tableros, canalizaciones y validacion tecnica.",
+      "restriccion": "No copiar AutoCAD ni su codigo, interfaz, nombres internos o logica propietaria.",
+      "formatoInternoInicial": "giae-plan-v1"
+    },
+    "lecturaDocumental": {
+      "descripcion": "Leer PDF, imagen, texto, planilla y .giae para clasificar documentos, extraer datos tecnicos y evaluar coherencia.",
+      "regla": "No copiar texto completo; convertir a reglas propias con referencias."
+    },
+    "razonamiento": {
+      "descripcion": "Responder con evidencia, regla, calculo, supuesto, resultado, confianza, accion y bloqueo si falta dato.",
+      "estados": [
+        "recomendacion",
+        "advertencia",
+        "bloqueo",
+        "validacion_preliminar",
+        "requiere_revision"
+      ]
+    }
+  }
+}
