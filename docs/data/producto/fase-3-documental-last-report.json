@@ -1,0 +1,198 @@
+{
+  "schema": "giae.diagnostico.fase3-documental.v1",
+  "generatedAt": "2026-07-06T21:05:13.393Z",
+  "score": 100,
+  "status": "apto_para_prueba_manual",
+  "root": "C:\\Users\\julio\\Documents\\GitHub\\giae-chile-v6",
+  "summary": {
+    "total": 12,
+    "ok": 12,
+    "failed": 0,
+    "criticalFails": 0,
+    "highFails": 0
+  },
+  "checks": [
+    {
+      "id": "engine-existe",
+      "name": "Motor documental existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "core/document-intelligence/documentIntelligenceEngine.js",
+      "evidence": []
+    },
+    {
+      "id": "modulo-existe",
+      "name": "Modulo lector documental existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "modules/lector-documental/lector-documental.js",
+      "evidence": []
+    },
+    {
+      "id": "tipos-existen",
+      "name": "Tipos documentales existen",
+      "ok": true,
+      "level": "critico",
+      "detail": "data/document-intelligence/document-types.json",
+      "evidence": []
+    },
+    {
+      "id": "registro-menu",
+      "name": "Modulo registrado en menu",
+      "ok": true,
+      "level": "critico",
+      "detail": "core/moduleRegistry.js",
+      "evidence": []
+    },
+    {
+      "id": "admin-integrado",
+      "name": "Administracion reconoce Fase 3",
+      "ok": true,
+      "level": "alto",
+      "detail": "Panel administrador",
+      "evidence": []
+    },
+    {
+      "id": "sw-cache",
+      "name": "PWA cachea lector documental",
+      "ok": true,
+      "level": "alto",
+      "detail": "sw.js",
+      "evidence": []
+    },
+    {
+      "id": "js-valido",
+      "name": "JavaScript documental valido",
+      "ok": true,
+      "level": "critico",
+      "detail": "engine + modulo",
+      "evidence": []
+    },
+    {
+      "id": "engine-analiza",
+      "name": "Motor analiza documento demo",
+      "ok": true,
+      "level": "critico",
+      "detail": "memoria_tecnica / 3 senales",
+      "evidence": [
+        {
+          "schema": "giae.document-intelligence.analysis.v1",
+          "analyzedAt": "2026-07-06T21:05:13.389Z",
+          "file": {
+            "name": "memoria.txt",
+            "type": "text/plain",
+            "size": 80,
+            "kind": "texto",
+            "hash": "demo"
+          },
+          "classification": {
+            "id": "memoria_tecnica",
+            "label": "Memoria tecnica",
+            "confidence": 96,
+            "candidates": [
+              {
+                "id": "memoria_tecnica",
+                "label": "Memoria tecnica",
+                "score": 104
+              },
+              {
+                "id": "normativa",
+                "label": "Fuente normativa o regla",
+                "score": 48
+              },
+              {
+                "id": "plano_electrico",
+                "label": "Plano electrico",
+                "score": 20
+              },
+              {
+                "id": "proyecto_giae",
+                "label": "Proyecto GIAE",
+                "score": 0
+              },
+              {
+                "id": "informe_tierra",
+                "label": "Informe puesta a tierra",
+                "score": 0
+              }
+            ]
+          },
+          "signals": [
+            {
+              "id": "project_data",
+              "ok": true,
+              "hits": [
+                "proyecto",
+                "cliente"
+              ]
+            },
+            {
+              "id": "loads_or_power",
+              "ok": true,
+              "hits": [
+                "potencia"
+              ]
+            },
+            {
+              "id": "normative_trace",
+              "ok": true,
+              "hits": [
+                "ric",
+                "ds8"
+              ]
+            }
+          ],
+          "structuredFindings": [],
+          "gaps": [],
+          "recommendations": [
+            "Documento apto para revision asistida; aun requiere criterio profesional antes de validar cumplimiento."
+          ],
+          "status": "listo_para_revision",
+          "trace": {
+            "sourcesAllowed": [
+              "DS8",
+              "RIC",
+              "IEC",
+              "SEC"
+            ],
+            "copiedNormativeText": false,
+            "note": "Analisis propio de senales. No certifica cumplimiento ni copia textos normativos completos."
+          },
+          "preview": "Proyecto prueba con memoria tecnica RIC DS8 potencia tablero conductor cliente"
+        }
+      ]
+    },
+    {
+      "id": "tipos-validos",
+      "name": "Tipos documentales validos",
+      "ok": true,
+      "level": "alto",
+      "detail": "6 tipos",
+      "evidence": []
+    },
+    {
+      "id": "docs-fase3",
+      "name": "Docs y datos Fase 3 presentes",
+      "ok": true,
+      "level": "alto",
+      "detail": "docs fase 3",
+      "evidence": []
+    },
+    {
+      "id": "readme-fase3",
+      "name": "README documenta Fase 3",
+      "ok": true,
+      "level": "medio",
+      "detail": "README",
+      "evidence": []
+    },
+    {
+      "id": "sin-promesa-excesiva",
+      "name": "Fase 3 declara limites honestos",
+      "ok": true,
+      "level": "alto",
+      "detail": "limites declarados",
+      "evidence": []
+    }
+  ]
+}

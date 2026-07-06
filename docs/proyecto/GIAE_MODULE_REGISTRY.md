@@ -354,6 +354,25 @@ Estrategica
 
 ---
 
+## Lector Documental Inteligente
+
+Estado:
+Iniciado en Fase 3
+
+Responsabilidad:
+Analizar documentos del proyecto, clasificar tipo documental, detectar senales tecnicas, faltantes y trazabilidad sin copiar textos normativos completos.
+
+Archivos:
+
+- core/document-intelligence/documentIntelligenceEngine.js
+- modules/lector-documental/lector-documental.js
+- data/document-intelligence/document-types.json
+
+Prioridad:
+Alta
+
+---
+
 ## Lector Documental / Norma Chile
 
 Estado:

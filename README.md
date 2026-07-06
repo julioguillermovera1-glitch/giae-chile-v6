@@ -80,6 +80,22 @@ Servidor local para prueba PWA:
 
 Esta base no reemplaza la prueba manual en PC y celular ni corresponde aun a instalador EXE, MSI o APK final.
 
+## Fase 3 inteligencia documental
+
+La Fase 3 inicia el lector documental inteligente de GIAE:
+
+- core/document-intelligence/documentIntelligenceEngine.js
+- modules/lector-documental/lector-documental.js
+- data/document-intelligence/document-types.json
+- docs/FASE_3_INTELIGENCIA_DOCUMENTAL_GIAE.md
+- tools/phase3-document-intelligence-check.mjs
+
+Comando de revision:
+
+    node tools/phase3-document-intelligence-check.mjs
+
+Esta base clasifica documentos, detecta senales y faltantes, pero aun no hace OCR ni certifica cumplimiento final.
+
 ## Decreto Supremo N8
 
 El PDF local indicado por el usuario quedo registrado como fuente de ingesta en:

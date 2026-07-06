@@ -1,0 +1,42 @@
+{
+  "schema": "giae.producto.fase3-documental.v1",
+  "actualizadoEn": "2026-07-06",
+  "estado": "iniciada",
+  "objetivo": "Lectura documental inteligente verificable y trazable.",
+  "entregables": [
+    {
+      "id": "motor-documental",
+      "archivo": "core/document-intelligence/documentIntelligenceEngine.js",
+      "estado": "incorporado"
+    },
+    {
+      "id": "modulo-lector",
+      "archivo": "modules/lector-documental/lector-documental.js",
+      "estado": "incorporado"
+    },
+    {
+      "id": "tipos-documentales",
+      "archivo": "data/document-intelligence/document-types.json",
+      "estado": "incorporado"
+    },
+    {
+      "id": "diagnostico",
+      "archivo": "tools/phase3-document-intelligence-check.mjs",
+      "estado": "incorporado"
+    }
+  ],
+  "capacidades": [
+    "clasificacion documental",
+    "senales tecnicas",
+    "faltantes",
+    "hash local",
+    "reporte",
+    "guardado en proyecto"
+  ],
+  "noIncluye": [
+    "OCR",
+    "extraccion profunda PDF",
+    "conversion automatica de normas a reglas",
+    "certificacion final"
+  ]
+}

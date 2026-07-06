@@ -33,7 +33,7 @@
       "nombre": "Version 1.0 instalable local",
       "versionObjetivo": "v1.0",
       "prioridad": "muy_alta",
-      "estado": "iniciada",
+      "estado": "validada_tecnicamente",
       "foco": [
         "PWA",
         "offline",
@@ -58,7 +58,7 @@
       "nombre": "Inteligencia normativa y lectura documental",
       "versionObjetivo": "v1.5",
       "prioridad": "alta",
-      "estado": "planificada",
+      "estado": "iniciada",
       "foco": [
         "lector PDF",
         "lector documentos",

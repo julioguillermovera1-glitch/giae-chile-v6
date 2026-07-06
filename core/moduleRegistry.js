@@ -25,6 +25,7 @@ export const modules = [
   { id: "auditoria", label: "Auditoría", group: "ingenieria", path: "../modules/auditoria/auditoria.js", profiles: ["independiente", "empresa", "estudiante"] },
 
   { id: "documentacion", label: "Centro de Documentación SEC", group: "documentacion", path: "../modules/documentacion/documentacion.js", profiles: ["independiente", "empresa"] },
+  { id: "lector-documental", label: "Lector documental", group: "documentacion", path: "../modules/lector-documental/lector-documental.js", profiles: ["independiente", "empresa", "administrador"] },
   { id: "presupuesto", label: "Presupuesto", group: "documentacion", path: "../modules/presupuesto/presupuesto.js", profiles: ["independiente", "empresa"] },
 
   { id: "educacion", label: "Aula Técnica", group: "educacion", path: "../modules/educacion/educacion.js", profiles: ["aula", "estudiante", "independiente", "empresa"] },
