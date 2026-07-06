@@ -16,7 +16,7 @@ const EMBEDDED_DOCUMENT_CATALOG = {
 function has(value){ return value !== undefined && value !== null && String(value).trim() !== ""; }
 function hasLoads(project){ return Array.isArray(project.loads) && project.loads.length > 0; }
 function hasLoadBoard(project){ return Array.isArray(project.loadBoard) && project.loadBoard.length > 0; }
-function hasGrounding(project){ return Boolean(project.grounding || project.groundingEngine || project.tierra); }
+function hasGrounding(project){ return Boolean(project.grounding || project.tierra); }
 function hasUnilineal(project){ return Boolean(project.unilineal || hasLoadBoard(project)); }
 function hasCalculations(project){ return Boolean(project.electricalEngine || project.loadEngine || hasLoadBoard(project)); }
 
@@ -36,7 +36,7 @@ export function evaluateRequiredData(project, requiredData = []){
     memoria_tecnica: hasCalculations(project),
     calculos: hasCalculations(project),
     normativa: Boolean(project.electricalEngine || project.normativeTrace || project.audit),
-    medicion_terreno: Boolean(project.grounding?.measurementOhm || project.grounding?.measuredOhm),
+    medicion_terreno: Boolean(project.grounding?.measurementOhm || project.grounding?.measuredOhm || project.grounding?.summary?.measuredOhm),
     responsable: Boolean(has(project.installer) || has(project.responsible)),
     potencia: Number(project.installedPowerKw || project.demandPowerKw || 0) > 0,
     demanda: Number(project.demandPowerKw || 0) > 0,

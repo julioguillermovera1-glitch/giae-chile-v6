@@ -89,9 +89,10 @@ function auditPanel(p){
 
 function auditGrounding(p){
   const g = p.grounding;
+  const measuredOhm = Number(g?.measuredOhm || g?.measurementOhm || g?.summary?.measuredOhm || g?.inputs?.measuredOhm || g?.measurement?.ohm || 0);
   return [
     item("GND-001", "Puesta a tierra", "Diseño de puesta a tierra", Boolean(g), "medio", "No hay diseño/registro de puesta a tierra.", "Completar módulo de Puesta a Tierra.", "RIC 6"),
-    item("GND-002", "Puesta a tierra", "Medición en terreno", Boolean(g?.measuredOhm || g?.measurement?.ohm), "medio", "Falta medición real de resistencia de puesta a tierra.", "Registrar medición en terreno con instrumento adecuado.", "RIC 6"),
+    item("GND-002", "Puesta a tierra", "Medición en terreno", measuredOhm > 0, "medio", "Falta medición real de resistencia de puesta a tierra.", "Registrar medición en terreno con instrumento adecuado.", "RIC 6"),
     item("GND-003", "Puesta a tierra", "Advertencia técnica", true, "ok", "La medición de tierra no puede ser reemplazada por cálculo preliminar.", "Mantener advertencia en informe.", "RIC 6")
   ];
 }
