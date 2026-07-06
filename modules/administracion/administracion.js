@@ -1,19 +1,27 @@
 import { persist } from "../../core/store.js";
 
 const moduleLabels = {
-  proyecto: "Proyecto",
+  dashboard: "Dashboard",
+  proyectos: "Administrador de proyectos",
+  proyecto: "Proyecto activo",
+  gpe: "Motor de proyecto",
   usuarios: "Usuarios empresa",
-  administracion: "Administración",
   cargas: "Cargas",
   "cuadro-carga": "Cuadro de carga",
+  balance: "Balance de fases",
+  tableros: "Tableros",
   empalme: "Empalme",
   tierra: "Puesta a tierra",
   unilineal: "Unilineal",
-  documentacion: "Documentación",
+  auditoria: "Auditoria",
+  documentacion: "Centro de Documentacion SEC",
   presupuesto: "Presupuesto",
-  auditoria: "Auditoría",
-  educacion: "Educación",
-  biblioteca: "Biblioteca técnica"
+  educacion: "Aula Tecnica",
+  administracion: "Panel administrador",
+  biblioteca: "Base de conocimiento",
+  componentes: "BUCE Componentes electricos",
+  normativo: "Motor normativo",
+  "norma-chile": "NORMA-CHILE"
 };
 
 function ensureAdminData(state){
@@ -47,7 +55,9 @@ function ensureAdminData(state){
     { name: "Orden de trabajo", type: "Trabajo", status: "Activa", content: "Orden de trabajo\nResponsable: {{instalador}}\nActividad: {{actividad}}" },
     { name: "Informe técnico", type: "Informe", status: "Activa", content: "Informe técnico\nProyecto: {{proyecto}}\nObservaciones: {{observaciones}}" }
   ];
-  state.admin.enabledModules = state.admin.enabledModules || Object.fromEntries(Object.keys(moduleLabels).map(key => [key, true]));
+  const defaultEnabledModules = Object.fromEntries(Object.keys(moduleLabels).map(key => [key, true]));
+  state.admin.enabledModules = { ...defaultEnabledModules, ...(state.admin.enabledModules || {}) };
+  state.admin.enabledModules.administracion = true;
   state.admin.auditLog = state.admin.auditLog || [];
 }
 
@@ -235,6 +245,7 @@ export function render(host, state){
             <div><strong>6</strong><span>Razonador</span></div>
           </div>
           <div class="policy-box"><b>Documentos:</b> docs/ROADMAP_6_FASES_GIAE_CHILE.md y docs/GIAE_2_0_CAD_DOCUMENTOS_RAZONAMIENTO.md.<br><b>Datos:</b> docs/data/producto/product-manifest.json y docs/data/producto/roadmap-6-fases.json.</div>
+          <div class="policy-box"><b>Fase 1 activa:</b> docs/FASE_1_PUBLICABLE_GIAE.md y tools/phase1-publicable-check.mjs.</div>
           <div class="policy-box"><b>Regla:</b> ninguna mejora debe copiar codigo externo ni prometer cumplimiento normativo sin reglas, medicion y evidencia.</div>
         </div>
       </section>

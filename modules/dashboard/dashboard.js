@@ -40,7 +40,7 @@ const quickByProfile = {
 
 function getProjectStats(state){
   const loads = state.currentProject?.loads || [];
-  const totalW = loads.reduce((sum, item) => sum + (Number(item.power || item.watts || item.potencia || 0) * Number(item.quantity || item.qty || item.cantidad || 1)), 0);
+  const totalW = loads.reduce((sum, item) => sum + (Number(item.powerW || item.power || item.watts || item.potencia || 0) * Number(item.quantity || item.qty || item.cantidad || 1)), 0);
   return {
     loads: loads.length,
     totalW,
