@@ -1,4 +1,4 @@
-const GIAE_CACHE_VERSION = 'giae-chile-v1-cloud-2026-07-06';
+const GIAE_CACHE_VERSION = 'giae-chile-v1-cad-2026-07-06';
 const GIAE_APP_SHELL = [
   "./",
   "./assets/icons/giae-icon-192.png",
@@ -10,6 +10,7 @@ const GIAE_APP_SHELL = [
   "./core/architecture/index.js",
   "./core/audit/integralAuditEngine.js",
   "./core/calculations.js",
+  "./core/cad/cadEngine.js",
   "./core/commercial/budgetEngine.js",
   "./core/componentLibrary.js",
   "./core/cloud/cloudWorkspaceEngine.js",
@@ -67,6 +68,7 @@ const GIAE_APP_SHELL = [
   "./css/platform.css",
   "./data/architecture/architecture-policy.json",
   "./data/biblioteca-tecnica.json",
+  "./data/cad/electrical-symbols.json",
   "./data/cloud/cloud-contract.json",
   "./data/cloud/d1-schema.json",
   "./data/cloud/r2-assets.json",
@@ -149,6 +151,8 @@ const GIAE_APP_SHELL = [
   "./docs/data/producto/fase-3-documental-last-report.json",
   "./docs/data/producto/fase-4-cloud.json",
   "./docs/data/producto/fase-4-cloud-last-report.json",
+  "./docs/data/producto/fase-5-cad.json",
+  "./docs/data/producto/fase-5-cad-last-report.json",
   "./docs/data/producto/product-manifest.json",
   "./docs/data/producto/roadmap-6-fases.json",
   "./docs/data/producto/vision-giae-2.json",
@@ -158,6 +162,7 @@ const GIAE_APP_SHELL = [
   "./modules/auditoria/auditoria.js",
   "./modules/balance/balance.js",
   "./modules/biblioteca/biblioteca.js",
+  "./modules/cad-electrico/cad-electrico.js",
   "./modules/cargas/cargas.js",
   "./modules/componentes/componentes.js",
   "./modules/cuadro-carga/cuadro-carga.js",

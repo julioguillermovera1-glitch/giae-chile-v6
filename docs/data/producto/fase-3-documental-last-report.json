@@ -1,6 +1,6 @@
 {
   "schema": "giae.diagnostico.fase3-documental.v1",
-  "generatedAt": "2026-07-06T21:23:22.415Z",
+  "generatedAt": "2026-07-06T21:48:00.898Z",
   "score": 100,
   "status": "apto_para_prueba_manual",
   "root": "C:\\Users\\julio\\Documents\\GitHub\\giae-chile-v6",
@@ -77,7 +77,7 @@
       "evidence": [
         {
           "schema": "giae.document-intelligence.analysis.v1",
-          "analyzedAt": "2026-07-06T21:23:22.409Z",
+          "analyzedAt": "2026-07-06T21:48:00.892Z",
           "file": {
             "name": "memoria.txt",
             "type": "text/plain",

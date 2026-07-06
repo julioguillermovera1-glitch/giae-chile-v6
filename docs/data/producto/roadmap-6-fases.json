@@ -83,7 +83,7 @@
       "nombre": "Nube, usuarios, licencias y colaboracion",
       "versionObjetivo": "v1.8",
       "prioridad": "media_alta",
-      "estado": "iniciada",
+      "estado": "validada_tecnicamente",
       "foco": [
         "Cloudflare Workers",
         "D1",
@@ -110,7 +110,7 @@
       "nombre": "CAD electrico GIAE 2.0",
       "versionObjetivo": "v2.0",
       "prioridad": "estrategica",
-      "estado": "vision",
+      "estado": "iniciada",
       "foco": [
         "CAD propio",
         "planos electricos",

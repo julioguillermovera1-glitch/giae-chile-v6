@@ -1,6 +1,6 @@
 {
   "schema": "giae.diagnostico.fase4-cloud.v1",
-  "generatedAt": "2026-07-06T21:23:22.544Z",
+  "generatedAt": "2026-07-06T21:48:01.142Z",
   "score": 100,
   "status": "apto_para_prueba_manual",
   "root": "C:\\Users\\julio\\Documents\\GitHub\\giae-chile-v6",
@@ -77,7 +77,7 @@
       "evidence": [
         {
           "schema": "giae.cloud.readiness.v1",
-          "generatedAt": "2026-07-06T21:23:22.539Z",
+          "generatedAt": "2026-07-06T21:48:01.137Z",
           "score": 100,
           "status": "listo_para_worker",
           "license": {
@@ -168,16 +168,16 @@
           ]
         },
         {
-          "id": "sync-mr9q8njg-91soq3",
+          "id": "sync-mr9r4cfl-caii3f",
           "status": "pendiente",
           "operation": "project.upsert",
           "projectId": "GIAE-DEMO",
           "projectName": "Proyecto demo",
-          "createdAt": "06-07-2026, 5:23:22 p. m.",
+          "createdAt": "06-07-2026, 5:48:01 p. m.",
           "attempts": 0,
           "envelope": {
             "schema": "giae.cloud.sync-envelope.v1",
-            "createdAt": "2026-07-06T21:23:22.540Z",
+            "createdAt": "2026-07-06T21:48:01.137Z",
             "operation": "project.upsert",
             "workspaceId": "workspace-local",
             "companyId": "local-company",
@@ -206,10 +206,10 @@
             },
             "portableBackupRequired": true,
             "audit": {
-              "id": "audit-mr9q8njg-4y57w6",
+              "id": "audit-mr9r4cfl-333f1k",
               "action": "Prueba Fase 4",
               "module": "Nube y licencias",
-              "createdAt": "2026-07-06T21:23:22.540Z",
+              "createdAt": "2026-07-06T21:48:01.137Z",
               "note": "Paquete local preparado. El Worker debe validar permisos antes de aceptar cambios."
             },
             "safety": {

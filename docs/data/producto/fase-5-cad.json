@@ -1,0 +1,36 @@
+{
+  "schema": "giae.producto.fase5-cad.v1",
+  "actualizadoEn": "2026-07-06",
+  "fase": "fase-5",
+  "nombre": "CAD electrico GIAE 2.0",
+  "estado": "base_cad_2d_iniciada",
+  "objetivo": "Crear un CAD electrico propio, conectado al Proyecto Activo, con formato interno documentado y validacion preliminar.",
+  "entregables": [
+    { "id": "motor-cad", "archivo": "core/cad/cadEngine.js", "estado": "creado" },
+    { "id": "modulo-cad", "archivo": "modules/cad-electrico/cad-electrico.js", "estado": "creado" },
+    { "id": "simbolos-cad", "archivo": "data/cad/electrical-symbols.json", "estado": "creado" },
+    { "id": "diagnostico-fase5", "archivo": "tools/phase5-cad-check.mjs", "estado": "creado" }
+  ],
+  "capacidades": [
+    "formato .giaecad propio",
+    "capas electricas",
+    "simbolos propios",
+    "cableado en dos clics",
+    "generacion desde proyecto activo",
+    "validacion preliminar",
+    "exportacion JSON/SVG"
+  ],
+  "limites": [
+    "No importa ni exporta DWG/DXF todavia",
+    "No reemplaza CAD profesional completo todavia",
+    "No certifica cumplimiento final",
+    "No copia AutoCAD ni bloques externos"
+  ],
+  "criterioSalida": [
+    "modulo registrado",
+    "motor genera plano valido",
+    "simbolos y capas declarados",
+    "exportacion .giaecad documentada",
+    "diagnostico Fase 5 en 100%"
+  ]
+}

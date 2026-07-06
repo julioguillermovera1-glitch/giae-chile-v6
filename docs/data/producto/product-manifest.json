@@ -27,7 +27,8 @@
     "docs/FASE_1_PUBLICABLE_GIAE.md",
     "docs/FASE_2_INSTALABLE_GIAE.md",
     "docs/FASE_3_INTELIGENCIA_DOCUMENTAL_GIAE.md",
-    "docs/FASE_4_NUBE_USUARIOS_LICENCIAS_GIAE.md"
+    "docs/FASE_4_NUBE_USUARIOS_LICENCIAS_GIAE.md",
+    "docs/FASE_5_CAD_ELECTRICO_GIAE.md"
   ],
   "datosEstructurados": [
     "docs/data/producto/roadmap-6-fases.json",
@@ -42,7 +43,10 @@
     "data/cloud/cloud-contract.json",
     "data/cloud/d1-schema.json",
     "data/cloud/r2-assets.json",
-    "docs/data/producto/fase-4-cloud-last-report.json"
+    "docs/data/producto/fase-4-cloud-last-report.json",
+    "docs/data/producto/fase-5-cad.json",
+    "data/cad/electrical-symbols.json",
+    "docs/data/producto/fase-5-cad-last-report.json"
   ],
   "nota": "Los datos de producto viven temporalmente en docs/data/producto por restriccion de permisos. Cuando se autorice limpieza de data/, pueden moverse a data/producto sin cambiar su contenido.",
   "fases": [
@@ -58,7 +62,8 @@
     "tools/phase2-installable-check.mjs",
     "tools/local-static-server.mjs",
     "tools/phase3-document-intelligence-check.mjs",
-    "tools/phase4-cloud-readiness-check.mjs"
+    "tools/phase4-cloud-readiness-check.mjs",
+    "tools/phase5-cad-check.mjs"
   ],
   "pwa": {
     "manifest": "manifest.webmanifest",
@@ -83,5 +88,12 @@
     "modeloD1": "data/cloud/d1-schema.json",
     "archivosR2": "data/cloud/r2-assets.json",
     "diagnostico": "tools/phase4-cloud-readiness-check.mjs"
+  },
+  "cadElectrico": {
+    "motor": "core/cad/cadEngine.js",
+    "modulo": "modules/cad-electrico/cad-electrico.js",
+    "simbolos": "data/cad/electrical-symbols.json",
+    "formato": ".giaecad",
+    "diagnostico": "tools/phase5-cad-check.mjs"
   }
 }

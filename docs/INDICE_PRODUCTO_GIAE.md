@@ -12,6 +12,7 @@ Este indice conecta la documentacion estrategica con los datos estructurados del
 - FASE_2_INSTALABLE_GIAE.md
 - FASE_3_INTELIGENCIA_DOCUMENTAL_GIAE.md
 - FASE_4_NUBE_USUARIOS_LICENCIAS_GIAE.md
+- FASE_5_CAD_ELECTRICO_GIAE.md
 - ORIGINALIDAD.md
 - CLOUDFLARE_D1_R2_PLAN.md
 
@@ -25,10 +26,12 @@ Este indice conecta la documentacion estrategica con los datos estructurados del
 - docs/data/producto/fase-2-instalable.json
 - docs/data/producto/fase-3-documental.json
 - docs/data/producto/fase-4-cloud.json
+- docs/data/producto/fase-5-cad.json
 - data/cloud/cloud-contract.json
 - data/cloud/d1-schema.json
 - data/cloud/r2-assets.json
 - data/document-intelligence/document-types.json
+- data/cad/electrical-symbols.json
 - data/norma-chile/fuentes/decreto8-local-intake.json
 
 ## Herramientas
@@ -37,6 +40,7 @@ Este indice conecta la documentacion estrategica con los datos estructurados del
 - tools/phase2-installable-check.mjs
 - tools/phase3-document-intelligence-check.mjs
 - tools/phase4-cloud-readiness-check.mjs
+- tools/phase5-cad-check.mjs
 - tools/local-static-server.mjs
 
 ## Regla

@@ -109,6 +109,30 @@
       "tipo": "reporte_diagnostico",
       "archivo": "docs/data/producto/fase-4-cloud-last-report.json",
       "estado": "vigente"
+    },
+    {
+      "id": "fase-5-cad",
+      "tipo": "cad_electrico",
+      "archivo": "docs/FASE_5_CAD_ELECTRICO_GIAE.md",
+      "estado": "vigente"
+    },
+    {
+      "id": "datos-cad-simbolos",
+      "tipo": "biblioteca_cad",
+      "archivo": "data/cad/electrical-symbols.json",
+      "estado": "vigente"
+    },
+    {
+      "id": "diagnostico-fase-5",
+      "tipo": "herramienta",
+      "archivo": "tools/phase5-cad-check.mjs",
+      "estado": "vigente"
+    },
+    {
+      "id": "reporte-fase-5",
+      "tipo": "reporte_diagnostico",
+      "archivo": "docs/data/producto/fase-5-cad-last-report.json",
+      "estado": "vigente"
     }
   ]
 }

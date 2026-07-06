@@ -14,6 +14,7 @@ const moduleLabels = {
   empalme: "Empalme",
   tierra: "Puesta a tierra",
   unilineal: "Unilineal",
+  "cad-electrico": "CAD electrico",
   auditoria: "Auditoria",
   documentacion: "Centro de Documentacion SEC",
   "lector-documental": "Lector documental",
@@ -251,6 +252,7 @@ export function render(host, state){
           <div class="policy-box"><b>Fase 2 activa:</b> manifest.webmanifest, sw.js, core/pwa.js y tools/phase2-installable-check.mjs.</div>
           <div class="policy-box"><b>Fase 3 activa:</b> Lector documental, core/document-intelligence y tools/phase3-document-intelligence-check.mjs.</div>
           <div class="policy-box"><b>Fase 4 activa:</b> Nube y licencias, core/cloud, data/cloud y tools/phase4-cloud-readiness-check.mjs.</div>
+          <div class="policy-box"><b>Fase 5 activa:</b> CAD electrico, core/cad, data/cad y tools/phase5-cad-check.mjs.</div>
           <div class="policy-box"><b>Regla:</b> ninguna mejora debe copiar codigo externo ni prometer cumplimiento normativo sin reglas, medicion y evidencia.</div>
         </div>
       </section>
