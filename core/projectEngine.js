@@ -126,7 +126,7 @@ function buildNextActions(status, issues){
 
 export function runProjectEngine(project){
   const previous = project.gpe || {};
-  project.grounding = calculateGroundingProject(project);
+  project.groundingEngine = calculateGroundingProject(project);
   const status = buildModuleStatus(project);
   const issues = buildIssues(project, status);
   const dependencies = buildDependencies(project);

@@ -73,7 +73,12 @@ function collectMaterials(project, settings){
     list.push(normalizeMaterial({ family:'Empalme', item: project.connection.connectionType || 'Empalme normalizado', qty:1, unit:'gl' }, settings, 'Empalme'));
   }
   if(project.grounding){
-    list.push(normalizeMaterial({ family:'Tierra', item:'Sistema de puesta a tierra preliminar', qty:1, unit:'gl' }, settings, 'Puesta a tierra'));
+    const groundingMaterials = Array.isArray(project.grounding.materials) ? project.grounding.materials : [];
+    if(groundingMaterials.length){
+      groundingMaterials.forEach(item => list.push(normalizeMaterial(item, settings, 'Puesta a tierra')));
+    } else {
+      list.push(normalizeMaterial({ family:'Tierra', item:'Sistema de puesta a tierra preliminar', qty:1, unit:'gl' }, settings, 'Puesta a tierra'));
+    }
   }
   if(!list.length && Array.isArray(project.loads) && project.loads.length){
     project.loads.forEach((load, index) => {
