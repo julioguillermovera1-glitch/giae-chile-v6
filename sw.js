@@ -1,4 +1,4 @@
-const GIAE_CACHE_VERSION = 'giae-chile-v1-installable-2026-07-06';
+const GIAE_CACHE_VERSION = 'giae-chile-v1-documental-2026-07-06';
 const GIAE_APP_SHELL = [
   "./",
   "./assets/icons/giae-icon-192.png",
@@ -12,6 +12,7 @@ const GIAE_APP_SHELL = [
   "./core/calculations.js",
   "./core/commercial/budgetEngine.js",
   "./core/componentLibrary.js",
+  "./core/document-intelligence/documentIntelligenceEngine.js",
   "./core/documentationEngine.js",
   "./core/engineering/connectionEngine.js",
   "./core/engineering/electricalEngine.js",
@@ -71,6 +72,7 @@ const GIAE_APP_SHELL = [
   "./data/data/norma-chile/rules/ric-19.json",
   "./data/distribuidoras-base.json",
   "./data/distribuidoras.json",
+  "./data/document-intelligence/document-types.json",
   "./data/documentos-sec.json",
   "./data/inspector/checklist-presec.json",
   "./data/inspector/consistency-rules.json",
@@ -137,6 +139,8 @@ const GIAE_APP_SHELL = [
   "./docs/data/producto/documentos-producto.json",
   "./docs/data/producto/fase-1-publicable-last-report.json",
   "./docs/data/producto/fase-1-publicable.json",
+  "./docs/data/producto/fase-2-instalable.json",
+  "./docs/data/producto/fase-2-installable-last-report.json",
   "./docs/data/producto/product-manifest.json",
   "./docs/data/producto/roadmap-6-fases.json",
   "./docs/data/producto/vision-giae-2.json",
@@ -155,6 +159,7 @@ const GIAE_APP_SHELL = [
   "./modules/empalme/empalme.js",
   "./modules/giae-inspector/inspector.js",
   "./modules/gpe.js",
+  "./modules/lector-documental/lector-documental.js",
   "./modules/norma-chile/norma-chile.js",
   "./modules/normativo/normativo.js",
   "./modules/presupuesto/presupuesto.js",

@@ -1,0 +1,90 @@
+{
+  "schema": "giae.document-intelligence.types.v1",
+  "actualizadoEn": "2026-07-06",
+  "tipos": [
+    {
+      "id": "proyecto_giae",
+      "nombre": "Proyecto GIAE",
+      "acepta": [
+        ".giae",
+        ".json"
+      ],
+      "requiere": [
+        "datos de proyecto",
+        "cargas o potencia"
+      ]
+    },
+    {
+      "id": "memoria_tecnica",
+      "nombre": "Memoria tecnica",
+      "acepta": [
+        ".txt",
+        ".md",
+        ".pdf"
+      ],
+      "requiere": [
+        "calculos",
+        "normativa",
+        "cargas"
+      ]
+    },
+    {
+      "id": "informe_tierra",
+      "nombre": "Informe puesta a tierra",
+      "acepta": [
+        ".txt",
+        ".pdf",
+        "imagenes"
+      ],
+      "requiere": [
+        "ohm",
+        "medicion",
+        "evidencia"
+      ]
+    },
+    {
+      "id": "plano_electrico",
+      "nombre": "Plano electrico",
+      "acepta": [
+        ".pdf",
+        "imagenes"
+      ],
+      "requiere": [
+        "plano",
+        "circuitos",
+        "tablero"
+      ]
+    },
+    {
+      "id": "presupuesto",
+      "nombre": "Presupuesto o cotizacion",
+      "acepta": [
+        ".txt",
+        ".md",
+        ".pdf",
+        ".json"
+      ],
+      "requiere": [
+        "materiales",
+        "valores comerciales",
+        "total"
+      ]
+    },
+    {
+      "id": "normativa",
+      "nombre": "Fuente normativa o regla",
+      "acepta": [
+        ".txt",
+        ".md",
+        ".pdf",
+        ".json"
+      ],
+      "requiere": [
+        "fuente",
+        "articulo",
+        "fecha"
+      ]
+    }
+  ],
+  "politica": "No copiar textos normativos completos. Registrar senales, fuente y faltantes antes de convertir a reglas propias."
+}

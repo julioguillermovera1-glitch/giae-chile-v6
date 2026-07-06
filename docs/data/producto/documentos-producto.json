@@ -61,6 +61,18 @@
       "tipo": "herramienta",
       "archivo": "tools/local-static-server.mjs",
       "estado": "vigente"
+    },
+    {
+      "id": "fase-3-documental",
+      "tipo": "inteligencia_documental",
+      "archivo": "docs/FASE_3_INTELIGENCIA_DOCUMENTAL_GIAE.md",
+      "estado": "vigente"
+    },
+    {
+      "id": "diagnostico-fase-3",
+      "tipo": "herramienta",
+      "archivo": "tools/phase3-document-intelligence-check.mjs",
+      "estado": "vigente"
     }
   ]
 }

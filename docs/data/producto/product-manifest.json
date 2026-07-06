@@ -25,7 +25,8 @@
     "docs/CLOUDFLARE_D1_R2_PLAN.md",
     "docs/INDICE_PRODUCTO_GIAE.md",
     "docs/FASE_1_PUBLICABLE_GIAE.md",
-    "docs/FASE_2_INSTALABLE_GIAE.md"
+    "docs/FASE_2_INSTALABLE_GIAE.md",
+    "docs/FASE_3_INTELIGENCIA_DOCUMENTAL_GIAE.md"
   ],
   "datosEstructurados": [
     "docs/data/producto/roadmap-6-fases.json",
@@ -33,7 +34,9 @@
     "docs/data/producto/documentos-producto.json",
     "data/norma-chile/fuentes/decreto8-local-intake.json",
     "docs/data/producto/fase-1-publicable.json",
-    "docs/data/producto/fase-2-instalable.json"
+    "docs/data/producto/fase-2-instalable.json",
+    "docs/data/producto/fase-3-documental.json",
+    "data/document-intelligence/document-types.json"
   ],
   "nota": "Los datos de producto viven temporalmente en docs/data/producto por restriccion de permisos. Cuando se autorice limpieza de data/, pueden moverse a data/producto sin cambiar su contenido.",
   "fases": [
@@ -47,7 +50,8 @@
   "herramientas": [
     "tools/phase1-publicable-check.mjs",
     "tools/phase2-installable-check.mjs",
-    "tools/local-static-server.mjs"
+    "tools/local-static-server.mjs",
+    "tools/phase3-document-intelligence-check.mjs"
   ],
   "pwa": {
     "manifest": "manifest.webmanifest",
@@ -59,5 +63,10 @@
       "assets/icons/giae-icon-192.png",
       "assets/icons/giae-icon-512.png"
     ]
+  },
+  "inteligenciaDocumental": {
+    "motor": "core/document-intelligence/documentIntelligenceEngine.js",
+    "modulo": "modules/lector-documental/lector-documental.js",
+    "tipos": "data/document-intelligence/document-types.json"
   }
 }

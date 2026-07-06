@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-07-06 - Inicio Fase 3 inteligencia documental
+
+- Se agrega motor propio de inteligencia documental.
+- Se agrega modulo Lector documental al menu de Documentacion.
+- Se agregan tipos documentales y politica de analisis sin copia normativa completa.
+- Se conecta el lector al Proyecto Activo para guardar resultados.
+- Se actualiza cache PWA para incluir Fase 3.
+- Se agrega diagnostico Fase 3 documental.
+
 ## 2026-07-06 - Inicio Fase 2 instalable local
 
 - Se agrega manifest PWA para instalacion local.
