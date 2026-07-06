@@ -7,7 +7,7 @@
       "nombre": "Depuracion y base publicable",
       "versionObjetivo": "v1.0-alpha-publicable",
       "prioridad": "muy_alta",
-      "estado": "iniciada",
+      "estado": "validada_tecnicamente",
       "foco": [
         "limpieza",
         "una fuente de verdad",
@@ -33,7 +33,7 @@
       "nombre": "Version 1.0 instalable local",
       "versionObjetivo": "v1.0",
       "prioridad": "muy_alta",
-      "estado": "planificada",
+      "estado": "iniciada",
       "foco": [
         "PWA",
         "offline",

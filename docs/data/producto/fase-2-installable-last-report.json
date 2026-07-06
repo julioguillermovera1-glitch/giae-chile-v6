@@ -1,0 +1,152 @@
+{
+  "schema": "giae.diagnostico.fase2-instalable.v1",
+  "generatedAt": "2026-07-06T20:46:24.956Z",
+  "score": 100,
+  "status": "apto_para_prueba_manual",
+  "root": "C:\\Users\\julio\\Documents\\GitHub\\giae-chile-v6",
+  "summary": {
+    "total": 17,
+    "ok": 17,
+    "failed": 0,
+    "criticalFails": 0,
+    "highFails": 0
+  },
+  "checks": [
+    {
+      "id": "manifest-existe",
+      "name": "Manifest PWA existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "manifest.webmanifest",
+      "evidence": []
+    },
+    {
+      "id": "manifest-identidad",
+      "name": "Manifest tiene identidad de app",
+      "ok": true,
+      "level": "critico",
+      "detail": "name y short_name definidos",
+      "evidence": []
+    },
+    {
+      "id": "manifest-display",
+      "name": "Manifest usa modo instalable",
+      "ok": true,
+      "level": "critico",
+      "detail": "display=standalone",
+      "evidence": []
+    },
+    {
+      "id": "manifest-start-scope",
+      "name": "Manifest tiene start_url y scope",
+      "ok": true,
+      "level": "critico",
+      "detail": "start_url=./index.html?source=pwa scope=./",
+      "evidence": []
+    },
+    {
+      "id": "manifest-iconos",
+      "name": "Manifest referencia iconos existentes",
+      "ok": true,
+      "level": "critico",
+      "detail": "3 icono(s)",
+      "evidence": []
+    },
+    {
+      "id": "index-manifest",
+      "name": "index.html enlaza manifest e iconos",
+      "ok": true,
+      "level": "critico",
+      "detail": "manifest, theme-color y apple-touch-icon",
+      "evidence": []
+    },
+    {
+      "id": "pwa-registro",
+      "name": "Registro PWA incorporado",
+      "ok": true,
+      "level": "critico",
+      "detail": "core/main.js + core/pwa.js",
+      "evidence": []
+    },
+    {
+      "id": "service-worker",
+      "name": "Service worker propio existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "sw.js con cache, fetch y offline",
+      "evidence": []
+    },
+    {
+      "id": "offline-page",
+      "name": "Pagina offline existe y es local",
+      "ok": true,
+      "level": "alto",
+      "detail": "offline.html sin dependencias remotas",
+      "evidence": []
+    },
+    {
+      "id": "icono-svg",
+      "name": "Icono SVG propio existe",
+      "ok": true,
+      "level": "alto",
+      "detail": "assets/icons/giae-icon.svg",
+      "evidence": []
+    },
+    {
+      "id": "icono-png-192",
+      "name": "Icono PNG 192 existe",
+      "ok": true,
+      "level": "alto",
+      "detail": "assets/icons/giae-icon-192.png",
+      "evidence": []
+    },
+    {
+      "id": "icono-png-512",
+      "name": "Icono PNG 512 existe",
+      "ok": true,
+      "level": "alto",
+      "detail": "assets/icons/giae-icon-512.png",
+      "evidence": []
+    },
+    {
+      "id": "js-pwa-valido",
+      "name": "JavaScript PWA valido",
+      "ok": true,
+      "level": "critico",
+      "detail": "core/pwa.js y sw.js",
+      "evidence": []
+    },
+    {
+      "id": "docs-fase2",
+      "name": "Documentos y datos de Fase 2 presentes",
+      "ok": true,
+      "level": "alto",
+      "detail": "docs fase 2",
+      "evidence": []
+    },
+    {
+      "id": "servidor-local",
+      "name": "Servidor local de prueba existe",
+      "ok": true,
+      "level": "alto",
+      "detail": "tools/local-static-server.mjs",
+      "evidence": []
+    },
+    {
+      "id": "readme-fase2",
+      "name": "README declara Fase 2 como instalable local en proceso",
+      "ok": true,
+      "level": "medio",
+      "detail": "README con limites honestos",
+      "evidence": []
+    },
+    {
+      "id": "sin-assets-remotos",
+      "name": "Entrada sin scripts o estilos remotos",
+      "ok": true,
+      "level": "alto",
+      "detail": "index.html sin scripts/estilos remotos",
+      "evidence": []
+    }
+  ]
+}

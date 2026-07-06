@@ -1,0 +1,55 @@
+{
+  "schema": "giae.producto.fase2-instalable.v1",
+  "actualizadoEn": "2026-07-06",
+  "estado": "iniciada",
+  "objetivo": "Convertir GIAE en una app local instalable desde navegador, con modo offline controlado.",
+  "entregables": [
+    {
+      "id": "manifest",
+      "archivo": "manifest.webmanifest",
+      "estado": "incorporado"
+    },
+    {
+      "id": "service-worker",
+      "archivo": "sw.js",
+      "estado": "incorporado"
+    },
+    {
+      "id": "registro-pwa",
+      "archivo": "core/pwa.js",
+      "estado": "incorporado"
+    },
+    {
+      "id": "iconos",
+      "archivo": "assets/icons/",
+      "estado": "incorporado"
+    },
+    {
+      "id": "offline",
+      "archivo": "offline.html",
+      "estado": "mejorado"
+    },
+    {
+      "id": "diagnostico",
+      "archivo": "tools/phase2-installable-check.mjs",
+      "estado": "incorporado"
+    },
+    {
+      "id": "servidor-local",
+      "archivo": "tools/local-static-server.mjs",
+      "estado": "incorporado"
+    }
+  ],
+  "noIncluye": [
+    "instalador exe msi final",
+    "apk nativo",
+    "publicacion en tiendas",
+    "sincronizacion nube real"
+  ],
+  "pruebaManualPendiente": [
+    "instalar en navegador de escritorio",
+    "instalar en celular",
+    "probar offline",
+    "probar exportar importar .giae"
+  ]
+}

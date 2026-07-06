@@ -56,6 +56,30 @@ Comando de revision desde la raiz del repositorio:
 
 Esta revision no reemplaza la prueba manual en PC y celular. Sirve para detectar bloqueos tecnicos antes de anunciar una version publicable.
 
+## Fase 2 instalable local
+
+La Fase 2 inicia la preparacion de GIAE como app instalable local para PC y celular mediante PWA propia:
+
+- manifest.webmanifest
+- sw.js
+- core/pwa.js
+- assets/icons/giae-icon.svg
+- assets/icons/giae-icon-192.png
+- assets/icons/giae-icon-512.png
+- docs/FASE_2_INSTALABLE_GIAE.md
+- tools/phase2-installable-check.mjs
+- tools/local-static-server.mjs
+
+Comando de revision:
+
+    node tools/phase2-installable-check.mjs
+
+Servidor local para prueba PWA:
+
+    node tools/local-static-server.mjs 8787
+
+Esta base no reemplaza la prueba manual en PC y celular ni corresponde aun a instalador EXE, MSI o APK final.
+
 ## Decreto Supremo N8
 
 El PDF local indicado por el usuario quedo registrado como fuente de ingesta en:

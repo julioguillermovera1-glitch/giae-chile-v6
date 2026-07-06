@@ -246,6 +246,7 @@ export function render(host, state){
           </div>
           <div class="policy-box"><b>Documentos:</b> docs/ROADMAP_6_FASES_GIAE_CHILE.md y docs/GIAE_2_0_CAD_DOCUMENTOS_RAZONAMIENTO.md.<br><b>Datos:</b> docs/data/producto/product-manifest.json y docs/data/producto/roadmap-6-fases.json.</div>
           <div class="policy-box"><b>Fase 1 activa:</b> docs/FASE_1_PUBLICABLE_GIAE.md y tools/phase1-publicable-check.mjs.</div>
+          <div class="policy-box"><b>Fase 2 activa:</b> manifest.webmanifest, sw.js, core/pwa.js y tools/phase2-installable-check.mjs.</div>
           <div class="policy-box"><b>Regla:</b> ninguna mejora debe copiar codigo externo ni prometer cumplimiento normativo sin reglas, medicion y evidencia.</div>
         </div>
       </section>
