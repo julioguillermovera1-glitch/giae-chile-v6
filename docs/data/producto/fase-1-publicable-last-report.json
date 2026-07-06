@@ -1,0 +1,116 @@
+{
+  "schema": "giae.diagnostico.fase1-publicable.v1",
+  "generatedAt": "2026-07-06T20:21:58.452Z",
+  "score": 100,
+  "status": "apto_para_prueba_manual",
+  "root": "C:\\Users\\julio\\Documents\\GitHub\\giae-chile-v6",
+  "summary": {
+    "total": 12,
+    "ok": 12,
+    "failed": 0,
+    "criticalFails": 0,
+    "highFails": 0
+  },
+  "checks": [
+    {
+      "id": "entrada-oficial",
+      "name": "Entrada oficial disponible",
+      "ok": true,
+      "level": "critico",
+      "detail": "index.html, core/main.js, css/platform.css",
+      "evidence": [
+        "index.html",
+        "core/main.js",
+        "css/platform.css"
+      ]
+    },
+    {
+      "id": "index-conecta-core",
+      "name": "index.html conecta app nueva",
+      "ok": true,
+      "level": "critico",
+      "detail": "Debe cargar css/platform.css y core/main.js",
+      "evidence": []
+    },
+    {
+      "id": "legado-identificado",
+      "name": "Legado identificado",
+      "ok": true,
+      "level": "medio",
+      "detail": "js/app.js y css/styles.css quedan tratados como legado",
+      "evidence": []
+    },
+    {
+      "id": "modulos-rutas",
+      "name": "Rutas de modulos existentes",
+      "ok": true,
+      "level": "critico",
+      "detail": "21 modulo(s) revisados",
+      "evidence": []
+    },
+    {
+      "id": "modulos-render",
+      "name": "Modulos exportan render",
+      "ok": true,
+      "level": "critico",
+      "detail": "21 modulo(s) con contrato de render",
+      "evidence": []
+    },
+    {
+      "id": "js-sintaxis",
+      "name": "Sintaxis JavaScript valida",
+      "ok": true,
+      "level": "critico",
+      "detail": "85 archivo(s) JS/MJS revisados",
+      "evidence": []
+    },
+    {
+      "id": "json-valido",
+      "name": "JSON y JSONC validos",
+      "ok": true,
+      "level": "critico",
+      "detail": "104 archivo(s) de datos revisados",
+      "evidence": []
+    },
+    {
+      "id": "producto-fase1",
+      "name": "Documentos y datos de Fase 1 presentes",
+      "ok": true,
+      "level": "alto",
+      "detail": "docs/ROADMAP_6_FASES_GIAE_CHILE.md, docs/FASE_1_PUBLICABLE_GIAE.md, docs/data/producto/product-manifest.json, docs/data/producto/roadmap-6-fases.json, docs/data/producto/fase-1-publicable.json",
+      "evidence": []
+    },
+    {
+      "id": "sin-assets-remotos",
+      "name": "Sin scripts o estilos remotos en entrada",
+      "ok": true,
+      "level": "alto",
+      "detail": "Entradas sin dependencias remotas activas",
+      "evidence": []
+    },
+    {
+      "id": "texto-legible",
+      "name": "Texto sin caracteres de reemplazo",
+      "ok": true,
+      "level": "medio",
+      "detail": "No se detecto caracter de reemplazo UTF-8",
+      "evidence": []
+    },
+    {
+      "id": "ds8-normalizado",
+      "name": "DS8 sin denominacion antigua activa",
+      "ok": true,
+      "level": "medio",
+      "detail": "No se detectaron referencias antiguas fuera de migracion interna",
+      "evidence": []
+    },
+    {
+      "id": "readme-publicable",
+      "name": "README declara estado publicable honesto",
+      "ok": true,
+      "level": "alto",
+      "detail": "README debe evitar prometer version final",
+      "evidence": []
+    }
+  ]
+}

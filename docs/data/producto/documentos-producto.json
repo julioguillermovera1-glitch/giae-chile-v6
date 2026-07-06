@@ -31,6 +31,18 @@
       "tipo": "fuente_normativa_local",
       "archivo": "data/norma-chile/fuentes/decreto8-local-intake.json",
       "estado": "registrado_no_convertido_a_reglas"
+    },
+    {
+      "id": "fase-1-publicable",
+      "tipo": "depuracion_publicable",
+      "archivo": "docs/FASE_1_PUBLICABLE_GIAE.md",
+      "estado": "vigente"
+    },
+    {
+      "id": "diagnostico-fase-1",
+      "tipo": "herramienta",
+      "archivo": "tools/phase1-publicable-check.mjs",
+      "estado": "vigente"
     }
   ]
 }

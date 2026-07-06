@@ -1,0 +1,63 @@
+{
+  "schema": "giae.producto.fase1-publicable.v1",
+  "actualizadoEn": "2026-07-06",
+  "estado": "iniciada",
+  "objetivo": "Base publicable honesta, estable y verificable antes de preparar instalador.",
+  "entradaOficial": [
+    "index.html",
+    "core/main.js",
+    "css/platform.css"
+  ],
+  "legadoIdentificado": [
+    "js/app.js",
+    "css/styles.css",
+    "indice.html"
+  ],
+  "entregables": [
+    {
+      "id": "diagnostico-local",
+      "nombre": "Herramienta propia de diagnostico Fase 1",
+      "archivo": "tools/phase1-publicable-check.mjs",
+      "estado": "incorporado"
+    },
+    {
+      "id": "checklist-publicable",
+      "nombre": "Checklist de salida publicable",
+      "archivo": "docs/FASE_1_PUBLICABLE_GIAE.md",
+      "estado": "incorporado"
+    },
+    {
+      "id": "datos-fase-1",
+      "nombre": "Datos estructurados de Fase 1",
+      "archivo": "docs/data/producto/fase-1-publicable.json",
+      "estado": "incorporado"
+    },
+    {
+      "id": "dashboard-powerw",
+      "nombre": "Dashboard calcula potencia desde powerW",
+      "archivo": "modules/dashboard/dashboard.js",
+      "estado": "corregido"
+    },
+    {
+      "id": "admin-modulos",
+      "nombre": "Panel administrador registra todos los modulos principales",
+      "archivo": "modules/administracion/administracion.js",
+      "estado": "corregido"
+    }
+  ],
+  "pruebasMinimas": [
+    "Sintaxis JavaScript",
+    "JSON y JSONC validos",
+    "Rutas de modulos existentes",
+    "Render exportado por cada modulo",
+    "Datos de producto existentes",
+    "Politica normativa sin promesa excesiva"
+  ],
+  "noIncluye": [
+    "instalador PWA final",
+    "lector documental inteligente",
+    "CAD electrico",
+    "razonador tecnico final"
+  ],
+  "regla": "Si falta evidencia, medicion o regla local, GIAE debe indicar requiere revision."
+}

@@ -42,6 +42,20 @@ Las seis fases son:
 - Separar siempre calculo preliminar, medicion real y validacion final.
 - Si falta evidencia, GIAE debe indicar requiere revision.
 
+## Fase 1 publicable
+
+La Fase 1 ya tiene checklist y diagnostico local propio:
+
+- docs/FASE_1_PUBLICABLE_GIAE.md
+- docs/data/producto/fase-1-publicable.json
+- tools/phase1-publicable-check.mjs
+
+Comando de revision desde la raiz del repositorio:
+
+    node tools/phase1-publicable-check.mjs
+
+Esta revision no reemplaza la prueba manual en PC y celular. Sirve para detectar bloqueos tecnicos antes de anunciar una version publicable.
+
 ## Decreto Supremo N8
 
 El PDF local indicado por el usuario quedo registrado como fuente de ingesta en:

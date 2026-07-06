@@ -23,13 +23,15 @@
     "docs/DEPURACION_GIAE_2026_07_06.md",
     "docs/ORIGINALIDAD.md",
     "docs/CLOUDFLARE_D1_R2_PLAN.md",
-    "docs/INDICE_PRODUCTO_GIAE.md"
+    "docs/INDICE_PRODUCTO_GIAE.md",
+    "docs/FASE_1_PUBLICABLE_GIAE.md"
   ],
   "datosEstructurados": [
     "docs/data/producto/roadmap-6-fases.json",
     "docs/data/producto/vision-giae-2.json",
     "docs/data/producto/documentos-producto.json",
-    "data/norma-chile/fuentes/decreto8-local-intake.json"
+    "data/norma-chile/fuentes/decreto8-local-intake.json",
+    "docs/data/producto/fase-1-publicable.json"
   ],
   "nota": "Los datos de producto viven temporalmente en docs/data/producto por restriccion de permisos. Cuando se autorice limpieza de data/, pueden moverse a data/producto sin cambiar su contenido.",
   "fases": [
@@ -39,5 +41,8 @@
     "fase-4",
     "fase-5",
     "fase-6"
+  ],
+  "herramientas": [
+    "tools/phase1-publicable-check.mjs"
   ]
 }
