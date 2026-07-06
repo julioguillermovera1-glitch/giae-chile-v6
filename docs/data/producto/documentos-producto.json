@@ -1,0 +1,36 @@
+{
+  "schema": "giae.producto.documentos.v1",
+  "actualizadoEn": "2026-07-06",
+  "docs": [
+    {
+      "id": "roadmap-6-fases",
+      "tipo": "roadmap",
+      "archivo": "docs/ROADMAP_6_FASES_GIAE_CHILE.md",
+      "estado": "vigente"
+    },
+    {
+      "id": "vision-2-cad-docs-razonamiento",
+      "tipo": "vision",
+      "archivo": "docs/GIAE_2_0_CAD_DOCUMENTOS_RAZONAMIENTO.md",
+      "estado": "vigente"
+    },
+    {
+      "id": "propuesta-publicable",
+      "tipo": "propuesta",
+      "archivo": "docs/PROPUESTA_PUBLICABLE_GIAE_CHILE.md",
+      "estado": "vigente"
+    },
+    {
+      "id": "depuracion-2026-07-06",
+      "tipo": "depuracion",
+      "archivo": "docs/DEPURACION_GIAE_2026_07_06.md",
+      "estado": "vigente"
+    },
+    {
+      "id": "decreto8-intake-local",
+      "tipo": "fuente_normativa_local",
+      "archivo": "data/norma-chile/fuentes/decreto8-local-intake.json",
+      "estado": "registrado_no_convertido_a_reglas"
+    }
+  ]
+}

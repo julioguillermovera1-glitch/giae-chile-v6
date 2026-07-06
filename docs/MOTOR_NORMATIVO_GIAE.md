@@ -1,7 +1,7 @@
 # Motor Normativo GIAE · Etapa 3.0.1
 
 ## Objetivo
-Crear un motor robusto y preparado para evaluar reglas técnicas asociadas a RIC, IEC eléctrica aplicable y Decreto N°8, sin copiar textos completos de normas dentro del software.
+Crear un motor robusto y preparado para evaluar reglas técnicas asociadas a RIC, IEC eléctrica aplicable y Decreto Supremo N8, sin copiar textos completos de normas dentro del software.
 
 ## Principio obligatorio
 GIAE no inventa cumplimiento normativo. Si no existe regla implementada, datos suficientes o referencia validada, el resultado debe ser: requiere revisión normativa o información insuficiente.

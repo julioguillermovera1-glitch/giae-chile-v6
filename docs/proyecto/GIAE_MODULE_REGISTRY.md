@@ -314,4 +314,70 @@ Una vez integrados, comenzará la fase de auditoría funcional del sistema.
 
 ---
 
+---
+
+# Modulos estrategicos incorporados al roadmap
+
+## Roadmap / Producto
+
+Estado:
+En desarrollo
+
+Responsabilidad:
+Mantener la ruta oficial de 6 fases, criterios de salida, documentos vigentes y datos estructurados del producto.
+
+Archivos:
+
+- docs/ROADMAP_6_FASES_GIAE_CHILE.md
+- docs/INDICE_PRODUCTO_GIAE.md
+- docs/data/producto/product-manifest.json
+- docs/data/producto/roadmap-6-fases.json
+
+Prioridad:
+Muy Alta
+
+---
+
+## CAD Electrico GIAE 2.0
+
+Estado:
+Planificado
+
+Responsabilidad:
+Crear un editor propio de planos electricos con capas, simbolos, circuitos, tableros, canalizaciones y validacion tecnica.
+
+Restriccion:
+No copiar AutoCAD ni su codigo, interfaz, nombres internos o logica propietaria.
+
+Prioridad:
+Estrategica
+
+---
+
+## Lector Documental / Norma Chile
+
+Estado:
+Planificado
+
+Responsabilidad:
+Leer PDF, imagenes, textos y documentos tecnicos para extraer datos, evaluar coherencia y generar reglas propias con trazabilidad.
+
+Prioridad:
+Alta
+
+---
+
+## Razonador Tecnico GIAE
+
+Estado:
+Vision 2.0
+
+Responsabilidad:
+Emitir recomendaciones con evidencia, reglas, calculos, supuestos, nivel de confianza y bloqueos cuando falten datos.
+
+Prioridad:
+Estrategica
+
+---
+
 Fin del documento.
