@@ -1,0 +1,29 @@
+{
+  "schema": "giae.producto.fase4-cloud.v1",
+  "actualizadoEn": "2026-07-06",
+  "fase": "fase-4",
+  "nombre": "Nube, usuarios, licencias y colaboracion",
+  "estado": "base_cloud_ready_iniciada",
+  "objetivo": "Preparar GIAE para Cloudflare Workers, D1 y R2 sin perder modo local ni respaldo .giae.",
+  "entregables": [
+    { "id": "motor-cloud", "archivo": "core/cloud/cloudWorkspaceEngine.js", "estado": "creado" },
+    { "id": "modulo-nube", "archivo": "modules/nube/nube.js", "estado": "creado" },
+    { "id": "contrato-worker", "archivo": "data/cloud/cloud-contract.json", "estado": "creado" },
+    { "id": "modelo-d1", "archivo": "data/cloud/d1-schema.json", "estado": "creado" },
+    { "id": "politica-r2", "archivo": "data/cloud/r2-assets.json", "estado": "creado" },
+    { "id": "diagnostico-fase4", "archivo": "tools/phase4-cloud-readiness-check.mjs", "estado": "creado" }
+  ],
+  "limites": [
+    "No autentica usuarios reales todavia",
+    "No escribe en D1/R2 todavia",
+    "No guarda secretos en cliente",
+    "No reemplaza el formato .giae"
+  ],
+  "criterioSalida": [
+    "modulo registrado",
+    "contrato D1/R2/Worker declarado",
+    "cola sync local funcional",
+    "diagnostico Fase 4 en 100%",
+    "limites honestos documentados"
+  ]
+}

@@ -26,7 +26,8 @@
     "docs/INDICE_PRODUCTO_GIAE.md",
     "docs/FASE_1_PUBLICABLE_GIAE.md",
     "docs/FASE_2_INSTALABLE_GIAE.md",
-    "docs/FASE_3_INTELIGENCIA_DOCUMENTAL_GIAE.md"
+    "docs/FASE_3_INTELIGENCIA_DOCUMENTAL_GIAE.md",
+    "docs/FASE_4_NUBE_USUARIOS_LICENCIAS_GIAE.md"
   ],
   "datosEstructurados": [
     "docs/data/producto/roadmap-6-fases.json",
@@ -36,7 +37,12 @@
     "docs/data/producto/fase-1-publicable.json",
     "docs/data/producto/fase-2-instalable.json",
     "docs/data/producto/fase-3-documental.json",
-    "data/document-intelligence/document-types.json"
+    "data/document-intelligence/document-types.json",
+    "docs/data/producto/fase-4-cloud.json",
+    "data/cloud/cloud-contract.json",
+    "data/cloud/d1-schema.json",
+    "data/cloud/r2-assets.json",
+    "docs/data/producto/fase-4-cloud-last-report.json"
   ],
   "nota": "Los datos de producto viven temporalmente en docs/data/producto por restriccion de permisos. Cuando se autorice limpieza de data/, pueden moverse a data/producto sin cambiar su contenido.",
   "fases": [
@@ -51,7 +57,8 @@
     "tools/phase1-publicable-check.mjs",
     "tools/phase2-installable-check.mjs",
     "tools/local-static-server.mjs",
-    "tools/phase3-document-intelligence-check.mjs"
+    "tools/phase3-document-intelligence-check.mjs",
+    "tools/phase4-cloud-readiness-check.mjs"
   ],
   "pwa": {
     "manifest": "manifest.webmanifest",
@@ -68,5 +75,13 @@
     "motor": "core/document-intelligence/documentIntelligenceEngine.js",
     "modulo": "modules/lector-documental/lector-documental.js",
     "tipos": "data/document-intelligence/document-types.json"
+  },
+  "cloudWorkspace": {
+    "motor": "core/cloud/cloudWorkspaceEngine.js",
+    "modulo": "modules/nube/nube.js",
+    "contrato": "data/cloud/cloud-contract.json",
+    "modeloD1": "data/cloud/d1-schema.json",
+    "archivosR2": "data/cloud/r2-assets.json",
+    "diagnostico": "tools/phase4-cloud-readiness-check.mjs"
   }
 }

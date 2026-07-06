@@ -58,7 +58,7 @@
       "nombre": "Inteligencia normativa y lectura documental",
       "versionObjetivo": "v1.5",
       "prioridad": "alta",
-      "estado": "iniciada",
+      "estado": "validada_tecnicamente",
       "foco": [
         "lector PDF",
         "lector documentos",
@@ -83,7 +83,7 @@
       "nombre": "Nube, usuarios, licencias y colaboracion",
       "versionObjetivo": "v1.8",
       "prioridad": "media_alta",
-      "estado": "planificada",
+      "estado": "iniciada",
       "foco": [
         "Cloudflare Workers",
         "D1",

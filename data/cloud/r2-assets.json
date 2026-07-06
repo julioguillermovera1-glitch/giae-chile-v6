@@ -1,0 +1,11 @@
+{
+  "schema": "giae.cloud.r2-assets.v1",
+  "actualizadoEn": "2026-07-06",
+  "buckets": [
+    { "binding": "GIAE_PROJECT_BACKUPS", "uso": "Respaldos .giae y paquetes de sincronizacion", "retencion": "versionado por proyecto" },
+    { "binding": "GIAE_PROJECT_DOCUMENTS", "uso": "Informes, memorias, PDF y evidencias documentales", "retencion": "por proyecto" },
+    { "binding": "GIAE_BRAND_ASSETS", "uso": "Logos, plantillas, firmas y marca blanca", "retencion": "por empresa" },
+    { "binding": "GIAE_FIELD_MEDIA", "uso": "Fotos de terreno, planos, imagenes y evidencias", "retencion": "por proyecto" }
+  ],
+  "regla": "R2 guarda archivos. D1 solo guarda indice, metadatos y hash."
+}

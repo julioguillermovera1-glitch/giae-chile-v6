@@ -1,0 +1,17 @@
+{
+  "schema": "giae.cloud.d1-schema.v1",
+  "actualizadoEn": "2026-07-06",
+  "binding": "GIAE_DB",
+  "tablas": [
+    { "name": "companies", "campos": ["id", "rut", "name", "status", "brand_json", "created_at", "updated_at"] },
+    { "name": "users", "campos": ["id", "company_id", "email", "name", "role_id", "status", "last_seen_at"] },
+    { "name": "roles", "campos": ["id", "company_id", "name", "permissions_json", "status"] },
+    { "name": "licenses", "campos": ["id", "company_id", "plan", "seats", "status", "valid_until"] },
+    { "name": "projects", "campos": ["id", "company_id", "owner_user_id", "name", "status", "meta_json", "updated_at"] },
+    { "name": "project_revisions", "campos": ["id", "project_id", "revision", "hash", "summary_json", "author_user_id", "created_at"] },
+    { "name": "file_assets", "campos": ["id", "project_id", "kind", "r2_binding", "r2_key", "sha256", "created_at"] },
+    { "name": "audit_events", "campos": ["id", "company_id", "project_id", "user_id", "action", "detail_json", "created_at"] },
+    { "name": "sync_queue", "campos": ["id", "project_id", "status", "operation", "payload_hash", "created_at", "processed_at"] }
+  ],
+  "regla": "El D1 guarda datos estructurados y metadatos. Los archivos grandes se guardan en R2."
+}

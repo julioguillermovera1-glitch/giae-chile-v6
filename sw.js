@@ -1,4 +1,4 @@
-const GIAE_CACHE_VERSION = 'giae-chile-v1-documental-2026-07-06';
+const GIAE_CACHE_VERSION = 'giae-chile-v1-cloud-2026-07-06';
 const GIAE_APP_SHELL = [
   "./",
   "./assets/icons/giae-icon-192.png",
@@ -12,6 +12,7 @@ const GIAE_APP_SHELL = [
   "./core/calculations.js",
   "./core/commercial/budgetEngine.js",
   "./core/componentLibrary.js",
+  "./core/cloud/cloudWorkspaceEngine.js",
   "./core/document-intelligence/documentIntelligenceEngine.js",
   "./core/documentationEngine.js",
   "./core/engineering/connectionEngine.js",
@@ -66,6 +67,9 @@ const GIAE_APP_SHELL = [
   "./css/platform.css",
   "./data/architecture/architecture-policy.json",
   "./data/biblioteca-tecnica.json",
+  "./data/cloud/cloud-contract.json",
+  "./data/cloud/d1-schema.json",
+  "./data/cloud/r2-assets.json",
   "./data/commercial/default-commercial-settings.json",
   "./data/componentes-electricos.json",
   "./data/data/norma-chile/metadata/ric19.info.json",
@@ -141,6 +145,10 @@ const GIAE_APP_SHELL = [
   "./docs/data/producto/fase-1-publicable.json",
   "./docs/data/producto/fase-2-instalable.json",
   "./docs/data/producto/fase-2-installable-last-report.json",
+  "./docs/data/producto/fase-3-documental.json",
+  "./docs/data/producto/fase-3-documental-last-report.json",
+  "./docs/data/producto/fase-4-cloud.json",
+  "./docs/data/producto/fase-4-cloud-last-report.json",
   "./docs/data/producto/product-manifest.json",
   "./docs/data/producto/roadmap-6-fases.json",
   "./docs/data/producto/vision-giae-2.json",
@@ -159,6 +167,7 @@ const GIAE_APP_SHELL = [
   "./modules/empalme/empalme.js",
   "./modules/giae-inspector/inspector.js",
   "./modules/gpe.js",
+  "./modules/nube/nube.js",
   "./modules/lector-documental/lector-documental.js",
   "./modules/norma-chile/norma-chile.js",
   "./modules/normativo/normativo.js",

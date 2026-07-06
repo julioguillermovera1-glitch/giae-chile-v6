@@ -73,6 +73,42 @@
       "tipo": "herramienta",
       "archivo": "tools/phase3-document-intelligence-check.mjs",
       "estado": "vigente"
+    },
+    {
+      "id": "fase-4-cloud",
+      "tipo": "nube_usuarios_licencias",
+      "archivo": "docs/FASE_4_NUBE_USUARIOS_LICENCIAS_GIAE.md",
+      "estado": "vigente"
+    },
+    {
+      "id": "contrato-cloud-fase-4",
+      "tipo": "contrato_cloud",
+      "archivo": "data/cloud/cloud-contract.json",
+      "estado": "vigente"
+    },
+    {
+      "id": "modelo-d1-fase-4",
+      "tipo": "modelo_d1",
+      "archivo": "data/cloud/d1-schema.json",
+      "estado": "vigente"
+    },
+    {
+      "id": "politica-r2-fase-4",
+      "tipo": "politica_r2",
+      "archivo": "data/cloud/r2-assets.json",
+      "estado": "vigente"
+    },
+    {
+      "id": "diagnostico-fase-4",
+      "tipo": "herramienta",
+      "archivo": "tools/phase4-cloud-readiness-check.mjs",
+      "estado": "vigente"
+    },
+    {
+      "id": "reporte-fase-4",
+      "tipo": "reporte_diagnostico",
+      "archivo": "docs/data/producto/fase-4-cloud-last-report.json",
+      "estado": "vigente"
     }
   ]
 }

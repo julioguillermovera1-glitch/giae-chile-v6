@@ -14,7 +14,7 @@ export const modules = [
   { id: "proyecto", label: "Proyecto activo", group: "proyecto", path: "../modules/proyecto/proyecto.js", profiles: ["independiente", "empresa", "estudiante", "administrador"] },
   { id: "gpe", label: "Motor de proyecto", group: "proyecto", path: "../modules/gpe.js", profiles: ["independiente", "empresa", "estudiante", "administrador"] },
   { id: "usuarios", label: "Usuarios", group: "proyecto", path: "../modules/usuarios/usuarios.js", profiles: ["empresa"] },
-
+  { id: "nube", label: "Nube y licencias", group: "proyecto", path: "../modules/nube/nube.js", profiles: ["administrador", "empresa", "independiente"] },
   { id: "cargas", label: "Cargas", group: "ingenieria", path: "../modules/cargas/cargas.js", profiles: ["independiente", "empresa", "estudiante"] },
   { id: "cuadro-carga", label: "Cuadro de carga", group: "ingenieria", path: "../modules/cuadro-carga/cuadro-carga.js", profiles: ["independiente", "empresa", "estudiante"] },
   { id: "balance", label: "Balance de fases", group: "ingenieria", path: "../modules/balance/balance.js", profiles: ["independiente", "empresa", "estudiante"] },
