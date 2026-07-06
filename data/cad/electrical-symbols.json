@@ -1,0 +1,27 @@
+{
+  "schema": "giae.cad.symbols.v1",
+  "actualizadoEn": "2026-07-06",
+  "politica": "Biblioteca propia de simbolos electricos GIAE. No copia bloques CAD propietarios.",
+  "layers": [
+    { "id": "arquitectura", "nombre": "Referencia", "color": "#64748b" },
+    { "id": "alumbrado", "nombre": "Alumbrado", "color": "#f59e0b" },
+    { "id": "enchufes", "nombre": "Enchufes", "color": "#2563eb" },
+    { "id": "fuerza", "nombre": "Fuerza", "color": "#7c3aed" },
+    { "id": "canalizacion", "nombre": "Canalizacion", "color": "#0f766e" },
+    { "id": "tablero", "nombre": "Tablero", "color": "#111827" },
+    { "id": "tierra", "nombre": "Tierra", "color": "#15803d" },
+    { "id": "notas", "nombre": "Notas", "color": "#334155" },
+    { "id": "revision", "nombre": "Revision", "color": "#b42318" }
+  ],
+  "symbols": [
+    { "id": "panel", "nombre": "Tablero", "layer": "tablero", "tipo": "equipment", "puertos": ["in", "out", "pe"] },
+    { "id": "breaker", "nombre": "Proteccion", "layer": "tablero", "tipo": "protection", "puertos": ["in", "out"] },
+    { "id": "light", "nombre": "Punto luz", "layer": "alumbrado", "tipo": "load", "puertos": ["phase", "neutral", "pe"] },
+    { "id": "switch", "nombre": "Interruptor", "layer": "alumbrado", "tipo": "control", "puertos": ["in", "out"] },
+    { "id": "outlet", "nombre": "Enchufe", "layer": "enchufes", "tipo": "load", "puertos": ["phase", "neutral", "pe"] },
+    { "id": "motor", "nombre": "Motor/carga fuerza", "layer": "fuerza", "tipo": "load", "puertos": ["phase", "neutral", "pe"] },
+    { "id": "junction", "nombre": "Caja derivacion", "layer": "canalizacion", "tipo": "connection", "puertos": ["a", "b", "c", "d"] },
+    { "id": "ground", "nombre": "Puesta a tierra", "layer": "tierra", "tipo": "ground", "puertos": ["pe"] },
+    { "id": "note", "nombre": "Nota", "layer": "notas", "tipo": "annotation", "puertos": [] }
+  ]
+}

@@ -22,6 +22,7 @@ export const modules = [
   { id: "empalme", label: "Empalme", group: "ingenieria", path: "../modules/empalme/empalme.js", profiles: ["independiente", "empresa", "estudiante"] },
   { id: "tierra", label: "Puesta a tierra", group: "ingenieria", path: "../modules/tierra/tierra.js", profiles: ["independiente", "empresa", "estudiante"] },
   { id: "unilineal", label: "Unilineal", group: "ingenieria", path: "../modules/unilineal/unilineal.js", profiles: ["independiente", "empresa", "estudiante"] },
+  { id: "cad-electrico", label: "CAD electrico", group: "ingenieria", path: "../modules/cad-electrico/cad-electrico.js", profiles: ["administrador", "empresa", "independiente", "estudiante"] },
   { id: "auditoria", label: "Auditoría", group: "ingenieria", path: "../modules/auditoria/auditoria.js", profiles: ["independiente", "empresa", "estudiante"] },
 
   { id: "documentacion", label: "Centro de Documentación SEC", group: "documentacion", path: "../modules/documentacion/documentacion.js", profiles: ["independiente", "empresa"] },

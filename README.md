@@ -114,6 +114,22 @@ Comando de revision:
     node tools/phase4-cloud-readiness-check.mjs
 
 Esta base prepara contratos, roles, licencias y paquetes de sincronizacion. Aun no autentica usuarios reales ni escribe en D1/R2.
+
+## Fase 5 CAD electrico GIAE 2.0
+
+La Fase 5 inicia el editor CAD electrico propio de GIAE:
+
+- core/cad/cadEngine.js
+- modules/cad-electrico/cad-electrico.js
+- data/cad/electrical-symbols.json
+- docs/FASE_5_CAD_ELECTRICO_GIAE.md
+- tools/phase5-cad-check.mjs
+
+Comando de revision:
+
+    node tools/phase5-cad-check.mjs
+
+Esta base permite generar un plano desde el Proyecto Activo, agregar simbolos y canalizaciones por clic, validar el plano y exportar `.giaecad` o SVG. Aun no importa ni exporta DWG/DXF.
 ## Decreto Supremo N8
 
 El PDF local indicado por el usuario quedo registrado como fuente de ingesta en:

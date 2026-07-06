@@ -422,4 +422,25 @@ Prioridad:
 Media Alta
 
 ---
+## CAD Electrico Operativo
+
+Estado:
+Iniciado en Fase 5
+
+Responsabilidad:
+Crear y editar planos electricos 2D con formato propio GIAE, capas, simbolos, circuitos, canalizaciones, puesta a tierra, leyenda, validacion y exportacion documentada.
+
+Archivos:
+
+- core/cad/cadEngine.js
+- modules/cad-electrico/cad-electrico.js
+- data/cad/electrical-symbols.json
+
+Restriccion:
+No copiar AutoCAD, bloques CAD propietarios, interfaz, comandos internos ni logica propietaria.
+
+Prioridad:
+Estrategica
+
+---
 Fin del documento.

@@ -1,0 +1,136 @@
+{
+  "schema": "giae.diagnostico.fase5-cad.v1",
+  "generatedAt": "2026-07-06T21:48:26.733Z",
+  "score": 100,
+  "status": "apto_para_prueba_manual",
+  "root": "C:\\Users\\julio\\Documents\\GitHub\\giae-chile-v6",
+  "summary": {
+    "total": 13,
+    "ok": 13,
+    "failed": 0,
+    "criticalFails": 0,
+    "highFails": 0
+  },
+  "checks": [
+    {
+      "id": "engine-existe",
+      "name": "Motor CAD existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "core/cad/cadEngine.js",
+      "evidence": []
+    },
+    {
+      "id": "modulo-existe",
+      "name": "Modulo CAD existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "modules/cad-electrico/cad-electrico.js",
+      "evidence": []
+    },
+    {
+      "id": "simbolos-existen",
+      "name": "Biblioteca simbolos CAD existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "data/cad/electrical-symbols.json",
+      "evidence": []
+    },
+    {
+      "id": "registro-menu",
+      "name": "Modulo registrado en menu",
+      "ok": true,
+      "level": "critico",
+      "detail": "core/moduleRegistry.js",
+      "evidence": []
+    },
+    {
+      "id": "admin-integrado",
+      "name": "Administracion reconoce Fase 5",
+      "ok": true,
+      "level": "alto",
+      "detail": "Panel administrador",
+      "evidence": []
+    },
+    {
+      "id": "sw-cache",
+      "name": "PWA cachea CAD",
+      "ok": true,
+      "level": "alto",
+      "detail": "sw.js",
+      "evidence": []
+    },
+    {
+      "id": "js-valido",
+      "name": "JavaScript CAD valido",
+      "ok": true,
+      "level": "critico",
+      "detail": "engine + modulo",
+      "evidence": []
+    },
+    {
+      "id": "engine-genera",
+      "name": "Motor genera plano CAD valido",
+      "ok": true,
+      "level": "critico",
+      "detail": "listo_para_revision / 100% / 8 entidades",
+      "evidence": [
+        {
+          "schema": "giae.cad.validation.v1",
+          "generatedAt": "2026-07-06T21:48:26.730Z",
+          "status": "listo_para_revision",
+          "score": 100,
+          "summary": {
+            "entities": 8,
+            "circuits": 2,
+            "layers": 6,
+            "issues": 0,
+            "critical": 0,
+            "medium": 0
+          },
+          "issues": []
+        }
+      ]
+    },
+    {
+      "id": "simbolos-validos",
+      "name": "Simbolos y capas validos",
+      "ok": true,
+      "level": "alto",
+      "detail": "9 capas / 9 simbolos",
+      "evidence": []
+    },
+    {
+      "id": "docs-fase5",
+      "name": "Docs y datos Fase 5 presentes",
+      "ok": true,
+      "level": "alto",
+      "detail": "docs fase 5",
+      "evidence": []
+    },
+    {
+      "id": "readme-fase5",
+      "name": "README documenta Fase 5",
+      "ok": true,
+      "level": "medio",
+      "detail": "README",
+      "evidence": []
+    },
+    {
+      "id": "sin-copia-autocad",
+      "name": "Fase 5 declara no copiar AutoCAD",
+      "ok": true,
+      "level": "alto",
+      "detail": "limite declarado",
+      "evidence": []
+    },
+    {
+      "id": "exportacion-documentada",
+      "name": "Exportacion .giaecad documentada",
+      "ok": true,
+      "level": "alto",
+      "detail": "formato propio",
+      "evidence": []
+    }
+  ]
+}

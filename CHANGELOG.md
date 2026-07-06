@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-07-06 - Inicio Fase 5 CAD electrico GIAE 2.0
+
+- Se agrega motor CAD propio con formato `.giaecad`.
+- Se agrega modulo CAD electrico al menu Ingenieria.
+- Se agregan capas, simbolos electricos, cableado en dos clics y validacion preliminar.
+- Se permite generar plano desde Proyecto Activo y exportar JSON/SVG.
+- Se agrega diagnostico Fase 5 CAD.
 ## 2026-07-06 - Inicio Fase 4 nube, usuarios y licencias
 
 - Se agrega motor cloud-ready propio para Workers, D1, R2, licencias, roles y cola sync.
