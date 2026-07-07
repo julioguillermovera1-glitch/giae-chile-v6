@@ -1,4 +1,4 @@
-const GIAE_CACHE_VERSION = 'giae-chile-v1-cad-2026-07-06';
+const GIAE_CACHE_VERSION = 'giae-chile-v1-flujo-2026-07-07';
 const GIAE_APP_SHELL = [
   "./",
   "./assets/icons/giae-icon-192.png",
@@ -65,6 +65,7 @@ const GIAE_APP_SHELL = [
   "./core/rule-engine/index.js",
   "./core/store.js",
   "./core/technicalLibrary.js",
+  "./core/workflow/guidedWorkflowEngine.js",
   "./css/platform.css",
   "./data/architecture/architecture-policy.json",
   "./data/biblioteca-tecnica.json",
@@ -142,6 +143,7 @@ const GIAE_APP_SHELL = [
   "./data/rules/ric/ric5/reglas-ric5-inicial.json",
   "./data/rules/ric/ric6/reglas-ric6-inicial.json",
   "./data/rules/ric/rules.json",
+  "./data/workflow/guided-flow.json",
   "./docs/data/producto/documentos-producto.json",
   "./docs/data/producto/fase-1-publicable-last-report.json",
   "./docs/data/producto/fase-1-publicable.json",
@@ -178,6 +180,7 @@ const GIAE_APP_SHELL = [
   "./modules/normativo/normativo.js",
   "./modules/presupuesto/presupuesto.js",
   "./modules/proyecto/proyecto.js",
+  "./modules/flujo-guiado/flujo-guiado.js",
   "./modules/proyectos/proyectos.js",
   "./modules/tableros/tableros.js",
   "./modules/tierra/tierra.js",

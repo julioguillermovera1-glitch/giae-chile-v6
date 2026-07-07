@@ -6,6 +6,7 @@ import { calculateDocumentationProject } from "./documentationEngine.js";
 import { runProjectEngine, createProjectRevision } from "./projectEngine.js";
 import { calculateCommercialProject } from "./commercial/budgetEngine.js";
 import { runIntegralAudit } from "./audit/integralAuditEngine.js";
+import { evaluateGuidedWorkflow } from "./workflow/guidedWorkflowEngine.js";
 const STORAGE_KEY = "giae_chile_v1_workspace";
 const LIBRARY_KEY = "giae_chile_v1_project_library";
 
@@ -57,7 +58,9 @@ function defaultProject(){
     panelMaterials: [],
     grounding: null,
     connection: null,
+    connectionEngine: null,
     unilineal: null,
+    guidedWorkflow: null,
     documentation: [],
     documentationEngine: null,
     budget: [],
@@ -225,6 +228,7 @@ export function recalculateProject(){
   p.panelEngine = panelResult;
   p.panel = panelResult;
   p.panelMaterials = panelResult.materials || [];
+  p.connectionEngine = calculateConnectionProject(p);
   p.documentationEngine = calculateDocumentationProject(p);
   p.installedPowerKw = electricalResult.summary.installedKw || Number((totalW / 1000).toFixed(3));
   p.demandPowerKw = electricalResult.summary.demandKw;
@@ -245,6 +249,7 @@ export function recalculateProject(){
   p.integralAudit = runIntegralAudit(p);
   p.audit = p.integralAudit?.issues || [];
   p.gpe = runProjectEngine(p);
+  p.guidedWorkflow = evaluateGuidedWorkflow(p);
   return p;
 }
 

@@ -163,6 +163,48 @@
       "tipo": "reporte_diagnostico",
       "archivo": "docs/data/producto/fase-5-5-worker-backend-last-report.json",
       "estado": "vigente"
+    },
+    {
+      "id": "fase-5-6-flujo-guiado",
+      "tipo": "flujo_guiado",
+      "archivo": "docs/FASE_5_6_FLUJO_GUIADO_GIAE.md",
+      "estado": "vigente"
+    },
+    {
+      "id": "especificacion-maestra",
+      "tipo": "vision_producto",
+      "archivo": "docs/ESPECIFICACION_MAESTRA_GIAE_CHILE.md",
+      "estado": "vigente"
+    },
+    {
+      "id": "flujo-guiado-v1",
+      "tipo": "flujo_producto",
+      "archivo": "docs/FLUJO_GUIADO_GIAE_V1.md",
+      "estado": "vigente"
+    },
+    {
+      "id": "datos-flujo-guiado",
+      "tipo": "datos_producto",
+      "archivo": "data/workflow/guided-flow.json",
+      "estado": "vigente"
+    },
+    {
+      "id": "datos-fase-5-6-flujo-guiado",
+      "tipo": "datos_producto",
+      "archivo": "docs/data/producto/fase-5-6-flujo-guiado.json",
+      "estado": "vigente"
+    },
+    {
+      "id": "diagnostico-fase-5-6",
+      "tipo": "herramienta",
+      "archivo": "tools/phase56-guided-flow-check.mjs",
+      "estado": "vigente"
+    },
+    {
+      "id": "reporte-fase-5-6",
+      "tipo": "reporte_diagnostico",
+      "archivo": "docs/data/producto/fase-5-6-flujo-guiado-last-report.json",
+      "estado": "vigente"
     }
   ]
 }

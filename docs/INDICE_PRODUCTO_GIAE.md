@@ -14,6 +14,9 @@ Este indice conecta la documentacion estrategica con los datos estructurados del
 - FASE_4_NUBE_USUARIOS_LICENCIAS_GIAE.md
 - FASE_5_CAD_ELECTRICO_GIAE.md
 - FASE_5_5_BACKEND_WORKER_GIAE.md
+- FASE_5_6_FLUJO_GUIADO_GIAE.md
+- ESPECIFICACION_MAESTRA_GIAE_CHILE.md
+- FLUJO_GUIADO_GIAE_V1.md
 - ORIGINALIDAD.md
 - CLOUDFLARE_D1_R2_PLAN.md
 
@@ -30,6 +33,9 @@ Este indice conecta la documentacion estrategica con los datos estructurados del
 - docs/data/producto/fase-5-cad.json
 - docs/data/producto/fase-5-5-worker-backend.json
 - docs/data/producto/fase-5-5-worker-backend-last-report.json
+- docs/data/producto/fase-5-6-flujo-guiado.json
+- docs/data/producto/fase-5-6-flujo-guiado-last-report.json
+- data/workflow/guided-flow.json
 - wrangler.bindings.example.jsonc
 - data/cloud/cloud-contract.json
 - data/cloud/d1-schema.json
@@ -46,6 +52,7 @@ Este indice conecta la documentacion estrategica con los datos estructurados del
 - tools/phase4-cloud-readiness-check.mjs
 - tools/phase5-cad-check.mjs
 - tools/phase55-worker-backend-check.mjs
+- tools/phase56-guided-flow-check.mjs
 - tools/local-static-server.mjs
 
 ## Regla

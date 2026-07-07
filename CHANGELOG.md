@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-07-07 - Fase 5.6 Flujo maestro guiado
+
+- Se agrega motor de flujo guiado en `core/workflow/guidedWorkflowEngine.js`.
+- Se agregan etapas oficiales en `data/workflow/guided-flow.json`.
+- Se agrega modulo `Flujo guiado` con bloqueos, observaciones, siguiente accion y reporte de faltantes.
+- Se conecta `guidedWorkflow` al Proyecto Activo desde `core/store.js`.
+- Se documenta la especificacion maestra y el limite profesional de GIAE.
 ## 2026-07-07 - Backend Worker real y fix despliegue Cloudflare
 
 - Se agrega Cloudflare Worker API en `src/worker.js`.
