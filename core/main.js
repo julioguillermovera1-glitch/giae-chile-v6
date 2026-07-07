@@ -81,8 +81,20 @@ function openPlatform() {
   document.querySelector("#exportBtn").classList.toggle("hidden", state.profile === "aula");
   renderMenu();
   updateStatusLine();
-  const first = availableModules()[0];
-  openModule(first?.id || "proyecto");
+  const available = availableModules();
+  const initial = initialModuleForProfile(available);
+  openModule(initial?.id || available[0]?.id || "proyectos");
+}
+
+function initialModuleForProfile(available){
+  const preferred = {
+    empresa: ["proyectos"],
+    independiente: ["proyectos"],
+    estudiante: ["proyectos"],
+    administrador: ["proyectos"],
+    aula: ["educacion", "dashboard"]
+  }[state.profile] || ["proyectos", "dashboard"];
+  return preferred.map(id => available.find(module => module.id === id)).find(Boolean) || available[0];
 }
 
 function availableModules(){

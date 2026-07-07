@@ -49,11 +49,14 @@ function groundingLabel(project){
 
 function connectionSummary(project){
   const summary = project.connectionEngine?.summary || {};
+  const distributor = summary.distributor || project.distributor || "Pendiente";
+  const supply = project.supplyType === "trifasico" ? "Empalme trifasico" : "Empalme monofasico";
   return {
-    type: summary.normalizedType || (project.supplyType === "trifasico" ? "Empalme trifasico" : "Empalme monofasico"),
+    type: `${supply} ${String(distributor).toUpperCase()}`,
+    technicalType: summary.normalizedType || "Tipo normalizado pendiente",
     limiter: summary.limiterA ? `${summary.limiterA} A` : "Pendiente",
     power: summary.normalizedPowerKw ? fmtKw(summary.normalizedPowerKw, 2) : fmtKw(project.demandPowerKw, 2),
-    distributor: summary.distributor || project.distributor || "Pendiente"
+    distributor
   };
 }
 
@@ -267,7 +270,7 @@ export function render(host, state){
           <div class="section-title-row"><h4>Tierra recomendada</h4><button class="secondary" data-open-module="tierra">Calcular tierra</button></div>
           <div class="recommendation-box"><strong>${esc(groundingLabel(project))}</strong><span>Debe confirmarse con medicion real en terreno.</span></div>
           <div class="section-title-row compact-title"><h4>Empalme recomendado</h4><button class="secondary" data-open-module="empalme">Ver empalme</button></div>
-          <div class="recommendation-box"><strong>${esc(connection.type)} · ${esc(connection.limiter)}</strong><span>Potencia a contratar: ${esc(connection.power)} · Documento: ${esc(docType(project))}</span></div>
+          <div class="recommendation-box"><strong>${esc(connection.type)} · ${esc(connection.limiter)}</strong><span>Potencia a contratar: ${esc(connection.power)} · ${esc(connection.technicalType)} · Documento: ${esc(docType(project))}</span></div>
         </article>
       </div>
 
