@@ -98,6 +98,7 @@ function openPlatform() {
 function initialModuleForProfile(available){
   const preferred = {
     empresa: ["proyectos"],
+    autorizado: ["proyectos"],
     independiente: ["proyectos"],
     estudiante: ["proyectos"],
     administrador: ["administracion"],
