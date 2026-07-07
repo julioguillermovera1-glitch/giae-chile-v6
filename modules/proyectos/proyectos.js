@@ -81,8 +81,7 @@ function flowSteps(project){
     { id:"cuadro", module:"cuadro-carga", title:"PASO 3. Cuadro de carga", done:board.length > 0, detail:`${board.length} circuitos calculados · ${fmtA(project.currentA)}` },
     { id:"tierra", module:"tierra", title:"PASO 4. Puesta a tierra", done:Boolean(project.grounding || project.earth || board.length), detail:groundingLabel(project) },
     { id:"unilineal", module:"unilineal", title:"PASO 5. Diagrama unilineal", done:Boolean(project.unilineal || board.length), detail:`Diagrama desde ${board.length || 0} circuitos y tablero principal` },
-    { id:"empalme", module:"empalme", title:"PASO 6. Empalme a contratar", done:Boolean(project.connectionEngine?.summary?.normalizedPowerKw), detail:`${connection.type} · ${connection.limiter} · ${docType(project)}` },
-    { id:"cad", module:"cad-electrico", title:"PASO 7. Plano CAD", done:Boolean(project.cad || project.plan), detail:"Plano sincronizado con cargas, unilineal y tablero" }
+    { id:"empalme", module:"empalme", title:"PASO 6. Empalme a contratar", done:Boolean(project.connectionEngine?.summary?.normalizedPowerKw), detail:`${connection.type} · ${connection.limiter} · ${docType(project)}` }
   ];
 }
 function nextStep(project){
@@ -258,7 +257,7 @@ export function render(host, state){
         <div>
           <p class="eyebrow">Proyecto electrico guiado</p>
           <h3>Crear y desarrollar proyecto</h3>
-          <p>Asistente en orden: datos del proyecto, cargas, cuadro de carga, puesta a tierra, unilineal, empalme y plano CAD.</p>
+          <p>Asistente en orden: datos del proyecto, cargas, cuadro de carga, puesta a tierra, unilineal y empalme. El plano CAD queda como decision posterior.</p>
         </div>
         <div class="project-state-card strong-state">
           <small>Avance tecnico</small>
@@ -267,6 +266,9 @@ export function render(host, state){
         </div>
       </div>
 
+      ${projectForm(project)}
+      ${quickLoadCard()}
+
       <section class="dashboard-grid kpi-row project-kpis">
         <article><small>Proyecto activo</small><strong>${esc(project.name || "Sin nombre")}</strong></article>
         <article><small>Potencia instalada</small><strong>${fmtKw(project.installedPowerKw)}</strong></article>
@@ -274,11 +276,10 @@ export function render(host, state){
         <article><small>Empalme / tramite</small><strong>${esc(connection.limiter)} · ${esc(docType(project))}</strong></article>
       </section>
 
-      <section class="project-flow-grid">${flowCards(project)}</section>
-
-      ${projectForm(project)}
-      ${quickLoadCard()}
-
+      <article class="dashboard-card project-flow-summary">
+        <div class="section-title-row"><h4>Resumen automatico del avance</h4><span class="muted-label">GIAE marca cada paso cuando tiene datos suficientes.</span></div>
+        <section class="project-flow-grid">${flowCards(project)}</section>
+      </article>
       <article class="dashboard-card">
         <div class="section-title-row"><h4>PASO 3 · Cuadro de Carga</h4><button class="secondary" data-open-module="cuadro-carga">Ver completo</button></div>
         ${loadBoardPreview(project)}
@@ -301,8 +302,8 @@ export function render(host, state){
       </article>
 
       <article class="dashboard-card">
-        <div class="section-title-row"><h4>PASO 7 · Plano CAD</h4><button class="secondary" data-open-module="cad-electrico">Abrir CAD</button></div>
-        <div class="recommendation-box"><strong>Plano electrico sincronizado</strong><span>Despues del empalme, el usuario dibuja recintos, medidas, simbolos, canalizaciones y exporta para revision CAD/DXF.</span></div>
+        <div class="section-title-row"><h4>Plano CAD opcional</h4><button class="secondary" data-open-module="cad-electrico">Abrir CAD</button></div>
+        <div class="recommendation-box"><strong>Plano electrico sincronizado</strong><span>Despues del empalme, el usuario decide si crea el plano. Si lo hace, dibuja recintos, medidas, simbolos, canalizaciones y exporta para revision CAD/DXF.</span></div>
       </article>
       <article class="dashboard-card project-toolbar-card secondary-library">
         <div class="section-title-row">
@@ -361,6 +362,7 @@ export function render(host, state){
     updateProject(readProjectPatch(), { module: "Proyecto", action: "Datos base actualizados desde flujo tecnico" });
     saveCurrentProjectToLibrary("Datos base guardados desde flujo tecnico");
     refresh();
+    window.GIAE?.openModule?.("cargas");
   });
 
   host.querySelector("#quickAddLoad").addEventListener("click", () => {
