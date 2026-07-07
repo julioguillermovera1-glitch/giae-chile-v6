@@ -98,7 +98,6 @@ function openPlatform() {
 function initialModuleForProfile(available){
   const preferred = {
     empresa: ["proyectos"],
-    autorizado: ["proyectos"],
     independiente: ["proyectos"],
     estudiante: ["proyectos"],
     administrador: ["administracion"],
@@ -282,7 +281,6 @@ function refreshActiveModule(){
 
 function profileLabel(profile) {
   const labels = {
-    autorizado: "Instalador autorizado",
     independiente: "Instalador independiente",
     empresa: "Empresa",
     estudiante: "Estudiante",

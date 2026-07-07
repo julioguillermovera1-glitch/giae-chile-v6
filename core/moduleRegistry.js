@@ -7,7 +7,7 @@ export const menuGroups = [
   { id: "administracion", label: "Reparacion" }
 ];
 
-const profesionales = ["empresa", "autorizado", "independiente"];
+const profesionales = ["empresa", "independiente"];
 const usuariosPago = [...profesionales, "estudiante"];
 
 export const modules = [
