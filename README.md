@@ -130,6 +130,23 @@ Comando de revision:
     node tools/phase5-cad-check.mjs
 
 Esta base permite generar un plano desde el Proyecto Activo, agregar simbolos y canalizaciones por clic, validar el plano y exportar `.giaecad` o SVG. Aun no importa ni exporta DWG/DXF.
+
+## Fase 5.5 backend Worker para D1/R2
+
+Esta etapa convierte GIAE en una aplicacion hibrida: PWA + Cloudflare Worker API.
+
+- src/worker.js
+- migrations/0001_giae_cloud_core.sql
+- package.json
+- .assetsignore
+- docs/FASE_5_5_BACKEND_WORKER_GIAE.md
+- tools/phase55-worker-backend-check.mjs
+
+Comando de revision:
+
+    node tools/phase55-worker-backend-check.mjs
+
+Antes de desplegar en produccion, reemplazar `REEMPLAZAR_CON_DATABASE_ID_D1` en `wrangler.jsonc` por el database_id real de D1 y crear el secreto `GIAE_API_TOKEN` en Cloudflare.
 ## Decreto Supremo N8
 
 El PDF local indicado por el usuario quedo registrado como fuente de ingesta en:

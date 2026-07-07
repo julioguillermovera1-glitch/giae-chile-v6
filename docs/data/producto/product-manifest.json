@@ -1,6 +1,6 @@
 {
   "schema": "giae.producto.manifest.v1",
-  "actualizadoEn": "2026-07-06",
+  "actualizadoEn": "2026-07-07",
   "nombre": "GIAE Chile",
   "estadoActual": "base_modular_en_depuracion_para_version_publicable",
   "entradaOficial": {
@@ -28,7 +28,8 @@
     "docs/FASE_2_INSTALABLE_GIAE.md",
     "docs/FASE_3_INTELIGENCIA_DOCUMENTAL_GIAE.md",
     "docs/FASE_4_NUBE_USUARIOS_LICENCIAS_GIAE.md",
-    "docs/FASE_5_CAD_ELECTRICO_GIAE.md"
+    "docs/FASE_5_CAD_ELECTRICO_GIAE.md",
+    "docs/FASE_5_5_BACKEND_WORKER_GIAE.md"
   ],
   "datosEstructurados": [
     "docs/data/producto/roadmap-6-fases.json",
@@ -46,7 +47,9 @@
     "docs/data/producto/fase-4-cloud-last-report.json",
     "docs/data/producto/fase-5-cad.json",
     "data/cad/electrical-symbols.json",
-    "docs/data/producto/fase-5-cad-last-report.json"
+    "docs/data/producto/fase-5-cad-last-report.json",
+    "docs/data/producto/fase-5-5-worker-backend.json",
+    "docs/data/producto/fase-5-5-worker-backend-last-report.json"
   ],
   "nota": "Los datos de producto viven temporalmente en docs/data/producto por restriccion de permisos. Cuando se autorice limpieza de data/, pueden moverse a data/producto sin cambiar su contenido.",
   "fases": [
@@ -63,7 +66,8 @@
     "tools/local-static-server.mjs",
     "tools/phase3-document-intelligence-check.mjs",
     "tools/phase4-cloud-readiness-check.mjs",
-    "tools/phase5-cad-check.mjs"
+    "tools/phase5-cad-check.mjs",
+    "tools/phase55-worker-backend-check.mjs"
   ],
   "pwa": {
     "manifest": "manifest.webmanifest",
@@ -95,5 +99,14 @@
     "simbolos": "data/cad/electrical-symbols.json",
     "formato": ".giaecad",
     "diagnostico": "tools/phase5-cad-check.mjs"
+  },
+  "workerBackend": {
+    "worker": "src/worker.js",
+    "wrangler": "wrangler.jsonc",
+    "package": "package.json",
+    "migration": "migrations/0001_giae_cloud_core.sql",
+    "diagnostico": "tools/phase55-worker-backend-check.mjs",
+    "apiBase": "/api/giae",
+    "estado": "preparado_con_placeholder_d1"
   }
 }
