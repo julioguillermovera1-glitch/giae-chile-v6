@@ -16,6 +16,7 @@ const projectStatusLine = document.querySelector("#projectStatusLine");
 restore();
 applyBranding();
 
+configurePrivateAdminAccess();
 if (state.profile) openPlatform();
 window.GIAE = window.GIAE || {};
 window.GIAE.openModule = openModule;
@@ -23,6 +24,14 @@ window.GIAE.refreshActiveModule = refreshActiveModule;
 registerGiaePwa();
 
 window.addEventListener("giae:admin-updated", () => { applyBranding(); renderMenu(); });
+function configurePrivateAdminAccess(){
+  const params = new URLSearchParams(window.location.search);
+  const enabled = params.get("admin") === "1" || window.location.hash === "#admin";
+  document.querySelectorAll('[data-profile="administrador"]').forEach(button => {
+    button.classList.toggle("hidden", !enabled);
+    button.setAttribute("aria-hidden", String(!enabled));
+  });
+}
 
 document.querySelectorAll("[data-profile]").forEach(button => {
   button.addEventListener("click", () => {
@@ -69,7 +78,7 @@ document.querySelector("#exportBtn").addEventListener("click", () => {
 window.GIAE.importProjectFile = payload => {
   importProjectFile(payload);
   updateStatusLine();
-  if(window.GIAE?.openModule) window.GIAE.openModule("proyecto");
+  if(window.GIAE?.openModule) window.GIAE.openModule("proyectos");
 };
 
 function openPlatform() {
@@ -91,7 +100,7 @@ function initialModuleForProfile(available){
     empresa: ["proyectos"],
     independiente: ["proyectos"],
     estudiante: ["proyectos"],
-    administrador: ["proyectos"],
+    administrador: ["administracion"],
     aula: ["educacion", "dashboard"]
   }[state.profile] || ["proyectos", "dashboard"];
   return preferred.map(id => available.find(module => module.id === id)).find(Boolean) || available[0];
@@ -272,10 +281,11 @@ function refreshActiveModule(){
 
 function profileLabel(profile) {
   const labels = {
+    autorizado: "Instalador autorizado",
     independiente: "Instalador independiente",
     empresa: "Empresa",
     estudiante: "Estudiante",
-    administrador: "Administrador",
+    administrador: "Administrador - Reparacion",
     aula: "Aula Técnica - Acceso libre"
   };
   return labels[profile] || "Sin sesión";
