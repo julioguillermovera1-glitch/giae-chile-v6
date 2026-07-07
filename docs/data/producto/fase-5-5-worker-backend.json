@@ -1,0 +1,24 @@
+{
+  "schema": "giae.producto.fase55-worker-backend.v1",
+  "actualizadoEn": "2026-07-07",
+  "nombre": "Backend Worker real para D1/R2",
+  "estado": "preparado_con_placeholder_d1",
+  "objetivo": "Agregar Cloudflare Worker API manteniendo la PWA actual.",
+  "archivos": [
+    "src/worker.js",
+    "migrations/0001_giae_cloud_core.sql",
+    "package.json",
+    ".assetsignore",
+    "tools/phase55-worker-backend-check.mjs"
+  ],
+  "bindings": {
+    "assets": "ASSETS",
+    "d1": "GIAE_DB",
+    "r2": ["GIAE_PROJECT_BACKUPS", "GIAE_PROJECT_DOCUMENTS", "GIAE_BRAND_ASSETS", "GIAE_FIELD_MEDIA"]
+  },
+  "pendienteUsuario": [
+    "Reemplazar database_id D1 en wrangler.jsonc",
+    "Crear secreto GIAE_API_TOKEN en Cloudflare",
+    "Ejecutar migracion D1 remota"
+  ]
+}

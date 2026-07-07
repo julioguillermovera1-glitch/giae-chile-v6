@@ -1,0 +1,192 @@
+{
+  "schema": "giae.diagnostico.fase55-worker-backend.v1",
+  "generatedAt": "2026-07-07T01:28:42.798Z",
+  "score": 100,
+  "status": "apto_para_configurar_cloudflare",
+  "root": "C:\\Users\\julio\\Documents\\GitHub\\giae-chile-v6",
+  "summary": {
+    "total": 22,
+    "ok": 22,
+    "failed": 0,
+    "criticalFails": 0,
+    "highFails": 0
+  },
+  "checks": [
+    {
+      "id": "worker-existe",
+      "name": "Worker API existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "src/worker.js",
+      "evidence": []
+    },
+    {
+      "id": "package-existe",
+      "name": "package.json existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "package.json",
+      "evidence": []
+    },
+    {
+      "id": "migration-existe",
+      "name": "Migracion D1 existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "migrations/0001_giae_cloud_core.sql",
+      "evidence": []
+    },
+    {
+      "id": "assetsignore-existe",
+      "name": "Assets ignore existe",
+      "ok": true,
+      "level": "alto",
+      "detail": ".assetsignore",
+      "evidence": []
+    },
+    {
+      "id": "worker-js-valido",
+      "name": "Worker JavaScript valido",
+      "ok": true,
+      "level": "critico",
+      "detail": "node --check src/worker.js",
+      "evidence": []
+    },
+    {
+      "id": "wrangler-worker",
+      "name": "Wrangler usa Worker con Assets",
+      "ok": true,
+      "level": "critico",
+      "detail": "main + ASSETS + run_worker_first",
+      "evidence": []
+    },
+    {
+      "id": "wrangler-d1-r2",
+      "name": "Wrangler declara D1 y R2",
+      "ok": true,
+      "level": "alto",
+      "detail": "GIAE_DB + 4 buckets R2",
+      "evidence": []
+    },
+    {
+      "id": "placeholder-d1-visible",
+      "name": "D1 database_id queda claramente pendiente",
+      "ok": true,
+      "level": "medio",
+      "detail": "placeholder explicito",
+      "evidence": []
+    },
+    {
+      "id": "table-companies",
+      "name": "Tabla D1 companies",
+      "ok": true,
+      "level": "critico",
+      "detail": "companies",
+      "evidence": []
+    },
+    {
+      "id": "table-users",
+      "name": "Tabla D1 users",
+      "ok": true,
+      "level": "critico",
+      "detail": "users",
+      "evidence": []
+    },
+    {
+      "id": "table-roles",
+      "name": "Tabla D1 roles",
+      "ok": true,
+      "level": "critico",
+      "detail": "roles",
+      "evidence": []
+    },
+    {
+      "id": "table-licenses",
+      "name": "Tabla D1 licenses",
+      "ok": true,
+      "level": "critico",
+      "detail": "licenses",
+      "evidence": []
+    },
+    {
+      "id": "table-projects",
+      "name": "Tabla D1 projects",
+      "ok": true,
+      "level": "critico",
+      "detail": "projects",
+      "evidence": []
+    },
+    {
+      "id": "table-project_revisions",
+      "name": "Tabla D1 project_revisions",
+      "ok": true,
+      "level": "critico",
+      "detail": "project_revisions",
+      "evidence": []
+    },
+    {
+      "id": "table-file_assets",
+      "name": "Tabla D1 file_assets",
+      "ok": true,
+      "level": "critico",
+      "detail": "file_assets",
+      "evidence": []
+    },
+    {
+      "id": "table-audit_events",
+      "name": "Tabla D1 audit_events",
+      "ok": true,
+      "level": "critico",
+      "detail": "audit_events",
+      "evidence": []
+    },
+    {
+      "id": "table-sync_queue",
+      "name": "Tabla D1 sync_queue",
+      "ok": true,
+      "level": "critico",
+      "detail": "sync_queue",
+      "evidence": []
+    },
+    {
+      "id": "worker-endpoints",
+      "name": "Worker declara endpoints GIAE",
+      "ok": true,
+      "level": "alto",
+      "detail": "health + sync + license",
+      "evidence": []
+    },
+    {
+      "id": "worker-assets",
+      "name": "Worker conserva frontend PWA",
+      "ok": true,
+      "level": "critico",
+      "detail": "ASSETS fallback",
+      "evidence": []
+    },
+    {
+      "id": "worker-secret",
+      "name": "Worker bloquea escrituras sin secreto",
+      "ok": true,
+      "level": "alto",
+      "detail": "GIAE_API_TOKEN",
+      "evidence": []
+    },
+    {
+      "id": "docs-backend",
+      "name": "Docs backend presentes",
+      "ok": true,
+      "level": "alto",
+      "detail": "docs fase 5.5",
+      "evidence": []
+    },
+    {
+      "id": "readme-backend",
+      "name": "README documenta backend Worker",
+      "ok": true,
+      "level": "medio",
+      "detail": "README",
+      "evidence": []
+    }
+  ]
+}

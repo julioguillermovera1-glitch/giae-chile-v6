@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-07-07 - Backend Worker real para D1/R2
+
+- Se agrega Cloudflare Worker API en `src/worker.js`.
+- Se actualiza `wrangler.jsonc` para Worker + Static Assets + D1 + R2.
+- Se agrega migracion inicial D1 para empresas, usuarios, roles, licencias, proyectos, revisiones, archivos, auditoria y cola sync.
+- Se agrega `package.json`, `.assetsignore` y diagnostico backend.
+- Las escrituras quedan bloqueadas si no existe el secreto `GIAE_API_TOKEN`.
 ## 2026-07-06 - Inicio Fase 5 CAD electrico GIAE 2.0
 
 - Se agrega motor CAD propio con formato `.giaecad`.

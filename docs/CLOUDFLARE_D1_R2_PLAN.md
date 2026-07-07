@@ -47,3 +47,18 @@ La Fase 4 agrega una capa local cloud-ready:
 - `data/cloud/r2-assets.json` declara la politica de archivos.
 
 No se deben guardar tokens ni secretos en el navegador. La autenticacion real, validacion de licencia y escritura en D1/R2 quedan para el Worker.
+## Backend Worker real incorporado
+
+Se agrega `src/worker.js` como API real de Cloudflare Worker. La PWA sigue existiendo, pero `/api/giae/*` ahora queda preparado para ejecutarse en Worker y usar D1/R2.
+
+Archivos principales:
+
+- `wrangler.jsonc`: Worker + Static Assets + D1 + R2.
+- `migrations/0001_giae_cloud_core.sql`: tablas base D1.
+- `src/worker.js`: endpoints API.
+
+Pendientes antes de produccion:
+
+- Reemplazar `REEMPLAZAR_CON_DATABASE_ID_D1` por el ID real de D1.
+- Crear secreto `GIAE_API_TOKEN`.
+- Aplicar migracion D1 remota.
