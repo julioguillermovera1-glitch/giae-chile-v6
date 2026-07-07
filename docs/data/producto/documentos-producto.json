@@ -1,6 +1,6 @@
 {
   "schema": "giae.producto.documentos.v1",
-  "actualizadoEn": "2026-07-06",
+  "actualizadoEn": "2026-07-07",
   "docs": [
     {
       "id": "roadmap-6-fases",
@@ -132,6 +132,36 @@
       "id": "reporte-fase-5",
       "tipo": "reporte_diagnostico",
       "archivo": "docs/data/producto/fase-5-cad-last-report.json",
+      "estado": "vigente"
+    },
+    {
+      "id": "plantilla-wrangler-bindings",
+      "tipo": "configuracion_cloudflare",
+      "archivo": "wrangler.bindings.example.jsonc",
+      "estado": "plantilla_pendiente_de_ids_reales"
+    },
+    {
+      "id": "fase-5-5-worker-backend",
+      "tipo": "backend_worker",
+      "archivo": "docs/FASE_5_5_BACKEND_WORKER_GIAE.md",
+      "estado": "vigente"
+    },
+    {
+      "id": "datos-fase-5-5-worker-backend",
+      "tipo": "datos_producto",
+      "archivo": "docs/data/producto/fase-5-5-worker-backend.json",
+      "estado": "vigente"
+    },
+    {
+      "id": "diagnostico-fase-5-5",
+      "tipo": "herramienta",
+      "archivo": "tools/phase55-worker-backend-check.mjs",
+      "estado": "vigente"
+    },
+    {
+      "id": "reporte-fase-5-5",
+      "tipo": "reporte_diagnostico",
+      "archivo": "docs/data/producto/fase-5-5-worker-backend-last-report.json",
       "estado": "vigente"
     }
   ]

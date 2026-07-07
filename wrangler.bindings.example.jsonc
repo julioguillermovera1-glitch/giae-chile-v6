@@ -1,0 +1,27 @@
+{
+  "d1_databases": [
+    {
+      "binding": "GIAE_DB",
+      "database_name": "giae-db",
+      "database_id": "REEMPLAZAR_CON_DATABASE_ID_D1"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "GIAE_PROJECT_BACKUPS",
+      "bucket_name": "giae-project-backups"
+    },
+    {
+      "binding": "GIAE_PROJECT_DOCUMENTS",
+      "bucket_name": "giae-project-documents"
+    },
+    {
+      "binding": "GIAE_BRAND_ASSETS",
+      "bucket_name": "giae-brand-assets"
+    },
+    {
+      "binding": "GIAE_FIELD_MEDIA",
+      "bucket_name": "giae-field-media"
+    }
+  ]
+}

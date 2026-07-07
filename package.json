@@ -1,0 +1,21 @@
+{
+  "name": "giae-chile-v6",
+  "version": "2.0.0-alpha.worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "check:backend": "node tools/phase55-worker-backend-check.mjs",
+    "check:phase1": "node tools/phase1-publicable-check.mjs",
+    "check:phase2": "node tools/phase2-installable-check.mjs",
+    "check:phase3": "node tools/phase3-document-intelligence-check.mjs",
+    "check:phase4": "node tools/phase4-cloud-readiness-check.mjs",
+    "check:phase5": "node tools/phase5-cad-check.mjs",
+    "d1:migrate:local": "wrangler d1 migrations apply giae-db --local",
+    "d1:migrate:remote": "wrangler d1 migrations apply giae-db --remote"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

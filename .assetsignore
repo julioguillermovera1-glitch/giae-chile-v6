@@ -1,0 +1,15 @@
+.git
+.github
+.assetsignore
+node_modules
+src
+migrations
+tools
+docs
+*.md
+README*.md
+*.log
+*.zip
+package.json
+package-lock.json
+wrangler*.jsonc

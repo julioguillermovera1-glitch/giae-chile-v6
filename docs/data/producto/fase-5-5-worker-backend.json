@@ -1,0 +1,33 @@
+{
+  "schema": "giae.producto.fase55-worker-backend.v1",
+  "actualizadoEn": "2026-07-07",
+  "nombre": "Backend Worker real para D1/R2",
+  "estado": "apto_para_deploy_worker_assets",
+  "objetivo": "Agregar Cloudflare Worker API manteniendo la PWA actual y dejando D1/R2 listos para activar con IDs reales.",
+  "archivos": [
+    "src/worker.js",
+    "migrations/0001_giae_cloud_core.sql",
+    "package.json",
+    ".assetsignore",
+    "wrangler.jsonc",
+    "wrangler.bindings.example.jsonc",
+    "tools/phase55-worker-backend-check.mjs"
+  ],
+  "deployActual": {
+    "modo": "worker_assets_sin_bindings_activos",
+    "motivo": "Evitar rechazo de Cloudflare por database_id de ejemplo o buckets aun no creados.",
+    "wrangler": "wrangler.jsonc"
+  },
+  "bindings": {
+    "assets": "ASSETS",
+    "d1": "GIAE_DB",
+    "r2": ["GIAE_PROJECT_BACKUPS", "GIAE_PROJECT_DOCUMENTS", "GIAE_BRAND_ASSETS", "GIAE_FIELD_MEDIA"],
+    "plantilla": "wrangler.bindings.example.jsonc"
+  },
+  "pendienteUsuario": [
+    "Pegar database_id real de D1 antes de activar d1_databases en wrangler.jsonc",
+    "Crear buckets R2 reales antes de activar r2_buckets en wrangler.jsonc",
+    "Crear secreto GIAE_API_TOKEN en Cloudflare",
+    "Ejecutar migracion D1 remota"
+  ]
+}

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-07-07 - Backend Worker real y fix despliegue Cloudflare
+
+- Se agrega Cloudflare Worker API en `src/worker.js`.
+- Se agrega `package.json`, `.assetsignore`, migracion D1 y diagnostico backend.
+- Se deja `wrangler.jsonc` publicable en modo Worker + Static Assets sin placeholders activos.
+- Se mueve la configuracion D1/R2 pendiente a `wrangler.bindings.example.jsonc`.
+- Se evita que Cloudflare rechace el deploy por `database_id` de ejemplo o Worker faltante.
 ## 2026-07-06 - Inicio Fase 5 CAD electrico GIAE 2.0
 
 - Se agrega motor CAD propio con formato `.giaecad`.
