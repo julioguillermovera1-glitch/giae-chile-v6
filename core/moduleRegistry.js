@@ -10,8 +10,8 @@ export const menuGroups = [
 export const modules = [
   { id: "dashboard", label: "Dashboard", group: "inicio", path: "../modules/dashboard/dashboard.js", profiles: ["administrador", "empresa", "independiente", "estudiante", "aula"] },
 
-  { id: "proyectos", label: "Administrador de proyectos", group: "proyecto", path: "../modules/proyectos/proyectos.js", profiles: ["independiente", "empresa", "estudiante", "administrador"] },
-  { id: "proyecto", label: "Proyecto activo", group: "proyecto", path: "../modules/proyecto/proyecto.js", profiles: ["independiente", "empresa", "estudiante", "administrador"] },
+  { id: "proyectos", label: "Crear proyecto", group: "proyecto", path: "../modules/proyectos/proyectos.js", profiles: ["independiente", "empresa", "estudiante", "administrador"] },
+  { id: "proyecto", label: "Datos del proyecto", group: "proyecto", path: "../modules/proyecto/proyecto.js", profiles: ["independiente", "empresa", "estudiante", "administrador"] },
   { id: "flujo-guiado", label: "Flujo guiado", group: "proyecto", path: "../modules/flujo-guiado/flujo-guiado.js", profiles: ["independiente", "empresa", "estudiante", "administrador"] },
   { id: "gpe", label: "Motor de proyecto", group: "proyecto", path: "../modules/gpe.js", profiles: ["independiente", "empresa", "estudiante", "administrador"] },
   { id: "usuarios", label: "Usuarios", group: "proyecto", path: "../modules/usuarios/usuarios.js", profiles: ["empresa"] },
