@@ -267,6 +267,9 @@ export function render(host, state){
         </div>
       </div>
 
+      ${projectForm(project)}
+      ${quickLoadCard()}
+
       <section class="dashboard-grid kpi-row project-kpis">
         <article><small>Proyecto activo</small><strong>${esc(project.name || "Sin nombre")}</strong></article>
         <article><small>Potencia instalada</small><strong>${fmtKw(project.installedPowerKw)}</strong></article>
@@ -274,11 +277,10 @@ export function render(host, state){
         <article><small>Empalme / tramite</small><strong>${esc(connection.limiter)} · ${esc(docType(project))}</strong></article>
       </section>
 
-      <section class="project-flow-grid">${flowCards(project)}</section>
-
-      ${projectForm(project)}
-      ${quickLoadCard()}
-
+      <article class="dashboard-card project-flow-summary">
+        <div class="section-title-row"><h4>Resumen automatico del avance</h4><span class="muted-label">GIAE marca cada paso cuando tiene datos suficientes.</span></div>
+        <section class="project-flow-grid">${flowCards(project)}</section>
+      </article>
       <article class="dashboard-card">
         <div class="section-title-row"><h4>PASO 3 · Cuadro de Carga</h4><button class="secondary" data-open-module="cuadro-carga">Ver completo</button></div>
         ${loadBoardPreview(project)}
@@ -361,6 +363,7 @@ export function render(host, state){
     updateProject(readProjectPatch(), { module: "Proyecto", action: "Datos base actualizados desde flujo tecnico" });
     saveCurrentProjectToLibrary("Datos base guardados desde flujo tecnico");
     refresh();
+    window.GIAE?.openModule?.("cargas");
   });
 
   host.querySelector("#quickAddLoad").addEventListener("click", () => {
