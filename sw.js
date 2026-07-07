@@ -1,4 +1,4 @@
-const GIAE_CACHE_VERSION = 'giae-chile-v1-flujo-2026-07-07';
+const GIAE_CACHE_VERSION = 'giae-chile-v1-flujo-2026-07-07-menu-fix';
 const GIAE_APP_SHELL = [
   "./",
   "./assets/icons/giae-icon-192.png",
@@ -207,6 +207,10 @@ self.addEventListener('fetch', event => {
     event.respondWith(networkFirstNavigation(request));
     return;
   }
+  if(/\.(js|css|html)$/i.test(url.pathname)) {
+    event.respondWith(networkFirstStatic(request));
+    return;
+  }
   event.respondWith(cacheFirstStatic(request));
 });
 
@@ -216,6 +220,17 @@ function normalizedRequest(request){
   return new Request(url.toString(), { credentials: 'same-origin' });
 }
 
+async function networkFirstStatic(request){
+  const cache = await caches.open(GIAE_CACHE_VERSION);
+  const cacheKey = normalizedRequest(request);
+  try{
+    const response = await fetch(request);
+    if(response && response.ok) await cache.put(cacheKey, response.clone());
+    return response;
+  }catch(error){
+    return (await cache.match(cacheKey, { ignoreSearch: true })) || cache.match(OFFLINE_URL);
+  }
+}
 async function cacheFirstStatic(request){
   const cache = await caches.open(GIAE_CACHE_VERSION);
   const cacheKey = normalizedRequest(request);
