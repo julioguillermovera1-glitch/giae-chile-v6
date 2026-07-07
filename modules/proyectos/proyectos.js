@@ -76,15 +76,15 @@ function flowSteps(project){
   const board = project.loadBoard || [];
   const connection = connectionSummary(project);
   return [
-    { id:"datos", module:"proyecto", title:"1. Crear proyecto", done:Boolean(project.client && project.company && project.address), detail:`${project.client || "Cliente pendiente"} · ${project.company || "Empresa pendiente"}` },
-    { id:"cargas", module:"cargas", title:"2. Cargas del proyecto", done:(project.loads || []).length > 0, detail:`${(project.loads || []).length} cargas ingresadas` },
-    { id:"cuadro", module:"cuadro-carga", title:"3. Cuadro de cargas", done:board.length > 0, detail:`${board.length} circuitos calculados · ${fmtA(project.currentA)}` },
-    { id:"tierra", module:"tierra", title:"4. Tierra recomendada", done:Boolean(project.grounding || project.earth || board.length), detail:groundingLabel(project) },
-    { id:"unilineal", module:"unilineal", title:"5. Cuadro unifilar", done:Boolean(project.unilineal || board.length), detail:`Diagrama desde ${board.length || 0} circuitos y tablero principal` },
-    { id:"empalme", module:"empalme", title:"6. Empalme a contratar", done:Boolean(project.connectionEngine?.summary?.normalizedPowerKw), detail:`${connection.type} · ${connection.limiter} · ${docType(project)}` }
+    { id:"datos", module:"proyectos", title:"PASO 1. Datos del proyecto", done:Boolean(project.name && project.client && project.company && project.address && project.commune && project.region && project.distributor), detail:`${project.client || "Cliente pendiente"} · ${project.company || "Empresa pendiente"}` },
+    { id:"cargas", module:"proyectos", title:"PASO 2. Ingreso de cargas", done:(project.loads || []).length > 0, detail:`${(project.loads || []).length} cargas ingresadas` },
+    { id:"cuadro", module:"cuadro-carga", title:"PASO 3. Cuadro de carga", done:board.length > 0, detail:`${board.length} circuitos calculados · ${fmtA(project.currentA)}` },
+    { id:"tierra", module:"tierra", title:"PASO 4. Puesta a tierra", done:Boolean(project.grounding || project.earth || board.length), detail:groundingLabel(project) },
+    { id:"unilineal", module:"unilineal", title:"PASO 5. Diagrama unilineal", done:Boolean(project.unilineal || board.length), detail:`Diagrama desde ${board.length || 0} circuitos y tablero principal` },
+    { id:"empalme", module:"empalme", title:"PASO 6. Empalme a contratar", done:Boolean(project.connectionEngine?.summary?.normalizedPowerKw), detail:`${connection.type} · ${connection.limiter} · ${docType(project)}` },
+    { id:"cad", module:"cad-electrico", title:"PASO 7. Plano CAD", done:Boolean(project.cad || project.plan), detail:"Plano sincronizado con cargas, unilineal y tablero" }
   ];
 }
-
 function nextStep(project){
   return flowSteps(project).find(step => !step.done) || flowSteps(project).at(-1);
 }
@@ -159,15 +159,16 @@ function unilinealPreview(project){
 function projectForm(project){
   return `<article class="dashboard-card project-creation-card">
     <div class="section-title-row">
-      <div><h4>Crear proyecto electrico</h4><p>Primero datos de empresa y cliente. Desde aqui nace el proyecto, no desde una lista vacia.</p></div>
-      <button id="createProjectFromForm" class="primary-action">Crear proyecto con estos datos</button>
+      <div><h4>PASO 1 · Datos del Proyecto</h4><p>Primero se ingresan datos de cliente, empresa, instalador, direccion, distribuidora y tipo de instalacion. Con esto GIAE habilita las cargas.</p></div>
+      <button id="createProjectFromForm" class="primary-action">Iniciar proyecto</button>
     </div>
     <div class="form-grid compact">
       <label>Nombre del proyecto <input id="flowName" value="${esc(project.name)}" placeholder="Ej: Local comercial Los Angeles"></label>
       <label>Codigo interno <input id="flowCode" value="${esc(project.code)}" placeholder="PR-2026-001"></label>
       <label>Cliente <input id="flowClient" value="${esc(project.client)}" placeholder="Nombre cliente"></label>
       <label>Empresa <input id="flowCompany" value="${esc(project.company)}" placeholder="Empresa instaladora"></label>
-      <label>Responsable tecnico <input id="flowInstaller" value="${esc(project.installer || project.responsible)}" placeholder="Instalador autorizado"></label>
+      <label>Responsable tecnico <input id="flowInstaller" value="${esc(project.installer || project.responsible)}" placeholder="Nombre del instalador"></label>
+      <label>Registro SEC <input id="flowSec" value="${esc(project.secRegistration || project.secNumber)}" placeholder="Registro SEC si corresponde"></label>
       <label>Direccion <input id="flowAddress" value="${esc(project.address)}" placeholder="Calle y numero"></label>
       <label>Comuna <input id="flowCommune" value="${esc(project.commune)}" placeholder="Comuna"></label>
       <label>Region <input id="flowRegion" value="${esc(project.region)}" placeholder="Region"></label>
@@ -182,6 +183,23 @@ function projectForm(project){
           ${["cge","copelec","frontel","saesa","chilquinta","coelcha"].map(d => `<option value="${d}" ${project.distributor === d ? "selected" : ""}>${d.toUpperCase()}</option>`).join("")}
         </select>
       </label>
+      <label>Tipo de instalacion
+        <select id="flowInstallationType">
+          <option value="domiciliaria" ${project.installationType === "domiciliaria" ? "selected" : ""}>Domiciliaria</option>
+          <option value="comercial" ${project.installationType === "comercial" ? "selected" : ""}>Comercial</option>
+          <option value="industrial" ${project.installationType === "industrial" ? "selected" : ""}>Industrial</option>
+          <option value="provisoria" ${project.installationType === "provisoria" ? "selected" : ""}>Provisoria</option>
+        </select>
+      </label>
+      <label>Tipo de inmueble
+        <select id="flowPropertyType">
+          <option value="vivienda" ${project.propertyType === "vivienda" ? "selected" : ""}>Vivienda</option>
+          <option value="local-comercial" ${project.propertyType === "local-comercial" ? "selected" : ""}>Local comercial</option>
+          <option value="oficina" ${project.propertyType === "oficina" ? "selected" : ""}>Oficina</option>
+          <option value="edificio" ${project.propertyType === "edificio" ? "selected" : ""}>Edificio</option>
+        </select>
+      </label>
+      <label>Potencia existente kW <input id="flowExistingPower" type="number" step="0.01" min="0" value="${esc(project.existingPowerKw)}" placeholder="0 si no corresponde"></label>
       <label>Tipo de trabajo
         <select id="flowService">
           <option value="instalacion-nueva" ${project.serviceType === "instalacion-nueva" ? "selected" : ""}>Instalacion nueva</option>
@@ -190,6 +208,7 @@ function projectForm(project){
           <option value="modificacion" ${project.serviceType === "modificacion" ? "selected" : ""}>Modificacion</option>
         </select>
       </label>
+      <label>Observaciones <input id="flowObservations" value="${esc(project.observations)}" placeholder="Notas del proyecto"></label>
       <label>Estado
         <select id="flowStatus">
           <option ${project.status === "En desarrollo" ? "selected" : ""}>En desarrollo</option>
@@ -200,17 +219,16 @@ function projectForm(project){
       </label>
     </div>
     <div class="top-actions wrap-actions">
-      <button id="saveProjectIdentity">Guardar datos del proyecto</button>
+      <button id="saveProjectIdentity">Validar datos y continuar a cargas</button>
       <button class="secondary" data-open-module="cargas">Continuar a cargas</button>
     </div>
   </article>`;
 }
-
 function quickLoadCard(){
   return `<article class="dashboard-card quick-load-card">
     <div class="section-title-row">
-      <div><h4>Cargas del proyecto</h4><p>Agrega cargas y el sistema arma el cuadro, tierra, unifilar y empalme.</p></div>
-      <button class="secondary" data-open-module="cargas">Abrir motor de cargas</button>
+      <div><h4>PASO 2 · Ingreso de Cargas</h4><p>El usuario ingresa consumos por recinto; GIAE calcula potencia, demanda, corriente, fases y circuitos.</p></div>
+      <button class="secondary" data-open-module="cargas">Ver modulo de cargas</button>
     </div>
     <div class="form-grid compact load-form">
       <label>Descripcion <input id="quickLoadName" placeholder="Ej: Enchufes oficina"></label>
@@ -240,7 +258,7 @@ export function render(host, state){
         <div>
           <p class="eyebrow">Proyecto electrico guiado</p>
           <h3>Crear y desarrollar proyecto</h3>
-          <p>Flujo de trabajo para empresa: datos del proyecto, cargas, cuadro de cargas, tierra recomendada, unifilar y empalme/documento probable.</p>
+          <p>Asistente en orden: datos del proyecto, cargas, cuadro de carga, puesta a tierra, unilineal, empalme y plano CAD.</p>
         </div>
         <div class="project-state-card strong-state">
           <small>Avance tecnico</small>
@@ -261,25 +279,31 @@ export function render(host, state){
       ${projectForm(project)}
       ${quickLoadCard()}
 
-      <div class="dashboard-grid two project-output-grid">
-        <article class="dashboard-card">
-          <div class="section-title-row"><h4>Cuadro de cargas</h4><button class="secondary" data-open-module="cuadro-carga">Ver completo</button></div>
-          ${loadBoardPreview(project)}
-        </article>
-        <article class="dashboard-card">
-          <div class="section-title-row"><h4>Tierra recomendada</h4><button class="secondary" data-open-module="tierra">Calcular tierra</button></div>
-          <div class="recommendation-box"><strong>${esc(groundingLabel(project))}</strong><span>Debe confirmarse con medicion real en terreno.</span></div>
-          <div class="section-title-row compact-title"><h4>Empalme recomendado</h4><button class="secondary" data-open-module="empalme">Ver empalme</button></div>
-          <div class="recommendation-box"><strong>${esc(connection.type)} · ${esc(connection.limiter)}</strong><span>Potencia a contratar: ${esc(connection.power)} · ${esc(connection.technicalType)} · Documento: ${esc(docType(project))}</span></div>
-        </article>
-      </div>
-
       <article class="dashboard-card">
-        <div class="section-title-row"><h4>Cuadro unifilar preliminar</h4><button class="secondary" data-open-module="unilineal">Abrir unifilar</button></div>
-        ${unilinealPreview(project)}
-        <div class="data-table-wrap unilineal-board-under"><h4>Cuadro de cargas asociado</h4>${loadBoardPreview(project)}</div>
+        <div class="section-title-row"><h4>PASO 3 · Cuadro de Carga</h4><button class="secondary" data-open-module="cuadro-carga">Ver completo</button></div>
+        ${loadBoardPreview(project)}
       </article>
 
+      <article class="dashboard-card">
+        <div class="section-title-row"><h4>PASO 4 · Calculo de Puesta a Tierra</h4><button class="secondary" data-open-module="tierra">Ver tierra</button></div>
+        <div class="recommendation-box"><strong>${esc(groundingLabel(project))}</strong><span>GIAE propone electrodo, conductor de proteccion y resistencia esperada segun las cargas calculadas. Debe confirmarse con medicion real en terreno.</span></div>
+      </article>
+
+      <article class="dashboard-card">
+        <div class="section-title-row"><h4>PASO 5 · Diagrama Unilineal</h4><button class="secondary" data-open-module="unilineal">Abrir unilineal</button></div>
+        ${unilinealPreview(project)}
+        <div class="data-table-wrap unilineal-board-under"><h4>Cuadro de carga asociado</h4>${loadBoardPreview(project)}</div>
+      </article>
+
+      <article class="dashboard-card">
+        <div class="section-title-row"><h4>PASO 6 · Empalme a Contratar</h4><button class="secondary" data-open-module="empalme">Ver empalme</button></div>
+        <div class="recommendation-box"><strong>${esc(connection.type)} · ${esc(connection.limiter)}</strong><span>Potencia a contratar: ${esc(connection.power)} · ${esc(connection.technicalType)} · Documento: ${esc(docType(project))}</span></div>
+      </article>
+
+      <article class="dashboard-card">
+        <div class="section-title-row"><h4>PASO 7 · Plano CAD</h4><button class="secondary" data-open-module="cad-electrico">Abrir CAD</button></div>
+        <div class="recommendation-box"><strong>Plano electrico sincronizado</strong><span>Despues del empalme, el usuario dibuja recintos, medidas, simbolos, canalizaciones y exporta para revision CAD/DXF.</span></div>
+      </article>
       <article class="dashboard-card project-toolbar-card secondary-library">
         <div class="section-title-row">
           <div><h4>Biblioteca local</h4><p>Guardar, abrir, importar y exportar queda como respaldo del trabajo, no como punto de partida.</p></div>
@@ -311,12 +335,17 @@ export function render(host, state){
       company: host.querySelector("#flowCompany").value.trim(),
       installer: host.querySelector("#flowInstaller").value.trim(),
       responsible: host.querySelector("#flowInstaller").value.trim(),
+      secRegistration: host.querySelector("#flowSec").value.trim(),
       address: host.querySelector("#flowAddress").value.trim(),
       commune: host.querySelector("#flowCommune").value.trim(),
       region: host.querySelector("#flowRegion").value.trim(),
       supplyType: host.querySelector("#flowSupply").value,
       distributor: host.querySelector("#flowDistributor").value,
+      installationType: host.querySelector("#flowInstallationType").value,
+      propertyType: host.querySelector("#flowPropertyType").value,
+      existingPowerKw: Number(host.querySelector("#flowExistingPower").value || 0),
       serviceType: host.querySelector("#flowService").value,
+      observations: host.querySelector("#flowObservations").value.trim(),
       status: host.querySelector("#flowStatus").value
     };
   }
