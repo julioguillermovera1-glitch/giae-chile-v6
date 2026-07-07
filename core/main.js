@@ -321,7 +321,9 @@ function updateStatusLine(){
   const company = state.admin?.company?.name || p.company || state.companyBrand?.name || "GIAE Chile";
   const pct = p.progress?.engineering ?? 0;
   const saved = p.updatedAt || "sin guardar";
-  projectStatusLine.textContent = `Proyecto activo: ${name} · ${pct}% avance · Último guardado: ${saved} · Empresa: ${company} · Normativa: RIC · IEC eléctrica · DS N°8`;
+  const flow = p.guidedWorkflow?.score ?? pct;
+  const flowStatus = p.guidedWorkflow?.status || "pendiente";
+  projectStatusLine.textContent = `Proyecto activo: ${name} · Flujo: ${flow}% ${flowStatus} · ${pct}% avance · Ultimo guardado: ${saved} · Empresa: ${company} · Normativa: RIC · IEC electrica · DS N8`;
 }
 
 function defaultLogoMarkup(){

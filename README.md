@@ -148,6 +148,24 @@ Comando de revision:
     node tools/phase55-worker-backend-check.mjs
 
 El despliegue actual queda listo para Worker + Static Assets. D1/R2 quedan en `wrangler.bindings.example.jsonc` para activarlos cuando exista el `database_id` real de D1, los buckets R2 reales y el secreto `GIAE_API_TOKEN`.
+
+## Fase 5.6 flujo maestro guiado
+
+Esta etapa crea el asistente paso a paso que revisa el Proyecto Activo y dice que falta, que bloquea y cual es la siguiente accion.
+
+- core/workflow/guidedWorkflowEngine.js
+- data/workflow/guided-flow.json
+- modules/flujo-guiado/flujo-guiado.js
+- docs/FASE_5_6_FLUJO_GUIADO_GIAE.md
+- docs/ESPECIFICACION_MAESTRA_GIAE_CHILE.md
+- docs/FLUJO_GUIADO_GIAE_V1.md
+- tools/phase56-guided-flow-check.mjs
+
+Comando de revision:
+
+    node tools/phase56-guided-flow-check.mjs
+
+El flujo guia y prevalida. No reemplaza mediciones reales, revision profesional, SEC ni distribuidora.
 ## Decreto Supremo N8
 
 El PDF local indicado por el usuario quedo registrado como fuente de ingesta en:

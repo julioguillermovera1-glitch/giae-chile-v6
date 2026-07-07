@@ -1,0 +1,136 @@
+{
+  "schema": "giae.diagnostico.fase56-flujo-guiado.v1",
+  "generatedAt": "2026-07-07T02:45:38.358Z",
+  "score": 100,
+  "status": "apto_para_prueba_manual",
+  "root": "C:\\Users\\julio\\Documents\\GitHub\\giae-chile-v6",
+  "summary": {
+    "total": 15,
+    "ok": 15,
+    "failed": 0,
+    "criticalFails": 0,
+    "highFails": 0
+  },
+  "checks": [
+    {
+      "id": "engine-existe",
+      "name": "Motor de flujo existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "core/workflow/guidedWorkflowEngine.js",
+      "evidence": []
+    },
+    {
+      "id": "data-existe",
+      "name": "Definicion de etapas existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "data/workflow/guided-flow.json",
+      "evidence": []
+    },
+    {
+      "id": "modulo-existe",
+      "name": "Modulo Flujo guiado existe",
+      "ok": true,
+      "level": "critico",
+      "detail": "modules/flujo-guiado/flujo-guiado.js",
+      "evidence": []
+    },
+    {
+      "id": "registro-menu",
+      "name": "Modulo registrado en menu",
+      "ok": true,
+      "level": "critico",
+      "detail": "core/moduleRegistry.js",
+      "evidence": []
+    },
+    {
+      "id": "store-conectado",
+      "name": "Store calcula guidedWorkflow",
+      "ok": true,
+      "level": "critico",
+      "detail": "core/store.js",
+      "evidence": []
+    },
+    {
+      "id": "estado-superior",
+      "name": "Barra superior muestra flujo",
+      "ok": true,
+      "level": "alto",
+      "detail": "core/main.js",
+      "evidence": []
+    },
+    {
+      "id": "admin-integrado",
+      "name": "Administracion reconoce Fase 5.6",
+      "ok": true,
+      "level": "alto",
+      "detail": "Panel administrador",
+      "evidence": []
+    },
+    {
+      "id": "dashboard-integrado",
+      "name": "Dashboard abre flujo guiado",
+      "ok": true,
+      "level": "medio",
+      "detail": "modules/dashboard/dashboard.js",
+      "evidence": []
+    },
+    {
+      "id": "sw-cache",
+      "name": "PWA cachea flujo guiado",
+      "ok": true,
+      "level": "alto",
+      "detail": "sw.js",
+      "evidence": []
+    },
+    {
+      "id": "js-valido",
+      "name": "JavaScript flujo valido",
+      "ok": true,
+      "level": "critico",
+      "detail": "engine + modulo",
+      "evidence": []
+    },
+    {
+      "id": "etapas-validas",
+      "name": "Flujo tiene etapas oficiales",
+      "ok": true,
+      "level": "critico",
+      "detail": "14 etapas",
+      "evidence": []
+    },
+    {
+      "id": "engine-evalua",
+      "name": "Motor detecta bloqueos y avance",
+      "ok": true,
+      "level": "critico",
+      "detail": "bloqueado=17 ready=100%",
+      "evidence": []
+    },
+    {
+      "id": "docs-fase56",
+      "name": "Docs Fase 5.6 presentes",
+      "ok": true,
+      "level": "alto",
+      "detail": "docs fase 5.6",
+      "evidence": []
+    },
+    {
+      "id": "readme-fase56",
+      "name": "README documenta Fase 5.6",
+      "ok": true,
+      "level": "medio",
+      "detail": "README",
+      "evidence": []
+    },
+    {
+      "id": "limite-honesto",
+      "name": "Docs declaran limite profesional",
+      "ok": true,
+      "level": "alto",
+      "detail": "limite honesto",
+      "evidence": []
+    }
+  ]
+}

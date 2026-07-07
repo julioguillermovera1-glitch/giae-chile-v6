@@ -1,0 +1,24 @@
+{
+  "schema": "giae.workflow.guided.definition.v1",
+  "updatedAt": "2026-07-07",
+  "name": "Flujo maestro guiado GIAE",
+  "principle": "GIAE guia, prevalida y advierte. No reemplaza al profesional competente, SEC ni distribuidora.",
+  "steps": [
+    { "id": "proyecto", "order": 1, "label": "Proyecto", "moduleId": "proyecto", "required": true },
+    { "id": "cliente", "order": 2, "label": "Cliente", "moduleId": "proyecto", "required": true },
+    { "id": "instalacion", "order": 3, "label": "Datos tecnicos", "moduleId": "proyecto", "required": true },
+    { "id": "cargas", "order": 4, "label": "Cargas", "moduleId": "cargas", "required": true },
+    { "id": "cuadro-carga", "order": 5, "label": "Cuadro de carga", "moduleId": "cuadro-carga", "required": true },
+    { "id": "tableros", "order": 6, "label": "Tablero", "moduleId": "tableros", "required": true },
+    { "id": "tierra", "order": 7, "label": "Puesta a tierra", "moduleId": "tierra", "required": true },
+    { "id": "empalme", "order": 8, "label": "Empalme", "moduleId": "empalme", "required": true },
+    { "id": "plano", "order": 9, "label": "Plano CAD", "moduleId": "cad-electrico", "required": true },
+    { "id": "unilineal", "order": 10, "label": "Unilineal", "moduleId": "unilineal", "required": true },
+    { "id": "documentacion", "order": 11, "label": "Documentacion SEC", "moduleId": "documentacion", "required": true },
+    { "id": "auditoria", "order": 12, "label": "Auditoria", "moduleId": "auditoria", "required": true },
+    { "id": "presupuesto", "order": 13, "label": "Presupuesto", "moduleId": "presupuesto", "required": true },
+    { "id": "exportacion", "order": 14, "label": "Exportacion", "moduleId": "proyecto", "required": true }
+  ],
+  "states": ["completado", "revisable", "observado", "pendiente", "bloqueado"],
+  "outputs": ["estado del proyecto", "siguiente accion", "bloqueos", "observaciones", "reporte de faltantes"]
+}

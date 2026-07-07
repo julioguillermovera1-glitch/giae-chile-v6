@@ -13,7 +13,8 @@
     "check:phase4": "node tools/phase4-cloud-readiness-check.mjs",
     "check:phase5": "node tools/phase5-cad-check.mjs",
     "d1:migrate:local": "wrangler d1 migrations apply giae-db --local",
-    "d1:migrate:remote": "wrangler d1 migrations apply giae-db --remote"
+    "d1:migrate:remote": "wrangler d1 migrations apply giae-db --remote",
+    "check:phase56": "node tools/phase56-guided-flow-check.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

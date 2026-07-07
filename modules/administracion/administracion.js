@@ -4,6 +4,7 @@ const moduleLabels = {
   dashboard: "Dashboard",
   proyectos: "Administrador de proyectos",
   proyecto: "Proyecto activo",
+  "flujo-guiado": "Flujo guiado",
   gpe: "Motor de proyecto",
   usuarios: "Usuarios empresa",
   nube: "Nube y licencias",
@@ -253,6 +254,7 @@ export function render(host, state){
           <div class="policy-box"><b>Fase 3 activa:</b> Lector documental, core/document-intelligence y tools/phase3-document-intelligence-check.mjs.</div>
           <div class="policy-box"><b>Fase 4 activa:</b> Nube y licencias, core/cloud, data/cloud y tools/phase4-cloud-readiness-check.mjs.</div>
           <div class="policy-box"><b>Fase 5 activa:</b> CAD electrico, core/cad, data/cad y tools/phase5-cad-check.mjs.</div>
+          <div class="policy-box"><b>Fase 5.6 activa:</b> Flujo guiado, core/workflow, data/workflow y tools/phase56-guided-flow-check.mjs.</div>
           <div class="policy-box"><b>Regla:</b> ninguna mejora debe copiar codigo externo ni prometer cumplimiento normativo sin reglas, medicion y evidencia.</div>
         </div>
       </section>
@@ -562,7 +564,7 @@ async function buildOriginalityReport(state){
 async function loadProjectSources(){
   const paths = [
     "./index.html", "./indice.html", "./core/main.js", "./core/store.js", "./core/moduleRegistry.js", "./core/calculations.js", "./core/normativeGuard.js", "./css/platform.css",
-    "./modules/dashboard/dashboard.js", "./modules/proyecto/proyecto.js", "./modules/proyectos/proyectos.js", "./modules/cargas/cargas.js", "./modules/cuadro-carga/cuadro-carga.js", "./modules/empalme/empalme.js", "./modules/tierra/tierra.js", "./modules/unilineal/unilineal.js", "./modules/documentacion/documentacion.js", "./modules/presupuesto/presupuesto.js", "./modules/auditoria/auditoria.js", "./modules/educacion/educacion.js", "./modules/usuarios/usuarios.js", "./modules/administracion/administracion.js"
+    "./modules/dashboard/dashboard.js", "./modules/proyecto/proyecto.js", "./modules/flujo-guiado/flujo-guiado.js", "./modules/proyectos/proyectos.js", "./modules/cargas/cargas.js", "./modules/cuadro-carga/cuadro-carga.js", "./modules/empalme/empalme.js", "./modules/tierra/tierra.js", "./modules/unilineal/unilineal.js", "./modules/documentacion/documentacion.js", "./modules/presupuesto/presupuesto.js", "./modules/auditoria/auditoria.js", "./modules/educacion/educacion.js", "./modules/usuarios/usuarios.js", "./modules/administracion/administracion.js"
   ];
   const loaded = [];
   for(const path of paths){
