@@ -89,6 +89,7 @@ function openPlatform() {
   document.querySelector("#saveProjectBtn").classList.toggle("hidden", state.profile === "aula");
   document.querySelector("#exportBtn").classList.toggle("hidden", state.profile === "aula");
   renderMenu();
+  window.scrollTo({ top: 0, left: 0 });
   updateStatusLine();
   const available = availableModules();
   const initial = initialModuleForProfile(available);
@@ -118,7 +119,7 @@ function renderMenu() {
   const available = availableModules();
   const grouped = menuGroups.map(group => ({
     ...group,
-    modules: available.filter(module => module.group === group.id)
+    modules: available.filter(module => module.group === group.id && !module.hiddenInMenu)
   })).filter(group => group.modules.length);
 
   menu.innerHTML = grouped.map((group, index) => `

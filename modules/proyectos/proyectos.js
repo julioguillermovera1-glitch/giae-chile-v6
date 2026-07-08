@@ -84,6 +84,56 @@ function flowSteps(project){
     { id:"empalme", module:"empalme", title:"PASO 6. Empalme a contratar", done:Boolean(project.connectionEngine?.summary?.normalizedPowerKw), detail:`${connection.type} · ${connection.limiter} · ${docType(project)}` }
   ];
 }
+
+function projectDataReady(project){
+  return Boolean(project.name && project.client && project.company && project.address && project.commune && project.region && project.distributor);
+}
+
+function activeAssistantStep(project){
+  const board = project.loadBoard || [];
+  if(!projectDataReady(project)) return "datos";
+  if(!(project.loads || []).length) return "cargas";
+  if(!board.length) return "cuadro";
+  if(!(project.grounding || project.earth)) return "tierra";
+  if(!project.connectionEngine?.summary?.normalizedPowerKw) return "unilineal";
+  return "cad";
+}
+
+function activeStepTitle(step){
+  const titles = {
+    datos: "PASO 1 · Datos del proyecto",
+    cargas: "PASO 2 · Ingreso de cargas",
+    cuadro: "PASO 3 · Cuadro de carga",
+    tierra: "PASO 4 · Puesta a tierra",
+    unilineal: "PASO 5 · Diagrama unilineal",
+    empalme: "PASO 6 · Empalme",
+    cad: "Plano CAD opcional"
+  };
+  return titles[step] || titles.datos;
+}
+
+function renderActiveAssistantStep(project, step, connection){
+  if(step === "datos") return projectForm(project);
+  if(step === "cargas") return quickLoadCard();
+  if(step === "cuadro") return `<article class="dashboard-card active-flow-card">
+    <div class="section-title-row"><div><h4>PASO 3 · Cuadro de carga</h4><p>GIAE ya puede ordenar las cargas y generar protecciones, conductores, fases y totales.</p></div><button class="primary-action" data-open-module="cuadro-carga">Abrir cuadro de carga</button></div>
+    ${loadBoardPreview(project)}
+  </article>`;
+  if(step === "tierra") return `<article class="dashboard-card active-flow-card">
+    <div class="section-title-row"><div><h4>PASO 4 · Puesta a tierra</h4><p>Con el cuadro de carga listo, GIAE propone la tierra recomendada.</p></div><button class="primary-action" data-open-module="tierra">Calcular puesta a tierra</button></div>
+    <div class="recommendation-box"><strong>${esc(groundingLabel(project))}</strong><span>El detalle técnico queda dentro del módulo de tierra y debe confirmarse con medición real.</span></div>
+  </article>`;
+  if(step === "unilineal") return `<article class="dashboard-card active-flow-card">
+    <div class="section-title-row"><div><h4>PASO 5 · Diagrama unilineal</h4><p>El unilineal se arma desde el cuadro de carga y la tierra del proyecto.</p></div><button class="primary-action" data-open-module="unilineal">Abrir unilineal</button></div>
+    ${unilinealPreview(project)}
+    <div class="top-actions wrap-actions"><button class="secondary" data-open-module="empalme">Continuar a empalme</button></div>
+  </article>`;
+  return `<article class="dashboard-card active-flow-card">
+    <div class="section-title-row"><div><h4>PASO 6 · Empalme a contratar</h4><p>Con los cálculos listos, GIAE resume el empalme que corresponde contratar.</p></div><button class="primary-action" data-open-module="empalme">Ver empalme</button></div>
+    <div class="recommendation-box"><strong>${esc(connection.type)} · ${esc(connection.limiter)}</strong><span>Potencia a contratar: ${esc(connection.power)} · ${esc(connection.technicalType)} · Documento: ${esc(docType(project))}</span></div>
+    <div class="top-actions wrap-actions"><button class="secondary" data-open-module="cad-electrico">Crear plano CAD opcional</button></div>
+  </article>`;
+}
 function nextStep(project){
   return flowSteps(project).find(step => !step.done) || flowSteps(project).at(-1);
 }
@@ -219,15 +269,14 @@ function projectForm(project){
     </div>
     <div class="top-actions wrap-actions">
       <button id="saveProjectIdentity">Validar datos y continuar a cargas</button>
-      <button class="secondary" data-open-module="cargas">Continuar a cargas</button>
     </div>
   </article>`;
 }
 function quickLoadCard(){
   return `<article class="dashboard-card quick-load-card">
     <div class="section-title-row">
-      <div><h4>PASO 2 · Ingreso de Cargas</h4><p>El usuario ingresa consumos por recinto; GIAE calcula potencia, demanda, corriente, fases y circuitos.</p></div>
-      <button class="secondary" data-open-module="cargas">Ver modulo de cargas</button>
+      <div><h4>PASO 2 · Ingreso de Cargas</h4><p>Ingresa solo los consumos por recinto. GIAE calcula potencia, demanda, corriente, fases y circuitos.</p></div>
+      <button class="secondary" data-open-module="cargas">Abrir cargas</button>
     </div>
     <div class="form-grid compact load-form">
       <label>Descripcion <input id="quickLoadName" placeholder="Ej: Enchufes oficina"></label>
@@ -236,8 +285,6 @@ function quickLoadCard(){
       </label>
       <label>Cantidad <input id="quickLoadQty" type="number" min="1" value="1"></label>
       <label>W unidad <input id="quickLoadPower" type="number" min="0" value="100"></label>
-      <label>Factor demanda <input id="quickLoadFD" type="number" min="0" max="1" step="0.01" value="1"></label>
-      <label>Fase <select id="quickLoadPhase"><option>Auto</option><option>R</option><option>S</option><option>T</option><option>R-S-T</option></select></label>
     </div>
     <div class="top-actions"><button id="quickAddLoad" class="primary-action">Agregar carga</button></div>
   </article>`;
@@ -251,61 +298,39 @@ export function render(host, state){
   const next = nextStep(project);
   const connection = connectionSummary(project);
 
+  const activeStep = activeAssistantStep(project);
+
   host.innerHTML = `
-    <section class="module-window projects-module project-command-center">
+    <section class="module-window projects-module project-command-center focused-project-flow">
       <div class="module-head split-head">
         <div>
           <p class="eyebrow">Proyecto electrico guiado</p>
-          <h3>Crear y desarrollar proyecto</h3>
-          <p>Asistente en orden: datos del proyecto, cargas, cuadro de carga, puesta a tierra, unilineal y empalme. El plano CAD queda como decision posterior.</p>
+          <h3>${esc(activeStepTitle(activeStep))}</h3>
+          <p>GIAE muestra solo la etapa que corresponde. Al completar este paso, continua con el siguiente.</p>
         </div>
         <div class="project-state-card strong-state">
           <small>Avance tecnico</small>
           <strong>${progress}%</strong>
-          <span>Siguiente: ${esc(next.title.replace(/^\d+\.\s*/, ""))}</span>
+          <span>Siguiente: ${esc(activeStepTitle(activeStep))}</span>
         </div>
       </div>
 
-      ${projectForm(project)}
-      ${quickLoadCard()}
-
-      <section class="dashboard-grid kpi-row project-kpis">
+      <section class="dashboard-grid kpi-row project-kpis compact-project-kpis">
         <article><small>Proyecto activo</small><strong>${esc(project.name || "Sin nombre")}</strong></article>
         <article><small>Potencia instalada</small><strong>${fmtKw(project.installedPowerKw)}</strong></article>
         <article><small>Demanda calculada</small><strong>${fmtKw(project.demandPowerKw)}</strong></article>
         <article><small>Empalme / tramite</small><strong>${esc(connection.limiter)} · ${esc(docType(project))}</strong></article>
       </section>
 
-      <article class="dashboard-card project-flow-summary">
-        <div class="section-title-row"><h4>Resumen automatico del avance</h4><span class="muted-label">GIAE marca cada paso cuando tiene datos suficientes.</span></div>
+      ${renderActiveAssistantStep(project, activeStep, connection)}
+
+      <details class="dashboard-card project-flow-summary compact-flow-summary">
+        <summary>Ver avance completo del proyecto</summary>
         <section class="project-flow-grid">${flowCards(project)}</section>
-      </article>
-      <article class="dashboard-card">
-        <div class="section-title-row"><h4>PASO 3 · Cuadro de Carga</h4><button class="secondary" data-open-module="cuadro-carga">Ver completo</button></div>
-        ${loadBoardPreview(project)}
-      </article>
+      </details>
 
-      <article class="dashboard-card">
-        <div class="section-title-row"><h4>PASO 4 · Calculo de Puesta a Tierra</h4><button class="secondary" data-open-module="tierra">Ver tierra</button></div>
-        <div class="recommendation-box"><strong>${esc(groundingLabel(project))}</strong><span>GIAE propone electrodo, conductor de proteccion y resistencia esperada segun las cargas calculadas. Debe confirmarse con medicion real en terreno.</span></div>
-      </article>
-
-      <article class="dashboard-card">
-        <div class="section-title-row"><h4>PASO 5 · Diagrama Unilineal</h4><button class="secondary" data-open-module="unilineal">Abrir unilineal</button></div>
-        ${unilinealPreview(project)}
-        <div class="data-table-wrap unilineal-board-under"><h4>Cuadro de carga asociado</h4>${loadBoardPreview(project)}</div>
-      </article>
-
-      <article class="dashboard-card">
-        <div class="section-title-row"><h4>PASO 6 · Empalme a Contratar</h4><button class="secondary" data-open-module="empalme">Ver empalme</button></div>
-        <div class="recommendation-box"><strong>${esc(connection.type)} · ${esc(connection.limiter)}</strong><span>Potencia a contratar: ${esc(connection.power)} · ${esc(connection.technicalType)} · Documento: ${esc(docType(project))}</span></div>
-      </article>
-
-      <article class="dashboard-card">
-        <div class="section-title-row"><h4>Plano CAD opcional</h4><button class="secondary" data-open-module="cad-electrico">Abrir CAD</button></div>
-        <div class="recommendation-box"><strong>Plano electrico sincronizado</strong><span>Despues del empalme, el usuario decide si crea el plano. Si lo hace, dibuja recintos, medidas, simbolos, canalizaciones y exporta para revision CAD/DXF.</span></div>
-      </article>
-      <article class="dashboard-card project-toolbar-card secondary-library">
+      <details class="dashboard-card project-toolbar-card secondary-library">
+        <summary>Biblioteca local y respaldo</summary>
         <div class="section-title-row">
           <div><h4>Biblioteca local</h4><p>Guardar, abrir, importar y exportar queda como respaldo del trabajo, no como punto de partida.</p></div>
           <div class="top-actions wrap-actions">
@@ -323,9 +348,8 @@ export function render(host, state){
             <tbody id="projectsRows">${renderRows(projects)}</tbody>
           </table>
         </div>
-      </article>
+      </details>
     </section>`;
-
   function refresh(){ render(host, globalState); }
 
   function readProjectPatch(){
@@ -351,30 +375,34 @@ export function render(host, state){
     };
   }
 
-  host.querySelector("#createProjectFromForm").addEventListener("click", () => {
-    newProject(readProjectPatch());
+  host.querySelector("#createProjectFromForm")?.addEventListener("click", () => {
+    const patch = readProjectPatch();
+    if(!projectDataReady(patch)) return alert("Completa nombre, cliente, empresa, direccion, comuna, region y distribuidora antes de continuar.");
+    newProject(patch);
     saveCurrentProjectToLibrary("Proyecto creado desde flujo tecnico");
     refresh();
     window.GIAE?.refreshActiveModule?.();
   });
 
-  host.querySelector("#saveProjectIdentity").addEventListener("click", () => {
-    updateProject(readProjectPatch(), { module: "Proyecto", action: "Datos base actualizados desde flujo tecnico" });
+  host.querySelector("#saveProjectIdentity")?.addEventListener("click", () => {
+    const patch = readProjectPatch();
+    if(!projectDataReady(patch)) return alert("Completa nombre, cliente, empresa, direccion, comuna, region y distribuidora antes de continuar.");
+    updateProject(patch, { module: "Proyecto", action: "Datos base actualizados desde flujo tecnico" });
     saveCurrentProjectToLibrary("Datos base guardados desde flujo tecnico");
     refresh();
     window.GIAE?.openModule?.("cargas");
   });
 
-  host.querySelector("#quickAddLoad").addEventListener("click", () => {
+  host.querySelector("#quickAddLoad")?.addEventListener("click", () => {
     const load = {
       name: host.querySelector("#quickLoadName").value.trim(),
       type: host.querySelector("#quickLoadType").value,
       quantity: Number(host.querySelector("#quickLoadQty").value || 1),
       powerW: Number(host.querySelector("#quickLoadPower").value || 0),
-      demandFactor: Number(host.querySelector("#quickLoadFD").value || 1),
+      demandFactor: Number(host.querySelector("#quickLoadFD")?.value || 1),
       simultaneityFactor: 1,
       fp: 0.95,
-      phase: host.querySelector("#quickLoadPhase").value
+      phase: host.querySelector("#quickLoadPhase")?.value || "Auto"
     };
     if(!load.name || !load.powerW || load.quantity < 1) return alert("Ingresa descripcion, cantidad y potencia valida.");
     addLoad(load);
@@ -386,17 +414,17 @@ export function render(host, state){
     button.addEventListener("click", () => window.GIAE?.openModule?.(button.dataset.openModule));
   });
 
-  host.querySelector("#saveManagedProject").addEventListener("click", () => {
+  host.querySelector("#saveManagedProject")?.addEventListener("click", () => {
     saveCurrentProjectToLibrary();
     refresh();
   });
 
-  host.querySelector("#exportActiveProject").addEventListener("click", () => {
+  host.querySelector("#exportActiveProject")?.addEventListener("click", () => {
     saveCurrentProjectToLibrary("Proyecto activo exportado");
     downloadProject(exportProjectById(globalState.currentProject.id));
   });
 
-  host.querySelector("#managedImport").addEventListener("change", async event => {
+  host.querySelector("#managedImport")?.addEventListener("change", async event => {
     const file = event.target.files?.[0];
     if(!file) return;
     try{
@@ -409,13 +437,13 @@ export function render(host, state){
     }
   });
 
-  host.querySelector("#projectSearch").addEventListener("input", event => {
+  host.querySelector("#projectSearch")?.addEventListener("input", event => {
     const q = event.target.value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const filtered = listProjects().filter(project => JSON.stringify(project).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(q));
     host.querySelector("#projectsRows").innerHTML = renderRows(filtered);
   });
 
-  host.querySelector("#projectsRows").addEventListener("click", event => {
+  host.querySelector("#projectsRows")?.addEventListener("click", event => {
     const button = event.target.closest("button[data-action]");
     if(!button) return;
     const id = button.dataset.id;
