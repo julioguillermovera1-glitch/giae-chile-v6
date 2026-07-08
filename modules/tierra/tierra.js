@@ -148,9 +148,9 @@ export function render(host, state) {
   host.innerHTML = `
     <section class="module-window tierra-inteligente">
       <div>
-        <p class="eyebrow">Motor RIC 6 · DS8 · IEC aplicable</p>
-        <h3>Puesta a tierra inteligente</h3>
-        <p>Compara soluciones preliminares de tierra, exige medicion real para verificar y excluye NCh4 como norma activa.</p>
+        <p class="eyebrow">PASO 4 · Puesta a tierra</p>
+        <h3>Puesta a tierra</h3>
+        <p>GIAE recomienda una solución de tierra usando los datos calculados del proyecto.</p>
       </div>
       <div class="result-box info">
         <strong>Datos del proyecto:</strong> ${esc(project.name || "Proyecto sin nombre")} · ${esc(project.supplyType === "trifasico" ? "Trifasico" : "Monofasico")} · corriente ${num(project.currentA || 0, 2)} A.
@@ -199,12 +199,14 @@ export function render(host, state) {
         <button id="earthApplyDesign" class="secondary">Usar mejor alternativa</button>
         <button id="earthSave" class="secondary">Guardar en proyecto</button>
         <button id="continueToUnilinealTop" class="primary-action">Continuar a unilineal</button>
-        <button id="earthDownload" class="secondary">Descargar informe</button>
       </div>
       <div id="earthResult">${renderSummary(latest)}</div>
-      <section class="workspace-panel"><h4>Alternativas evaluadas</h4><div id="earthAlternatives">${renderAlternatives(latest)}</div></section>
-      <section class="workspace-panel"><h4>Observaciones</h4><div id="earthObservations">${renderObservations(latest)}</div></section>
-      <section class="workspace-panel"><h4>Trazabilidad normativa</h4><div id="earthTrace">${renderTrace(latest)}</div></section>
+      <details class="normative-details">
+        <summary>Ver detalle técnico</summary>
+        <section class="workspace-panel"><h4>Alternativas evaluadas</h4><div id="earthAlternatives">${renderAlternatives(latest)}</div></section>
+        <section class="workspace-panel"><h4>Observaciones</h4><div id="earthObservations">${renderObservations(latest)}</div></section>
+        <section class="workspace-panel"><h4>Trazabilidad normativa</h4><div id="earthTrace">${renderTrace(latest)}</div></section>
+      </details>
       <div class="dashboard-card next-step-card"><div class="section-title-row"><div><h4>Puesta a tierra lista</h4><p>Guarda el diseño de tierra y continua al diagrama unilineal del proyecto.</p></div><button id="continueToUnilineal" class="primary-action">Continuar a unilineal</button></div></div>
     </section>`;
 
@@ -257,7 +259,7 @@ export function render(host, state) {
     persist();
     alert("Puesta a tierra guardada en el Proyecto Activo.");
   });
-  host.querySelector("#earthDownload").addEventListener("click", () => downloadReport(project, update()));
+  host.querySelector("#earthDownload")?.addEventListener("click", () => downloadReport(project, update()));
   const goToUnilineal = () => window.GIAE?.openModule?.("unilineal");
   host.querySelector("#continueToUnilinealTop")?.addEventListener("click", goToUnilineal);
   host.querySelector("#continueToUnilineal")?.addEventListener("click", goToUnilineal);
