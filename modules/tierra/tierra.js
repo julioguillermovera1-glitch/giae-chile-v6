@@ -198,6 +198,7 @@ export function render(host, state) {
         <button id="earthCalculate">Recalcular</button>
         <button id="earthApplyDesign" class="secondary">Usar mejor alternativa</button>
         <button id="earthSave" class="secondary">Guardar en proyecto</button>
+        <button id="continueToUnilinealTop" class="primary-action">Continuar a unilineal</button>
         <button id="earthDownload" class="secondary">Descargar informe</button>
       </div>
       <div id="earthResult">${renderSummary(latest)}</div>
@@ -257,5 +258,7 @@ export function render(host, state) {
     alert("Puesta a tierra guardada en el Proyecto Activo.");
   });
   host.querySelector("#earthDownload").addEventListener("click", () => downloadReport(project, update()));
-  host.querySelector("#continueToUnilineal")?.addEventListener("click", () => window.GIAE?.openModule?.("unilineal"));
+  const goToUnilineal = () => window.GIAE?.openModule?.("unilineal");
+  host.querySelector("#continueToUnilinealTop")?.addEventListener("click", goToUnilineal);
+  host.querySelector("#continueToUnilineal")?.addEventListener("click", goToUnilineal);
 }
