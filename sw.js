@@ -1,4 +1,4 @@
-const GIAE_CACHE_VERSION = 'giae-chile-v1-flujo-2026-07-07-menu-fix';
+const GIAE_CACHE_VERSION = 'giae-chile-v1-flujo-2026-07-08-asistente-enfocado';
 const GIAE_APP_SHELL = [
   "./",
   "./assets/icons/giae-icon-192.png",
