@@ -31,11 +31,11 @@ export function render(host, state) {
     <section class="module-window real-workspace">
       <div class="workspace-title-row">
         <div>
-          <p class="eyebrow">Motor de Ingeniería · Etapa 4.0.2</p>
-          <h3>Cuadro de carga automático</h3>
-          <p>Este cuadro se genera desde el Motor de Ingeniería Eléctrica. No duplica cálculos: lee los resultados del Proyecto Activo.</p>
+          <p class="eyebrow">PASO 3 · Cuadro de carga</p>
+          <h3>Cuadro de carga</h3>
+          <p>GIAE ordena las cargas ingresadas y muestra protecciones, conductores, fases y totales.</p>
         </div>
-        <div class="status-strip"><span>${esc(engine?.version || "Sin motor")}</span><span>${board.length} circuitos</span></div>
+        <div class="status-strip"><span>${board.length} circuitos</span><span>${num(project.demandPowerKw,3)} kW demanda</span></div>
       </div>
       <div class="kpi-grid engineering-kpis">
         <div class="kpi-card"><span>Potencia instalada</span><strong>${num(project.installedPowerKw,3)} kW</strong></div>

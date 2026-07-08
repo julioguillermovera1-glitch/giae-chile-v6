@@ -98,14 +98,14 @@ export function render(host, state) {
     <section class="module-window real-workspace cargas-workspace">
       <div class="workspace-title-row">
         <div>
-          <p class="eyebrow">Motor de ingeniería · Etapa 4.0.2</p>
-          <h3>Motor de Ingeniería Eléctrica</h3>
-          <p>Registra cargas y genera datos técnicos reutilizables: cuadro de carga, protecciones, conductores, canalizaciones, caída de tensión, presupuesto y trazabilidad normativa.</p>
+          <p class="eyebrow">PASO 2 · Ingreso de cargas</p>
+          <h3>Cargas del proyecto</h3>
+          <p>Ingresa los consumos por recinto. GIAE calcula potencia, demanda, corriente y circuitos.</p>
         </div>
         <div class="status-strip">
-          <span>Proyecto: ${esc(project.name)}</span>
-          <span>Versión motor: ${esc(electrical.version || engine.version)}</span>
-          <span>Circuitos: ${circuits.length}</span>
+          <span>${esc(project.name)}</span>
+          <span>${circuits.length} circuitos</span>
+          <span>${kw(engine.demandW)} kW demanda</span>
         </div>
       </div>
 
@@ -133,15 +133,10 @@ export function render(host, state) {
         <div class="module-toolbar">
           <button id="addLoadBtn" class="primary-action">Agregar al proyecto</button>
           <button id="continueToLoadBoardTop" class="primary-action">Continuar a cuadro de carga</button>
-          <button id="exampleLoadsBtn" class="secondary">Cargar ejemplo técnico</button>
-          <button id="recalculateBtn" class="secondary">Recalcular</button>
           <button id="clearLoadsBtn" class="secondary">Limpiar cargas</button>
         </div>
       </div>
 
-      ${balanceBox(engine, project)}
-
-      ${materialsBox(electrical)}
 
       ${circuits.length ? `
         <div class="data-table-wrap wide-table">
@@ -164,7 +159,6 @@ export function render(host, state) {
             <button id="backToProjectFlow" class="secondary">Volver a datos del proyecto</button>
           </div>
         </div>`}
-      ${traceTable(circuits)}
     </section>`;
 
   const readLoad = () => ({
@@ -184,13 +178,13 @@ export function render(host, state) {
     addLoad(load);
     render(host, state);
   });
-  host.querySelector("#exampleLoadsBtn").addEventListener("click", () => {
+  host.querySelector("#exampleLoadsBtn")?.addEventListener("click", () => {
     addLoad({ name:"Alumbrado LED sala", type:"Alumbrado", quantity:12, powerW:18, demandFactor:1, simultaneityFactor:1, fp:0.95, phase:"Auto" });
     addLoad({ name:"Enchufes generales", type:"Enchufes", quantity:8, powerW:180, demandFactor:0.7, simultaneityFactor:1, fp:0.95, phase:"Auto" });
     addLoad({ name:"Equipo especial", type:"Especial", quantity:1, powerW:1200, demandFactor:1, simultaneityFactor:1, fp:0.9, phase:"Auto" });
     render(host, state);
   });
-  host.querySelector("#recalculateBtn").addEventListener("click", () => { recalculateProject(); persist(); render(host, state); });
+  host.querySelector("#recalculateBtn")?.addEventListener("click", () => { recalculateProject(); persist(); render(host, state); });
   host.querySelector("#clearLoadsBtn").addEventListener("click", () => {
     if(confirm("¿Eliminar todas las cargas del Proyecto Activo?")){ clearLoads(); render(host, state); }
   });

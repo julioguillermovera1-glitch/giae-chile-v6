@@ -209,18 +209,18 @@ export function render(host, state){
   const project = state.currentProject;
   const circuits = buildCircuits(project);
   host.innerHTML = `<section class="module-window unilineal-view unilineal-v951">
-    <div class="workspace-title-row"><div><p class="eyebrow">Etapa 7.1 · Motor Unilineal Profesional</p><h3>Unilineal vivo desde Proyecto Activo</h3><p>Genera el diagrama desde cargas, tablero y BUCE. La línea principal se ajusta al último circuito y el automático general queda centrado automáticamente.</p></div><div class="status-strip"><span>${circuits.length} circuitos</span><span>SVG/PNG</span><span>Impresión A4</span></div></div>
+    <div class="workspace-title-row"><div><p class="eyebrow">PASO 5 · Diagrama unilineal</p><h3>Diagrama unilineal</h3><p>GIAE arma el unilineal desde las cargas, protecciones, tablero y tierra del proyecto.</p></div><div class="status-strip"><span>${circuits.length} circuitos</span><span>Sincronizado con cuadro de carga</span></div></div>
     ${project.loads?.length ? "" : `<div class="result-box danger"><strong>Sin cargas reales:</strong> se muestran circuitos de reserva para verificar el formato del plano.</div>`}
-    <div class="module-toolbar"><button id="regenUnilinealBtn" class="primary-action">Regenerar desde proyecto</button><button id="downloadSvgBtn" class="secondary">Descargar SVG</button><button id="downloadPngBtn" class="secondary">Descargar PNG</button><button id="printBtn" class="secondary">Imprimir</button><button id="continueToConnectionTop" class="primary-action">Continuar a empalme</button></div>
+    <div class="module-toolbar"><button id="regenUnilinealBtn" class="primary-action">Regenerar desde proyecto</button><button id="continueToConnectionTop" class="primary-action">Continuar a empalme</button></div>
     <div class="diagram-panel">${renderSvg(project,circuits)}</div>
     ${table(circuits)}
     <div class="dashboard-card next-step-card"><div class="section-title-row"><div><h4>Unilineal listo</h4><p>El siguiente paso es definir el empalme a contratar con la potencia y corriente calculadas.</p></div><button id="continueToConnection" class="primary-action">Continuar a empalme</button></div></div>
     <details class="normative-details"><summary>Trazabilidad</summary><ul><li>Proyecto Activo: cargas y sistema de suministro.</li><li>Motor de Tableros: dispositivos, barras y gabinete.</li><li>BUCE: símbolos y componentes reutilizables.</li><li>Estado: diagrama preliminar sujeto a revisión profesional.</li></ul></details>
   </section>`;
   host.querySelector("#regenUnilinealBtn").addEventListener("click",()=>{ recalculateProject(); addHistory("Unilineal regenerado desde Proyecto Activo", "Unilineal", false); persist(); render(host,state); });
-  host.querySelector("#downloadSvgBtn").addEventListener("click",()=>downloadSvg(project));
-  host.querySelector("#downloadPngBtn").addEventListener("click",()=>downloadPng(project));
-  host.querySelector("#printBtn").addEventListener("click",()=>window.print());
+  host.querySelector("#downloadSvgBtn")?.addEventListener("click",()=>downloadSvg(project));
+  host.querySelector("#downloadPngBtn")?.addEventListener("click",()=>downloadPng(project));
+  host.querySelector("#printBtn")?.addEventListener("click",()=>window.print());
   const goToConnection = () => window.GIAE?.openModule?.("empalme");
   host.querySelector("#continueToConnectionTop")?.addEventListener("click", goToConnection);
   host.querySelector("#continueToConnection")?.addEventListener("click", goToConnection);
