@@ -47,5 +47,20 @@ export function render(host, state) {
         <thead><tr><th>N°</th><th>Carga</th><th>Cant.</th><th>W unidad</th><th>Instalada</th><th>Demanda</th><th>Ib</th><th>Fase</th><th>Protección</th><th>Conductor</th><th>Canalización</th><th>Confianza</th></tr></thead>
         <tbody>${rows(board)}</tbody>
       </table></div>` : `<div class="workspace-empty">No hay cargas calculadas. Agrega cargas en el Motor de Ingeniería.</div>`}
+      ${board.length ? `
+      <div class="dashboard-card next-step-card">
+        <div class="section-title-row">
+          <div><h4>Cuadro de carga listo</h4><p>El siguiente paso es calcular la puesta a tierra recomendada usando estos circuitos.</p></div>
+          <button id="continueToGrounding" class="primary-action">Continuar a puesta a tierra</button>
+        </div>
+      </div>` : `
+      <div class="dashboard-card next-step-card muted-step">
+        <div class="section-title-row">
+          <div><h4>Faltan cargas</h4><p>Primero ingresa cargas para generar el cuadro automaticamente.</p></div>
+          <button id="backToLoads" class="secondary">Volver a cargas</button>
+        </div>
+      </div>`}
     </section>`;
+  host.querySelector("#continueToGrounding")?.addEventListener("click", () => window.GIAE?.openModule?.("tierra"));
+  host.querySelector("#backToLoads")?.addEventListener("click", () => window.GIAE?.openModule?.("cargas"));
 }
