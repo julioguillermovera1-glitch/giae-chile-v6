@@ -132,6 +132,7 @@ export function render(host, state) {
         </div>
         <div class="module-toolbar">
           <button id="addLoadBtn" class="primary-action">Agregar al proyecto</button>
+          <button id="continueToLoadBoardTop" class="primary-action">Continuar a cuadro de carga</button>
           <button id="exampleLoadsBtn" class="secondary">Cargar ejemplo técnico</button>
           <button id="recalculateBtn" class="secondary">Recalcular</button>
           <button id="clearLoadsBtn" class="secondary">Limpiar cargas</button>
@@ -150,6 +151,19 @@ export function render(host, state) {
           </table>
         </div>` : `<div class="workspace-empty">No hay cargas registradas. Agrega cargas para que los demás módulos trabajen con datos reales.</div>`}
 
+      ${circuits.length ? `
+        <div class="dashboard-card next-step-card">
+          <div class="section-title-row">
+            <div><h4>Cargas listas</h4><p>GIAE ya calculo potencia, demanda, corriente y circuitos preliminares. El siguiente paso es revisar el cuadro de carga generado.</p></div>
+            <button id="continueToLoadBoard" class="primary-action">Continuar a cuadro de carga</button>
+          </div>
+        </div>` : `
+        <div class="dashboard-card next-step-card muted-step">
+          <div class="section-title-row">
+            <div><h4>Siguiente paso</h4><p>Agrega al menos una carga para habilitar el cuadro de carga automatico.</p></div>
+            <button id="backToProjectFlow" class="secondary">Volver a datos del proyecto</button>
+          </div>
+        </div>`}
       ${traceTable(circuits)}
     </section>`;
 
@@ -180,6 +194,10 @@ export function render(host, state) {
   host.querySelector("#clearLoadsBtn").addEventListener("click", () => {
     if(confirm("¿Eliminar todas las cargas del Proyecto Activo?")){ clearLoads(); render(host, state); }
   });
+  const goToLoadBoard = () => window.GIAE?.openModule?.("cuadro-carga");
+  host.querySelector("#continueToLoadBoardTop")?.addEventListener("click", goToLoadBoard);
+  host.querySelector("#continueToLoadBoard")?.addEventListener("click", goToLoadBoard);
+  host.querySelector("#backToProjectFlow")?.addEventListener("click", () => window.GIAE?.openModule?.("proyectos"));
   host.querySelectorAll("[data-delete-load]").forEach(button => button.addEventListener("click", () => {
     project.loads.splice(Number(button.dataset.deleteLoad), 1);
     addHistory("Carga eliminada", "Cargas", false);

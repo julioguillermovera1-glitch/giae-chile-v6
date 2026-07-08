@@ -204,6 +204,7 @@ export function render(host, state) {
       <section class="workspace-panel"><h4>Alternativas evaluadas</h4><div id="earthAlternatives">${renderAlternatives(latest)}</div></section>
       <section class="workspace-panel"><h4>Observaciones</h4><div id="earthObservations">${renderObservations(latest)}</div></section>
       <section class="workspace-panel"><h4>Trazabilidad normativa</h4><div id="earthTrace">${renderTrace(latest)}</div></section>
+      <div class="dashboard-card next-step-card"><div class="section-title-row"><div><h4>Puesta a tierra lista</h4><p>Guarda el diseño de tierra y continua al diagrama unilineal del proyecto.</p></div><button id="continueToUnilineal" class="primary-action">Continuar a unilineal</button></div></div>
     </section>`;
 
   const readForm = () => ({
@@ -256,4 +257,5 @@ export function render(host, state) {
     alert("Puesta a tierra guardada en el Proyecto Activo.");
   });
   host.querySelector("#earthDownload").addEventListener("click", () => downloadReport(project, update()));
+  host.querySelector("#continueToUnilineal")?.addEventListener("click", () => window.GIAE?.openModule?.("unilineal"));
 }
