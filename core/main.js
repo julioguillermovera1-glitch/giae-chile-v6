@@ -1,6 +1,6 @@
 import { modules, menuGroups } from "./moduleRegistry.js";
 import { registerGiaePwa } from "./pwa.js";
-import { restore, setProfile, clearProfile, state, persist, exportProjectFile, importProjectFile, saveCurrentProjectToLibrary } from "./store.js";
+import { restore, setProfile, clearProfile, state, persist, exportProjectFile, importProjectFile, saveCurrentProjectToLibrary, ensureCompanyAccess, hasCompanyPermission, currentCompanyUser } from "./store.js";
 
 const loginView = document.querySelector("#loginView");
 const platformView = document.querySelector("#platformView");
@@ -23,7 +23,7 @@ window.GIAE.openModule = openModule;
 window.GIAE.refreshActiveModule = refreshActiveModule;
 registerGiaePwa();
 
-window.addEventListener("giae:admin-updated", () => { applyBranding(); renderMenu(); });
+window.addEventListener("giae:admin-updated", () => { applyBranding(); activeProfile.textContent = profileLabel(state.profile); renderMenu(); });
 function configurePrivateAdminAccess(){
   const params = new URLSearchParams(window.location.search);
   const enabled = params.get("admin") === "1" || window.location.hash === "#admin";
@@ -85,6 +85,7 @@ function openPlatform() {
   applyBranding();
   loginView.classList.add("hidden");
   platformView.classList.remove("hidden");
+  ensureCompanyAccess();
   activeProfile.textContent = profileLabel(state.profile);
   document.querySelector("#saveProjectBtn").classList.toggle("hidden", state.profile === "aula");
   document.querySelector("#exportBtn").classList.toggle("hidden", state.profile === "aula");
@@ -111,7 +112,8 @@ function availableModules(){
   return modules.filter(module => {
     const allowed = !module.profiles || module.profiles.includes(state.profile);
     const enabled = state.admin?.enabledModules?.[module.id] !== false;
-    return allowed && enabled;
+    const permitted = state.profile !== "empresa" || hasCompanyPermission(module.permission);
+    return allowed && enabled && permitted;
   });
 }
 
@@ -283,7 +285,7 @@ function refreshActiveModule(){
 function profileLabel(profile) {
   const labels = {
     independiente: "Instalador independiente",
-    empresa: "Empresa",
+    empresa: `Empresa - ${currentCompanyUser()?.name || "Super administrador"}`,
     estudiante: "Estudiante",
     administrador: "Administrador - Reparacion",
     aula: "Aula Técnica - Acceso libre"

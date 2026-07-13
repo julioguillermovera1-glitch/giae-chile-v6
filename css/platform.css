@@ -634,3 +634,13 @@ body{background:var(--bg);}
 .internal-window{border:0!important;box-shadow:none!important;background:transparent!important;overflow:visible!important}
 .focused-project-flow{padding-top:0}
 .focused-project-flow .project-creation-card{margin-top:0}
+
+/* Usuarios y permisos de empresa */
+.company-users-module{gap:1rem}
+.company-user-form{display:grid;gap:14px}
+.permission-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:4px}
+.permission-check{display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);background:#f8fbff;border-radius:10px;padding:10px;font-weight:800;color:#26364f}
+.permission-check input{width:auto;margin-top:3px}
+.active-user-row td{background:#eef6ff!important}
+.inventory-alert.info{border:1px solid #b8d4f1;background:#f1f7ff;color:#173b67;border-radius:14px;padding:12px 14px;margin:12px 0;display:grid;gap:3px}
+@media(max-width:800px){.permission-grid{grid-template-columns:1fr}}
