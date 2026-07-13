@@ -1,4 +1,4 @@
-const GIAE_CACHE_VERSION = 'giae-chile-v1-flujo-2026-07-13-usuarios-empresa';
+const GIAE_CACHE_VERSION = 'giae-chile-v1-flujo-2026-07-13-cad-inventario-ventanas';
 const GIAE_APP_SHELL = [
   "./",
   "./assets/icons/giae-icon-192.png",

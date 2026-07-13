@@ -107,7 +107,7 @@ function activeStepTitle(step){
     tierra: "PASO 4 · Puesta a tierra",
     unilineal: "PASO 5 · Diagrama unilineal",
     empalme: "PASO 6 · Empalme",
-    cad: "Plano CAD opcional"
+    cad: "Plano CAD"
   };
   return titles[step] || titles.datos;
 }
@@ -131,7 +131,7 @@ function renderActiveAssistantStep(project, step, connection){
   return `<article class="dashboard-card active-flow-card">
     <div class="section-title-row"><div><h4>PASO 6 · Empalme a contratar</h4><p>Con los cálculos listos, GIAE resume el empalme que corresponde contratar.</p></div><button class="primary-action" data-open-module="empalme">Ver empalme</button></div>
     <div class="recommendation-box"><strong>${esc(connection.type)} · ${esc(connection.limiter)}</strong><span>Potencia a contratar: ${esc(connection.power)} · ${esc(connection.technicalType)} · Documento: ${esc(docType(project))}</span></div>
-    <div class="top-actions wrap-actions"><button class="secondary" data-open-module="cad-electrico">Crear plano CAD opcional</button></div>
+    <div class="top-actions wrap-actions"><button class="secondary" data-open-module="cad-electrico">Abrir ventana CAD</button></div>
   </article>`;
 }
 function nextStep(project){
