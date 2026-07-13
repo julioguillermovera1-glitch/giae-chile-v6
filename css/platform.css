@@ -626,3 +626,11 @@ body{background:var(--bg);}
 .secondary-library > :not(summary){margin:14px}
 .focused-project-flow .quick-load-card .form-grid.compact{grid-template-columns:1.4fr .8fr .6fr .7fr}
 @media(max-width:900px){.focused-project-flow .quick-load-card .form-grid.compact{grid-template-columns:1fr}}
+
+/* Limpieza de marco de trabajo visible */
+.workspace-tabs{display:none!important}
+.internal-window-titlebar{display:none!important}
+.internal-window-body{padding:0!important}
+.internal-window{border:0!important;box-shadow:none!important;background:transparent!important;overflow:visible!important}
+.focused-project-flow{padding-top:0}
+.focused-project-flow .project-creation-card{margin-top:0}

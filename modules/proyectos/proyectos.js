@@ -294,36 +294,12 @@ export function render(host, state){
   recalculateProject();
   const projects = listProjects({ includeArchived: false });
   const project = state.currentProject || {};
-  const progress = completion(project);
-  const next = nextStep(project);
   const connection = connectionSummary(project);
-
   const activeStep = activeAssistantStep(project);
 
   host.innerHTML = `
     <section class="module-window projects-module project-command-center focused-project-flow">
-      <div class="module-head split-head">
-        <div>
-          <p class="eyebrow">Proyecto electrico guiado</p>
-          <h3>${esc(activeStepTitle(activeStep))}</h3>
-          <p>GIAE muestra solo la etapa que corresponde. Al completar este paso, continua con el siguiente.</p>
-        </div>
-        <div class="project-state-card strong-state">
-          <small>Avance tecnico</small>
-          <strong>${progress}%</strong>
-          <span>Siguiente: ${esc(activeStepTitle(activeStep))}</span>
-        </div>
-      </div>
-
-      <section class="dashboard-grid kpi-row project-kpis compact-project-kpis">
-        <article><small>Proyecto activo</small><strong>${esc(project.name || "Sin nombre")}</strong></article>
-        <article><small>Potencia instalada</small><strong>${fmtKw(project.installedPowerKw)}</strong></article>
-        <article><small>Demanda calculada</small><strong>${fmtKw(project.demandPowerKw)}</strong></article>
-        <article><small>Empalme / tramite</small><strong>${esc(connection.limiter)} · ${esc(docType(project))}</strong></article>
-      </section>
-
       ${renderActiveAssistantStep(project, activeStep, connection)}
-
       <details class="dashboard-card project-flow-summary compact-flow-summary">
         <summary>Ver avance completo del proyecto</summary>
         <section class="project-flow-grid">${flowCards(project)}</section>
