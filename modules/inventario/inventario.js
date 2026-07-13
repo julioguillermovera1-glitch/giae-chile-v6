@@ -1,4 +1,4 @@
-import { state, persist } from "../../core/store.js";
+import { state, persist, hasCompanyPermission } from "../../core/store.js";
 
 function esc(value = ""){
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -78,7 +78,7 @@ function itemRows(items){
       <td>${money(Number(item.stock || 0) * Number(item.unitCost || 0))}</td>
       <td>${needed ? `${number(needed)} ${esc(item.unit || "un")}` : "-"}</td>
       <td><span class="stock-pill ${status.key}">${esc(status.label)}</span></td>
-      <td><button class="ghost danger-text" data-delete-item="${esc(item.id)}">Eliminar</button></td>
+      <td>${hasCompanyPermission("inventory.manage") ? `<button class="ghost danger-text" data-delete-item="${esc(item.id)}">Eliminar</button>` : "-"}</td>
     </tr>`;
   }).join("");
 }
@@ -105,6 +105,7 @@ function readNumber(host, selector){
 export function render(host){
   const inventory = ensureInventory();
   const data = metrics(inventory);
+  const canManage = hasCompanyPermission("inventory.manage");
   host.innerHTML = `
     <section class="module-window inventory-module">
       <div class="module-head split-head">
@@ -129,7 +130,7 @@ export function render(host){
         <article><small>Productos en rojo</small><strong>${data.redItems.length}</strong></article>
       </section>
 
-      <div class="dashboard-grid two inventory-workgrid">
+      ${canManage ? `<div class="dashboard-grid two inventory-workgrid">
         <article class="dashboard-card">
           <h4>Agregar producto</h4>
           <div class="form-grid compact inventory-form">
@@ -158,9 +159,9 @@ export function render(host){
           </div>
           <div class="top-actions"><button id="deliverInventoryItem" class="primary-action">Registrar entrega y descontar</button></div>
         </article>
-      </div>
+      </div>` : `<div class="inventory-alert info"><strong>Modo consulta.</strong><span>Este usuario puede ver inventario y entregas, pero no modificar stock.</span></div>`}
 
-      <article class="dashboard-card">
+<article class="dashboard-card">
         <h4>Inventario actual</h4>
         <div class="data-table-wrap wide-table"><table>
           <thead><tr><th>Producto</th><th>Categoria</th><th>Stock</th><th>Minimo</th><th>Valor unitario</th><th>Valor actual</th><th>Falta para minimo</th><th>Estado</th><th></th></tr></thead>
@@ -177,7 +178,7 @@ export function render(host){
       </article>
     </section>`;
 
-  host.querySelector("#addInventoryItem").addEventListener("click", () => {
+  host.querySelector("#addInventoryItem")?.addEventListener("click", () => {
     const name = host.querySelector("#itemName").value.trim();
     if(!name) return alert("Ingresa el nombre del producto.");
     inventory.items.push({
@@ -195,7 +196,7 @@ export function render(host){
     render(host);
   });
 
-  host.querySelector("#deliverInventoryItem").addEventListener("click", () => {
+  host.querySelector("#deliverInventoryItem")?.addEventListener("click", () => {
     const id = host.querySelector("#deliveryProduct").value;
     const item = inventory.items.find(product => product.id === id);
     if(!item) return alert("Selecciona un producto del inventario.");

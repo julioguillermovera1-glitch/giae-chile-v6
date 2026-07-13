@@ -9,6 +9,7 @@ import { runIntegralAudit } from "./audit/integralAuditEngine.js";
 import { evaluateGuidedWorkflow } from "./workflow/guidedWorkflowEngine.js";
 const STORAGE_KEY = "giae_chile_v1_workspace";
 const LIBRARY_KEY = "giae_chile_v1_project_library";
+const ALL_COMPANY_PERMISSIONS = ["project.manage", "inventory.view", "inventory.manage", "users.manage", "docs.view", "budget.view"];
 
 function nowStamp(){
   return new Date().toLocaleString("es-CL");
@@ -95,9 +96,82 @@ export const state = {
     allowedSources: ["RIC", "IEC", "DS8"],
     mode: "estricto",
     noInventar: true
+  },
+  companyAccess: {
+    activeUserId: "owner",
+    users: [
+      { id: "owner", name: "Super administrador", email: "", role: "super_admin", status: "Activo", permissions: ALL_COMPANY_PERMISSIONS, createdAt: nowStamp() }
+    ]
   }
 };
 
+
+function createCompanyUserId(){
+  return "USR-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).slice(2,5).toUpperCase();
+}
+
+export function ensureCompanyAccess(){
+  state.companyAccess = state.companyAccess || {};
+  state.companyAccess.users = Array.isArray(state.companyAccess.users) ? state.companyAccess.users : [];
+  let owner = state.companyAccess.users.find(user => user.role === "super_admin") || state.companyAccess.users.find(user => user.id === "owner");
+  if(!owner){
+    owner = { id: "owner", name: "Super administrador", email: "", role: "super_admin", status: "Activo", permissions: ALL_COMPANY_PERMISSIONS, createdAt: nowStamp() };
+    state.companyAccess.users.unshift(owner);
+  }
+  owner.permissions = ALL_COMPANY_PERMISSIONS;
+  owner.status = owner.status || "Activo";
+  state.companyAccess.activeUserId = state.companyAccess.activeUserId || owner.id;
+  if(!state.companyAccess.users.some(user => user.id === state.companyAccess.activeUserId)) state.companyAccess.activeUserId = owner.id;
+  return state.companyAccess;
+}
+
+export function currentCompanyUser(){
+  const access = ensureCompanyAccess();
+  return access.users.find(user => user.id === access.activeUserId) || access.users[0];
+}
+
+export function hasCompanyPermission(permission){
+  const user = currentCompanyUser();
+  if(!permission) return true;
+  if(user?.role === "super_admin") return true;
+  return Array.isArray(user?.permissions) && user.permissions.includes(permission);
+}
+
+export function setActiveCompanyUser(userId){
+  const access = ensureCompanyAccess();
+  if(access.users.some(user => user.id === userId)) access.activeUserId = userId;
+  persist();
+}
+
+export function upsertCompanyUser(user){
+  const access = ensureCompanyAccess();
+  const permissions = user.role === "super_admin" ? ALL_COMPANY_PERMISSIONS : Array.from(new Set(user.permissions || []));
+  const normalized = {
+    id: user.id || createCompanyUserId(),
+    name: user.name || "Usuario empresa",
+    email: user.email || "",
+    role: user.role || "proyectos",
+    status: user.status || "Activo",
+    permissions,
+    createdAt: user.createdAt || nowStamp(),
+    updatedAt: nowStamp()
+  };
+  const index = access.users.findIndex(item => item.id === normalized.id);
+  if(index >= 0) access.users[index] = { ...access.users[index], ...normalized };
+  else access.users.push(normalized);
+  persist();
+  return normalized;
+}
+
+export function deleteCompanyUser(userId){
+  const access = ensureCompanyAccess();
+  const user = access.users.find(item => item.id === userId);
+  if(!user || user.role === "super_admin") return false;
+  access.users = access.users.filter(item => item.id !== userId);
+  if(access.activeUserId === userId) access.activeUserId = access.users.find(item => item.role === "super_admin")?.id || access.users[0]?.id;
+  persist();
+  return true;
+}
 function normalizeProject(project){
   const base = defaultProject();
   const merged = { ...base, ...(project || {}) };
@@ -289,6 +363,7 @@ function normalizeLibrary(list){
 export function saveCurrentProjectToLibrary(action = "Proyecto guardado en biblioteca local"){
   recalculateProject();
   state.projectLibrary = normalizeLibrary(state.projectLibrary);
+    ensureCompanyAccess();
   const idx = state.projectLibrary.findIndex(project => project.id === state.currentProject.id);
   const snapshot = normalizeProject(JSON.parse(JSON.stringify(state.currentProject)));
   snapshot.updatedAt = nowStamp();
@@ -304,6 +379,7 @@ export function saveCurrentProjectToLibrary(action = "Proyecto guardado en bibli
 
 export function listProjects(options = {}){
   state.projectLibrary = normalizeLibrary(state.projectLibrary);
+    ensureCompanyAccess();
   const includeArchived = Boolean(options.includeArchived);
   return state.projectLibrary
     .filter(project => includeArchived || !project.archived)
@@ -312,6 +388,7 @@ export function listProjects(options = {}){
 
 export function openProject(projectId){
   state.projectLibrary = normalizeLibrary(state.projectLibrary);
+    ensureCompanyAccess();
   const found = state.projectLibrary.find(project => project.id === projectId);
   if(!found) return false;
   saveCurrentProjectToLibrary("Proyecto anterior guardado antes de abrir otro");
@@ -324,6 +401,7 @@ export function openProject(projectId){
 
 export function duplicateProject(projectId){
   state.projectLibrary = normalizeLibrary(state.projectLibrary);
+    ensureCompanyAccess();
   const source = state.projectLibrary.find(project => project.id === projectId) || state.currentProject;
   const copy = normalizeProject(JSON.parse(JSON.stringify(source)));
   copy.id = createProjectId();
@@ -370,6 +448,7 @@ export function renameProject(projectId, name){
 
 export function exportProjectById(projectId){
   state.projectLibrary = normalizeLibrary(state.projectLibrary);
+    ensureCompanyAccess();
   const project = state.projectLibrary.find(project => project.id === projectId) || state.currentProject;
   return {
     fileType: "GIAE_PROJECT",
@@ -419,6 +498,7 @@ export function persist() {
 export function restore() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) {
+    ensureCompanyAccess();
     recalculateProject();
     return state;
   }
@@ -427,6 +507,7 @@ export function restore() {
     Object.assign(state, saved);
     state.currentProject = normalizeProject(state.currentProject);
     state.projectLibrary = normalizeLibrary(state.projectLibrary);
+    ensureCompanyAccess();
     if(state.normativePolicy?.allowedSources?.includes("DL8")){
       state.normativePolicy.allowedSources = state.normativePolicy.allowedSources.map(x => x === "DL8" ? "DS8" : x);
     }
