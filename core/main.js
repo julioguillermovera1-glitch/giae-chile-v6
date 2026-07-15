@@ -16,6 +16,7 @@ const projectStatusLine = document.querySelector("#projectStatusLine");
 restore();
 applyBranding();
 
+// Always show the administrator access button on the login screen.
 configurePrivateAdminAccess();
 if (state.profile) openPlatform();
 window.GIAE = window.GIAE || {};
@@ -25,11 +26,10 @@ registerGiaePwa();
 
 window.addEventListener("giae:admin-updated", () => { applyBranding(); activeProfile.textContent = profileLabel(state.profile); renderMenu(); });
 function configurePrivateAdminAccess(){
-  const params = new URLSearchParams(window.location.search);
-  const enabled = params.get("admin") === "1" || window.location.hash === "#admin";
+  // Keep the administrator button visible at all times.
   document.querySelectorAll('[data-profile="administrador"]').forEach(button => {
-    button.classList.toggle("hidden", !enabled);
-    button.setAttribute("aria-hidden", String(!enabled));
+    button.classList.remove("hidden");
+    button.setAttribute("aria-hidden", "false");
   });
 }
 
