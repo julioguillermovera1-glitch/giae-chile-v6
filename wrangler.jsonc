@@ -12,6 +12,87 @@
   },
   "vars": {
     "GIAE_ENV": "production",
-    "GIAE_BINDINGS_MODE": "pending"
+    "GIAE_BINDINGS_MODE": "active"
+  },
+  "d1_databases": [
+    {
+      "binding": "GIAE_DB",
+      "database_name": "giae-production",
+      "database_id": "giae-db-prod"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "GIAE_PROJECT_BACKUPS",
+      "bucket_name": "giae-project-backups"
+    },
+    {
+      "binding": "GIAE_PROJECT_DOCUMENTS",
+      "bucket_name": "giae-project-documents"
+    },
+    {
+      "binding": "GIAE_BRAND_ASSETS",
+      "bucket_name": "giae-brand-assets"
+    },
+    {
+      "binding": "GIAE_FIELD_MEDIA",
+      "bucket_name": "giae-field-media"
+    }
+  ],
+  "env": {
+    "production": {
+      "d1_databases": [
+        {
+          "binding": "GIAE_DB",
+          "database_name": "giae-production",
+          "database_id": "giae-db-prod"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "GIAE_PROJECT_BACKUPS",
+          "bucket_name": "giae-project-backups-prod"
+        },
+        {
+          "binding": "GIAE_PROJECT_DOCUMENTS",
+          "bucket_name": "giae-project-documents-prod"
+        },
+        {
+          "binding": "GIAE_BRAND_ASSETS",
+          "bucket_name": "giae-brand-assets-prod"
+        },
+        {
+          "binding": "GIAE_FIELD_MEDIA",
+          "bucket_name": "giae-field-media-prod"
+        }
+      ]
+    },
+    "development": {
+      "d1_databases": [
+        {
+          "binding": "GIAE_DB",
+          "database_name": "giae-dev",
+          "database_id": "giae-db-dev"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "GIAE_PROJECT_BACKUPS",
+          "bucket_name": "giae-project-backups-dev"
+        },
+        {
+          "binding": "GIAE_PROJECT_DOCUMENTS",
+          "bucket_name": "giae-project-documents-dev"
+        },
+        {
+          "binding": "GIAE_BRAND_ASSETS",
+          "bucket_name": "giae-brand-assets-dev"
+        },
+        {
+          "binding": "GIAE_FIELD_MEDIA",
+          "bucket_name": "giae-field-media-dev"
+        }
+      ]
+    }
   }
 }
