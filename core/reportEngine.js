@@ -150,6 +150,87 @@ ${makeMarkdownParagraphs(body.closing)}
 `;
 }
 
+function escapePdfString(value){
+  return String(value || "")
+    .replace(/\\/g, "\\\\")
+    .replace(/\(/g, "\\(")
+    .replace(/\)/g, "\\)")
+    .replace(/\r/g, "")
+    .replace(/\n/g, "\\n");
+}
+
+function chunkArray(array, size){
+  const result = [];
+  for(let i = 0; i < array.length; i += size){
+    result.push(array.slice(i, i + size));
+  }
+  return result;
+}
+
+export function buildPdfBlob(report){
+  const lines = [];
+  lines.push(report.metadata.title);
+  if(report.metadata.institution) lines.push(`Institución: ${report.metadata.institution}`);
+  lines.push(`Autor: ${report.metadata.author}`);
+  lines.push(`Audiencia: ${report.metadata.audience}`);
+  lines.push(`Tipo: ${report.metadata.type}`);
+  lines.push(`Estilo: ${report.metadata.style}`);
+  lines.push(`Generado: ${report.metadata.generatedAt}`);
+  lines.push("");
+  lines.push("Resumen:");
+  lines.push(report.body.intro);
+  lines.push("");
+  lines.push("Descripción:");
+  lines.push(...report.body.details);
+  lines.push("");
+  lines.push("Conclusión:");
+  lines.push(...report.body.closing);
+
+  const pages = chunkArray(lines, 40);
+  const objects = [];
+  let objectId = 1;
+  objects.push(`${objectId} 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n\n`);
+  objectId += 1;
+  objects.push(`${objectId} 0 obj\n<< /Type /Pages /Kids [${pages.map((_, index) => `${3 + index * 2} 0 R`).join(" ")} ] /Count ${pages.length} >>\nendobj\n\n`);
+  objectId += 1;
+
+  const contentIds = [];
+  pages.forEach((pageLines, pageIndex) => {
+    const contentId = objectId;
+    const stream = ["BT", "/F1 12 Tf", "50 760 Td"];
+    pageLines.forEach(line => {
+      stream.push(`(${escapePdfString(line)}) Tj`);
+      stream.push("T*");
+    });
+    stream.push("ET");
+    const streamText = stream.join("\n");
+    objects.push(`${contentId} 0 obj\n<< /Length ${streamText.length} >>\nstream\n${streamText}\nendstream\nendobj\n\n`);
+    contentIds.push(contentId);
+    objectId += 1;
+    objects.push(`${objectId} 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents ${contentId} 0 R >>\nendobj\n\n`);
+    objectId += 1;
+  });
+
+  objects.push(`5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n\n`);
+
+  const body = objects.join("");
+  const xrefStart = body.length;
+  const offsets = [];
+  let pointer = 0;
+  objects.forEach(object => {
+    offsets.push(pointer);
+    pointer += object.length;
+  });
+
+  const xref = [`xref`, `0 ${objects.length + 1}`, `0000000000 65535 f `];
+  offsets.forEach(offset => {
+    xref.push(offset.toString().padStart(10, "0") + " 00000 n ");
+  });
+  const trailer = `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
+  const pdf = `%%PDF-1.3\n${body}${xref.join("\n")}\n${trailer}`;
+  return new Blob([pdf], { type: "application/pdf" });
+}
+
 export function buildReport(options){
   const metadata = createMetadata(options || {});
   const narrative = createNarrative({
