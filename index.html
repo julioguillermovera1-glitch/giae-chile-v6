@@ -57,6 +57,20 @@
             <button data-profile="aula" class="public-access">Aula educativa - acceso libre</button>
             <button data-profile="administrador" class="admin-access">Administrador</button>
           </div>
+          <div class="company-login-panel hidden">
+            <h3>Acceso de empresa</h3>
+            <p class="small">Ingresa tu correo y contraseña creados por la empresa para iniciar sesión como usuario de empresa.</p>
+            <p class="small note">Si no tienes credenciales, pide a tu administrador de empresa que cree tu cuenta.</p>
+            <div class="form-grid compact">
+              <label>Correo<input id="companyLoginEmail" type="email" placeholder="correo@empresa.cl"></label>
+              <label>Contraseña<input id="companyLoginPassword" type="password" placeholder="Contraseña"></label>
+            </div>
+            <div class="button-row">
+              <button id="companyLoginSubmit" class="primary-action">Ingresar</button>
+              <button id="companyLoginBack" class="secondary">Volver</button>
+            </div>
+            <div id="companyLoginFeedback" class="login-feedback"></div>
+          </div>
         </section>
       </main>
 

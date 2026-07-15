@@ -50,7 +50,7 @@ function userRows(users, activeId){
 }
 
 function defaultFormUser(){
-  return { id: "", name: "", email: "", role: "proyectos", status: "Activo", permissions: roles.proyectos.permissions };
+  return { id: "", name: "", email: "", role: "proyectos", status: "Activo", permissions: roles.proyectos.permissions, password: "" };
 }
 
 function form(user = defaultFormUser()){
@@ -60,6 +60,8 @@ function form(user = defaultFormUser()){
     <div class="form-grid compact">
       <label>Nombre <input id="userName" value="${esc(user.name || "")}" placeholder="Ej: Juan Perez"></label>
       <label>Correo / usuario <input id="userEmail" value="${esc(user.email || "")}" placeholder="usuario@empresa.cl"></label>
+      <label>Contraseña <input id="userPassword" type="password" value="${esc(user.password || "")}" placeholder="${user.id ? "Dejar vacío para mantener la contraseña actual" : "Crear contraseña"}"></label>
+      <p class="small note">La contraseña debe ser creada por la empresa y se usa para el ingreso de usuarios de empresa.</p>
       <label>Rol
         <select id="userRole">
           ${Object.entries(roles).map(([id, role]) => `<option value="${id}" ${user.role === id ? "selected" : ""}>${esc(role.label)}</option>`).join("")}
@@ -122,6 +124,7 @@ export function render(host, state) {
       id: host.querySelector("#userId").value,
       name: host.querySelector("#userName").value.trim(),
       email: host.querySelector("#userEmail").value.trim(),
+      password: host.querySelector("#userPassword").value,
       role,
       status: host.querySelector("#userStatus").value,
       permissions: role === "super_admin" ? roles.super_admin.permissions : checked
@@ -136,6 +139,8 @@ export function render(host, state) {
   host.querySelector("#saveCompanyUser")?.addEventListener("click", () => {
     const user = readForm();
     if(!user.name) return alert("Ingresa el nombre del usuario.");
+    if(!user.email) return alert("Ingresa el correo del usuario.");
+    if(!user.id && !user.password) return alert("Crea una contraseña para el nuevo usuario.");
     if(user.role !== "super_admin" && !user.permissions.length) return alert("Asigna al menos un permiso.");
     upsertCompanyUser(user);
     window.dispatchEvent(new Event("giae:admin-updated"));

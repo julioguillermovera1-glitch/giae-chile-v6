@@ -1,6 +1,6 @@
 import { modules, menuGroups } from "./moduleRegistry.js";
 import { registerGiaePwa } from "./pwa.js";
-import { restore, setProfile, clearProfile, state, persist, exportProjectFile, importProjectFile, saveCurrentProjectToLibrary, ensureCompanyAccess, hasCompanyPermission, currentCompanyUser } from "./store.js";
+import { restore, setProfile, clearProfile, state, persist, exportProjectFile, importProjectFile, saveCurrentProjectToLibrary, ensureCompanyAccess, hasCompanyPermission, currentCompanyUser, verifyCompanyUserCredentials, setActiveCompanyUser } from "./store.js";
 
 const loginView = document.querySelector("#loginView");
 const platformView = document.querySelector("#platformView");
@@ -12,6 +12,13 @@ let activeWindowId = null;
 const title = document.querySelector("#workspaceTitle");
 const activeProfile = document.querySelector("#activeProfile");
 const projectStatusLine = document.querySelector("#projectStatusLine");
+const profileGrid = document.querySelector(".profile-grid");
+const companyLoginPanel = document.querySelector(".company-login-panel");
+const companyLoginEmail = document.querySelector("#companyLoginEmail");
+const companyLoginPassword = document.querySelector("#companyLoginPassword");
+const companyLoginFeedback = document.querySelector("#companyLoginFeedback");
+const companyLoginSubmit = document.querySelector("#companyLoginSubmit");
+const companyLoginBack = document.querySelector("#companyLoginBack");
 
 restore();
 applyBranding();
@@ -35,11 +42,56 @@ function configurePrivateAdminAccess(){
 
 document.querySelectorAll("[data-profile]").forEach(button => {
   button.addEventListener("click", () => {
+    if(button.dataset.profile === "empresa"){
+      showCompanyLogin();
+      return;
+    }
     setProfile(button.dataset.profile);
     markSession(button.dataset.profile);
     openPlatform();
   });
 });
+
+companyLoginSubmit?.addEventListener("click", event => {
+  event.preventDefault();
+  const email = companyLoginEmail?.value.trim();
+  const password = companyLoginPassword?.value || "";
+  if(!email || !password){
+    companyLoginFeedback.textContent = "Ingresa correo y contraseña para acceder.";
+    return;
+  }
+  const user = verifyCompanyUserCredentials(email, password);
+  if(!user){
+    companyLoginFeedback.textContent = "Credenciales inválidas o usuario inactivo.";
+    return;
+  }
+  setActiveCompanyUser(user.id);
+  setProfile("empresa");
+  markSession("empresa");
+  hideCompanyLogin();
+  openPlatform();
+});
+
+companyLoginBack?.addEventListener("click", event => {
+  event.preventDefault();
+  hideCompanyLogin();
+});
+
+function showCompanyLogin(){
+  profileGrid?.classList.add("hidden");
+  companyLoginPanel?.classList.remove("hidden");
+  companyLoginFeedback.textContent = "";
+  companyLoginEmail.value = "";
+  companyLoginPassword.value = "";
+}
+
+function hideCompanyLogin(){
+  companyLoginPanel?.classList.add("hidden");
+  profileGrid?.classList.remove("hidden");
+  companyLoginFeedback.textContent = "";
+  companyLoginEmail.value = "";
+  companyLoginPassword.value = "";
+}
 
 document.querySelector("#saveProjectBtn").addEventListener("click", () => {
   saveCurrentProjectToLibrary();
@@ -284,9 +336,10 @@ function refreshActiveModule(){
 }
 
 function profileLabel(profile) {
+  const user = currentCompanyUser();
   const labels = {
     independiente: "Instalador independiente",
-    empresa: `Empresa - ${currentCompanyUser()?.name || "Super administrador"}`,
+    empresa: `Empresa - ${user?.name || "Super administrador"}${user?.email ? ` (${user.email})` : ""}`,
     estudiante: "Estudiante",
     administrador: "Administrador - Reparacion",
     aula: "Aula Técnica - Acceso libre"

@@ -110,6 +110,23 @@ function createCompanyUserId(){
   return "USR-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).slice(2,5).toUpperCase();
 }
 
+function hashPassword(password){
+  let hash = 2166136261;
+  for(const char of String(password || "")){
+    hash ^= char.charCodeAt(0);
+    hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
+export function verifyCompanyUserCredentials(email, password){
+  const access = ensureCompanyAccess();
+  const normalizedEmail = String(email || "").trim().toLowerCase();
+  const user = access.users.find(item => String(item.email || "").trim().toLowerCase() === normalizedEmail && item.status === "Activo");
+  if(!user || !user.passwordHash) return null;
+  return user.passwordHash === hashPassword(password) ? user : null;
+}
+
 export function ensureCompanyAccess(){
   state.companyAccess = state.companyAccess || {};
   state.companyAccess.users = Array.isArray(state.companyAccess.users) ? state.companyAccess.users : [];
@@ -145,6 +162,8 @@ export function setActiveCompanyUser(userId){
 
 export function upsertCompanyUser(user){
   const access = ensureCompanyAccess();
+  const index = access.users.findIndex(item => item.id === user.id);
+  const existing = index >= 0 ? access.users[index] : null;
   const permissions = user.role === "super_admin" ? ALL_COMPANY_PERMISSIONS : Array.from(new Set(user.permissions || []));
   const normalized = {
     id: user.id || createCompanyUserId(),
@@ -153,10 +172,10 @@ export function upsertCompanyUser(user){
     role: user.role || "proyectos",
     status: user.status || "Activo",
     permissions,
-    createdAt: user.createdAt || nowStamp(),
+    passwordHash: user.password ? hashPassword(user.password) : existing?.passwordHash || "",
+    createdAt: existing?.createdAt || user.createdAt || nowStamp(),
     updatedAt: nowStamp()
   };
-  const index = access.users.findIndex(item => item.id === normalized.id);
   if(index >= 0) access.users[index] = { ...access.users[index], ...normalized };
   else access.users.push(normalized);
   persist();
