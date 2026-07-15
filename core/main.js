@@ -16,6 +16,7 @@ const profileGrid = document.querySelector(".profile-grid");
 const companyLoginPanel = document.querySelector(".company-login-panel");
 const companyLoginEmail = document.querySelector("#companyLoginEmail");
 const companyLoginPassword = document.querySelector("#companyLoginPassword");
+const companyLoginHint = document.querySelector("#companyLoginHint");
 const companyLoginFeedback = document.querySelector("#companyLoginFeedback");
 const companyLoginSubmit = document.querySelector("#companyLoginSubmit");
 const companyLoginBack = document.querySelector("#companyLoginBack");
@@ -81,6 +82,11 @@ function showCompanyLogin(){
   profileGrid?.classList.add("hidden");
   companyLoginPanel?.classList.remove("hidden");
   companyLoginFeedback.textContent = "";
+  const access = ensureCompanyAccess();
+  const companyUsers = access.users.filter(user => user.role !== "super_admin");
+  companyLoginHint.textContent = companyUsers.length === 0
+    ? "No hay usuarios de empresa creados. Inicia sesión como Administrador y crea Usuarios de empresa." 
+    : "Este acceso usa el correo y la contraseña creados por tu empresa.";
   companyLoginEmail.value = "";
   companyLoginPassword.value = "";
 }
@@ -89,6 +95,7 @@ function hideCompanyLogin(){
   companyLoginPanel?.classList.add("hidden");
   profileGrid?.classList.remove("hidden");
   companyLoginFeedback.textContent = "";
+  companyLoginHint.textContent = "Este acceso usa el correo y la contraseña creados por tu empresa.";
   companyLoginEmail.value = "";
   companyLoginPassword.value = "";
 }
@@ -187,6 +194,8 @@ function renderMenu() {
       </div>
     </section>
   `).join("");
+
+  document.querySelectorAll("#openIaChatBtn").forEach(button => button.addEventListener("click", () => openModule("ia-electrico")));
 
   menu.onclick = event => {
     const toggle = event.target.closest("[data-toggle-group]");
@@ -347,17 +356,29 @@ function profileLabel(profile) {
   return labels[profile] || "Sin sesión";
 }
 
+function generateSessionId(){
+  return `S-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
+}
+
 function markSession(profile){
   state.admin = state.admin || {};
   state.admin.sessions = state.admin.sessions || [];
-  const name = profileLabel(profile);
+  let name = profileLabel(profile);
+  if(profile === "empresa"){
+    const user = currentCompanyUser();
+    if(user){
+      name = `${user.name}${user.email ? ` (${user.email})` : ""}`;
+    }
+  }
   const now = new Date().toLocaleString("es-CL");
-  const existing = state.admin.sessions.find(session => session.profile === profile);
+  const existing = state.admin.sessions.find(session => session.profile === profile && session.name === name && session.status === "Conectado");
   if(existing){
-    existing.status = "Conectado";
     existing.lastSeen = now;
+    state.admin.currentSessionId = existing.id;
   } else {
-    state.admin.sessions.push({ name, profile, status: "Conectado", lastSeen: now });
+    const session = { id: generateSessionId(), name, profile, status: "Conectado", lastSeen: now };
+    state.admin.sessions.push(session);
+    state.admin.currentSessionId = session.id;
   }
   persist();
 }
@@ -365,11 +386,19 @@ function markSession(profile){
 function closeSession(){
   state.admin = state.admin || {};
   state.admin.sessions = state.admin.sessions || [];
-  const current = state.admin.sessions.find(session => session.profile === state.profile);
+  let current = null;
+  if(state.admin.currentSessionId){
+    current = state.admin.sessions.find(session => session.id === state.admin.currentSessionId);
+  }
+  if(!current){
+    const name = profileLabel(state.profile);
+    current = state.admin.sessions.find(session => session.profile === state.profile && session.name === name && session.status === "Conectado");
+  }
   if(current){
     current.status = "Desconectado";
     current.lastSeen = new Date().toLocaleString("es-CL");
   }
+  delete state.admin.currentSessionId;
   persist();
 }
 

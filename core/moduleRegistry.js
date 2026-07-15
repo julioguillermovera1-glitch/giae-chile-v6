@@ -4,7 +4,7 @@ export const menuGroups = [
   { id: "inventario", label: "Inventario" },
   { id: "cad", label: "CAD" },
   { id: "documentacion", label: "Documentacion" },
-  { id: "educacion", label: "Educacion" },
+  { id: "educacion", label: "Educacion / IA" },
   { id: "administracion", label: "Reparacion" }
 ];
 
@@ -26,7 +26,7 @@ export const modules = [
   { id: "inventario", label: "Inventario empresa", group: "inventario", path: "../modules/inventario/inventario.js", profiles: profesionales, permission: "inventory.view" },
   { id: "flujo-guiado", label: "Flujo guiado", group: "proyecto", path: "../modules/flujo-guiado/flujo-guiado.js", profiles: usuariosPago, hiddenInMenu: true, permission: "project.manage" },
   { id: "gpe", label: "Motor de proyecto", group: "proyecto", path: "../modules/gpe.js", profiles: usuariosPago, hiddenInMenu: true, permission: "project.manage" },
-  { id: "usuarios", label: "Usuarios de empresa", group: "proyecto", path: "../modules/usuarios/usuarios.js", profiles: ["empresa"], permission: "users.manage" },
+  { id: "usuarios", label: "Usuarios de empresa", group: "proyecto", path: "../modules/usuarios/usuarios.js", profiles: ["empresa", "administrador"], permission: "users.manage" },
   { id: "nube", label: "Nube y licencias", group: "proyecto", path: "../modules/nube/nube.js", profiles: profesionales, hiddenInMenu: true, permission: "users.manage" },
   { id: "auditoria", label: "Auditoria", group: "proyecto", path: "../modules/auditoria/auditoria.js", profiles: usuariosPago, hiddenInMenu: true, permission: "project.manage" },
 
