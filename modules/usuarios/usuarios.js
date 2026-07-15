@@ -84,8 +84,19 @@ export function render(host, state) {
     return;
   }
 
+  const companyUsers = access.users.filter(user => user.role !== "super_admin");
+  const noUsers = companyUsers.length === 0;
+  const connectedUsers = companyUsers.filter(user => user.status === "Activo").length;
+
   host.innerHTML = `
     <section class="module-window company-users-module">
+      <section class="dashboard-grid kpi-row company-user-kpis">
+        <article><small>Usuarios de empresa</small><strong>${companyUsers.length}</strong></article>
+        <article><small>Usuarios activos</small><strong>${connectedUsers}</strong></article>
+        <article><small>Usuario activo</small><strong>${esc(active?.name || "Super administrador")}</strong></article>
+      </section>
+      ${noUsers ? `<div class="result-box info"><strong>No hay usuarios de empresa creados.</strong><br>Usa el formulario a continuación para agregar empleados con correo y contraseña. Luego ellos podrán iniciar sesión en Empresa.</div>` : ""}
+      ${noUsers ? `<div class="result-box info"><strong>No hay usuarios de empresa creados.</strong><br>Usa el formulario a continuación para agregar empleados con correo y contraseña. Luego ellos podrán iniciar sesión en Empresa.</div>` : ""}
       <div class="module-head split-head">
         <div>
           <p class="eyebrow">Empresa</p>

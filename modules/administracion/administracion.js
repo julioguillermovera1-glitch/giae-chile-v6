@@ -157,7 +157,7 @@ export function render(host, state){
               ${["tecnico","sobrio","empresa","minimal"].map(style => `<option value="${style}" ${style === (state.admin.company.brand?.templateStyle || "tecnico") ? "selected" : ""}>${style}</option>`).join("")}
             </select>
           </label>
-          ${isCompanyAdmin ? `<p class="small"><strong>Nota:</strong> como administrador de empresa puedes definir marca, logo y cargar presupuestos. Para administrar empleados usa el módulo Usuarios de Empresa.</p>` : ``}
+          ${isCompanyAdmin ? `<p class="small"><strong>Nota:</strong> como administrador de empresa puedes definir marca, logo y cargar presupuestos. Para administrar empleados usa el módulo Usuarios de Empresa.</p>` : `<div class="top-actions"><button id="admOpenCompanyUsers" class="secondary">Abrir Usuarios de empresa</button></div><p class="small"><strong>Nota:</strong> como administrador puedes abrir directamente el módulo Usuarios de empresa para crear empleados con correo y contraseña. Estos usuarios podrán iniciar sesión en el perfil Empresa.</p>`}
         </div>
       </section>
 

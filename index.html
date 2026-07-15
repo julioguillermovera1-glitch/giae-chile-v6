@@ -57,10 +57,13 @@
             <button data-profile="aula" class="public-access">Aula educativa - acceso libre</button>
             <button data-profile="administrador" class="admin-access">Administrador</button>
           </div>
+          <p class="small note login-tip">Para ingresar como empresa, pulsa Empresa y utiliza el correo y contraseña creados por tu administrador. Si no tienes cuenta, ingresa como Administrador y crea tu usuario en Usuarios de empresa.</p>
+          <p class="small note login-tip">El botón Empresa abre el formulario de login por correo y contraseña de empresa.</p>
           <div class="company-login-panel hidden">
             <h3>Acceso de empresa</h3>
             <p class="small">Ingresa tu correo y contraseña creados por la empresa para iniciar sesión como usuario de empresa.</p>
             <p class="small note">Si no tienes credenciales, pide a tu administrador de empresa que cree tu cuenta.</p>
+            <p id="companyLoginHint" class="small note">Este acceso usa el correo y la contraseña creados por tu empresa.</p>
             <div class="form-grid compact">
               <label>Correo<input id="companyLoginEmail" type="email" placeholder="correo@empresa.cl"></label>
               <label>Contraseña<input id="companyLoginPassword" type="password" placeholder="Contraseña"></label>
@@ -69,7 +72,7 @@
               <button id="companyLoginSubmit" class="primary-action">Ingresar</button>
               <button id="companyLoginBack" class="secondary">Volver</button>
             </div>
-            <div id="companyLoginFeedback" class="login-feedback"></div>
+            <div id="companyLoginFeedback" class="login-feedback">Si no ves el módulo Empresa, debes crear un usuario de empresa primero.</div>
           </div>
         </section>
       </main>
@@ -103,6 +106,7 @@
         </div>
         <div class="top-actions">
           <span id="activeProfile" class="pill">Sin sesión</span>
+          <button id="openIaChatBtn" class="secondary">Chat IA</button>
           <button id="saveProjectBtn">Guardar</button>
           <button id="exportBtn">Exportar</button>
           <button id="logoutBtn" class="danger">Cerrar sesión</button>
