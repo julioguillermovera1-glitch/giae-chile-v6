@@ -158,63 +158,130 @@ function generatePreliminaryCad(host, state) {
   host.querySelector("#iaDetails").innerHTML = "";
 }
 
-export function render(host, state){
-  const engine = formatEngineStatus();
+async function generateChatResponse(userMessage, state) {
+  const msg = userMessage.toLowerCase();
   const project = state.currentProject;
-  const projectSummary = project ? `${esc(project.name)} · ${esc(project.distributor)} · ${esc(project.supplyType)}` : "Sin proyecto activo";
+
+  // Saludos
+  if (msg.match(/hola|hi|hey|buenos/i)) {
+    return "¡Hola! 👋 Soy tu asistente eléctrico especializado en normativa chilena. Puedo ayudarte con cálculos de cargas, protecciones, conductores, caída de tensión, y todo lo relacionado con RIC e IEC. ¿Qué necesitas?";
+  }
+
+  // Sobre el proyecto actual
+  if (msg.match(/proyecto|proyecto activo|estado del proyecto/i)) {
+    if (project) {
+      return `Tu proyecto actual es: **${project.name || 'Sin nombre'}** (${project.supplyType} - ${project.distributor}). Tienes ${project.loads?.length || 0} cargas registradas. ¿Necesitas analizar algo específico?`;
+    }
+    return "No tienes un proyecto activo. Crea uno primero en el módulo Proyecto para que pueda ayudarte con el análisis.";
+  }
+
+  // Sobre cargas
+  if (msg.match(/carga|cargas|circuito|circuitos/i)) {
+    return "Las cargas son los aparatos eléctricos que consumen energía. Para dimensionar bien el proyecto necesito:\n- Potencia de cada carga (W o kW)\n- Tipo (monofásica, trifásica)\n- Factor de potencia (generalmente 0.9 o 1.0)\n\n¿Tienes esos datos para que los ingresemos?";
+  }
+
+  // Sobre protecciones
+  if (msg.match(/protección|protecciones|breaker|disyuntor|fusible/i)) {
+    return "Las protecciones (breakers/disyuntores) protegen contra sobrecarga y cortocircuito. Se dimensionan según:\n- Corriente máxima de la carga (Iz)\n- Tipo de curva (C, D, K según norma RIC)\n- Calibre comercial disponible\n\nLa corriente Iz se calcula: Iz = P / (√3 × V × cosφ)\n\n¿Qué carga necesitas proteger?";
+  }
+
+  // Sobre conductores
+  if (msg.match(/conductor|cable|sección|mm²|awg/i)) {
+    return "Los conductores transportan la corriente. Se dimensionan considerando:\n- Corriente (Iz en amperes)\n- Caída de tensión máxima (3% en ramales, 5% total)\n- Método de instalación (en canaleta, enterrado, aéreo, etc.)\n\nTabla RIC IEC: Para 10A → 2.5mm² Cu, 15A → 4mm², 20A → 6mm², etc.\n\n¿Qué corriente debes transportar?";
+  }
+
+  // Sobre tierra/puesta a tierra
+  if (msg.match(/tierra|puesta a tierra|electrodo|tp|ts|atterraggio/i)) {
+    return "La puesta a tierra (TP/TS) protege a las personas ante fallas. Según RIC:\n- **TP**: Tierra de Protección (neutro del transformador)\n- **TS**: Tierra de Servicio (cuerpo del cliente)\n- Resistencia máxima: ≤ 10Ω para vivienda, ≤ 5Ω para industria\n\n¿Es para una vivienda, negocio o industria?";
+  }
+
+  // Sobre normativa RIC
+  if (msg.match(/ric|norma|normativa|regulación/i)) {
+    return "La **RIC (Reglamento de Instalaciones de Consumo)** es la norma obligatoria en Chile. Complementada con:\n- **IEC 60364**: Instalaciones eléctricas (internacional)\n- **DS Nº 8**: Requisitos de eficiencia energética\n- **NCh 4/2003**: Código eléctrico chileno\n\n¿Necesitas saber requisitos específicos de una instalación?";
+  }
+
+  // Sobre caída de tensión
+  if (msg.match(/caída|caída de tensión|voltaje|tensión/i)) {
+    return "La caída de tensión es la pérdida de voltaje en el conductor por su resistencia.\n\nFórmula: ΔV% = (100 × ρ × I × L) / (S × V)\nDonde: ρ=resistividad, I=corriente, L=longitud, S=sección, V=voltaje\n\n**Límites RIC:**\n- 3% en ramales desde cuadro secundario\n- 5% máximo total desde cuadro principal\n\n¿Qué distancia y corriente tienes?";
+  }
+
+  // Sobre empalme
+  if (msg.match(/empalme|rIC 1|rIC1|conexión a red/i)) {
+    return "El **Empalme (RIC 1)** es la conexión del cliente con la red de distribución. Requisitos:\n- Debe ser realizado por instalador SEC autorizado\n- Voltaje: 220V monofásico o 380V trifásico (según disponibilidad)\n- Seccionador con llave de corte de emergencia\n- Protección general y medidor de energía\n\n¿Qué tipo de empalme necesitas (monofásico o trifásico)?";
+  }
+
+  // Respuesta por defecto (conversacional)
+  return "Interesante pregunta sobre electricidad. 🔌 Tengo conocimiento en:\n- Cálculo de cargas y dimensionamiento\n- Protecciones (breakers, fusibles)\n- Conductores y caída de tensión\n- Puesta a tierra (TP/TS)\n- Normativa RIC, IEC y DS Nº8\n- Empalmes a red\n\nTambién puedo ayudarte a analizar tu proyecto si tienes uno abierto. ¿Hay algo específico en lo que pueda ayudarte?";
+}
+
+export function render(host, state) {
+  if(!state.iaChatHistory) state.iaChatHistory = [];
+  const chatMessages = state.iaChatHistory.map(msg => `
+    <div class="chat-message ${msg.role}">
+      <div class="chat-bubble">${esc(msg.text)}</div>
+    </div>
+  `).join("");
 
   host.innerHTML = `
-    <section class="module-window ia-module">
-      <div class="module-head">
-        <div>
-          <p class="eyebrow">Asistente Eléctrico</p>
-          <h3>IA especializada en electricidad</h3>
-          <p>Motor local que razona con cálculos de cargas, RIC y reglas normativas chilenas. Gratuito y sin llamar a servicios externos.</p>
+    <section class="module-window ia-chat-module">
+      <div class="ia-chat-container">
+        <div id="iaChatMessages" class="ia-chat-messages">
+          ${chatMessages || '<div class="chat-message system"><div class="chat-bubble">Hola 👋 Soy tu asistente eléctrico. Puedo ayudarte con normativa RIC, IEC, caídas de tensión, protecciones, conductores y más. ¿Qué necesitas?</div></div>'}
+        </div>
+        <div class="ia-chat-input-area">
+          <input id="iaChatInput" type="text" placeholder="Escribe tu pregunta sobre electricidad..." autocomplete="off">
+          <button id="iaChatSendBtn" class="primary">Enviar</button>
         </div>
       </div>
-
-      <div class="admin-card ia-summary-card">
-        <h4>Proyecto activo</h4>
-        <p>${projectSummary}</p>
-        <p class="small-note">Utiliza este asistente sobre el proyecto abierto en el sistema. Actualiza las cargas y la información del proyecto antes de ejecutar la revisión.</p>
-      </div>
-
-      ${renderStatusCard(engine)}
-
-      <section class="admin-card">
-        <h4>Interacción con la IA</h4>
-        <p>${esc(messages.help)}</p>
-        <textarea id="iaPrompt" rows="4" placeholder="${esc(messages.prompt)}"></textarea>
-        <div class="button-row">
-          <button class="primary" id="iaAnalyzeBtn">Analizar proyecto</button>
-          <button class="secondary" id="iaReportBtn">Generar informe Markdown</button>
-          <button class="secondary" id="iaReportHtmlBtn">Generar informe HTML</button>
-          <button class="secondary" id="iaReportPdfBtn">Generar informe PDF</button>
-          <button class="secondary" id="iaCadBtn">Generar plano CAD preliminar</button>
-          <button class="secondary" id="iaClearBtn">Limpiar respuesta</button>
-        </div>
-      </section>
-
-      <section class="admin-card ia-response-card">
-        <h4>Respuesta del asistente</h4>
-        <div id="iaResponse" class="result-box">Pulsa "Analizar proyecto" para obtener el diagnóstico.</div>
-      </section>
-
-      <section class="admin-card ia-details-card">
-        <h4>Detalles técnicos</h4>
-        <div id="iaDetails"></div>
-      </section>
     </section>
   `;
 
-  host.querySelector("#iaAnalyzeBtn").addEventListener("click", () => analyze(host, state));
-  host.querySelector("#iaReportBtn").addEventListener("click", () => generateReport(host, state));
-  host.querySelector("#iaReportHtmlBtn").addEventListener("click", () => generateReportHtml(host, state));
-  host.querySelector("#iaReportPdfBtn").addEventListener("click", () => generateReportPdf(host, state));
-  host.querySelector("#iaCadBtn").addEventListener("click", () => generatePreliminaryCad(host, state));
-  host.querySelector("#iaClearBtn").addEventListener("click", () => {
-    host.querySelector("#iaResponse").textContent = "Pulsa \"Analizar proyecto\" para obtener el diagnóstico.";
-    host.querySelector("#iaDetails").innerHTML = "";
-    host.querySelector("#iaPrompt").value = "";
+  const inputEl = host.querySelector("#iaChatInput");
+  const sendBtn = host.querySelector("#iaChatSendBtn");
+  const messagesContainer = host.querySelector("#iaChatMessages");
+
+  const sendMessage = async () => {
+    const text = inputEl.value.trim();
+    if(!text) return;
+    
+    inputEl.value = "";
+    inputEl.disabled = true;
+    sendBtn.disabled = true;
+
+    // Add user message
+    state.iaChatHistory.push({ role: "usuario", text });
+    const userBubble = document.createElement("div");
+    userBubble.className = "chat-message usuario";
+    userBubble.innerHTML = `<div class="chat-bubble">${esc(text)}</div>`;
+    messagesContainer.appendChild(userBubble);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+    // Generate AI response
+    try {
+      const response = await generateChatResponse(text, state);
+      state.iaChatHistory.push({ role: "asistente", text: response });
+      const aiBubble = document.createElement("div");
+      aiBubble.className = "chat-message asistente";
+      aiBubble.innerHTML = `<div class="chat-bubble">${esc(response)}</div>`;
+      messagesContainer.appendChild(aiBubble);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      persist();
+    } catch(e) {
+      console.error(e);
+      const errorBubble = document.createElement("div");
+      errorBubble.className = "chat-message asistente";
+      errorBubble.innerHTML = `<div class="chat-bubble">Lo siento, hubo un error. Intenta de nuevo.</div>`;
+      messagesContainer.appendChild(errorBubble);
+    }
+
+    inputEl.disabled = false;
+    sendBtn.disabled = false;
+    inputEl.focus();
+  };
+
+  sendBtn.addEventListener("click", sendMessage);
+  inputEl.addEventListener("keypress", (e) => {
+    if(e.key === "Enter") sendMessage();
   });
+  inputEl.focus();
 }

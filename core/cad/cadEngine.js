@@ -13,7 +13,7 @@ export const CAD_LAYERS = [
 ];
 
 export const CAD_SYMBOLS = [
-  { id: "panel", label: "Tablero", layer: "tablero", kind: "equipment", ports: ["in", "out", "pe"] },
+  { id: "panel", label: "Tablero TDA", layer: "tablero", kind: "equipment", ports: ["in", "out", "pe"] },
   { id: "breaker", label: "Proteccion", layer: "tablero", kind: "protection", ports: ["in", "out"] },
   { id: "light", label: "Punto luz", layer: "alumbrado", kind: "load", ports: ["phase", "neutral", "pe"] },
   { id: "switch", label: "Interruptor", layer: "alumbrado", kind: "control", ports: ["in", "out"] },
@@ -21,6 +21,10 @@ export const CAD_SYMBOLS = [
   { id: "motor", label: "Motor/carga fuerza", layer: "fuerza", kind: "load", ports: ["phase", "neutral", "pe"] },
   { id: "junction", label: "Caja derivacion", layer: "canalizacion", kind: "connection", ports: ["a", "b", "c", "d"] },
   { id: "ground", label: "Puesta a tierra", layer: "tierra", kind: "ground", ports: ["pe"] },
+  { id: "canaleta", label: "Canaleta/Tubo", layer: "canalizacion", kind: "conduit", ports: ["in", "out"] },
+  { id: "punto", label: "Punto centro", layer: "alumbrado", kind: "control", ports: ["in", "out"] },
+  { id: "medidor", label: "Medidor", layer: "tablero", kind: "equipment", ports: ["in", "out"] },
+  { id: "empalme", label: "Empalme", layer: "canalizacion", kind: "connection", ports: ["a", "b"] },
   { id: "note", label: "Nota", layer: "notas", kind: "annotation", ports: [] },
   { id: "dimension", label: "Dimension", layer: "revision", kind: "annotation", ports: [] }
 ];

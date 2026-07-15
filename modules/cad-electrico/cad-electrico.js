@@ -42,6 +42,7 @@ function renderLayerToggles(doc){
 function renderToolOptions(activeTool, docSymbols = []){
   const tools = [
     ["select", "Seleccionar"],
+    ["house", "Casa"],
     ["wire", "Cablear"],
     ["dimension", "Dimension"],
     ["panel", "Tablero"],
@@ -52,6 +53,10 @@ function renderToolOptions(activeTool, docSymbols = []){
     ["motor", "Fuerza"],
     ["junction", "Derivacion"],
     ["ground", "Tierra"],
+    ["canaleta", "Canaleta"],
+    ["punto", "Punto"],
+    ["medidor", "Medidor"],
+    ["empalme", "Empalme"],
     ["note", "Nota"]
   ];
   const defaultIds = new Set(tools.map(([id]) => id));
@@ -63,15 +68,19 @@ function renderSymbol(entity, symbols = CAD_SYMBOLS){
   const x = n(entity.x), y = n(entity.y);
   const label = esc(entity.label || symbolLabel(entity.symbolId, symbols));
   const base = `data-entity-id="${esc(entity.id)}" class="cad-entity cad-symbol"`;
-  if(entity.symbolId === "panel") return `<g ${base} transform="translate(${x} ${y})"><rect x="-34" y="-42" width="68" height="84" rx="4" fill="#fff" stroke="${color}" stroke-width="3"/><line x1="-22" y1="-20" x2="22" y2="-20" stroke="${color}" stroke-width="2"/><line x1="-22" y1="0" x2="22" y2="0" stroke="${color}" stroke-width="2"/><line x1="-22" y1="20" x2="22" y2="20" stroke="${color}" stroke-width="2"/><text y="58" text-anchor="middle" font-size="13" font-weight="800">${label}</text></g>`;
-  if(entity.symbolId === "breaker") return `<g ${base} transform="translate(${x} ${y})"><rect x="-22" y="-32" width="44" height="64" rx="3" fill="#fff" stroke="${color}" stroke-width="2.5"/><path d="M -10 8 C -2 -18 8 -18 14 -30" fill="none" stroke="${color}" stroke-width="2.5"/><text y="50" text-anchor="middle" font-size="12" font-weight="800">${label}</text></g>`;
-  if(entity.symbolId === "light") return `<g ${base} transform="translate(${x} ${y})"><circle r="25" fill="#fff" stroke="${color}" stroke-width="3"/><line x1="-17" y1="-17" x2="17" y2="17" stroke="${color}" stroke-width="2"/><line x1="17" y1="-17" x2="-17" y2="17" stroke="${color}" stroke-width="2"/><text y="46" text-anchor="middle" font-size="12" font-weight="800">${label}</text></g>`;
-  if(entity.symbolId === "switch") return `<g ${base} transform="translate(${x} ${y})"><circle r="18" fill="#fff" stroke="${color}" stroke-width="3"/><line x1="-7" y1="6" x2="16" y2="-15" stroke="${color}" stroke-width="3"/><text y="40" text-anchor="middle" font-size="12" font-weight="800">${label}</text></g>`;
-  if(entity.symbolId === "outlet") return `<g ${base} transform="translate(${x} ${y})"><circle r="24" fill="#fff" stroke="${color}" stroke-width="3"/><circle cx="-8" cy="0" r="3" fill="${color}"/><circle cx="8" cy="0" r="3" fill="${color}"/><path d="M -10 10 Q 0 17 10 10" fill="none" stroke="${color}" stroke-width="2"/><text y="45" text-anchor="middle" font-size="12" font-weight="800">${label}</text></g>`;
-  if(entity.symbolId === "motor") return `<g ${base} transform="translate(${x} ${y})"><circle r="27" fill="#fff" stroke="${color}" stroke-width="3"/><text y="7" text-anchor="middle" font-size="22" font-weight="900" fill="${color}">M</text><text y="50" text-anchor="middle" font-size="12" font-weight="800">${label}</text></g>`;
-  if(entity.symbolId === "junction") return `<g ${base} transform="translate(${x} ${y})"><rect x="-20" y="-20" width="40" height="40" rx="4" fill="#fff" stroke="${color}" stroke-width="3"/><circle r="5" fill="${color}"/><text y="42" text-anchor="middle" font-size="12" font-weight="800">${label}</text></g>`;
-  if(entity.symbolId === "ground") return `<g ${base} transform="translate(${x} ${y})"><line x1="0" y1="-28" x2="0" y2="0" stroke="${color}" stroke-width="3"/><line x1="-24" y1="0" x2="24" y2="0" stroke="${color}" stroke-width="3"/><line x1="-16" y1="10" x2="16" y2="10" stroke="${color}" stroke-width="3"/><line x1="-8" y1="20" x2="8" y2="20" stroke="${color}" stroke-width="3"/><text y="46" text-anchor="middle" font-size="12" font-weight="800">${label}</text></g>`;
-  return `<g ${base} transform="translate(${x} ${y})"><rect x="-70" y="-22" width="140" height="44" rx="4" fill="#fff" stroke="${color}" stroke-width="2"/><text y="5" text-anchor="middle" font-size="12" font-weight="800">${label}</text></g>`;
+  if(entity.symbolId === "panel") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><rect x="-32" y="-40" width="64" height="80" rx="0" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-20" y1="-28" x2="20" y2="-28" stroke="${color}" stroke-width="1.5"/><line x1="-20" y1="-8" x2="20" y2="-8" stroke="${color}" stroke-width="1.5"/><line x1="-20" y1="12" x2="20" y2="12" stroke="${color}" stroke-width="1.5"/><circle cx="-26" cy="-34" r="2.5" fill="${color}"/><circle cx="26" cy="-34" r="2.5" fill="${color}"/><circle cx="-26" cy="34" r="2.5" fill="${color}"/><circle cx="26" cy="34" r="2.5" fill="${color}"/><text y="60" text-anchor="middle" font-size="10" font-weight="600" fill="${color}">TDA</text></g>`;
+  if(entity.symbolId === "breaker") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><rect x="-16" y="-20" width="32" height="40" rx="2" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-10" y1="-14" x2="10" y2="-14" stroke="${color}" stroke-width="2"/><line x1="-10" y1="-2" x2="10" y2="-2" stroke="${color}" stroke-width="2"/><line x1="-10" y1="10" x2="10" y2="10" stroke="${color}" stroke-width="2"/><text y="44" text-anchor="middle" font-size="9" font-weight="600" fill="${color}">DIF</text></g>`;
+  if(entity.symbolId === "light") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><circle r="16" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-11" y1="-11" x2="11" y2="11" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="11" y1="-11" x2="-11" y2="11" stroke="${color}" stroke-width="2" stroke-linecap="round"/><text y="42" text-anchor="middle" font-size="10" font-weight="600" fill="${color}">◦</text></g>`;
+  if(entity.symbolId === "switch") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><circle r="16" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="0" y1="-14" x2="0" y2="2" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="0" y1="2" x2="10" y2="12" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><circle cx="0" cy="-14" r="2" fill="${color}"/><circle cx="10" cy="12" r="2" fill="${color}"/><text y="42" text-anchor="middle" font-size="10" font-weight="600" fill="${color}">S</text></g>`;
+  if(entity.symbolId === "outlet") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><circle r="18" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="-6" cy="-5" r="2.5" fill="${color}"/><circle cx="6" cy="-5" r="2.5" fill="${color}"/><circle cx="0" cy="8" r="2.5" fill="${color}"/><text y="42" text-anchor="middle" font-size="10" font-weight="600" fill="${color}">E</text></g>`;
+  if(entity.symbolId === "motor") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><circle r="22" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="0" cy="0" r="3" fill="${color}"/><text y="8" text-anchor="middle" font-size="16" font-weight="900" fill="${color}">M</text><circle cx="-8" cy="-6" r="1.5" fill="${color}"/><circle cx="8" cy="-6" r="1.5" fill="${color}"/><text y="44" text-anchor="middle" font-size="10" font-weight="600" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "junction") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><circle r="7" fill="${color}"/><text y="38" text-anchor="middle" font-size="9" font-weight="600" fill="${color}">∩</text></g>`;
+  if(entity.symbolId === "ground") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><line x1="0" y1="-28" x2="0" y2="-4" stroke="${color}" stroke-width="3" stroke-linecap="round"/><line x1="-20" y1="-4" x2="20" y2="-4" stroke="${color}" stroke-width="2.5"/><line x1="-14" y1="4" x2="14" y2="4" stroke="${color}" stroke-width="2"/><line x1="-8" y1="12" x2="8" y2="12" stroke="${color}" stroke-width="1.5"/><text y="40" text-anchor="middle" font-size="10" font-weight="600" fill="${color}">GND</text></g>`;
+  if(entity.symbolId === "canaleta") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><rect x="-22" y="-8" width="44" height="16" rx="2" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-18" y1="-4" x2="18" y2="-4" stroke="${color}" stroke-width="1.5"/><circle cx="-12" cy="0" r="1.5" fill="${color}"/><circle cx="0" cy="0" r="1.5" fill="${color}"/><circle cx="12" cy="0" r="1.5" fill="${color}"/><text y="36" text-anchor="middle" font-size="8" font-weight="600" fill="${color}">C</text></g>`;
+  if(entity.symbolId === "punto") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><circle r="14" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-10" y1="-10" x2="10" y2="10" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="10" y1="-10" x2="-10" y2="10" stroke="${color}" stroke-width="2" stroke-linecap="round"/><text y="40" text-anchor="middle" font-size="9" font-weight="600" fill="${color}">P</text></g>`;
+  if(entity.symbolId === "medidor") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><rect x="-18" y="-18" width="36" height="36" rx="2" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="0" cy="-2" r="8" fill="none" stroke="${color}" stroke-width="1.5"/><line x1="0" y1="-2" x2="4" y2="-6" stroke="${color}" stroke-width="2" stroke-linecap="round"/><circle cx="-12" cy="-12" r="1.5" fill="${color}"/><circle cx="12" cy="-12" r="1.5" fill="${color}"/><circle cx="-12" cy="12" r="1.5" fill="${color}"/><circle cx="12" cy="12" r="1.5" fill="${color}"/><text y="40" text-anchor="middle" font-size="8" font-weight="600" fill="${color}">kWh</text></g>`;
+  if(entity.symbolId === "empalme") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><rect x="-18" y="-14" width="36" height="28" rx="1" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="-12" cy="-6" r="2.5" fill="${color}"/><circle cx="0" cy="-6" r="2.5" fill="${color}"/><circle cx="12" cy="-6" r="2.5" fill="${color}"/><circle cx="-12" cy="6" r="2.5" fill="${color}"/><circle cx="0" cy="6" r="2.5" fill="${color}"/><circle cx="12" cy="6" r="2.5" fill="${color}"/><text y="40" text-anchor="middle" font-size="8" font-weight="600" fill="${color}">BOX</text></g>`;
+  return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><rect x="-70" y="-20" width="140" height="40" rx="2" fill="none" stroke="${color}" stroke-width="2"/><text y="6" text-anchor="middle" font-size="10" font-weight="600" fill="${color}">${label}</text></g>`;
 }
 function renderWire(entity){
   const color = layerColor(entity.layer);
@@ -79,7 +88,17 @@ function renderWire(entity){
   const to = entity.to || { x: entity.x + 120, y: entity.y };
   const mx = Math.round((from.x + to.x) / 2);
   const my = Math.round((from.y + to.y) / 2) - 7;
-  return `<g data-entity-id="${esc(entity.id)}" class="cad-entity cad-wire"><line x1="${n(from.x)}" y1="${n(from.y)}" x2="${n(to.x)}" y2="${n(to.y)}" stroke="${color}" stroke-width="4" stroke-linecap="round"/><text x="${mx}" y="${my}" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">${esc(entity.label)}</text></g>`;
+  const dx = to.x - from.x, dy = to.y - from.y;
+  const len = Math.sqrt(dx*dx + dy*dy);
+  const nx = dx/len, ny = dy/len;
+  return `<g data-entity-id="${esc(entity.id)}" class="cad-entity cad-wire"><line x1="${n(from.x)}" y1="${n(from.y)}" x2="${n(to.x)}" y2="${n(to.y)}" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#shadowEffect)"/><circle cx="${n(from.x)}" cy="${n(from.y)}" r="2.5" fill="${color}"/><circle cx="${n(to.x)}" cy="${n(to.y)}" r="2.5" fill="${color}"/><text x="${mx}" y="${my}" text-anchor="middle" font-size="10" font-weight="600" fill="${color}">${esc(entity.label)}</text></g>`;
+}
+function renderHouse(entity){
+  const color = layerColor(entity.layer);
+  const x = n(entity.x), y = n(entity.y);
+  const w = n(entity.width, 400), h = n(entity.height, 300);
+  const label = esc(entity.label || "Casa");
+  return `<g data-entity-id="${esc(entity.id)}" class="cad-entity cad-house" filter="url(#shadowEffect)"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="none" stroke="${color}" stroke-width="2.5" stroke-dasharray="10 6" opacity="0.85"/><text x="${x + w/2}" y="${y - 15}" text-anchor="middle" font-size="11" font-weight="700" fill="${color}" opacity="0.9">${label}</text></g>`;
 }
 function renderLegend(doc){
   if(!doc.legend?.visible) return "";
@@ -89,16 +108,20 @@ function renderLegend(doc){
 }
 function renderCadSvg(doc, selectedId = ""){
   const hidden = new Set(doc.layers.filter(layer => layer.hidden).map(layer => layer.id));
-  const grid = n(doc.canvas.grid, 20);
+  const grid = n(doc.canvas.grid, 40);
   const width = n(doc.canvas.width, 1200), height = n(doc.canvas.height, 760);
+  const smallGrid = grid / 4;
   const gridLines = [];
-  for(let x = 0; x <= width; x += grid) gridLines.push(`<line x1="${x}" y1="0" x2="${x}" y2="${height}"/>`);
-  for(let y = 0; y <= height; y += grid) gridLines.push(`<line x1="0" y1="${y}" x2="${width}" y2="${y}"/>`);
+  for(let x = 0; x <= width; x += grid) gridLines.push(`<line x1="${x}" y1="0" x2="${x}" y2="${height}" stroke="#404a54" stroke-width="1.5" opacity="0.8"/>`);
+  for(let y = 0; y <= height; y += grid) gridLines.push(`<line x1="0" y1="${y}" x2="${width}" y2="${y}" stroke="#404a54" stroke-width="1.5" opacity="0.8"/>`);
+  for(let x = 0; x <= width; x += smallGrid) gridLines.push(`<line x1="${x}" y1="0" x2="${x}" y2="${height}" stroke="#3a3f48" stroke-width="0.5" opacity="0.4"/>`);
+  for(let y = 0; y <= height; y += smallGrid) gridLines.push(`<line x1="0" y1="${y}" x2="${width}" y2="${y}" stroke="#3a3f48" stroke-width="0.5" opacity="0.4"/>`);
+  const houses = doc.entities.filter(entity => entity.type === "house" && !hidden.has(entity.layer)).map(renderHouse).join("");
   const wires = doc.entities.filter(entity => entity.type === "wire" && !hidden.has(entity.layer)).map(renderWire).join("");
-  const symbols = doc.entities.filter(entity => entity.type !== "wire" && !hidden.has(entity.layer)).map(entity => renderSymbol(entity, doc.symbols)).join("");
+  const symbols = doc.entities.filter(entity => entity.type !== "wire" && entity.type !== "house" && !hidden.has(entity.layer)).map(entity => renderSymbol(entity, doc.symbols)).join("");
   const selected = selectedId ? doc.entities.find(entity => entity.id === selectedId) : null;
-  const selectBox = selected && selected.type !== "wire" ? `<rect class="cad-selected-box" x="${n(selected.x)-44}" y="${n(selected.y)-52}" width="88" height="104" rx="4"/>` : "";
-  return `<svg id="cadCanvas" class="cad-canvas" viewBox="0 0 ${width} ${height}" role="img" aria-label="Plano CAD electrico GIAE"><defs><pattern id="cadGrid" width="${grid}" height="${grid}" patternUnits="userSpaceOnUse"><path d="M ${grid} 0 L 0 0 0 ${grid}" fill="none" stroke="#e2e8f0" stroke-width="1"/></pattern></defs><rect width="${width}" height="${height}" fill="#ffffff"/><rect width="${width}" height="${height}" fill="url(#cadGrid)"/><g class="cad-border"><rect x="24" y="24" width="${width-48}" height="${height-48}" fill="none" stroke="#94a3b8" stroke-dasharray="8 6"/></g>${wires}${symbols}${selectBox}${renderLegend(doc)}</svg>`;
+  const selectBox = selected && selected.type !== "wire" ? `<rect class="cad-selected-box" x="${n(selected.x)-46}" y="${n(selected.y)-54}" width="92" height="108" rx="3"/>` : "";
+  return `<svg id="cadCanvas" class="cad-canvas" viewBox="0 0 ${width} ${height}" role="img" aria-label="Plano CAD electrico GIAE"><defs><filter id="shadowEffect"><feDropShadow dx="1" dy="1" stdDeviation="1" flood-opacity="0.3"/></filter></defs><rect width="${width}" height="${height}" fill="#3a4150"/><g class="grid-major">${gridLines.join("")}</g><g class="cad-border"><rect x="24" y="24" width="${width-48}" height="${height-48}" fill="none" stroke="#515a68" stroke-width="2" stroke-dasharray="6 4" opacity="0.9"/></g>${houses}${wires}${symbols}${selectBox}${renderLegend(doc)}</svg>`;
 }
 function renderValidation(validation){
   const issues = validation.issues || [];
@@ -260,11 +283,24 @@ export function render(host, state){
     ui.label = label;
     ui.circuitId = circuitId;
     if(ui.tool === "select") return;
+    if(ui.tool === "house"){
+      if(!ui.wireStart){ ui.wireStart = { x, y }; project.cadUi = ui; render(host, state); return; }
+      const x2 = x, y2 = y;
+      const width = Math.abs(x2 - ui.wireStart.x);
+      const height = Math.abs(y2 - ui.wireStart.y);
+      const startX = Math.min(ui.wireStart.x, x2);
+      const startY = Math.min(ui.wireStart.y, y2);
+      doc = addCadEntity(doc, createCadEntity("house", { x: startX, y: startY, width, height, layer: ui.layer || "estructura", label: label || "Casa", source: "manual" }));
+      ui.wireStart = null;
+      saveAndRefresh("Casa agregada en CAD");
+      return;
+    }
     if(ui.tool === "wire" || ui.tool === "dimension"){
       if(!ui.wireStart){ ui.wireStart = { x, y }; project.cadUi = ui; render(host, state); return; }
       const dx = x - ui.wireStart.x;
       const dy = y - ui.wireStart.y;
       const length = Math.hypot(dx, dy);
+      if(length < 40){ ui.wireStart = null; return; }
       const actualLength = length * parseScale(doc.scale);
       const dimensionLabel = ui.tool === "dimension" ? formatDistance(actualLength, doc.units) : (circuitId || "Canalizacion");
       doc = addCadEntity(doc, createCadEntity("wire", { layer: ui.tool === "dimension" ? "revision" : "canalizacion", from: ui.wireStart, to: { x, y }, label: dimensionLabel, circuitId, source: "manual" }));
@@ -284,6 +320,28 @@ export function render(host, state){
     ui.selectedId = "";
     saveAndRefresh("Entidad CAD eliminada");
   });
+  
+  // Listener para Delete key (Ctrl+Delete o solo Delete)
+  const deleteHandler = (e) => {
+    if((e.ctrlKey || e.metaKey) && e.key === "Delete"){
+      e.preventDefault();
+      if(ui.selectedId){
+        doc = removeCadEntity(doc, ui.selectedId);
+        ui.selectedId = "";
+        saveAndRefresh("Entidad CAD eliminada");
+      }
+    }
+  };
+  document.addEventListener("keydown", deleteHandler);
+  
+  // Cleanup: remover listener cuando se desmonta el componente
+  const observer = new MutationObserver(() => {
+    if(!host.querySelector("#cadCanvas")){
+      document.removeEventListener("keydown", deleteHandler);
+      observer.disconnect();
+    }
+  });
+  observer.observe(host.parentElement || document.body, { childList: true, subtree: true });
   host.querySelector("#cadGenerateProject").addEventListener("click", () => {
     if(!confirm("Regenerar el plano desde el Proyecto Activo? Esto reemplaza el plano CAD actual.")) return;
     project.cad2d = buildCadFromProject(project);

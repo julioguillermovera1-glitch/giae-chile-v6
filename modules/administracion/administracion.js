@@ -277,6 +277,7 @@ export function render(host, state){
 }
 
 function wireEvents(state){
+  const isCompanyAdmin = state.profile === "empresa";
   document.querySelectorAll("[data-admin-tab]").forEach(btn => btn.addEventListener("click", () => showTab(btn.dataset.adminTab)));
   document.querySelector("#adminSaveBtn").addEventListener("click", () => saveAdminForm(state, true));
   document.querySelector("#adminBackupBtn").addEventListener("click", () => downloadBackup(state));
