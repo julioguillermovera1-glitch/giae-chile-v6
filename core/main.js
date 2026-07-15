@@ -109,10 +109,11 @@ function initialModuleForProfile(available){
 }
 
 function availableModules(){
+  const isAdministrator = state.profile === "administrador";
   return modules.filter(module => {
-    const allowed = !module.profiles || module.profiles.includes(state.profile);
+    const allowed = isAdministrator || !module.profiles || module.profiles.includes(state.profile);
     const enabled = state.admin?.enabledModules?.[module.id] !== false;
-    const permitted = state.profile !== "empresa" || hasCompanyPermission(module.permission);
+    const permitted = isAdministrator || state.profile !== "empresa" || hasCompanyPermission(module.permission);
     return allowed && enabled && permitted;
   });
 }
@@ -121,7 +122,7 @@ function renderMenu() {
   const available = availableModules();
   const grouped = menuGroups.map(group => ({
     ...group,
-    modules: available.filter(module => module.group === group.id && !module.hiddenInMenu)
+    modules: available.filter(module => module.group === group.id && (state.profile === "administrador" || !module.hiddenInMenu))
   })).filter(group => group.modules.length);
 
   menu.innerHTML = grouped.map((group, index) => `
