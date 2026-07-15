@@ -133,32 +133,8 @@ export function render(host, state){
       </section>
 
       <section class="admin-tabs" aria-label="Secciones de administración">
-        ${isCompanyAdmin ? `<button class="active" data-admin-tab="empleados">Empleados</button><button data-admin-tab="empresa">Empresa y logo</button><button data-admin-tab="plantillas">Plantillas</button>` : `<button class="active" data-admin-tab="usuarios">Usuarios</button><button data-admin-tab="sesiones">Conectados</button><button data-admin-tab="empresa">Empresa y logo</button><button data-admin-tab="modulos">Módulos</button><button data-admin-tab="plantillas">Plantillas</button><button data-admin-tab="sistema">Sistema</button><button data-admin-tab="estado">Estado del software</button><button data-admin-tab="inspector">Inspector</button><button data-admin-tab="originalidad">Originalidad</button><button data-admin-tab="roadmap">Roadmap</button><button data-admin-tab="cuentas">Cuentas corporativas</button>`}
+        ${!isCompanyAdmin ? `<button class="active" data-admin-tab="usuarios">Usuarios</button><button data-admin-tab="sesiones">Conectados</button><button data-admin-tab="empresa">Empresa y logo</button><button data-admin-tab="modulos">Módulos</button><button data-admin-tab="plantillas">Plantillas</button><button data-admin-tab="sistema">Sistema</button><button data-admin-tab="estado">Estado del software</button><button data-admin-tab="inspector">Inspector</button><button data-admin-tab="originalidad">Originalidad</button><button data-admin-tab="roadmap">Roadmap</button><button data-admin-tab="cuentas">Cuentas corporativas</button>` : ``}
       </section>
-
-      ${isCompanyAdmin ? `
-      <section id="admTabEmpleados" class="admin-tab-page active">
-        <div class="admin-card">
-          <h4>Empleados de la empresa</h4>
-          <p class="small">Gestiona los empleados de tu empresa. Asigna roles (panadero, instalador, supervisor, cotizador) y permisos de acceso.</p>
-          <div class="admin-inline">
-            <input id="empName" placeholder="Nombre completo">
-            <input id="empEmail" placeholder="correo@empresa.cl">
-            <input id="empPassword" placeholder="Contraseña" type="password">
-            <select id="empRole">
-              <option value="panadero">Panadero</option>
-              <option value="instalador">Instalador</option>
-              <option value="supervisor">Supervisor</option>
-              <option value="cotizador">Cotizador</option>
-              <option value="tecnico">Técnico</option>
-            </select>
-            <label class="checkbox-label"><input id="empActive" type="checkbox" checked> Activo</label>
-            <button id="admAddEmployee" class="primary">Agregar empleado</button>
-          </div>
-          <div id="admEmployeesTable"></div>
-        </div>
-      </section>
-      ` : ``}
 
       ${!isCompanyAdmin ? `
       <section id="admTabUsuarios" class="admin-tab-page active">
@@ -377,7 +353,7 @@ export function render(host, state){
     </article>
   `;
 
-  paintUsers(state); paintPueblos(state); paintSessions(state); paintTemplates(state); paintModules(state); paintAudit(state); if(state.profile === "empresa") paintEmployees(state); wireEvents(state);
+  paintUsers(state); paintPueblos(state); paintSessions(state); paintTemplates(state); paintModules(state); paintAudit(state); wireEvents(state);
 }
 
 function wireEvents(state){
@@ -406,8 +382,6 @@ function wireEvents(state){
   document.querySelector("#admBudgetUpload")?.addEventListener("change", event => loadBudgetFile(event, state));
   if(!isCompanyAdmin) {
     document.querySelector("#admAddUser")?.addEventListener("click", () => addUser(state));
-  } else {
-    document.querySelector("#admAddEmployee")?.addEventListener("click", () => addEmployee(state));
   }
   // Corporate accounts tab handlers (super-admin / administrador)
   document.querySelector("#admAddCuenta")?.addEventListener("click", () => addCuenta(state));
