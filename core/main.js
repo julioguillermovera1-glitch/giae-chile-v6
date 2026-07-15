@@ -20,6 +20,7 @@ const companyLoginHint = document.querySelector("#companyLoginHint");
 const companyLoginFeedback = document.querySelector("#companyLoginFeedback");
 const companyLoginSubmit = document.querySelector("#companyLoginSubmit");
 const companyLoginBack = document.querySelector("#companyLoginBack");
+let companyLoginMode = "empresa";
 
 restore();
 applyBranding();
@@ -43,8 +44,9 @@ function configurePrivateAdminAccess(){
 
 document.querySelectorAll("[data-profile]").forEach(button => {
   button.addEventListener("click", () => {
-    if(button.dataset.profile === "empresa"){
-      showCompanyLogin();
+    if(button.dataset.profile === "empresa" || button.dataset.profile === "pueblos"){
+      companyLoginMode = button.dataset.profile;
+      showCompanyLogin(button.dataset.profile);
       return;
     }
     setProfile(button.dataset.profile);
@@ -61,14 +63,14 @@ companyLoginSubmit?.addEventListener("click", event => {
     companyLoginFeedback.textContent = "Ingresa correo y contraseña para acceder.";
     return;
   }
-  const user = verifyCompanyUserCredentials(email, password);
+  const user = verifyCompanyUserCredentials(email, password, companyLoginMode);
   if(!user){
     companyLoginFeedback.textContent = "Credenciales inválidas o usuario inactivo.";
     return;
   }
   setActiveCompanyUser(user.id);
-  setProfile("empresa");
-  markSession("empresa");
+  setProfile(companyLoginMode);
+  markSession(companyLoginMode);
   hideCompanyLogin();
   openPlatform();
 });
@@ -78,15 +80,15 @@ companyLoginBack?.addEventListener("click", event => {
   hideCompanyLogin();
 });
 
-function showCompanyLogin(){
+function showCompanyLogin(mode){
   profileGrid?.classList.add("hidden");
   companyLoginPanel?.classList.remove("hidden");
   companyLoginFeedback.textContent = "";
   const access = ensureCompanyAccess();
-  const companyUsers = access.users.filter(user => user.role !== "super_admin");
+  const companyUsers = access.users.filter(user => user.role !== "super_admin" && user.accountType === (mode === "pueblos" ? "pueblos" : "empresa"));
   companyLoginHint.textContent = companyUsers.length === 0
-    ? "No hay usuarios de empresa creados. Inicia sesión como Administrador y crea Usuarios de empresa." 
-    : "Este acceso usa el correo y la contraseña creados por tu empresa.";
+    ? `No hay usuarios ${mode === "pueblos" ? "de pueblos técnicos" : "de empresa"} creados. Inicia sesión como Administrador y crea usuarios para este tipo.`
+    : `Este acceso usa el correo y la contraseña creados por tu ${mode === "pueblos" ? "programa de pueblos técnicos" : "empresa"}.`;
   companyLoginEmail.value = "";
   companyLoginPassword.value = "";
 }
@@ -95,7 +97,7 @@ function hideCompanyLogin(){
   companyLoginPanel?.classList.add("hidden");
   profileGrid?.classList.remove("hidden");
   companyLoginFeedback.textContent = "";
-  companyLoginHint.textContent = "Este acceso usa el correo y la contraseña creados por tu empresa.";
+  companyLoginHint.textContent = "Este acceso usa el correo y la contraseña creados por tu empresa o pueblos técnicos.";
   companyLoginEmail.value = "";
   companyLoginPassword.value = "";
 }
@@ -349,6 +351,7 @@ function profileLabel(profile) {
   const labels = {
     independiente: "Instalador independiente",
     empresa: `Empresa - ${user?.name || "Super administrador"}${user?.email ? ` (${user.email})` : ""}`,
+    pueblos: "Pueblos técnicos - acceso libre",
     estudiante: "Estudiante",
     administrador: "Administrador - Reparacion",
     aula: "Aula Técnica - Acceso libre"

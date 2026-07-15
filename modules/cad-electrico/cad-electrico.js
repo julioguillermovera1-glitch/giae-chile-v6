@@ -182,7 +182,7 @@ export function render(host, state){
 
           <article class="admin-card">
             <h4>Importar / Exportar</h4>
-            <div class="row-actions"><button id="cadExportJson" class="secondary">Exportar .giaecad</button><button id="cadExportDxf" class="secondary">Exportar DXF</button></div>
+            <div class="row-actions"><button id="cadExportJsonSide" class="secondary">Exportar .giaecad</button><button id="cadExportDxf" class="secondary">Exportar DXF</button></div>
             <div class="row-actions"><button id="cadImportDxf" class="secondary">Importar DXF</button><button id="cadImportSymbols" class="secondary">Cargar símbolos</button></div>
             <input id="cadImportDxfFile" type="file" accept=".dxf,text/plain" hidden>
             <input id="cadImportSymbolsFile" type="file" accept=".json,application/json" hidden>
@@ -196,7 +196,7 @@ export function render(host, state){
           <article class="admin-card">
             <h4>Entidades</h4>
             <div class="cad-entity-list">${renderEntities(doc, ui.selectedId)}</div>
-            <div class="row-actions"><button id="cadDeleteSelected" class="ghost danger-text">Eliminar seleccionado</button></div>
+            <div class="row-actions"><button id="cadDeleteSelected" class="ghost danger-text">Eliminar seleccionado</button><small class="hint" style="margin-left:12px">Atajo: Ctrl+Suprimir</small></div>
           </article>
         </aside>
 
@@ -234,6 +234,7 @@ export function render(host, state){
     render(host, state);
   });
   host.querySelector("#cadExportDxf").addEventListener("click", () => downloadText(safeFileName(doc.name) + ".dxf", createCadExportDxf(project, doc), "application/dxf;charset=utf-8"));
+  host.querySelector("#cadExportJsonSide")?.addEventListener("click", () => downloadText(safeFileName(doc.name) + ".giaecad", JSON.stringify(createCadExportPackage(project, doc), null, 2)));
   host.querySelector("#cadImportDxf").addEventListener("click", () => host.querySelector("#cadImportDxfFile").click());
   host.querySelector("#cadImportSymbols").addEventListener("click", () => host.querySelector("#cadImportSymbolsFile").click());
   host.querySelector("#cadImportDxfFile").addEventListener("change", async event => {
@@ -361,4 +362,24 @@ export function render(host, state){
     persist();
     render(host, state);
   });
+
+  // Keyboard support: Suprimir / Backspace borra la entidad seleccionada cuando el módulo CAD está activo.
+  try{
+    if(window.__giae_cad_keydown_handler) window.removeEventListener('keydown', window.__giae_cad_keydown_handler);
+  }catch(e){}
+  window.__giae_cad_keydown_handler = function(ev){
+    // Require Ctrl/Cmd + Delete (or Backspace) to avoid accidental removals
+    if(!( (ev.key === 'Delete' || ev.key === 'Backspace') && (ev.ctrlKey || ev.metaKey) )) return;
+    // Avoid deleting while typing in inputs or textareas
+    const active = document.activeElement;
+    if(active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+    // Only act if CAD module is visible
+    if(!document.querySelector('.cad-module')) return;
+    if(!ui.selectedId) return;
+    // Perform delete
+    doc = removeCadEntity(doc, ui.selectedId);
+    ui.selectedId = "";
+    saveAndRefresh('Entidad CAD eliminada (tecla Suprimir)');
+  };
+  window.addEventListener('keydown', window.__giae_cad_keydown_handler);
 }

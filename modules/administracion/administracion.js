@@ -1,4 +1,7 @@
-import { persist, importProjectFile, hasCompanyPermission, recalculateProject, state } from "../../core/store.js";
+import { persist, importProjectFile, hasCompanyPermission, recalculateProject, state, ensureCompanyAccess, upsertCompanyUser } from "../../core/store.js";
+
+// UI state for cuentas corporativas
+let cuentasState = { page: 1, pageSize: 10, sortBy: 'name', sortDir: 'asc', csvColumns: ["id","name","email","accountType","freeAccess","role","createdAt"] };
 
 const moduleLabels = {
   dashboard: "Dashboard",
@@ -30,16 +33,17 @@ const moduleLabels = {
 
 function ensureAdminData(state){
   state.admin = state.admin || {};
+  const companyName = (state.currentProject && state.currentProject.company) ? state.currentProject.company : "GIAE Chile";
   state.admin.company = state.admin.company || {
-    name: state.currentProject.company || "GIAE Chile",
-    rut: "",
-    address: "",
-    phone: "",
-    email: "",
+    name: companyName,
+    rut: "76.000.000-0",
+    address: "Av. Providencia 1234, Santiago, Chile",
+    phone: "+56 9 1234 5678",
+    email: "contacto@giaechile.cl",
     logoName: "Logo interno GIAE",
     logoData: "",
     brand: {
-      name: state.currentProject.company || "GIAE Chile",
+      name: companyName,
       primaryColor: "#102033",
       accentColor: "#1456a0",
       backgroundColor: "#eef3f8",
@@ -55,14 +59,45 @@ function ensureAdminData(state){
     { name: "Administrador", profile: "administrador", status: state.profile === "administrador" ? "Conectado" : "Desconectado", lastSeen: new Date().toLocaleString("es-CL") }
   ];
   state.admin.templates = state.admin.templates || [
-    { name: "Cotización estándar", type: "Presupuesto", status: "Activa", content: "Cotización técnica\nCliente: {{cliente}}\nProyecto: {{proyecto}}\nTotal: {{total}}" },
-    { name: "Orden de trabajo", type: "Trabajo", status: "Activa", content: "Orden de trabajo\nResponsable: {{instalador}}\nActividad: {{actividad}}" },
-    { name: "Informe técnico", type: "Informe", status: "Activa", content: "Informe técnico\nProyecto: {{proyecto}}\nObservaciones: {{observaciones}}" }
+    { name: "Cotización estándar", type: "Presupuesto", status: "Activa", content: "Cotización técnica\nCliente: {{cliente}}\nProyecto: {{proyecto}}\nCarga total: {{carga}} kW\nPresupuesto: ${{presupuesto}}\n\nOBSERVACIONES:\nSe adjuntan planos técnicos, memoria de cálculo y listado de materiales." },
+    { name: "Orden de trabajo", type: "Trabajo", status: "Activa", content: "ORDEN DE TRABAJO\n\nResponsable: {{instalador}}\nProyecto: {{proyecto}}\nActividad: {{actividad}}\nFecha de inicio: {{fecha}}\n\nDetalles:\n- Revisión técnica normativa\n- Instalación de circuitos\n- Pruebas de funcionamiento" },
+    { name: "Informe técnico IA", type: "Informe", status: "Activa", content: "INFORME TÉCNICO ANÁLISIS IA\n\nProyecto: {{proyecto}}\nCliente: {{cliente}}\nFecha: {{fecha}}\n\nRESUMEN EJECUTIVO:\nAnálisis de proyecto eléctrico con motor IA local especializado en RIC y normativa chilena (DS8, IEC).\n\nOBSERVACIONES:\n{{observaciones}}\n\nRECOMENDACIONES:\n- Validar con normativa vigente\n- Realizar pruebas de campo\n- Documentar cambios realizados" },
+    { name: "Informe de auditoría", type: "Informe", status: "Activa", content: "INFORME DE AUDITORÍA TÉCNICA\n\nProyecto: {{proyecto}}\nAuditor: {{auditor}}\nFecha: {{fecha}}\n\nCRITERIOS DE REVISIÓN:\n✓ Cumplimiento normativo (RIC, IEC, DS8)\n✓ Cálculo de cargas y protecciones\n✓ Dimensionamiento de conductores\n✓ Puesta a tierra y seguridad\n\nHALLAZGOS:\n{{hallazgos}}\n\nACCIONES CORRECTIVAS:\n{{acciones}}" }
   ];
+  // Add enterprise employee users if not present
+  if(!state.admin.enterpriseUsers){
+    state.admin.enterpriseUsers = [
+      { id: "emp-001", name: "Julio Guillermo", email: "julio.vera@empresa.cl", role: "Administrador empresa", accountType: "empresa", status: "Activo", freeAccess: true },
+      { id: "emp-002", name: "Carlos Panadero", email: "carlos.panadero@empresa.cl", role: "Panadero", accountType: "empresa", status: "Activo", freeAccess: true },
+      { id: "emp-003", name: "Roberto Instalador", email: "roberto.instalador@empresa.cl", role: "Instalador", accountType: "empresa", status: "Activo", freeAccess: true },
+      { id: "emp-004", name: "Pedro Instalador II", email: "pedro.inst@empresa.cl", role: "Instalador", accountType: "empresa", status: "Activo", freeAccess: true },
+      { id: "emp-005", name: "Técnico Supervisor", email: "supervisor@empresa.cl", role: "Supervisor", accountType: "empresa", status: "Activo", freeAccess: false },
+      { id: "emp-006", name: "Cotizador Principal", email: "cotizador@empresa.cl", role: "Cotizador", accountType: "empresa", status: "Activo", freeAccess: false }
+    ];
+  }
   const defaultEnabledModules = Object.fromEntries(Object.keys(moduleLabels).map(key => [key, true]));
   state.admin.enabledModules = { ...defaultEnabledModules, ...(state.admin.enabledModules || {}) };
   state.admin.enabledModules.administracion = true;
   state.admin.auditLog = state.admin.auditLog || [];
+
+  // Ensure current project has default data structure
+  if(state.currentProject){
+    state.currentProject.name = state.currentProject.name || "Proyecto sin nombre";
+    state.currentProject.client = state.currentProject.client || "Cliente: GIAE Chile";
+    state.currentProject.supplyType = state.currentProject.supplyType || "Monofásico";
+    state.currentProject.distributor = state.currentProject.distributor || "Distribuidora base";
+    state.currentProject.budget = state.currentProject.budget || [];
+    state.currentProject.loads = state.currentProject.loads || [];
+    state.currentProject.version = state.currentProject.version || "1.0-alpha";
+  }
+
+  // Ensure IA memory structure with sample interactions
+  if(state.currentProject && !Array.isArray(state.currentProject.iaMemory)){
+    state.currentProject.iaMemory = [
+      { timestamp: Date.now() - 3600000, request: "Diagnóstico general del proyecto", summary: "Sistema monofásico en correcto estado normativo. Recomendación: revisar caída de tensión en ramales." },
+      { timestamp: Date.now() - 1800000, request: "Protecciones recomendadas", summary: "Se sugiere agregar protección diferencial en ramales de mayor demanda. Ampere recomendado: 16A curva C." }
+    ];
+  }
 }
 
 export function render(host, state){
@@ -98,7 +133,7 @@ export function render(host, state){
       </section>
 
       <section class="admin-tabs" aria-label="Secciones de administración">
-        ${isCompanyAdmin ? `<button class="active" data-admin-tab="empresa">Empresa y logo</button>` : `<button class="active" data-admin-tab="usuarios">Usuarios</button><button data-admin-tab="sesiones">Conectados</button><button data-admin-tab="empresa">Empresa y logo</button><button data-admin-tab="modulos">Módulos</button><button data-admin-tab="plantillas">Plantillas</button><button data-admin-tab="sistema">Sistema</button><button data-admin-tab="estado">Estado del software</button><button data-admin-tab="inspector">Inspector</button><button data-admin-tab="originalidad">Originalidad</button><button data-admin-tab="roadmap">Roadmap</button>`}
+        ${!isCompanyAdmin ? `<button class="active" data-admin-tab="usuarios">Usuarios</button><button data-admin-tab="sesiones">Conectados</button><button data-admin-tab="empresa">Empresa y logo</button><button data-admin-tab="modulos">Módulos</button><button data-admin-tab="plantillas">Plantillas</button><button data-admin-tab="sistema">Sistema</button><button data-admin-tab="estado">Estado del software</button><button data-admin-tab="inspector">Inspector</button><button data-admin-tab="originalidad">Originalidad</button><button data-admin-tab="roadmap">Roadmap</button><button data-admin-tab="cuentas">Cuentas corporativas</button>` : ``}
       </section>
 
       ${!isCompanyAdmin ? `
@@ -108,15 +143,60 @@ export function render(host, state){
             <div class="admin-inline admin-inline-5">
               <input id="admUserName" placeholder="Nombre usuario">
               <input id="admUserEmail" placeholder="correo@empresa.cl">
+              <input id="admUserPassword" placeholder="Contraseña (opcional)" type="password">
               <select id="admUserRole">
                 <option>Administrador</option><option>Supervisor</option><option>Instalador</option><option>Cotizador</option><option>Estudiante</option><option>Solo lectura</option>
               </select>
               <select id="admUserProfile">
                 <option value="administrador">Administrador</option><option value="empresa">Empresa</option><option value="independiente">Independiente</option><option value="estudiante">Estudiante</option>
               </select>
+              <label>Cuenta corporativa
+                <select id="admUserAccountType">
+                  <option value="">-- Ninguna --</option>
+                  <option value="empresa">Empresa</option>
+                  <option value="pueblos">Pueblos técnicos</option>
+                </select>
+              </label>
+              <label class="checkbox-label"><input id="admUserFreeAccess" type="checkbox"> Acceso gratuito (solo para Pueblos técnicos)</label>
               <button id="admAddUser">Agregar usuario</button>
             </div>
             <div id="admUsersTable"></div>
+            <div class="spacer"></div>
+            <div class="admin-card">
+              <h4>Usuarios Pueblos técnicos</h4>
+              <p class="small">Lista de cuentas registradas como <strong>Pueblos técnicos</strong>. Desde aquí puedes conceder o revocar <em>acceso gratuito</em> para usar los módulos disponibles.</p>
+              <div id="admPueblosTable"></div>
+            </div>
+        </div>
+      </section>
+      <section id="admTabCuentas" class="admin-tab-page">
+        <div class="admin-card">
+          <h4>Cuentas corporativas</h4>
+          <p class="small">Gestiona las cuentas registradas en el sistema (empresas y pueblos técnicos). Aquí puedes crear, editar, otorgar/revocar acceso gratuito y eliminar cuentas.</p>
+          <div class="admin-inline">
+            <input id="cuentasSearch" placeholder="Buscar por nombre o correo">
+            <select id="cuentasFilterType"><option value="">Todos los tipos</option><option value="empresa">Empresa</option><option value="pueblos">Pueblos técnicos</option></select>
+            <select id="cuentasFilterAccess"><option value="">Todos</option><option value="free">Acceso gratuito</option><option value="pending">Pendientes</option></select>
+            <select id="cuentasSort"><option value="name:asc">Orden: Nombre ↑</option><option value="name:desc">Nombre ↓</option><option value="email:asc">Correo ↑</option><option value="email:desc">Correo ↓</option><option value="type:asc">Tipo ↑</option><option value="createdAt:desc">Creado ↓</option></select>
+            <select id="cuentasPageSize"><option value="5">5</option><option value="10" selected>10</option><option value="25">25</option><option value="50">50</option></select>
+            <button id="cuentasExportCsv" class="secondary">Exportar CSV</button>
+            <button id="cuentasCsvColumnsBtn" class="secondary">Columnas CSV</button>
+            <div id="cuentasCsvColumnsPanel" class="csv-columns-panel" style="display:none">
+              <form id="cuentasCsvColumnsForm">
+                ${["id","name","email","accountType","freeAccess","role","createdAt"].map(c => `<label><input type="checkbox" name="col" value="${c}" ${cuentasState.csvColumns.includes(c)?'checked':''}> ${c}</label>`).join('')}
+                <div style="margin-top:6px"><button id="cuentasCsvColumnsSave" class="primary">Guardar</button> <button id="cuentasCsvColumnsClose" type="button" class="ghost">Cerrar</button></div>
+              </form>
+            </div>
+          </div>
+          <div id="admCuentasTable"></div>
+          <div class="admin-inline">
+            <input id="cuentaName" placeholder="Nombre cuenta">
+            <input id="cuentaEmail" placeholder="correo@cuenta.cl">
+            <input id="cuentaPassword" placeholder="Contraseña (opcional)" type="password">
+            <select id="cuentaType"><option value="empresa">Empresa</option><option value="pueblos">Pueblos técnicos</option></select>
+            <label class="checkbox-label"><input id="cuentaFreeAccess" type="checkbox"> Acceso gratuito (solo para Pueblos)</label>
+            <button id="admAddCuenta" class="primary">Crear cuenta</button>
+          </div>
         </div>
       </section>
       ` : ``}
@@ -273,7 +353,7 @@ export function render(host, state){
     </article>
   `;
 
-  paintUsers(state); paintSessions(state); paintTemplates(state); paintModules(state); paintAudit(state); wireEvents(state);
+  paintUsers(state); paintPueblos(state); paintSessions(state); paintTemplates(state); paintModules(state); paintAudit(state); wireEvents(state);
 }
 
 function wireEvents(state){
@@ -282,20 +362,39 @@ function wireEvents(state){
   document.querySelector("#adminSaveBtn").addEventListener("click", () => saveAdminForm(state, true));
   document.querySelector("#adminBackupBtn").addEventListener("click", () => downloadBackup(state));
   document.querySelector("#adminResetDemoBtn").addEventListener("click", () => {
-    if(!confirm("¿Limpiar usuarios, plantillas y sesiones de prueba?")) return;
-    state.admin.users = [];
-    state.admin.templates = [];
-    state.admin.sessions = [];
-    addLog(state, "Administrador limpió datos demo.");
-    persist(); render(document.querySelector("#windowHost"), state);
+    if(!confirm("¿Limpiar datos demo y reinicializar con datos por defecto? Se borrará todo el contenido local.")) return;
+    // Clear localStorage
+    const keys = [];
+    for(let i=0;i<localStorage.length;i++){
+      const key = localStorage.key(i);
+      if(key && key.toLowerCase().includes("giae")) keys.push(key);
+    }
+    keys.forEach(k => localStorage.removeItem(k));
+    // Reset admin data to defaults
+    state.admin = undefined;
+    ensureAdminData(state);
+    addLog(state, "Administrador reinició datos demo a valores por defecto.");
+    persist(); 
+    alert("Datos reiniciados. La página se recargará ahora."); 
+    location.reload();
   });
   document.querySelector("#admLogo").addEventListener("change", event => loadLogo(event, state));
   document.querySelector("#admBudgetUpload")?.addEventListener("change", event => loadBudgetFile(event, state));
   if(!isCompanyAdmin) {
     document.querySelector("#admAddUser")?.addEventListener("click", () => addUser(state));
-  } else {
-    document.querySelector("#admOpenCompanyUsers")?.addEventListener("click", () => openCompanyUsers());
   }
+  // Corporate accounts tab handlers (super-admin / administrador)
+  document.querySelector("#admAddCuenta")?.addEventListener("click", () => addCuenta(state));
+  document.querySelector("#cuentasSearch")?.addEventListener("input", () => { cuentasState.page = 1; paintCuentas(state); });
+  document.querySelector("#cuentasFilterType")?.addEventListener("change", () => { cuentasState.page = 1; paintCuentas(state); });
+  document.querySelector("#cuentasFilterAccess")?.addEventListener("change", () => { cuentasState.page = 1; paintCuentas(state); });
+  document.querySelector("#cuentasSort")?.addEventListener("change", (e) => { const [k,d]= (e.target.value||'name:asc').split(':'); cuentasState.sortBy=k; cuentasState.sortDir=d; paintCuentas(state); });
+  document.querySelector("#cuentasPageSize")?.addEventListener("change", (e) => { cuentasState.pageSize = Number(e.target.value||10); cuentasState.page = 1; paintCuentas(state); });
+  document.querySelector("#cuentasExportCsv")?.addEventListener("click", () => exportCuentasCsv(state));
+  document.querySelector("#cuentasCsvColumnsBtn")?.addEventListener("click", (e) => { const p = document.querySelector('#cuentasCsvColumnsPanel'); if(p) p.style.display = p.style.display === 'none' ? 'block' : 'none'; });
+  document.querySelector("#cuentasCsvColumnsClose")?.addEventListener("click", () => { const p = document.querySelector('#cuentasCsvColumnsPanel'); if(p) p.style.display = 'none'; });
+  document.querySelector("#cuentasCsvColumnsSave")?.addEventListener("click", (ev) => { ev.preventDefault(); const form = document.querySelector('#cuentasCsvColumnsForm'); if(!form) return; const cols = Array.from(form.querySelectorAll('input[name="col"]:checked')).map(i => i.value); cuentasState.csvColumns = cols.length ? cols : cuentasState.csvColumns; document.querySelector('#cuentasCsvColumnsPanel').style.display = 'none'; });
+  paintCuentas(state);
   document.querySelector("#admAddTemplate")?.addEventListener("click", () => addTemplate(state));
   document.querySelector("#admRunDiagnostics")?.addEventListener("click", () => paintSoftwareStatus(state, true));
   document.querySelector("#admDownloadDiagnostics")?.addEventListener("click", () => downloadDiagnostics(state));
@@ -341,12 +440,28 @@ function saveAdminForm(state, notify=false){
 function addUser(state){
   const name = document.querySelector("#admUserName").value.trim();
   const email = document.querySelector("#admUserEmail").value.trim();
+  const password = document.querySelector("#admUserPassword")?.value || "";
   const role = document.querySelector("#admUserRole").value;
   const profile = document.querySelector("#admUserProfile").value;
+  const accountType = document.querySelector("#admUserAccountType")?.value || "";
+  const freeAccess = !!document.querySelector("#admUserFreeAccess")?.checked;
   if(!name) return alert("Ingresa un nombre de usuario.");
   state.admin.users.push({ name, email, role, profile, status: "Activo" });
   addLog(state, `Usuario creado: ${name}.`);
+  // If admin requested a corporate account, create/update it in companyAccess as well
+  if(accountType === "empresa" || accountType === "pueblos"){
+    try{
+      upsertCompanyUser({ name, email, role, accountType, freeAccess, password });
+      addLog(state, `Cuenta ${accountType} creada/actualizada para: ${email || name}.`);
+    }catch(e){
+      console.error(e);
+      addLog(state, `Error creando cuenta corporativa para ${email || name}.`);
+    }
+  }
   document.querySelector("#admUserName").value = ""; document.querySelector("#admUserEmail").value = "";
+  document.querySelector("#admUserPassword").value = "";
+  document.querySelector("#admUserAccountType").value = "";
+  document.querySelector("#admUserFreeAccess").checked = false;
   persist(); paintUsers(state); paintAudit(state);
 }
 
@@ -358,6 +473,40 @@ function paintUsers(state){
   document.querySelectorAll("[data-save-user]").forEach(btn => btn.addEventListener("click", () => saveUser(state, Number(btn.dataset.saveUser))));
   document.querySelectorAll("[data-toggle-user]").forEach(btn => btn.addEventListener("click", () => toggleUser(state, Number(btn.dataset.toggleUser))));
   document.querySelectorAll("[data-remove-user]").forEach(btn => btn.addEventListener("click", () => removeUser(state, Number(btn.dataset.removeUser))));
+}
+
+function paintPueblos(state){
+  const access = ensureCompanyAccess();
+  const pueblos = (access.users || []).filter(u => u.accountType === "pueblos");
+  const rows = pueblos.map((u, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${escapeHtml(u.name)}</td>
+      <td>${escapeHtml(u.email || "")}</td>
+      <td><span class="status ${u.status === "Activo" ? "on" : "off"}">${escapeHtml(u.status)}</span></td>
+      <td>${u.freeAccess ? `<span class="tag tag-success">Acceso gratuito</span>` : `<span class="tag tag-muted">Pendiente</span>`}</td>
+      <td><button class="ghost" data-toggle-pueblos="${u.id}">${u.freeAccess ? "Revocar" : "Conceder"}</button></td>
+    </tr>
+  `).join("");
+
+  const host = document.querySelector("#admPueblosTable");
+  if(!host) return;
+  host.innerHTML = `<div class="table-scroll"><table><thead><tr><th>N°</th><th>Nombre</th><th>Correo</th><th>Estado</th><th>Acceso</th><th>Acciones</th></tr></thead><tbody>${rows || `<tr><td colspan="6">No hay usuarios de pueblos técnicos.</td></tr>`}</tbody></table></div>`;
+
+  document.querySelectorAll("[data-toggle-pueblos]").forEach(btn => btn.addEventListener("click", () => togglePueblosAccess(btn.dataset.togglePueblos, state)));
+}
+
+function togglePueblosAccess(userId, state){
+  const access = ensureCompanyAccess();
+  const user = (access.users || []).find(u => u.id === userId);
+  if(!user) return alert("Usuario no encontrado.");
+  const willGrant = !user.freeAccess;
+  if(!confirm(`${willGrant ? 'Conceder' : 'Revocar'} acceso gratuito a ${user.name || user.email || user.id}?`)) return;
+  user.freeAccess = willGrant;
+  addLog(state, `${willGrant ? 'Acceso gratuito concedido' : 'Acceso gratuito revocado'} a ${user.name || user.email || user.id}.`);
+  persist();
+  paintPueblos(state);
+  paintAudit(state);
 }
 
 function saveUser(state, index){
@@ -403,6 +552,243 @@ function openCompanyUsers(){
   } else {
     alert("No se pudo abrir el módulo Usuarios de empresa.");
   }
+}
+
+function getFilteredCuentas(state){
+  const access = ensureCompanyAccess();
+  const users = access.users || [];
+  const q = (document.querySelector('#cuentasSearch')?.value || '').toLowerCase().trim();
+  const typeFilter = document.querySelector('#cuentasFilterType')?.value || '';
+  const accessFilter = document.querySelector('#cuentasFilterAccess')?.value || '';
+  const filtered = users.filter(u => {
+    if(q){ const hay = `${(u.name||'').toLowerCase()} ${(u.email||'').toLowerCase()}`; if(!hay.includes(q)) return false; }
+    if(typeFilter && (u.accountType || 'empresa') !== typeFilter) return false;
+    if(accessFilter === 'free' && !u.freeAccess) return false;
+    if(accessFilter === 'pending') {
+      // pending = pueblos técnicos WITHOUT freeAccess granted
+      if(!(u.accountType === 'pueblos' && !u.freeAccess)) return false;
+    }
+    return true;
+  });
+  // Sorting
+  const sortBy = cuentasState.sortBy || 'name';
+  const sortDir = cuentasState.sortDir || 'asc';
+  filtered.sort((a,b) => {
+    const va = (a[sortBy] || '').toString().toLowerCase();
+    const vb = (b[sortBy] || '').toString().toLowerCase();
+    if(va < vb) return sortDir === 'asc' ? -1 : 1;
+    if(va > vb) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+  return filtered;
+}
+
+function paintCuentas(state){
+  const host = document.querySelector("#admCuentasTable");
+  if(!host) return;
+  const all = getFilteredCuentas(state);
+  const pageSize = cuentasState.pageSize || 10;
+  const total = all.length;
+  const pages = Math.max(1, Math.ceil(total / pageSize));
+  if(cuentasState.page > pages) cuentasState.page = pages;
+  const start = (cuentasState.page - 1) * pageSize;
+  const pageItems = all.slice(start, start + pageSize);
+  const rows = pageItems.map((u, i) => `
+    <tr>
+      <td>${start + i + 1}</td>
+      <td>${escapeHtml(u.name)}</td>
+      <td>${escapeHtml(u.email || "")}</td>
+      <td>${escapeHtml(u.accountType || "empresa")}</td>
+      <td>${u.accountType === "pueblos" ? (u.freeAccess ? `<span class="tag tag-success">Acceso gratuito</span>` : `<span class="tag tag-muted">Pendiente</span>`) : "-"}</td>
+      <td><button class="ghost" data-edit-cuenta="${u.id}">Editar</button> <button class="ghost" data-delete-cuenta="${u.id}">Borrar</button></td>
+    </tr>
+  `).join("");
+  const makeIndicator = (col) => {
+    if(cuentasState.sortBy !== col) return '';
+    return cuentasState.sortDir === 'asc' ? ' ↑' : ' ↓';
+  };
+  host.innerHTML = `<div class="table-scroll"><table class="load-table"><thead><tr><th>N°</th><th data-sort="name" class="sortable">Nombre${makeIndicator('name')}</th><th data-sort="email" class="sortable">Correo${makeIndicator('email')}</th><th data-sort="accountType" class="sortable">Tipo${makeIndicator('accountType')}</th><th>Acceso</th><th>Acciones</th></tr></thead><tbody>${rows || `<tr><td colspan="6">No hay cuentas corporativas.</td></tr>`}</tbody></table></div>`;
+  // pagination controls
+  const pager = document.createElement('div');
+  pager.className = 'admin-inline';
+  pager.innerHTML = `<button class="ghost" id="cuentasPrev" ${cuentasState.page<=1?"disabled":""}>Anterior</button><span style="margin:0 8px">Página ${cuentasState.page} / ${pages}</span><button class="ghost" id="cuentasNext" ${cuentasState.page>=pages?"disabled":""}>Siguiente</button><label style="margin-left:8px">Ir a página <input id="cuentasJump" type="number" min="1" max="${pages}" value="${cuentasState.page}" style="width:60px;margin-left:6px"></label><button class="ghost" id="cuentasJumpBtn">Ir</button>`;
+  host.appendChild(pager);
+  document.querySelectorAll("[data-edit-cuenta]").forEach(btn => btn.addEventListener("click", () => editCuenta(btn.dataset.editCuenta)));
+  document.querySelectorAll("[data-delete-cuenta]").forEach(btn => btn.addEventListener("click", () => deleteCuenta(btn.dataset.deleteCuenta)));
+  // Header click-to-sort handlers
+  document.querySelectorAll('#admCuentasTable th[data-sort]').forEach(th => {
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', () => {
+      const col = th.dataset.sort;
+      if(cuentasState.sortBy === col){
+        cuentasState.sortDir = cuentasState.sortDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        cuentasState.sortBy = col;
+        cuentasState.sortDir = 'asc';
+      }
+      // sync select control if present
+      const sel = document.querySelector('#cuentasSort');
+      if(sel){ sel.value = `${cuentasState.sortBy}:${cuentasState.sortDir}`; }
+      paintCuentas(state);
+    });
+  });
+  document.querySelector('#cuentasPrev')?.addEventListener('click', () => { if(cuentasState.page>1) cuentasState.page--; paintCuentas(state); });
+  document.querySelector('#cuentasNext')?.addEventListener('click', () => { const p = Math.max(1, Math.ceil(total / pageSize)); if(cuentasState.page<p) cuentasState.page++; paintCuentas(state); });
+  document.querySelector('#cuentasJumpBtn')?.addEventListener('click', () => { const v = Number(document.querySelector('#cuentasJump')?.value || cuentasState.page); const p = Math.max(1, Math.ceil(total / pageSize)); if(v >= 1 && v <= p){ cuentasState.page = v; paintCuentas(state); } else alert('Número de página fuera de rango'); });
+}
+
+function exportCuentasCsv(state){
+  const users = getFilteredCuentas(state);
+  const headers = Array.isArray(cuentasState.csvColumns) && cuentasState.csvColumns.length ? cuentasState.csvColumns : ["id","name","email","accountType","freeAccess","role","createdAt"];
+  const escape = (v) => {
+    if(v === undefined || v === null) return '';
+    const s = String(v);
+    // escape quotes by doubling them and wrap in quotes if contains comma or quote or newline
+    const needs = /[",\n]/.test(s);
+    const safe = s.replaceAll('"', '""');
+    return needs ? `"${safe}"` : safe;
+  };
+  const rows = users.map(u => headers.map(h => escape(u[h])).join(","));
+  const csv = headers.join(",") + "\n" + rows.join("\n");
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'giae-cuentas-corporativas.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+function addCuenta(state){
+  const name = document.querySelector("#cuentaName").value.trim();
+  const email = document.querySelector("#cuentaEmail").value.trim();
+  const password = document.querySelector("#cuentaPassword").value || "";
+  const accountType = document.querySelector("#cuentaType").value || "empresa";
+  const freeAccess = !!document.querySelector("#cuentaFreeAccess").checked;
+  if(!name || !email) return alert("Nombre y correo son obligatorios.");
+  try{
+    upsertCompanyUser({ name, email, password, accountType, freeAccess, role: accountType === 'pueblos' ? 'proyectos' : 'proyectos' });
+    addLog(state, `Cuenta corporativa creada: ${email}`);
+    persist();
+    document.querySelector("#cuentaName").value = ""; document.querySelector("#cuentaEmail").value = ""; document.querySelector("#cuentaPassword").value = ""; document.querySelector("#cuentaFreeAccess").checked = false;
+    paintCuentas(state);
+  }catch(e){ console.error(e); alert('Error creando cuenta. Revisa la consola.'); }
+}
+
+function editCuenta(id){
+  const access = ensureCompanyAccess();
+  const user = (access.users || []).find(u => u.id === id);
+  if(!user) return alert('Cuenta no encontrada');
+  document.querySelector("#cuentaName").value = user.name || "";
+  document.querySelector("#cuentaEmail").value = user.email || "";
+  document.querySelector("#cuentaType").value = user.accountType || "empresa";
+  document.querySelector("#cuentaFreeAccess").checked = Boolean(user.freeAccess);
+  // Set add button to save mode
+  const btn = document.querySelector("#admAddCuenta");
+  btn.textContent = "Guardar cambios";
+  btn.onclick = () => {
+    const name = document.querySelector("#cuentaName").value.trim();
+    const email = document.querySelector("#cuentaEmail").value.trim();
+    const password = document.querySelector("#cuentaPassword").value || "";
+    const accountType = document.querySelector("#cuentaType").value || "empresa";
+    const freeAccess = !!document.querySelector("#cuentaFreeAccess").checked;
+    try{
+      upsertCompanyUser({ id: user.id, name, email, password: password || undefined, accountType, freeAccess, role: user.role });
+      addLog(state, `Cuenta actualizada: ${email}`);
+      persist();
+      btn.textContent = "Crear cuenta";
+      btn.onclick = () => addCuenta(state);
+      document.querySelector("#cuentaName").value = ""; document.querySelector("#cuentaEmail").value = ""; document.querySelector("#cuentaPassword").value = ""; document.querySelector("#cuentaFreeAccess").checked = false;
+      paintCuentas(state);
+    }catch(e){ console.error(e); alert('Error guardando cuenta.'); }
+  };
+}
+
+function deleteCuenta(id){
+  if(!confirm('¿Borrar cuenta corporativa?')) return;
+  const access = ensureCompanyAccess();
+  access.users = (access.users || []).filter(u => u.id !== id);
+  persist();
+  addLog(state, `Cuenta borrada: ${id}`);
+  paintCuentas(state);
+}
+
+function paintEmployees(state){
+  const host = document.querySelector("#admEmployeesTable");
+  if(!host) return;
+  const employees = state.admin.enterpriseUsers || [];
+  const rows = employees.map((emp, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${escapeHtml(emp.name)}</td>
+      <td>${escapeHtml(emp.email || "")}</td>
+      <td>${escapeHtml(emp.role || "")}</td>
+      <td><span class="status ${emp.status === "Activo" ? "on" : "off"}">${escapeHtml(emp.status)}</span></td>
+      <td><button class="ghost" data-edit-emp="${i}">Editar</button> <button class="ghost danger-text" data-delete-emp="${i}">Borrar</button></td>
+    </tr>
+  `).join("");
+  host.innerHTML = `<div class="table-scroll"><table><thead><tr><th>N°</th><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${rows || `<tr><td colspan="6">No hay empleados registrados.</td></tr>`}</tbody></table></div>`;
+  document.querySelectorAll("[data-edit-emp]").forEach(btn => btn.addEventListener("click", () => editEmployee(state, Number(btn.dataset.editEmp))));
+  document.querySelectorAll("[data-delete-emp]").forEach(btn => btn.addEventListener("click", () => deleteEmployee(state, Number(btn.dataset.deleteEmp))));
+}
+
+function addEmployee(state){
+  const name = document.querySelector("#empName")?.value.trim();
+  const email = document.querySelector("#empEmail")?.value.trim();
+  const password = document.querySelector("#empPassword")?.value || "";
+  const role = document.querySelector("#empRole")?.value || "instalador";
+  const active = !!document.querySelector("#empActive")?.checked;
+  if(!name || !email) return alert("Nombre y correo son obligatorios.");
+  
+  if(!state.admin.enterpriseUsers) state.admin.enterpriseUsers = [];
+  const id = "emp-" + Date.now();
+  state.admin.enterpriseUsers.push({
+    id, name, email, role, accountType: "empresa", status: active ? "Activo" : "Inactivo", freeAccess: true
+  });
+  // Also add to company access if needed
+  try{
+    upsertCompanyUser({ name, email, password: password || undefined, accountType: "empresa", freeAccess: true, role });
+  }catch(e){ console.error(e); }
+  
+  addLog(state, `Empleado creado: ${name} (${role})`);
+  persist();
+  document.querySelector("#empName").value = "";
+  document.querySelector("#empEmail").value = "";
+  document.querySelector("#empPassword").value = "";
+  document.querySelector("#empActive").checked = true;
+  paintEmployees(state);
+}
+
+function editEmployee(state, index){
+  const emp = state.admin.enterpriseUsers?.[index];
+  if(!emp) return alert("Empleado no encontrado");
+  document.querySelector("#empName").value = emp.name || "";
+  document.querySelector("#empEmail").value = emp.email || "";
+  document.querySelector("#empRole").value = emp.role || "instalador";
+  document.querySelector("#empActive").checked = emp.status === "Activo";
+  const btn = document.querySelector("#admAddEmployee");
+  btn.textContent = "Guardar cambios";
+  btn.onclick = () => {
+    emp.name = document.querySelector("#empName").value.trim();
+    emp.email = document.querySelector("#empEmail").value.trim();
+    emp.role = document.querySelector("#empRole").value;
+    emp.status = document.querySelector("#empActive").checked ? "Activo" : "Inactivo";
+    addLog(state, `Empleado actualizado: ${emp.name}`);
+    persist();
+    btn.textContent = "Agregar empleado";
+    btn.onclick = () => addEmployee(state);
+    document.querySelector("#empName").value = "";
+    document.querySelector("#empEmail").value = "";
+    document.querySelector("#empPassword").value = "";
+    document.querySelector("#empActive").checked = true;
+    paintEmployees(state);
+  };
+}
+
+function deleteEmployee(state, index){
+  const emp = state.admin.enterpriseUsers?.[index];
+  if(!emp) return;
+  if(!confirm(`¿Borrar empleado ${emp.name}?`)) return;
+  state.admin.enterpriseUsers.splice(index, 1);
+  addLog(state, `Empleado borrado: ${emp.name}`);
+  persist();
+  paintEmployees(state);
 }
 
 function countLocalProjects(state){

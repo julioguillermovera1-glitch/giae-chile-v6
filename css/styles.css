@@ -352,6 +352,14 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
   color:#8cffad;
   background:#061017;
 }
+
+/* Administracion: sortable headers and CSV columns panel */
+th.sortable{ position:relative }
+th.sortable::after{ content:''; position:absolute; right:8px; top:50%; transform:translateY(-50%); font-size:12px }
+.csv-columns-panel{ position:absolute; background:#071923; border:1px solid #244d59; padding:10px; box-shadow:0 6px 20px rgba(0,0,0,0.6); z-index:40; max-width:320px }
+.csv-columns-panel form label{ display:block; font-size:13px; margin:6px 0; color:#d9f5ed }
+.admin-inline .csv-columns-panel{ margin-left:12px }
+.load-table th.sortable{ cursor:pointer }
 .mini-danger{
   border:1px solid #ff4d5d;
   background:#35141a;
@@ -398,6 +406,19 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
 }
 
 /* Carpeta Técnica y Asistente v2.1.5 */
+
+/* Chat IA */
+.chat-messages{max-height:320px;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,#061017,rgba(6,16,23,0.6));border:1px solid #173d47;border-radius:10px;margin-bottom:8px}
+.chat-message{display:flex}
+.chat-message.user{justify-content:flex-end}
+.chat-message.assistant{justify-content:flex-start}
+.chat-message .bubble{max-width:78%;padding:12px 14px;border-radius:12px;background:#071923;color:#dfffe8;box-shadow:0 6px 20px #0008}
+.chat-message.user .bubble{background:linear-gradient(90deg,#00c48c,#007f5f);color:#02120a;border-radius:14px}
+.chat-message.assistant .bubble{background:linear-gradient(180deg,#0b3a5a,#07263b);border-radius:14px;border:1px solid #155b8a;color:#e6f6ff}
+.chat-message pre{margin:0;white-space:pre-wrap;font-family:inherit}
+
+/* CAD hint */
+.cad-module .hint{color:var(--muted);font-size:12px}
 .folder-head,.folder-upload,.folder-panel,.folder-result,.assistant-card,.assistant-answer{border:1px solid #1d4656;background:#071923c7;border-radius:16px;padding:18px;margin-top:16px}
 .folder-head{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;align-items:end}
 .folder-head label,.assistant-card label{display:flex;flex-direction:column;gap:7px;color:#d9f5ed;font-weight:800}

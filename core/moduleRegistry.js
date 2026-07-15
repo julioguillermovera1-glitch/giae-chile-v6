@@ -8,7 +8,7 @@ export const menuGroups = [
   { id: "administracion", label: "Reparacion" }
 ];
 
-const profesionales = ["empresa", "independiente"];
+const profesionales = ["empresa", "independiente", "pueblos"];
 const usuariosPago = [...profesionales, "estudiante"];
 
 export const modules = [
@@ -34,9 +34,9 @@ export const modules = [
   { id: "lector-documental", label: "Lector documental", group: "documentacion", path: "../modules/lector-documental/lector-documental.js", profiles: profesionales, hiddenInMenu: true, permission: "docs.view" },
   { id: "presupuesto", label: "Presupuesto", group: "documentacion", path: "../modules/presupuesto/presupuesto.js", profiles: profesionales, hiddenInMenu: true, permission: "budget.view" },
 
-  { id: "educacion", label: "Aula tecnica", group: "educacion", path: "../modules/educacion/educacion.js", profiles: ["aula", "estudiante"] },
-  { id: "informes", label: "Generador de informes", group: "educacion", path: "../modules/informes/informes.js", profiles: ["aula", "estudiante"] },
-  { id: "ia-electrico", label: "Chat técnico IA", group: "educacion", path: "../modules/ia-electrico/ia-electrico.js" },
+  { id: "educacion", label: "Aula tecnica", group: "educacion", path: "../modules/educacion/educacion.js", profiles: ["aula", "estudiante", "pueblos"] },
+  { id: "informes", label: "Generador de informes", group: "educacion", path: "../modules/informes/informes.js", profiles: ["aula", "estudiante", "pueblos"] },
+  { id: "ia-electrico", label: "Chat técnico IA", group: "educacion", path: "../modules/ia-electrico/ia-electrico.js", profiles: ["empresa", "independiente", "estudiante", "pueblos", "administrador", "aula"] },
 
   { id: "administracion", label: "Panel de reparacion", group: "administracion", path: "../modules/administracion/administracion.js", profiles: ["administrador", "empresa"], permission: "users.manage" },
   { id: "biblioteca", label: "Base de conocimiento", group: "administracion", path: "../modules/biblioteca/biblioteca.js", profiles: ["administrador"] },
