@@ -49,7 +49,9 @@ function renderToolOptions(activeTool, docSymbols = []){
     ["breaker", "Proteccion"],
     ["light", "Luz"],
     ["switch", "Interruptor"],
-    ["outlet", "Enchufe"],
+    ["outlet-simple", "Enchufe simple"],
+    ["outlet-double", "Enchufe doble"],
+    ["outlet-triple", "Enchufe triple"],
     ["motor", "Fuerza"],
     ["junction", "Derivacion"],
     ["ground", "Tierra"],
@@ -72,11 +74,13 @@ function renderSymbol(entity, symbols = CAD_SYMBOLS){
   if(entity.symbolId === "breaker") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><rect x="-16" y="-20" width="32" height="40" rx="2" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-10" y1="-14" x2="10" y2="-14" stroke="${color}" stroke-width="2"/><line x1="-10" y1="-2" x2="10" y2="-2" stroke="${color}" stroke-width="2"/><line x1="-10" y1="10" x2="10" y2="10" stroke="${color}" stroke-width="2"/><text y="44" text-anchor="middle" font-size="9" font-weight="600" fill="${color}">DIF</text></g>`;
   if(entity.symbolId === "light") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><circle r="16" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-11" y1="-11" x2="11" y2="11" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="11" y1="-11" x2="-11" y2="11" stroke="${color}" stroke-width="2" stroke-linecap="round"/><text y="42" text-anchor="middle" font-size="10" font-weight="600" fill="${color}">◦</text></g>`;
   if(entity.symbolId === "switch") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><circle r="16" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="0" y1="-14" x2="0" y2="2" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="0" y1="2" x2="10" y2="12" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><circle cx="0" cy="-14" r="2" fill="${color}"/><circle cx="10" cy="12" r="2" fill="${color}"/><text y="42" text-anchor="middle" font-size="10" font-weight="600" fill="${color}">S</text></g>`;
-  if(entity.symbolId === "outlet") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><circle r="18" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="-6" cy="-5" r="2.5" fill="${color}"/><circle cx="6" cy="-5" r="2.5" fill="${color}"/><circle cx="0" cy="8" r="2.5" fill="${color}"/><text y="42" text-anchor="middle" font-size="10" font-weight="600" fill="${color}">E</text></g>`;
+  if(entity.symbolId === "outlet-simple") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><path d="M -18,0 A 18,18 0 0,1 18,0" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-18" y1="0" x2="18" y2="0" stroke="${color}" stroke-width="2.5"/><line x1="0" y1="-18" x2="0" y2="-28" stroke="${color}" stroke-width="2" stroke-linecap="round"/><text y="42" text-anchor="middle" font-size="9" font-weight="600" fill="${color}">1</text></g>`;
+  if(entity.symbolId === "outlet-double") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><path d="M -18,0 A 18,18 0 0,1 18,0" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-18" y1="0" x2="18" y2="0" stroke="${color}" stroke-width="2.5"/><line x1="-9" y1="-18" x2="-9" y2="-28" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="9" y1="-18" x2="9" y2="-28" stroke="${color}" stroke-width="2" stroke-linecap="round"/><text y="42" text-anchor="middle" font-size="9" font-weight="600" fill="${color}">2</text></g>`;
+  if(entity.symbolId === "outlet-triple") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><path d="M -18,0 A 18,18 0 0,1 18,0" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-18" y1="0" x2="18" y2="0" stroke="${color}" stroke-width="2.5"/><line x1="-12" y1="-18" x2="-12" y2="-28" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="0" y1="-18" x2="0" y2="-28" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="-18" x2="12" y2="-28" stroke="${color}" stroke-width="2" stroke-linecap="round"/><text y="42" text-anchor="middle" font-size="9" font-weight="600" fill="${color}">3</text></g>`;
   if(entity.symbolId === "motor") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><circle r="22" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="0" cy="0" r="3" fill="${color}"/><text y="8" text-anchor="middle" font-size="16" font-weight="900" fill="${color}">M</text><circle cx="-8" cy="-6" r="1.5" fill="${color}"/><circle cx="8" cy="-6" r="1.5" fill="${color}"/><text y="44" text-anchor="middle" font-size="10" font-weight="600" fill="${color}">${label}</text></g>`;
   if(entity.symbolId === "junction") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><circle r="7" fill="${color}"/><text y="38" text-anchor="middle" font-size="9" font-weight="600" fill="${color}">∩</text></g>`;
   if(entity.symbolId === "ground") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><line x1="0" y1="-28" x2="0" y2="-4" stroke="${color}" stroke-width="3" stroke-linecap="round"/><line x1="-20" y1="-4" x2="20" y2="-4" stroke="${color}" stroke-width="2.5"/><line x1="-14" y1="4" x2="14" y2="4" stroke="${color}" stroke-width="2"/><line x1="-8" y1="12" x2="8" y2="12" stroke="${color}" stroke-width="1.5"/><text y="40" text-anchor="middle" font-size="10" font-weight="600" fill="${color}">GND</text></g>`;
-  if(entity.symbolId === "canaleta") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><rect x="-22" y="-8" width="44" height="16" rx="2" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-18" y1="-4" x2="18" y2="-4" stroke="${color}" stroke-width="1.5"/><circle cx="-12" cy="0" r="1.5" fill="${color}"/><circle cx="0" cy="0" r="1.5" fill="${color}"/><circle cx="12" cy="0" r="1.5" fill="${color}"/><text y="36" text-anchor="middle" font-size="8" font-weight="600" fill="${color}">C</text></g>`;
+  if(entity.symbolId === "canaleta") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><line x1="-24" y1="-6" x2="24" y2="-6" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-24" y1="6" x2="24" y2="6" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><text y="36" text-anchor="middle" font-size="8" font-weight="600" fill="${color}">C</text></g>`;
   if(entity.symbolId === "punto") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><circle r="14" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-10" y1="-10" x2="10" y2="10" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="10" y1="-10" x2="-10" y2="10" stroke="${color}" stroke-width="2" stroke-linecap="round"/><text y="40" text-anchor="middle" font-size="9" font-weight="600" fill="${color}">P</text></g>`;
   if(entity.symbolId === "medidor") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><rect x="-18" y="-18" width="36" height="36" rx="2" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="0" cy="-2" r="8" fill="none" stroke="${color}" stroke-width="1.5"/><line x1="0" y1="-2" x2="4" y2="-6" stroke="${color}" stroke-width="2" stroke-linecap="round"/><circle cx="-12" cy="-12" r="1.5" fill="${color}"/><circle cx="12" cy="-12" r="1.5" fill="${color}"/><circle cx="-12" cy="12" r="1.5" fill="${color}"/><circle cx="12" cy="12" r="1.5" fill="${color}"/><text y="40" text-anchor="middle" font-size="8" font-weight="600" fill="${color}">kWh</text></g>`;
   if(entity.symbolId === "empalme") return `<g ${base} transform="translate(${x} ${y})" filter="url(#shadowEffect)"><rect x="-18" y="-14" width="36" height="28" rx="1" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="-12" cy="-6" r="2.5" fill="${color}"/><circle cx="0" cy="-6" r="2.5" fill="${color}"/><circle cx="12" cy="-6" r="2.5" fill="${color}"/><circle cx="-12" cy="6" r="2.5" fill="${color}"/><circle cx="0" cy="6" r="2.5" fill="${color}"/><circle cx="12" cy="6" r="2.5" fill="${color}"/><text y="40" text-anchor="middle" font-size="8" font-weight="600" fill="${color}">BOX</text></g>`;
@@ -168,6 +172,7 @@ export function render(host, state){
           <article class="admin-card">
             <h4>Herramientas</h4>
             <div class="cad-tools">${renderToolOptions(ui.tool)}</div>
+            <button id="cadCreateSymbol" class="secondary" style="width:100%;margin:0.8rem 0">+ Nuevo símbolo</button>
             <label>Capa activa<select id="cadLayerSelect">${CAD_LAYERS.map(layer => `<option value="${layer.id}" ${ui.layer === layer.id ? "selected" : ""}>${esc(layer.label)}</option>`).join("")}</select></label>
             <label>Texto / nombre<input id="cadLabelInput" value="${esc(ui.label || "")}" placeholder="Nombre del simbolo o nota"></label>
             <label>Circuito<input id="cadCircuitInput" value="${esc(ui.circuitId || "")}" placeholder="Ej: C01"></label>
@@ -210,6 +215,17 @@ export function render(host, state){
           <article class="admin-card"><h4>Validacion CAD</h4>${renderValidation(validation)}</article>
         </main>
       </section>
+
+      <dialog id="cadCreateSymbolDialog" class="admin-dialog">
+        <form method="dialog">
+          <h3>Crear símbolo personalizado</h3>
+          <label>Nombre del símbolo<input id="cadSymbolNameInput" type="text" placeholder="Ej: Transformador, Contacto de gas, etc." required></label>
+          <div style="display:flex;gap:0.8rem;margin-top:1rem">
+            <button type="button" id="cadSymbolCreateBtn" class="primary">Crear</button>
+            <button type="button" onclick="this.closest('dialog').close()" class="secondary">Cancelar</button>
+          </div>
+        </form>
+      </dialog>
     </section>`;
 
   function saveAndRefresh(action = "Plano CAD actualizado"){
@@ -221,6 +237,29 @@ export function render(host, state){
   }
 
   host.querySelectorAll("[data-cad-tool]").forEach(button => button.addEventListener("click", () => { ui.tool = button.dataset.cadTool; ui.wireStart = null; project.cadUi = ui; render(host, state); }));
+  
+  // Crear símbolo personalizado
+  host.querySelector("#cadCreateSymbol")?.addEventListener("click", () => {
+    host.querySelector("#cadSymbolNameInput").value = "";
+    host.querySelector("#cadCreateSymbolDialog").showModal();
+  });
+  
+  host.querySelector("#cadSymbolCreateBtn")?.addEventListener("click", () => {
+    const symbolName = host.querySelector("#cadSymbolNameInput").value.trim();
+    if(!symbolName) return alert("Ingresa un nombre para el símbolo");
+    const symbolId = "custom-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+    const newSymbol = { id: symbolId, label: symbolName, layer: ui.layer || "notas", kind: "custom", ports: ["in", "out"] };
+    if(!doc.symbols) doc.symbols = [];
+    doc.symbols.push(newSymbol);
+    ui.tool = symbolId;
+    project.cad2d = doc;
+    project.cadUi = ui;
+    addHistory(`Símbolo personalizado creado: ${symbolName}`, "CAD electrico", false);
+    persist();
+    host.querySelector("#cadCreateSymbolDialog").close();
+    render(host, state);
+  });
+  
   host.querySelector("#cadScaleInput").addEventListener("change", event => {
     doc.scale = event.target.value.trim() || "1:50";
     project.cad2d = doc;
@@ -322,11 +361,62 @@ export function render(host, state){
     saveAndRefresh("Entidad CAD eliminada");
   });
   
-  // Listener para Delete key (Ctrl+Delete o solo Delete)
+  // Estado de arrastre
+  let dragging = false, draggedEntity = null, dragStart = null;
+  
+  // Canvas events: Seleccionar, arrastrar y borrar
+  const canvas = host.querySelector("#cadCanvas");
+  canvas.addEventListener("mousedown", event => {
+    const entityGroup = event.target.closest("[data-entity-id]");
+    if(entityGroup){
+      ui.selectedId = entityGroup.dataset.entityId;
+      project.cadUi = ui;
+      if(ui.tool === "select"){
+        dragging = true;
+        draggedEntity = doc.entities.find(e => e.id === ui.selectedId);
+        dragStart = svgPoint(event, canvas);
+        event.preventDefault();
+      }
+      render(host, state);
+    }
+  });
+  
+  canvas.addEventListener("mousemove", event => {
+    if(dragging && draggedEntity && dragStart){
+      const current = svgPoint(event, canvas);
+      const grid = doc.canvas.grid || 20;
+      const dx = snap(current.x - dragStart.x, grid);
+      const dy = snap(current.y - dragStart.y, grid);
+      if(Math.abs(dx) > 1 || Math.abs(dy) > 1){
+        draggedEntity.x += dx;
+        draggedEntity.y += dy;
+        dragStart = current;
+        project.cad2d = doc;
+        render(host, state);
+      }
+    }
+  });
+  
+  canvas.addEventListener("mouseup", () => {
+    if(dragging && draggedEntity){
+      dragging = false;
+      draggedEntity = null;
+      dragStart = null;
+      saveAndRefresh("Entidad movida");
+    }
+  });
+  
+  canvas.addEventListener("mouseleave", () => {
+    dragging = false;
+    draggedEntity = null;
+    dragStart = null;
+  });
+  
+  // Listener para Delete key - solo Delete (sin requerir Ctrl)
   const deleteHandler = (e) => {
-    if((e.ctrlKey || e.metaKey) && e.key === "Delete"){
+    if(e.key === "Delete" || e.key === "Backspace"){
       e.preventDefault();
-      if(ui.selectedId){
+      if(ui.selectedId && host.querySelector("#cadCanvas")){
         doc = removeCadEntity(doc, ui.selectedId);
         ui.selectedId = "";
         saveAndRefresh("Entidad CAD eliminada");

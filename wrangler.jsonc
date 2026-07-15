@@ -12,6 +12,52 @@
   },
   "vars": {
     "GIAE_ENV": "production",
-    "GIAE_BINDINGS_MODE": "pending"
+    "GIAE_BINDINGS_MODE": "active"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "giae-production",
+      "database_id": "giae-db-prod"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "R2",
+      "bucket_name": "giae-storage",
+      "preview_bucket_name": "giae-storage-preview"
+    }
+  ],
+  "env": {
+    "production": {
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "giae-production",
+          "database_id": "giae-db-prod"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "R2",
+          "bucket_name": "giae-storage-prod"
+        }
+      ]
+    },
+    "development": {
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "giae-dev",
+          "database_id": "giae-db-dev"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "R2",
+          "bucket_name": "giae-storage-dev"
+        }
+      ]
+    }
   }
 }
