@@ -35,10 +35,10 @@ function ensureAdminData(state){
   state.admin = state.admin || {};
   state.admin.company = state.admin.company || {
     name: state.currentProject.company || "GIAE Chile",
-    rut: "",
-    address: "",
-    phone: "",
-    email: "",
+    rut: "76.000.000-0",
+    address: "Av. Providencia 1234, Santiago, Chile",
+    phone: "+56 9 1234 5678",
+    email: "contacto@giaechile.cl",
     logoName: "Logo interno GIAE",
     logoData: "",
     brand: {
@@ -58,14 +58,45 @@ function ensureAdminData(state){
     { name: "Administrador", profile: "administrador", status: state.profile === "administrador" ? "Conectado" : "Desconectado", lastSeen: new Date().toLocaleString("es-CL") }
   ];
   state.admin.templates = state.admin.templates || [
-    { name: "Cotización estándar", type: "Presupuesto", status: "Activa", content: "Cotización técnica\nCliente: {{cliente}}\nProyecto: {{proyecto}}\nTotal: {{total}}" },
-    { name: "Orden de trabajo", type: "Trabajo", status: "Activa", content: "Orden de trabajo\nResponsable: {{instalador}}\nActividad: {{actividad}}" },
-    { name: "Informe técnico", type: "Informe", status: "Activa", content: "Informe técnico\nProyecto: {{proyecto}}\nObservaciones: {{observaciones}}" }
+    { name: "Cotización estándar", type: "Presupuesto", status: "Activa", content: "Cotización técnica\nCliente: {{cliente}}\nProyecto: {{proyecto}}\nCarga total: {{carga}} kW\nPresupuesto: ${{presupuesto}}\n\nOBSERVACIONES:\nSe adjuntan planos técnicos, memoria de cálculo y listado de materiales." },
+    { name: "Orden de trabajo", type: "Trabajo", status: "Activa", content: "ORDEN DE TRABAJO\n\nResponsable: {{instalador}}\nProyecto: {{proyecto}}\nActividad: {{actividad}}\nFecha de inicio: {{fecha}}\n\nDetalles:\n- Revisión técnica normativa\n- Instalación de circuitos\n- Pruebas de funcionamiento" },
+    { name: "Informe técnico IA", type: "Informe", status: "Activa", content: "INFORME TÉCNICO ANÁLISIS IA\n\nProyecto: {{proyecto}}\nCliente: {{cliente}}\nFecha: {{fecha}}\n\nRESUMEN EJECUTIVO:\nAnálisis de proyecto eléctrico con motor IA local especializado en RIC y normativa chilena (DS8, IEC).\n\nOBSERVACIONES:\n{{observaciones}}\n\nRECOMENDACIONES:\n- Validar con normativa vigente\n- Realizar pruebas de campo\n- Documentar cambios realizados" },
+    { name: "Informe de auditoría", type: "Informe", status: "Activa", content: "INFORME DE AUDITORÍA TÉCNICA\n\nProyecto: {{proyecto}}\nAuditor: {{auditor}}\nFecha: {{fecha}}\n\nCRITERIOS DE REVISIÓN:\n✓ Cumplimiento normativo (RIC, IEC, DS8)\n✓ Cálculo de cargas y protecciones\n✓ Dimensionamiento de conductores\n✓ Puesta a tierra y seguridad\n\nHALLAZGOS:\n{{hallazgos}}\n\nACCIONES CORRECTIVAS:\n{{acciones}}" }
   ];
+  // Add enterprise employee users if not present
+  if(!state.admin.enterpriseUsers){
+    state.admin.enterpriseUsers = [
+      { id: "emp-001", name: "Julio Guillermo", email: "julio.vera@empresa.cl", role: "Administrador empresa", accountType: "empresa", status: "Activo", freeAccess: true },
+      { id: "emp-002", name: "Carlos Panadero", email: "carlos.panadero@empresa.cl", role: "Panadero", accountType: "empresa", status: "Activo", freeAccess: true },
+      { id: "emp-003", name: "Roberto Instalador", email: "roberto.instalador@empresa.cl", role: "Instalador", accountType: "empresa", status: "Activo", freeAccess: true },
+      { id: "emp-004", name: "Pedro Instalador II", email: "pedro.inst@empresa.cl", role: "Instalador", accountType: "empresa", status: "Activo", freeAccess: true },
+      { id: "emp-005", name: "Técnico Supervisor", email: "supervisor@empresa.cl", role: "Supervisor", accountType: "empresa", status: "Activo", freeAccess: false },
+      { id: "emp-006", name: "Cotizador Principal", email: "cotizador@empresa.cl", role: "Cotizador", accountType: "empresa", status: "Activo", freeAccess: false }
+    ];
+  }
   const defaultEnabledModules = Object.fromEntries(Object.keys(moduleLabels).map(key => [key, true]));
   state.admin.enabledModules = { ...defaultEnabledModules, ...(state.admin.enabledModules || {}) };
   state.admin.enabledModules.administracion = true;
   state.admin.auditLog = state.admin.auditLog || [];
+
+  // Ensure current project has default data structure
+  if(state.currentProject){
+    state.currentProject.name = state.currentProject.name || "Proyecto sin nombre";
+    state.currentProject.client = state.currentProject.client || "Cliente: GIAE Chile";
+    state.currentProject.supplyType = state.currentProject.supplyType || "Monofásico";
+    state.currentProject.distributor = state.currentProject.distributor || "Distribuidora base";
+    state.currentProject.budget = state.currentProject.budget || [];
+    state.currentProject.loads = state.currentProject.loads || [];
+    state.currentProject.version = state.currentProject.version || "1.0-alpha";
+  }
+
+  // Ensure IA memory structure with sample interactions
+  if(state.currentProject && !Array.isArray(state.currentProject.iaMemory)){
+    state.currentProject.iaMemory = [
+      { timestamp: Date.now() - 3600000, request: "Diagnóstico general del proyecto", summary: "Sistema monofásico en correcto estado normativo. Recomendación: revisar caída de tensión en ramales." },
+      { timestamp: Date.now() - 1800000, request: "Protecciones recomendadas", summary: "Se sugiere agregar protección diferencial en ramales de mayor demanda. Ampere recomendado: 16A curva C." }
+    ];
+  }
 }
 
 export function render(host, state){
@@ -330,12 +361,21 @@ function wireEvents(state){
   document.querySelector("#adminSaveBtn").addEventListener("click", () => saveAdminForm(state, true));
   document.querySelector("#adminBackupBtn").addEventListener("click", () => downloadBackup(state));
   document.querySelector("#adminResetDemoBtn").addEventListener("click", () => {
-    if(!confirm("¿Limpiar usuarios, plantillas y sesiones de prueba?")) return;
-    state.admin.users = [];
-    state.admin.templates = [];
-    state.admin.sessions = [];
-    addLog(state, "Administrador limpió datos demo.");
-    persist(); render(document.querySelector("#windowHost"), state);
+    if(!confirm("¿Limpiar datos demo y reinicializar con datos por defecto? Se borrará todo el contenido local.")) return;
+    // Clear localStorage
+    const keys = [];
+    for(let i=0;i<localStorage.length;i++){
+      const key = localStorage.key(i);
+      if(key && key.toLowerCase().includes("giae")) keys.push(key);
+    }
+    keys.forEach(k => localStorage.removeItem(k));
+    // Reset admin data to defaults
+    state.admin = undefined;
+    ensureAdminData(state);
+    addLog(state, "Administrador reinició datos demo a valores por defecto.");
+    persist(); 
+    alert("Datos reiniciados. La página se recargará ahora."); 
+    location.reload();
   });
   document.querySelector("#admLogo").addEventListener("change", event => loadLogo(event, state));
   document.querySelector("#admBudgetUpload")?.addEventListener("change", event => loadBudgetFile(event, state));
