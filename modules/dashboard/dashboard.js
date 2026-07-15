@@ -31,7 +31,8 @@ const quickByProfile = {
     ['proyecto', 'Proyecto de práctica', 'Practicar un flujo de proyecto eléctrico.'],
     ['flujo-guiado', 'Revision guiada', 'Aprender que datos faltan antes de avanzar.'],
     ['cargas', 'Ejercicios de cargas', 'Ingresar cargas y revisar resultados.'],
-    ['auditoria', 'Revisión guiada', 'Comprender observaciones del sistema.']
+    ['auditoria', 'Revisión guiada', 'Comprender observaciones del sistema.'],
+    ['informes', 'Generar informes', 'Crear informes educativos y explicativos.']
   ],
   aula: [
     ['educacion', 'Comenzar aprendizaje', 'Contenidos libres sin registro ni licencia.'],
