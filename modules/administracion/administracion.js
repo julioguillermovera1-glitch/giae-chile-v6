@@ -1,4 +1,4 @@
-import { persist } from "../../core/store.js";
+import { persist, importProjectFile, hasCompanyPermission, recalculateProject, state } from "../../core/store.js";
 
 const moduleLabels = {
   dashboard: "Dashboard",
@@ -67,13 +67,14 @@ function ensureAdminData(state){
 
 export function render(host, state){
   ensureAdminData(state);
-  if(state.profile !== "administrador"){
-    host.innerHTML = `<article class="module-window"><div class="result-box danger"><b>Acceso restringido.</b><br>Este módulo solo puede verlo el administrador de la plataforma.</div></article>`;
+  if(state.profile === "empresa" && !hasCompanyPermission("users.manage")){
+    host.innerHTML = `<article class="module-window"><div class="result-box danger"><b>Acceso restringido.</b><br>Este usuario no tiene permiso para administrar la empresa.</div></article>`;
     return;
   }
 
+  const isCompanyAdmin = state.profile === "empresa";
   host.innerHTML = `
-    <article class="module-window admin-panel real-admin">
+    <article class="module-window admin-panel ${isCompanyAdmin ? "company-admin" : "real-admin"}">
       <div class="module-head">
         <div>
           <p class="eyebrow">Centro de control exclusivo</p>
@@ -97,35 +98,28 @@ export function render(host, state){
       </section>
 
       <section class="admin-tabs" aria-label="Secciones de administración">
-        <button class="active" data-admin-tab="usuarios">Usuarios</button>
-        <button data-admin-tab="sesiones">Conectados</button>
-        <button data-admin-tab="empresa">Empresa y logo</button>
-        <button data-admin-tab="modulos">Módulos</button>
-        <button data-admin-tab="plantillas">Plantillas</button>
-        <button data-admin-tab="sistema">Sistema</button>
-        <button data-admin-tab="estado">Estado del software</button>
-        <button data-admin-tab="inspector">Inspector</button>
-        <button data-admin-tab="originalidad">Originalidad</button>
-        <button data-admin-tab="roadmap">Roadmap</button>
+        ${isCompanyAdmin ? `<button class="active" data-admin-tab="empresa">Empresa y logo</button>` : `<button class="active" data-admin-tab="usuarios">Usuarios</button><button data-admin-tab="sesiones">Conectados</button><button data-admin-tab="empresa">Empresa y logo</button><button data-admin-tab="modulos">Módulos</button><button data-admin-tab="plantillas">Plantillas</button><button data-admin-tab="sistema">Sistema</button><button data-admin-tab="estado">Estado del software</button><button data-admin-tab="inspector">Inspector</button><button data-admin-tab="originalidad">Originalidad</button><button data-admin-tab="roadmap">Roadmap</button>`}
       </section>
 
+      ${!isCompanyAdmin ? `
       <section id="admTabUsuarios" class="admin-tab-page active">
         <div class="admin-card">
-          <h4>Crear / editar usuarios</h4>
-          <div class="admin-inline admin-inline-5">
-            <input id="admUserName" placeholder="Nombre usuario">
-            <input id="admUserEmail" placeholder="correo@empresa.cl">
-            <select id="admUserRole">
-              <option>Administrador</option><option>Supervisor</option><option>Instalador</option><option>Cotizador</option><option>Estudiante</option><option>Solo lectura</option>
-            </select>
-            <select id="admUserProfile">
-              <option value="administrador">Administrador</option><option value="empresa">Empresa</option><option value="independiente">Independiente</option><option value="estudiante">Estudiante</option>
-            </select>
-            <button id="admAddUser">Agregar usuario</button>
-          </div>
-          <div id="admUsersTable"></div>
+            <h4>Crear / editar usuarios</h4>
+            <div class="admin-inline admin-inline-5">
+              <input id="admUserName" placeholder="Nombre usuario">
+              <input id="admUserEmail" placeholder="correo@empresa.cl">
+              <select id="admUserRole">
+                <option>Administrador</option><option>Supervisor</option><option>Instalador</option><option>Cotizador</option><option>Estudiante</option><option>Solo lectura</option>
+              </select>
+              <select id="admUserProfile">
+                <option value="administrador">Administrador</option><option value="empresa">Empresa</option><option value="independiente">Independiente</option><option value="estudiante">Estudiante</option>
+              </select>
+              <button id="admAddUser">Agregar usuario</button>
+            </div>
+            <div id="admUsersTable"></div>
         </div>
       </section>
+      ` : ``}
 
       <section id="admTabSesiones" class="admin-tab-page">
         <div class="admin-card">
@@ -135,7 +129,7 @@ export function render(host, state){
         </div>
       </section>
 
-      <section id="admTabEmpresa" class="admin-tab-page">
+      <section id="admTabEmpresa" class="admin-tab-page active">
         <div class="admin-card company-admin-card">
           <h4>Empresa / marca blanca</h4>
           <div class="form-grid">
@@ -145,6 +139,7 @@ export function render(host, state){
             <label>Correo<input id="admEmail" value="${escapeHtml(state.admin.company.email)}" placeholder="contacto@empresa.cl"></label>
             <label>Teléfono<input id="admPhone" value="${escapeHtml(state.admin.company.phone)}"></label>
             <label>Logo / imagen corporativa<input id="admLogo" type="file" accept="image/*"></label>
+            <label>Archivo de presupuesto<input id="admBudgetUpload" type="file" accept=".giae,.json"></label>
           </div>
           <div class="logo-admin-preview">
             <div id="admLogoPreview">${state.admin.company.logoData ? `<img src="${state.admin.company.logoData}" alt="Logo empresa">` : defaultLogo()}</div>
@@ -162,6 +157,7 @@ export function render(host, state){
               ${["tecnico","sobrio","empresa","minimal"].map(style => `<option value="${style}" ${style === (state.admin.company.brand?.templateStyle || "tecnico") ? "selected" : ""}>${style}</option>`).join("")}
             </select>
           </label>
+          ${isCompanyAdmin ? `<p class="small"><strong>Nota:</strong> como administrador de empresa puedes definir marca, logo y cargar presupuestos. Para administrar empleados usa el módulo Usuarios de Empresa.</p>` : ``}
         </div>
       </section>
 
@@ -293,8 +289,13 @@ function wireEvents(state){
     persist(); render(document.querySelector("#windowHost"), state);
   });
   document.querySelector("#admLogo").addEventListener("change", event => loadLogo(event, state));
-  document.querySelector("#admAddUser").addEventListener("click", () => addUser(state));
-  document.querySelector("#admAddTemplate").addEventListener("click", () => addTemplate(state));
+  document.querySelector("#admBudgetUpload")?.addEventListener("change", event => loadBudgetFile(event, state));
+  if(!isCompanyAdmin) {
+    document.querySelector("#admAddUser")?.addEventListener("click", () => addUser(state));
+  } else {
+    document.querySelector("#admOpenCompanyUsers")?.addEventListener("click", () => openCompanyUsers());
+  }
+  document.querySelector("#admAddTemplate")?.addEventListener("click", () => addTemplate(state));
   document.querySelector("#admRunDiagnostics")?.addEventListener("click", () => paintSoftwareStatus(state, true));
   document.querySelector("#admDownloadDiagnostics")?.addEventListener("click", () => downloadDiagnostics(state));
   document.querySelector("#admInspectBtn")?.addEventListener("click", () => runInspector(state));
@@ -390,9 +391,18 @@ function paintTemplates(state){
 }
 
 function loadLogo(event,state){ const file=event.target.files?.[0]; if(!file)return; const reader=new FileReader(); reader.onload=()=>{state.admin.company.logoName=file.name; state.admin.company.logoData=reader.result; document.querySelector("#admLogoName").textContent=file.name; document.querySelector("#admLogoPreview").innerHTML=`<img src="${reader.result}" alt="Logo empresa">`; state.companyBrand = { ...(state.companyBrand || {}), ...(state.admin.company.brand || {}), logoData: reader.result, name: state.admin.company.name }; addLog(state,`Logo cargado: ${file.name}.`); persist(); window.dispatchEvent(new CustomEvent("giae:admin-updated"));}; reader.readAsDataURL(file); }
+function loadBudgetFile(event, state){ const file=event.target.files?.[0]; if(!file)return; const reader=new FileReader(); reader.onload=()=>{ try { const payload = JSON.parse(reader.result); const budget = Array.isArray(payload.budget) ? payload.budget : Array.isArray(payload.project?.budget) ? payload.project.budget : null; if(Array.isArray(budget)){ state.currentProject.budget = budget; recalculateProject(); addLog(state, `Presupuesto importado: ${file.name}.`); persist(); alert('Presupuesto importado correctamente.'); window.dispatchEvent(new CustomEvent("giae:admin-updated")); return; } if(payload.project || payload.fileType === 'GIAE_PROJECT'){ importProjectFile(payload); addLog(state, `Proyecto importado desde archivo: ${file.name}.`); alert('Archivo cargado y proyecto actualizado.'); return; } alert('Archivo no contiene datos de presupuesto o proyecto válidos.'); } catch (err){ console.error(err); alert('Error leyendo el archivo. Verifica que sea JSON válido.'); }}; reader.readAsText(file); }
 function downloadBackup(state){ saveAdminForm(state,false); const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}); const url=URL.createObjectURL(blob); const link=document.createElement("a"); link.href=url; link.download="giae-respaldo-administracion.json"; link.click(); URL.revokeObjectURL(url); }
 function addLog(state,text){ ensureAdminData(state); state.admin.auditLog.unshift({date:new Date().toLocaleString("es-CL"),text}); state.admin.auditLog=state.admin.auditLog.slice(0,50); }
 function paintAudit(state){ const rows=(state.admin.auditLog||[]).map((l,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(l.date)}</td><td>${escapeHtml(l.text)}</td></tr>`).join(""); const el=document.querySelector("#admAuditLog"); if(el) el.innerHTML=`<div class="table-scroll"><table><thead><tr><th>N°</th><th>Fecha</th><th>Acción</th></tr></thead><tbody>${rows||`<tr><td colspan="3">Sin acciones registradas.</td></tr>`}</tbody></table></div>`; }
+
+function openCompanyUsers(){
+  if(window.GIAE?.openModule) {
+    window.GIAE.openModule("usuarios");
+  } else {
+    alert("No se pudo abrir el módulo Usuarios de empresa.");
+  }
+}
 
 function countLocalProjects(state){
   return Array.isArray(state.projectLibrary) ? state.projectLibrary.length : 0;
