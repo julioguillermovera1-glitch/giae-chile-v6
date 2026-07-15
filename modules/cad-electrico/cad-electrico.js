@@ -1,5 +1,5 @@
 import { persist, addHistory } from "../../core/store.js";
-import CloudflareCADService from "../../core/cad/cloudflare-service.js";
+import { CloudflareCADService } from "../../core/cad/cloudflare-service.js";
 import { buildCadFromProject, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS } from "../../core/cad/cadEngine.js";
 
 function esc(value = ""){
