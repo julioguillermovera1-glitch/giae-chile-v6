@@ -1,5 +1,8 @@
 import { persist, importProjectFile, hasCompanyPermission, recalculateProject, state, ensureCompanyAccess, upsertCompanyUser } from "../../core/store.js";
 
+// UI state for cuentas corporativas
+let cuentasState = { page: 1, pageSize: 10, sortBy: 'name', sortDir: 'asc' };
+
 const moduleLabels = {
   dashboard: "Dashboard",
   proyectos: "Administrador de proyectos",
@@ -142,6 +145,8 @@ export function render(host, state){
             <input id="cuentasSearch" placeholder="Buscar por nombre o correo">
             <select id="cuentasFilterType"><option value="">Todos los tipos</option><option value="empresa">Empresa</option><option value="pueblos">Pueblos técnicos</option></select>
             <select id="cuentasFilterAccess"><option value="">Todos</option><option value="free">Acceso gratuito</option><option value="pending">Pendientes</option></select>
+            <select id="cuentasSort"><option value="name:asc">Orden: Nombre ↑</option><option value="name:desc">Nombre ↓</option><option value="email:asc">Correo ↑</option><option value="email:desc">Correo ↓</option><option value="type:asc">Tipo ↑</option><option value="createdAt:desc">Creado ↓</option></select>
+            <select id="cuentasPageSize"><option value="5">5</option><option value="10" selected>10</option><option value="25">25</option><option value="50">50</option></select>
             <button id="cuentasExportCsv" class="secondary">Exportar CSV</button>
           </div>
           <div id="admCuentasTable"></div>
@@ -333,9 +338,11 @@ function wireEvents(state){
   }
   // Corporate accounts tab handlers (super-admin / administrador)
   document.querySelector("#admAddCuenta")?.addEventListener("click", () => addCuenta(state));
-  document.querySelector("#cuentasSearch")?.addEventListener("input", () => paintCuentas(state));
-  document.querySelector("#cuentasFilterType")?.addEventListener("change", () => paintCuentas(state));
-  document.querySelector("#cuentasFilterAccess")?.addEventListener("change", () => paintCuentas(state));
+  document.querySelector("#cuentasSearch")?.addEventListener("input", () => { cuentasState.page = 1; paintCuentas(state); });
+  document.querySelector("#cuentasFilterType")?.addEventListener("change", () => { cuentasState.page = 1; paintCuentas(state); });
+  document.querySelector("#cuentasFilterAccess")?.addEventListener("change", () => { cuentasState.page = 1; paintCuentas(state); });
+  document.querySelector("#cuentasSort")?.addEventListener("change", (e) => { const [k,d]= (e.target.value||'name:asc').split(':'); cuentasState.sortBy=k; cuentasState.sortDir=d; paintCuentas(state); });
+  document.querySelector("#cuentasPageSize")?.addEventListener("change", (e) => { cuentasState.pageSize = Number(e.target.value||10); cuentasState.page = 1; paintCuentas(state); });
   document.querySelector("#cuentasExportCsv")?.addEventListener("click", () => exportCuentasCsv(state));
   paintCuentas(state);
   document.querySelector("#admAddTemplate")?.addEventListener("click", () => addTemplate(state));
@@ -497,7 +504,7 @@ function openCompanyUsers(){
   }
 }
 
-function paintCuentas(state){
+function getFilteredCuentas(state){
   const access = ensureCompanyAccess();
   const users = access.users || [];
   const q = (document.querySelector('#cuentasSearch')?.value || '').toLowerCase().trim();
@@ -510,21 +517,32 @@ function paintCuentas(state){
     if(accessFilter === 'pending' && u.accountType === 'pueblos' && u.freeAccess) return false;
     return true;
   });
-  const rows = users.map((u, i) => `
-    <tr>
-      <td>${i+1}</td>
-      <td>${escapeHtml(u.name)}</td>
-      <td>${escapeHtml(u.email || "")}</td>
-      <td>${escapeHtml(u.accountType || "empresa")}</td>
-      <td>${u.accountType === "pueblos" ? (u.freeAccess ? `<span class="tag tag-success">Acceso gratuito</span>` : `<span class="tag tag-muted">Pendiente</span>`) : "-"}</td>
-      <td><button class="ghost" data-edit-cuenta="${u.id}">Editar</button> <button class="ghost" data-delete-cuenta="${u.id}">Borrar</button></td>
-    </tr>
-  `).join("");
+  // Sorting
+  const sortBy = cuentasState.sortBy || 'name';
+  const sortDir = cuentasState.sortDir || 'asc';
+  filtered.sort((a,b) => {
+    const va = (a[sortBy] || '').toString().toLowerCase();
+    const vb = (b[sortBy] || '').toString().toLowerCase();
+    if(va < vb) return sortDir === 'asc' ? -1 : 1;
+    if(va > vb) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+  return filtered;
+}
+
+function paintCuentas(state){
   const host = document.querySelector("#admCuentasTable");
   if(!host) return;
-  const sourceRows = filtered.map((u, i) => `
+  const all = getFilteredCuentas(state);
+  const pageSize = cuentasState.pageSize || 10;
+  const total = all.length;
+  const pages = Math.max(1, Math.ceil(total / pageSize));
+  if(cuentasState.page > pages) cuentasState.page = pages;
+  const start = (cuentasState.page - 1) * pageSize;
+  const pageItems = all.slice(start, start + pageSize);
+  const rows = pageItems.map((u, i) => `
     <tr>
-      <td>${i+1}</td>
+      <td>${start + i + 1}</td>
       <td>${escapeHtml(u.name)}</td>
       <td>${escapeHtml(u.email || "")}</td>
       <td>${escapeHtml(u.accountType || "empresa")}</td>
@@ -532,14 +550,20 @@ function paintCuentas(state){
       <td><button class="ghost" data-edit-cuenta="${u.id}">Editar</button> <button class="ghost" data-delete-cuenta="${u.id}">Borrar</button></td>
     </tr>
   `).join("");
-  host.innerHTML = `<div class="table-scroll"><table class="load-table"><thead><tr><th>N°</th><th>Nombre</th><th>Correo</th><th>Tipo</th><th>Acceso</th><th>Acciones</th></tr></thead><tbody>${sourceRows || `<tr><td colspan="6">No hay cuentas corporativas.</td></tr>`}</tbody></table></div>`;
+  host.innerHTML = `<div class="table-scroll"><table class="load-table"><thead><tr><th>N°</th><th>Nombre</th><th>Correo</th><th>Tipo</th><th>Acceso</th><th>Acciones</th></tr></thead><tbody>${rows || `<tr><td colspan="6">No hay cuentas corporativas.</td></tr>`}</tbody></table></div>`;
+  // pagination controls
+  const pager = document.createElement('div');
+  pager.className = 'admin-inline';
+  pager.innerHTML = `<button class="ghost" id="cuentasPrev" ${cuentasState.page<=1?"disabled":""}>Anterior</button><span style="margin:0 8px">Página ${cuentasState.page} / ${pages}</span><button class="ghost" id="cuentasNext" ${cuentasState.page>=pages?"disabled":""}>Siguiente</button>`;
+  host.appendChild(pager);
   document.querySelectorAll("[data-edit-cuenta]").forEach(btn => btn.addEventListener("click", () => editCuenta(btn.dataset.editCuenta)));
   document.querySelectorAll("[data-delete-cuenta]").forEach(btn => btn.addEventListener("click", () => deleteCuenta(btn.dataset.deleteCuenta)));
+  document.querySelector('#cuentasPrev')?.addEventListener('click', () => { if(cuentasState.page>1) cuentasState.page--; paintCuentas(state); });
+  document.querySelector('#cuentasNext')?.addEventListener('click', () => { const p = Math.max(1, Math.ceil(total / pageSize)); if(cuentasState.page<p) cuentasState.page++; paintCuentas(state); });
 }
 
 function exportCuentasCsv(state){
-  const access = ensureCompanyAccess();
-  const users = access.users || [];
+  const users = getFilteredCuentas(state);
   const headers = ["id","name","email","accountType","freeAccess","role","createdAt"];
   const rows = users.map(u => headers.map(h => JSON.stringify(u[h] || "")).join(","));
   const csv = headers.join(",") + "\n" + rows.join("\n");
