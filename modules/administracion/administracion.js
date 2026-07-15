@@ -98,7 +98,7 @@ export function render(host, state){
       </section>
 
       <section class="admin-tabs" aria-label="Secciones de administración">
-        ${isCompanyAdmin ? `<button class="active" data-admin-tab="empresa">Empresa y logo</button>` : `<button class="active" data-admin-tab="usuarios">Usuarios</button><button data-admin-tab="sesiones">Conectados</button><button data-admin-tab="empresa">Empresa y logo</button><button data-admin-tab="modulos">Módulos</button><button data-admin-tab="plantillas">Plantillas</button><button data-admin-tab="sistema">Sistema</button><button data-admin-tab="estado">Estado del software</button><button data-admin-tab="inspector">Inspector</button><button data-admin-tab="originalidad">Originalidad</button><button data-admin-tab="roadmap">Roadmap</button>`}
+        ${isCompanyAdmin ? `<button class="active" data-admin-tab="empresa">Empresa y logo</button>` : `<button class="active" data-admin-tab="usuarios">Usuarios</button><button data-admin-tab="sesiones">Conectados</button><button data-admin-tab="empresa">Empresa y logo</button><button data-admin-tab="modulos">Módulos</button><button data-admin-tab="plantillas">Plantillas</button><button data-admin-tab="sistema">Sistema</button><button data-admin-tab="estado">Estado del software</button><button data-admin-tab="inspector">Inspector</button><button data-admin-tab="originalidad">Originalidad</button><button data-admin-tab="roadmap">Roadmap</button><button data-admin-tab="cuentas">Cuentas corporativas</button>`}
       </section>
 
       ${!isCompanyAdmin ? `
@@ -132,6 +132,27 @@ export function render(host, state){
               <p class="small">Lista de cuentas registradas como <strong>Pueblos técnicos</strong>. Desde aquí puedes conceder o revocar <em>acceso gratuito</em> para usar los módulos disponibles.</p>
               <div id="admPueblosTable"></div>
             </div>
+        </div>
+      </section>
+      <section id="admTabCuentas" class="admin-tab-page">
+        <div class="admin-card">
+          <h4>Cuentas corporativas</h4>
+          <p class="small">Gestiona las cuentas registradas en el sistema (empresas y pueblos técnicos). Aquí puedes crear, editar, otorgar/revocar acceso gratuito y eliminar cuentas.</p>
+          <div class="admin-inline">
+            <input id="cuentasSearch" placeholder="Buscar por nombre o correo">
+            <select id="cuentasFilterType"><option value="">Todos los tipos</option><option value="empresa">Empresa</option><option value="pueblos">Pueblos técnicos</option></select>
+            <select id="cuentasFilterAccess"><option value="">Todos</option><option value="free">Acceso gratuito</option><option value="pending">Pendientes</option></select>
+            <button id="cuentasExportCsv" class="secondary">Exportar CSV</button>
+          </div>
+          <div id="admCuentasTable"></div>
+          <div class="admin-inline">
+            <input id="cuentaName" placeholder="Nombre cuenta">
+            <input id="cuentaEmail" placeholder="correo@cuenta.cl">
+            <input id="cuentaPassword" placeholder="Contraseña (opcional)" type="password">
+            <select id="cuentaType"><option value="empresa">Empresa</option><option value="pueblos">Pueblos técnicos</option></select>
+            <label class="checkbox-label"><input id="cuentaFreeAccess" type="checkbox"> Acceso gratuito (solo para Pueblos)</label>
+            <button id="admAddCuenta" class="primary">Crear cuenta</button>
+          </div>
         </div>
       </section>
       ` : ``}
@@ -310,6 +331,13 @@ function wireEvents(state){
   } else {
     document.querySelector("#admOpenCompanyUsers")?.addEventListener("click", () => openCompanyUsers());
   }
+  // Corporate accounts tab handlers (super-admin / administrador)
+  document.querySelector("#admAddCuenta")?.addEventListener("click", () => addCuenta(state));
+  document.querySelector("#cuentasSearch")?.addEventListener("input", () => paintCuentas(state));
+  document.querySelector("#cuentasFilterType")?.addEventListener("change", () => paintCuentas(state));
+  document.querySelector("#cuentasFilterAccess")?.addEventListener("change", () => paintCuentas(state));
+  document.querySelector("#cuentasExportCsv")?.addEventListener("click", () => exportCuentasCsv(state));
+  paintCuentas(state);
   document.querySelector("#admAddTemplate")?.addEventListener("click", () => addTemplate(state));
   document.querySelector("#admRunDiagnostics")?.addEventListener("click", () => paintSoftwareStatus(state, true));
   document.querySelector("#admDownloadDiagnostics")?.addEventListener("click", () => downloadDiagnostics(state));
@@ -467,6 +495,111 @@ function openCompanyUsers(){
   } else {
     alert("No se pudo abrir el módulo Usuarios de empresa.");
   }
+}
+
+function paintCuentas(state){
+  const access = ensureCompanyAccess();
+  const users = access.users || [];
+  const q = (document.querySelector('#cuentasSearch')?.value || '').toLowerCase().trim();
+  const typeFilter = document.querySelector('#cuentasFilterType')?.value || '';
+  const accessFilter = document.querySelector('#cuentasFilterAccess')?.value || '';
+  const filtered = users.filter(u => {
+    if(q){ const hay = `${(u.name||'').toLowerCase()} ${(u.email||'').toLowerCase()}`; if(!hay.includes(q)) return false; }
+    if(typeFilter && (u.accountType || 'empresa') !== typeFilter) return false;
+    if(accessFilter === 'free' && !u.freeAccess) return false;
+    if(accessFilter === 'pending' && u.accountType === 'pueblos' && u.freeAccess) return false;
+    return true;
+  });
+  const rows = users.map((u, i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td>${escapeHtml(u.name)}</td>
+      <td>${escapeHtml(u.email || "")}</td>
+      <td>${escapeHtml(u.accountType || "empresa")}</td>
+      <td>${u.accountType === "pueblos" ? (u.freeAccess ? `<span class="tag tag-success">Acceso gratuito</span>` : `<span class="tag tag-muted">Pendiente</span>`) : "-"}</td>
+      <td><button class="ghost" data-edit-cuenta="${u.id}">Editar</button> <button class="ghost" data-delete-cuenta="${u.id}">Borrar</button></td>
+    </tr>
+  `).join("");
+  const host = document.querySelector("#admCuentasTable");
+  if(!host) return;
+  const sourceRows = filtered.map((u, i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td>${escapeHtml(u.name)}</td>
+      <td>${escapeHtml(u.email || "")}</td>
+      <td>${escapeHtml(u.accountType || "empresa")}</td>
+      <td>${u.accountType === "pueblos" ? (u.freeAccess ? `<span class="tag tag-success">Acceso gratuito</span>` : `<span class="tag tag-muted">Pendiente</span>`) : "-"}</td>
+      <td><button class="ghost" data-edit-cuenta="${u.id}">Editar</button> <button class="ghost" data-delete-cuenta="${u.id}">Borrar</button></td>
+    </tr>
+  `).join("");
+  host.innerHTML = `<div class="table-scroll"><table class="load-table"><thead><tr><th>N°</th><th>Nombre</th><th>Correo</th><th>Tipo</th><th>Acceso</th><th>Acciones</th></tr></thead><tbody>${sourceRows || `<tr><td colspan="6">No hay cuentas corporativas.</td></tr>`}</tbody></table></div>`;
+  document.querySelectorAll("[data-edit-cuenta]").forEach(btn => btn.addEventListener("click", () => editCuenta(btn.dataset.editCuenta)));
+  document.querySelectorAll("[data-delete-cuenta]").forEach(btn => btn.addEventListener("click", () => deleteCuenta(btn.dataset.deleteCuenta)));
+}
+
+function exportCuentasCsv(state){
+  const access = ensureCompanyAccess();
+  const users = access.users || [];
+  const headers = ["id","name","email","accountType","freeAccess","role","createdAt"];
+  const rows = users.map(u => headers.map(h => JSON.stringify(u[h] || "")).join(","));
+  const csv = headers.join(",") + "\n" + rows.join("\n");
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'giae-cuentas-corporativas.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+function addCuenta(state){
+  const name = document.querySelector("#cuentaName").value.trim();
+  const email = document.querySelector("#cuentaEmail").value.trim();
+  const password = document.querySelector("#cuentaPassword").value || "";
+  const accountType = document.querySelector("#cuentaType").value || "empresa";
+  const freeAccess = !!document.querySelector("#cuentaFreeAccess").checked;
+  if(!name || !email) return alert("Nombre y correo son obligatorios.");
+  try{
+    upsertCompanyUser({ name, email, password, accountType, freeAccess, role: accountType === 'pueblos' ? 'proyectos' : 'proyectos' });
+    addLog(state, `Cuenta corporativa creada: ${email}`);
+    persist();
+    document.querySelector("#cuentaName").value = ""; document.querySelector("#cuentaEmail").value = ""; document.querySelector("#cuentaPassword").value = ""; document.querySelector("#cuentaFreeAccess").checked = false;
+    paintCuentas(state);
+  }catch(e){ console.error(e); alert('Error creando cuenta. Revisa la consola.'); }
+}
+
+function editCuenta(id){
+  const access = ensureCompanyAccess();
+  const user = (access.users || []).find(u => u.id === id);
+  if(!user) return alert('Cuenta no encontrada');
+  document.querySelector("#cuentaName").value = user.name || "";
+  document.querySelector("#cuentaEmail").value = user.email || "";
+  document.querySelector("#cuentaType").value = user.accountType || "empresa";
+  document.querySelector("#cuentaFreeAccess").checked = Boolean(user.freeAccess);
+  // Set add button to save mode
+  const btn = document.querySelector("#admAddCuenta");
+  btn.textContent = "Guardar cambios";
+  btn.onclick = () => {
+    const name = document.querySelector("#cuentaName").value.trim();
+    const email = document.querySelector("#cuentaEmail").value.trim();
+    const password = document.querySelector("#cuentaPassword").value || "";
+    const accountType = document.querySelector("#cuentaType").value || "empresa";
+    const freeAccess = !!document.querySelector("#cuentaFreeAccess").checked;
+    try{
+      upsertCompanyUser({ id: user.id, name, email, password: password || undefined, accountType, freeAccess, role: user.role });
+      addLog(state, `Cuenta actualizada: ${email}`);
+      persist();
+      btn.textContent = "Crear cuenta";
+      btn.onclick = () => addCuenta(state);
+      document.querySelector("#cuentaName").value = ""; document.querySelector("#cuentaEmail").value = ""; document.querySelector("#cuentaPassword").value = ""; document.querySelector("#cuentaFreeAccess").checked = false;
+      paintCuentas(state);
+    }catch(e){ console.error(e); alert('Error guardando cuenta.'); }
+  };
+}
+
+function deleteCuenta(id){
+  if(!confirm('¿Borrar cuenta corporativa?')) return;
+  const access = ensureCompanyAccess();
+  access.users = (access.users || []).filter(u => u.id !== id);
+  persist();
+  addLog(state, `Cuenta borrada: ${id}`);
+  paintCuentas(state);
 }
 
 function countLocalProjects(state){

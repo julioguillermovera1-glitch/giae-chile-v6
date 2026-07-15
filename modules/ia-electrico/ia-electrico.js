@@ -22,17 +22,18 @@ function renderStatusCard(engine){
     </section>`;
 }
 
-async function analyze(host, state){
+async function analyze(host, state, userRequest = ""){
   const project = state.currentProject;
-  if(!project) return;
-  const userRequest = host.querySelector("#iaPrompt").value.trim();
-  host.querySelector("#iaResponse").textContent = "Analizando proyecto...";
+  if(!project) return "";
+  if(!userRequest) userRequest = host.querySelector("#iaPrompt")?.value.trim() || "";
+  // Provide quick feedback in the details area while computing
+  host.querySelector("#iaDetails").innerHTML = `<div class="notice-list"><article class="notice-line info">Analizando proyecto...</article></div>`;
   try {
     const { electrical, normative } = await analyzeElectricalProject(project);
     const advice = buildAdvice(project, electrical, normative);
     let response = buildFriendlyResponse(project, advice);
     if(userRequest) response = `Solicitud: ${userRequest}\n\n${response}`;
-    host.querySelector("#iaResponse").textContent = response;
+    // Update details panel
     host.querySelector("#iaDetails").innerHTML = `
       <div class="notice-list">
         <article class="notice-line ok"><strong>Estado:</strong> ${esc(advice.electricalStatus)}</article>
@@ -47,10 +48,11 @@ async function analyze(host, state){
     `;
     addHistory("Revisión IA eléctrica ejecutada", "Asistente IA", false);
     persist();
+    return response;
   } catch (error) {
     console.error(error);
-    host.querySelector("#iaResponse").textContent = "Error al analizar el proyecto. Revisa la consola del navegador.";
     host.querySelector("#iaDetails").innerHTML = "";
+    return "Error al analizar el proyecto. Revisa la consola del navegador.";
   }
 }
 
@@ -184,10 +186,14 @@ export function render(host, state){
       <section class="admin-card">
         <h4>Interacción con la IA</h4>
         <p>${esc(messages.help)}</p>
-        <textarea id="iaPrompt" rows="4" placeholder="${esc(messages.prompt)}"></textarea>
+        <div id="iaChat">
+          <div id="iaChatMessages" class="chat-messages" aria-live="polite"></div>
+          <textarea id="iaPrompt" rows="3" placeholder="${esc(messages.prompt)}"></textarea>
+        </div>
         <div class="button-row">
           <button class="primary" id="iaAnalyzeBtn">Analizar proyecto</button>
           <button class="primary ghost" id="iaSendBtn">Enviar</button>
+          <button class="secondary" id="iaClearConversation">Borrar conversación</button>
           <button class="secondary" id="iaReportBtn">Generar informe Markdown</button>
           <button class="secondary" id="iaReportHtmlBtn">Generar informe HTML</button>
           <button class="secondary" id="iaReportPdfBtn">Generar informe PDF</button>
@@ -209,7 +215,7 @@ export function render(host, state){
   `;
 
   host.querySelector("#iaAnalyzeBtn").addEventListener("click", () => analyze(host, state));
-  host.querySelector("#iaSendBtn").addEventListener("click", () => analyze(host, state));
+  host.querySelector("#iaSendBtn").addEventListener("click", () => sendPrompt(host, state));
   host.querySelector("#iaReportBtn").addEventListener("click", () => generateReport(host, state));
   host.querySelector("#iaReportHtmlBtn").addEventListener("click", () => generateReportHtml(host, state));
   host.querySelector("#iaReportPdfBtn").addEventListener("click", () => generateReportPdf(host, state));
@@ -219,15 +225,79 @@ export function render(host, state){
     host.querySelector("#iaDetails").innerHTML = "";
     host.querySelector("#iaPrompt").value = "";
   });
+  host.querySelector("#iaClearConversation")?.addEventListener("click", () => clearConversation(host, state));
 
-  // Keyboard shortcut: Ctrl/Cmd + Enter to send the prompt
+  // Chat behavior: Enter to send, Shift+Enter for newline; Ctrl/Cmd+Enter also sends
   const promptEl = host.querySelector("#iaPrompt");
   if(promptEl){
     promptEl.addEventListener("keydown", (ev) => {
+      if(ev.key === "Enter" && !ev.shiftKey){
+        ev.preventDefault();
+        sendPrompt(host, state);
+        return;
+      }
       if(ev.key === "Enter" && (ev.ctrlKey || ev.metaKey)){
         ev.preventDefault();
-        analyze(host, state);
+        sendPrompt(host, state);
       }
     });
   }
+
+  // Restore previous history messages for project
+  const project = state.currentProject;
+  if(project && Array.isArray(project.iaMemory)){
+    project.iaMemory.slice().reverse().forEach(entry => {
+      appendMessage(host, 'user', entry.request || 'Diagnóstico general');
+      appendMessage(host, 'assistant', entry.summary || entry.report || 'Respuesta IA anterior');
+    });
+  }
+}
+
+function appendMessage(host, role, text){
+  const container = host.querySelector('#iaChatMessages');
+  if(!container) return;
+  const msg = document.createElement('div');
+  msg.className = `chat-message ${role}`;
+  msg.innerHTML = `<div class="bubble"><pre>${esc(String(text))}</pre></div>`;
+  container.appendChild(msg);
+  container.scrollTop = container.scrollHeight;
+}
+
+async function sendPrompt(host, state){
+  const promptEl = host.querySelector('#iaPrompt');
+  if(!promptEl) return;
+  const text = promptEl.value.trim();
+  if(!text) return;
+  appendMessage(host, 'user', text);
+  promptEl.value = '';
+  appendMessage(host, 'assistant', '...');
+  const response = await analyze(host, state, text);
+  // replace last assistant '...' with actual response
+  const container = host.querySelector('#iaChatMessages');
+  if(container){
+    const last = container.querySelector('.chat-message.assistant:last-child');
+    if(last) last.innerHTML = `<div class="bubble"><pre>${esc(String(response))}</pre></div>`;
+  }
+  // remember interaction in project memory
+  try{
+    const project = state.currentProject;
+    const { electrical, normative } = await analyzeElectricalProject(project);
+    const advice = buildAdvice(project, electrical, normative);
+    const report = buildProjectReport(project, advice, text);
+    rememberIaInteraction(project, text, advice, report);
+    persist();
+  }catch(e){ /* ignore memory failures */ }
+}
+
+function clearConversation(host, state){
+  const project = state.currentProject;
+  if(project && Array.isArray(project.iaMemory)){
+    if(!confirm('Borrar historial de conversación IA del proyecto?')) return;
+    project.iaMemory = [];
+    persist();
+  }
+  const container = host.querySelector('#iaChatMessages');
+  if(container) container.innerHTML = '';
+  host.querySelector('#iaResponse').textContent = 'Pulsa "Analizar proyecto" para obtener el diagnóstico.';
+  host.querySelector('#iaDetails').innerHTML = '';
 }
