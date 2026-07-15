@@ -1,5 +1,5 @@
 import { persist, addHistory } from "../../core/store.js";
-import { buildCadFromProject, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, CAD_LAYERS, CAD_SYMBOLS } from "../../core/cad/cadEngine.js";
+import { buildCadFromProject, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS } from "../../core/cad/cadEngine.js";
 
 function esc(value = ""){
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -7,8 +7,11 @@ function esc(value = ""){
 function n(value, fallback = 0){ const parsed = Number(value); return Number.isFinite(parsed) ? parsed : fallback; }
 function statusClass(status){ if(status === "listo_para_revision") return "ok"; if(status === "incompleto") return "warn"; return "danger"; }
 function layerColor(id){ return (CAD_LAYERS.find(layer => layer.id === id)?.color) || "#334155"; }
-function symbolLabel(id){ return (CAD_SYMBOLS.find(symbol => symbol.id === id)?.label) || id; }
+function symbolLabel(id, symbols = CAD_SYMBOLS){ return (symbols.find(symbol => symbol.id === id)?.label) || id; }
 function safeFileName(name){ return (name || "plano-giae").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "plano-giae"; }
+function parseScale(scale = "1:50"){ const parts = String(scale).split(":").map(part => Number(part.trim())); return parts.length === 2 && parts[0] > 0 && parts[1] > 0 ? parts[0] / parts[1] : 1 / 50; }
+function formatDistance(length = 0, units = "mm"){ const distance = Number(length) || 0; if(units === "cm") return `${(distance / 10).toFixed(1)} cm`; if(units === "m") return `${(distance / 1000).toFixed(2)} m`; return `${Math.round(distance)} mm`; }
+function safeJsonParse(value){ try { return JSON.parse(value); } catch { return null; } }
 function ensureCad(project){
   project.cad2d = normalizeCadDocument(project.cad2d || buildCadFromProject(project), project);
   project.cad2d.validation = validateCadDocument(project.cad2d);
@@ -36,10 +39,11 @@ function renderLayerToggles(doc){
   const used = new Set(doc.entities.map(entity => entity.layer));
   return CAD_LAYERS.map(layer => `<label class="cad-layer-toggle"><input type="checkbox" data-cad-layer="${esc(layer.id)}" ${layer.hidden ? "" : "checked"}><span style="--layer:${esc(layer.color)}"></span>${esc(layer.label)}<small>${used.has(layer.id) ? "en uso" : "vacia"}</small></label>`).join("");
 }
-function renderToolOptions(activeTool){
+function renderToolOptions(activeTool, docSymbols = []){
   const tools = [
     ["select", "Seleccionar"],
     ["wire", "Cablear"],
+    ["dimension", "Dimension"],
     ["panel", "Tablero"],
     ["breaker", "Proteccion"],
     ["light", "Luz"],
@@ -50,12 +54,14 @@ function renderToolOptions(activeTool){
     ["ground", "Tierra"],
     ["note", "Nota"]
   ];
-  return tools.map(([id, label]) => `<button type="button" class="cad-tool ${activeTool === id ? "active" : ""}" data-cad-tool="${id}">${label}</button>`).join("");
+  const defaultIds = new Set(tools.map(([id]) => id));
+  const customTools = Array.isArray(docSymbols) ? docSymbols.filter(symbol => !defaultIds.has(symbol.id)).map(symbol => [symbol.id, symbol.label || symbol.id]) : [];
+  return tools.concat(customTools).map(([id, label]) => `<button type="button" class="cad-tool ${activeTool === id ? "active" : ""}" data-cad-tool="${id}">${label}</button>`).join("");
 }
-function renderSymbol(entity){
+function renderSymbol(entity, symbols = CAD_SYMBOLS){
   const color = layerColor(entity.layer);
   const x = n(entity.x), y = n(entity.y);
-  const label = esc(entity.label || symbolLabel(entity.symbolId));
+  const label = esc(entity.label || symbolLabel(entity.symbolId, symbols));
   const base = `data-entity-id="${esc(entity.id)}" class="cad-entity cad-symbol"`;
   if(entity.symbolId === "panel") return `<g ${base} transform="translate(${x} ${y})"><rect x="-34" y="-42" width="68" height="84" rx="4" fill="#fff" stroke="${color}" stroke-width="3"/><line x1="-22" y1="-20" x2="22" y2="-20" stroke="${color}" stroke-width="2"/><line x1="-22" y1="0" x2="22" y2="0" stroke="${color}" stroke-width="2"/><line x1="-22" y1="20" x2="22" y2="20" stroke="${color}" stroke-width="2"/><text y="58" text-anchor="middle" font-size="13" font-weight="800">${label}</text></g>`;
   if(entity.symbolId === "breaker") return `<g ${base} transform="translate(${x} ${y})"><rect x="-22" y="-32" width="44" height="64" rx="3" fill="#fff" stroke="${color}" stroke-width="2.5"/><path d="M -10 8 C -2 -18 8 -18 14 -30" fill="none" stroke="${color}" stroke-width="2.5"/><text y="50" text-anchor="middle" font-size="12" font-weight="800">${label}</text></g>`;
@@ -89,7 +95,7 @@ function renderCadSvg(doc, selectedId = ""){
   for(let x = 0; x <= width; x += grid) gridLines.push(`<line x1="${x}" y1="0" x2="${x}" y2="${height}"/>`);
   for(let y = 0; y <= height; y += grid) gridLines.push(`<line x1="0" y1="${y}" x2="${width}" y2="${y}"/>`);
   const wires = doc.entities.filter(entity => entity.type === "wire" && !hidden.has(entity.layer)).map(renderWire).join("");
-  const symbols = doc.entities.filter(entity => entity.type !== "wire" && !hidden.has(entity.layer)).map(renderSymbol).join("");
+  const symbols = doc.entities.filter(entity => entity.type !== "wire" && !hidden.has(entity.layer)).map(entity => renderSymbol(entity, doc.symbols)).join("");
   const selected = selectedId ? doc.entities.find(entity => entity.id === selectedId) : null;
   const selectBox = selected && selected.type !== "wire" ? `<rect class="cad-selected-box" x="${n(selected.x)-44}" y="${n(selected.y)-52}" width="88" height="104" rx="4"/>` : "";
   return `<svg id="cadCanvas" class="cad-canvas" viewBox="0 0 ${width} ${height}" role="img" aria-label="Plano CAD electrico GIAE"><defs><pattern id="cadGrid" width="${grid}" height="${grid}" patternUnits="userSpaceOnUse"><path d="M ${grid} 0 L 0 0 0 ${grid}" fill="none" stroke="#e2e8f0" stroke-width="1"/></pattern></defs><rect width="${width}" height="${height}" fill="#ffffff"/><rect width="${width}" height="${height}" fill="url(#cadGrid)"/><g class="cad-border"><rect x="24" y="24" width="${width-48}" height="${height-48}" fill="none" stroke="#94a3b8" stroke-dasharray="8 6"/></g>${wires}${symbols}${selectBox}${renderLegend(doc)}</svg>`;
@@ -146,6 +152,20 @@ export function render(host, state){
           </article>
 
           <article class="admin-card">
+            <h4>Configuracion</h4>
+            <label>Escala<input id="cadScaleInput" value="${esc(doc.scale)}" placeholder="1:50"></label>
+            <label>Unidades<select id="cadUnitsSelect"><option value="mm" ${doc.units === "mm" ? "selected" : ""}>mm</option><option value="cm" ${doc.units === "cm" ? "selected" : ""}>cm</option><option value="m" ${doc.units === "m" ? "selected" : ""}>m</option></select></label>
+          </article>
+
+          <article class="admin-card">
+            <h4>Importar / Exportar</h4>
+            <div class="row-actions"><button id="cadExportJson" class="secondary">Exportar .giaecad</button><button id="cadExportDxf" class="secondary">Exportar DXF</button></div>
+            <div class="row-actions"><button id="cadImportDxf" class="secondary">Importar DXF</button><button id="cadImportSymbols" class="secondary">Cargar símbolos</button></div>
+            <input id="cadImportDxfFile" type="file" accept=".dxf,text/plain" hidden>
+            <input id="cadImportSymbolsFile" type="file" accept=".json,application/json" hidden>
+          </article>
+
+          <article class="admin-card">
             <h4>Capas</h4>
             <div class="cad-layer-list">${renderLayerToggles(doc)}</div>
           </article>
@@ -178,6 +198,44 @@ export function render(host, state){
   }
 
   host.querySelectorAll("[data-cad-tool]").forEach(button => button.addEventListener("click", () => { ui.tool = button.dataset.cadTool; ui.wireStart = null; project.cadUi = ui; render(host, state); }));
+  host.querySelector("#cadScaleInput").addEventListener("change", event => {
+    doc.scale = event.target.value.trim() || "1:50";
+    project.cad2d = doc;
+    persist();
+    render(host, state);
+  });
+  host.querySelector("#cadUnitsSelect").addEventListener("change", event => {
+    doc.units = event.target.value;
+    project.cad2d = doc;
+    persist();
+    render(host, state);
+  });
+  host.querySelector("#cadExportDxf").addEventListener("click", () => downloadText(safeFileName(doc.name) + ".dxf", createCadExportDxf(project, doc), "application/dxf;charset=utf-8"));
+  host.querySelector("#cadImportDxf").addEventListener("click", () => host.querySelector("#cadImportDxfFile").click());
+  host.querySelector("#cadImportSymbols").addEventListener("click", () => host.querySelector("#cadImportSymbolsFile").click());
+  host.querySelector("#cadImportDxfFile").addEventListener("change", async event => {
+    const file = event.target.files?.[0];
+    if(!file) return;
+    const text = await file.text();
+    const imported = parseCadDxf(text, project);
+    doc.entities = doc.entities.concat(imported.entities);
+    doc.validation = validateCadDocument(doc);
+    project.cad2d = doc;
+    addHistory(`Plano CAD importado desde ${file.name}`, "CAD electrico", false);
+    persist();
+    render(host, state);
+  });
+  host.querySelector("#cadImportSymbolsFile").addEventListener("change", async event => {
+    const file = event.target.files?.[0];
+    if(!file) return;
+    const text = await file.text();
+    const definitions = safeJsonParse(text) || [];
+    doc = importCadSymbols(doc, definitions);
+    project.cad2d = doc;
+    addHistory(`Simbolos CAD cargados desde ${file.name}`, "CAD electrico", false);
+    persist();
+    render(host, state);
+  });
   host.querySelector("#cadLayerSelect").addEventListener("change", event => { ui.layer = event.target.value; project.cadUi = ui; render(host, state); });
   host.querySelectorAll("[data-cad-layer]").forEach(input => input.addEventListener("change", () => {
     const layer = doc.layers.find(item => item.id === input.dataset.cadLayer);
@@ -202,17 +260,22 @@ export function render(host, state){
     ui.label = label;
     ui.circuitId = circuitId;
     if(ui.tool === "select") return;
-    if(ui.tool === "wire"){
+    if(ui.tool === "wire" || ui.tool === "dimension"){
       if(!ui.wireStart){ ui.wireStart = { x, y }; project.cadUi = ui; render(host, state); return; }
-      doc = addCadEntity(doc, createCadEntity("wire", { layer: "canalizacion", from: ui.wireStart, to: { x, y }, label: circuitId || "Canalizacion", circuitId, source: "manual" }));
+      const dx = x - ui.wireStart.x;
+      const dy = y - ui.wireStart.y;
+      const length = Math.hypot(dx, dy);
+      const actualLength = length * parseScale(doc.scale);
+      const dimensionLabel = ui.tool === "dimension" ? formatDistance(actualLength, doc.units) : (circuitId || "Canalizacion");
+      doc = addCadEntity(doc, createCadEntity("wire", { layer: ui.tool === "dimension" ? "revision" : "canalizacion", from: ui.wireStart, to: { x, y }, label: dimensionLabel, circuitId, source: "manual" }));
       ui.wireStart = null;
-      saveAndRefresh("Canalizacion agregada en CAD");
+      saveAndRefresh(ui.tool === "dimension" ? "Dimension agregada en CAD" : "Canalizacion agregada en CAD");
       return;
     }
-    const symbol = CAD_SYMBOLS.find(item => item.id === ui.tool);
+    const symbol = doc.symbols.find(item => item.id === ui.tool) || CAD_SYMBOLS.find(item => item.id === ui.tool);
     const layer = ui.layer || symbol?.layer || "notas";
-    doc = addCadEntity(doc, createCadEntity(ui.tool, { x, y, layer, label: label || symbolLabel(ui.tool), circuitId, source: "manual" }));
-    saveAndRefresh("Entidad CAD agregada: " + symbolLabel(ui.tool));
+    doc = addCadEntity(doc, createCadEntity(ui.tool, { x, y, layer, label: label || symbolLabel(ui.tool, doc.symbols), circuitId, source: "manual" }));
+    saveAndRefresh("Entidad CAD agregada: " + symbolLabel(ui.tool, doc.symbols));
   });
   host.querySelectorAll("[data-select-entity]").forEach(button => button.addEventListener("click", () => { ui.selectedId = button.dataset.selectEntity; project.cadUi = ui; render(host, state); }));
   host.querySelector("#cadDeleteSelected").addEventListener("click", () => {
