@@ -1,4 +1,5 @@
 import { persist, addHistory } from "../../core/store.js";
+import CloudflareCADService from "../../core/cad/cloudflare-service.js";
 import { buildCadFromProject, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS } from "../../core/cad/cadEngine.js";
 
 function esc(value = ""){
@@ -191,6 +192,14 @@ export function render(host, state){
             <div class="row-actions"><button id="cadImportDxf" class="secondary">Importar DXF</button><button id="cadImportSymbols" class="secondary">Cargar símbolos</button></div>
             <input id="cadImportDxfFile" type="file" accept=".dxf,text/plain" hidden>
             <input id="cadImportSymbolsFile" type="file" accept=".json,application/json" hidden>
+          </article>
+
+          <article class="admin-card">
+            <h4>☁️ Cloudflare (D1 + R2)</h4>
+            <div id="cadCFStatus" style="padding:0.8rem;background:#0f2532;border-radius:6px;margin-bottom:0.8rem;font-size:0.85rem;text-align:center">
+              <span id="cadCFStatusText">Verificando...</span>
+            </div>
+            <div class="row-actions"><button id="cadSaveCF" class="secondary">💾 Guardar en Cloud</button><button id="cadLoadCF" class="secondary">📥 Cargar de Cloud</button></div>
           </article>
 
           <article class="admin-card">
@@ -472,4 +481,70 @@ export function render(host, state){
     saveAndRefresh('Entidad CAD eliminada (tecla Suprimir)');
   };
   window.addEventListener('keydown', window.__giae_cad_keydown_handler);
+
+  // ☁️ Cloudflare D1 + R2 Integration
+  const cfService = new CloudflareCADService("/api/giae");
+  
+  // Verificar disponibilidad de Cloudflare
+  cfService.checkHealth().then(health => {
+    const statusEl = host.querySelector("#cadCFStatusText");
+    if (statusEl) {
+      statusEl.textContent = cfService.getStatusIcon(health);
+      statusEl.style.color = health.available ? "#22c55e" : "#ef4444";
+    }
+  });
+
+  // Guardar en Cloudflare (sin romper localStorage)
+  host.querySelector("#cadSaveCF")?.addEventListener("click", async () => {
+    const projectId = project.id || prompt("Ingresa el ID del proyecto:");
+    if (!projectId) return;
+    
+    const btn = host.querySelector("#cadSaveCF");
+    const original = btn.textContent;
+    btn.textContent = "💾 Guardando...";
+    btn.disabled = true;
+
+    const result = await cfService.saveToCF(projectId, doc);
+    
+    if (result.success) {
+      addHistory("Plano guardado en Cloudflare D1 + R2", "CAD electrico", false);
+      persist();
+      alert("✅ Plano guardado en la nube exitosamente!");
+    } else {
+      console.warn("⚠️ Cloudflare no disponible - usando localStorage");
+      addHistory("Plano guardado localmente (nube no disponible)", "CAD electrico", false);
+      persist();
+    }
+    
+    btn.textContent = original;
+    btn.disabled = false;
+  });
+
+  // Cargar desde Cloudflare (con fallback a localStorage)
+  host.querySelector("#cadLoadCF")?.addEventListener("click", async () => {
+    const planId = prompt("Ingresa el ID del plano a cargar:");
+    if (!planId) return;
+    
+    const btn = host.querySelector("#cadLoadCF");
+    const original = btn.textContent;
+    btn.textContent = "📥 Cargando...";
+    btn.disabled = true;
+
+    const result = await cfService.loadFromCF(planId);
+    
+    if (result.success && result.plan) {
+      doc = result.plan.contenido || doc;
+      project.cad2d = doc;
+      addHistory("Plano cargado desde Cloudflare R2", "CAD electrico", false);
+      persist();
+      render(host, state);
+      alert("✅ Plano cargado desde la nube!");
+    } else {
+      console.warn("⚠️ No se pudo cargar desde Cloudflare");
+      alert("⚠️ Plano no encontrado en la nube");
+    }
+    
+    btn.textContent = original;
+    btn.disabled = false;
+  });
 }
