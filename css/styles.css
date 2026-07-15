@@ -352,6 +352,14 @@ dl{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;margin:0}dt{color:var(-
   color:#8cffad;
   background:#061017;
 }
+
+/* Administracion: sortable headers and CSV columns panel */
+th.sortable{ position:relative }
+th.sortable::after{ content:''; position:absolute; right:8px; top:50%; transform:translateY(-50%); font-size:12px }
+.csv-columns-panel{ position:absolute; background:#071923; border:1px solid #244d59; padding:10px; box-shadow:0 6px 20px rgba(0,0,0,0.6); z-index:40; max-width:320px }
+.csv-columns-panel form label{ display:block; font-size:13px; margin:6px 0; color:#d9f5ed }
+.admin-inline .csv-columns-panel{ margin-left:12px }
+.load-table th.sortable{ cursor:pointer }
 .mini-danger{
   border:1px solid #ff4d5d;
   background:#35141a;
