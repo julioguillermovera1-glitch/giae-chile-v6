@@ -24,7 +24,7 @@ function renderStatusCard(engine){
 
 async function analyze(host, state, userRequest = ""){
   const project = state.currentProject;
-  if(!project) return "";
+  if(!project) return { response: "", advice: null, report: null };
   if(!userRequest) userRequest = host.querySelector("#iaPrompt")?.value.trim() || "";
   // Provide quick feedback in the details area while computing
   host.querySelector("#iaDetails").innerHTML = `<div class="notice-list"><article class="notice-line info">Analizando proyecto...</article></div>`;
@@ -48,11 +48,12 @@ async function analyze(host, state, userRequest = ""){
     `;
     addHistory("Revisión IA eléctrica ejecutada", "Asistente IA", false);
     persist();
-    return response;
+    const report = buildProjectReport(project, advice, userRequest);
+    return { response, advice, report };
   } catch (error) {
     console.error(error);
     host.querySelector("#iaDetails").innerHTML = "";
-    return "Error al analizar el proyecto. Revisa la consola del navegador.";
+    return { response: "Error al analizar el proyecto. Revisa la consola del navegador.", advice: null, report: null };
   }
 }
 
@@ -74,11 +75,15 @@ async function generateReport(host, state) {
   const userRequest = host.querySelector("#iaPrompt").value.trim();
   host.querySelector("#iaResponse").textContent = "Generando informe técnico...";
   try {
-    const { electrical, normative } = await analyzeElectricalProject(project);
-    const advice = buildAdvice(project, electrical, normative);
-    const report = buildProjectReport(project, advice, userRequest);
-    rememberIaInteraction(project, userRequest, advice, report);
-    persist();
+    const result = await analyze(host, state, userRequest);
+    const advice = result?.advice;
+    const report = result?.report;
+    if(advice && report){
+      rememberIaInteraction(project, userRequest, advice, report);
+      persist();
+    } else {
+      throw new Error('No se pudo generar el informe: análisis fallido');
+    }
     downloadFile(report.markdown, `${report.metadata.title}.md`, "text/markdown");
     host.querySelector("#iaResponse").textContent = `Informe técnico generado y descargado: ${report.metadata.title}.md`;
     host.querySelector("#iaDetails").innerHTML = `
@@ -101,12 +106,16 @@ async function generateReportHtml(host, state) {
   const userRequest = host.querySelector("#iaPrompt").value.trim();
   host.querySelector("#iaResponse").textContent = "Generando informe técnico HTML...";
   try {
-    const { electrical, normative } = await analyzeElectricalProject(project);
-    const advice = buildAdvice(project, electrical, normative);
-    const report = buildProjectReport(project, advice, userRequest);
-    rememberIaInteraction(project, userRequest, advice, report);
-    persist();
-    downloadFile(report.html, `${report.metadata.title}.html`, "text/html");
+    const result = await analyze(host, state, userRequest);
+    const advice = result?.advice;
+    const report = result?.report;
+    if(advice && report){
+      rememberIaInteraction(project, userRequest, advice, report);
+      persist();
+      downloadFile(report.html, `${report.metadata.title}.html`, "text/html");
+    } else {
+      throw new Error('No se pudo generar el informe HTML: análisis fallido');
+    }
     host.querySelector("#iaResponse").textContent = `Informe técnico HTML generado y descargado: ${report.metadata.title}.html`;
     host.querySelector("#iaDetails").innerHTML = `
       <div class="notice-list">
@@ -128,13 +137,17 @@ async function generateReportPdf(host, state) {
   const userRequest = host.querySelector("#iaPrompt").value.trim();
   host.querySelector("#iaResponse").textContent = "Generando informe técnico PDF...";
   try {
-    const { electrical, normative } = await analyzeElectricalProject(project);
-    const advice = buildAdvice(project, electrical, normative);
-    const report = buildProjectReport(project, advice, userRequest);
-    const pdfBlob = buildPdfBlob(report);
-    rememberIaInteraction(project, userRequest, advice, report);
-    persist();
-    downloadFile(pdfBlob, `${report.metadata.title}.pdf`, "application/pdf");
+    const result = await analyze(host, state, userRequest);
+    const advice = result?.advice;
+    const report = result?.report;
+    if(advice && report){
+      const pdfBlob = buildPdfBlob(report);
+      rememberIaInteraction(project, userRequest, advice, report);
+      persist();
+      downloadFile(pdfBlob, `${report.metadata.title}.pdf`, "application/pdf");
+    } else {
+      throw new Error('No se pudo generar el informe PDF: análisis fallido');
+    }
     host.querySelector("#iaResponse").textContent = `Informe técnico PDF generado y descargado: ${report.metadata.title}.pdf`;
     host.querySelector("#iaDetails").innerHTML = `
       <div class="notice-list">
@@ -214,7 +227,10 @@ export function render(host, state){
     </section>
   `;
 
-  host.querySelector("#iaAnalyzeBtn").addEventListener("click", () => analyze(host, state));
+  host.querySelector("#iaAnalyzeBtn").addEventListener("click", async () => {
+    const result = await analyze(host, state);
+    if(result && result.response) host.querySelector("#iaResponse").textContent = result.response;
+  });
   host.querySelector("#iaSendBtn").addEventListener("click", () => sendPrompt(host, state));
   host.querySelector("#iaReportBtn").addEventListener("click", () => generateReport(host, state));
   host.querySelector("#iaReportHtmlBtn").addEventListener("click", () => generateReportHtml(host, state));
@@ -271,7 +287,8 @@ async function sendPrompt(host, state){
   appendMessage(host, 'user', text);
   promptEl.value = '';
   appendMessage(host, 'assistant', '...');
-  const response = await analyze(host, state, text);
+  const result = await analyze(host, state, text);
+  const response = result?.response || '';
   // replace last assistant '...' with actual response
   const container = host.querySelector('#iaChatMessages');
   if(container){
@@ -281,11 +298,10 @@ async function sendPrompt(host, state){
   // remember interaction in project memory
   try{
     const project = state.currentProject;
-    const { electrical, normative } = await analyzeElectricalProject(project);
-    const advice = buildAdvice(project, electrical, normative);
-    const report = buildProjectReport(project, advice, text);
-    rememberIaInteraction(project, text, advice, report);
-    persist();
+    if(result && result.advice && result.report){
+      rememberIaInteraction(project, text, result.advice, result.report);
+      persist();
+    }
   }catch(e){ /* ignore memory failures */ }
 }
 

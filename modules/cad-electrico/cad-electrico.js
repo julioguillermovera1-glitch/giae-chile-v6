@@ -159,7 +159,7 @@ export function render(host, state){
 
           <article class="admin-card">
             <h4>Importar / Exportar</h4>
-            <div class="row-actions"><button id="cadExportJson" class="secondary">Exportar .giaecad</button><button id="cadExportDxf" class="secondary">Exportar DXF</button></div>
+            <div class="row-actions"><button id="cadExportJsonSide" class="secondary">Exportar .giaecad</button><button id="cadExportDxf" class="secondary">Exportar DXF</button></div>
             <div class="row-actions"><button id="cadImportDxf" class="secondary">Importar DXF</button><button id="cadImportSymbols" class="secondary">Cargar símbolos</button></div>
             <input id="cadImportDxfFile" type="file" accept=".dxf,text/plain" hidden>
             <input id="cadImportSymbolsFile" type="file" accept=".json,application/json" hidden>
@@ -211,6 +211,7 @@ export function render(host, state){
     render(host, state);
   });
   host.querySelector("#cadExportDxf").addEventListener("click", () => downloadText(safeFileName(doc.name) + ".dxf", createCadExportDxf(project, doc), "application/dxf;charset=utf-8"));
+  host.querySelector("#cadExportJsonSide")?.addEventListener("click", () => downloadText(safeFileName(doc.name) + ".giaecad", JSON.stringify(createCadExportPackage(project, doc), null, 2)));
   host.querySelector("#cadImportDxf").addEventListener("click", () => host.querySelector("#cadImportDxfFile").click());
   host.querySelector("#cadImportSymbols").addEventListener("click", () => host.querySelector("#cadImportSymbolsFile").click());
   host.querySelector("#cadImportDxfFile").addEventListener("change", async event => {

@@ -1,7 +1,7 @@
 import { persist, importProjectFile, hasCompanyPermission, recalculateProject, state, ensureCompanyAccess, upsertCompanyUser } from "../../core/store.js";
 
 // UI state for cuentas corporativas
-let cuentasState = { page: 1, pageSize: 10, sortBy: 'name', sortDir: 'asc' };
+let cuentasState = { page: 1, pageSize: 10, sortBy: 'name', sortDir: 'asc', csvColumns: ["id","name","email","accountType","freeAccess","role","createdAt"] };
 
 const moduleLabels = {
   dashboard: "Dashboard",
@@ -148,6 +148,13 @@ export function render(host, state){
             <select id="cuentasSort"><option value="name:asc">Orden: Nombre ↑</option><option value="name:desc">Nombre ↓</option><option value="email:asc">Correo ↑</option><option value="email:desc">Correo ↓</option><option value="type:asc">Tipo ↑</option><option value="createdAt:desc">Creado ↓</option></select>
             <select id="cuentasPageSize"><option value="5">5</option><option value="10" selected>10</option><option value="25">25</option><option value="50">50</option></select>
             <button id="cuentasExportCsv" class="secondary">Exportar CSV</button>
+            <button id="cuentasCsvColumnsBtn" class="secondary">Columnas CSV</button>
+            <div id="cuentasCsvColumnsPanel" class="csv-columns-panel" style="display:none">
+              <form id="cuentasCsvColumnsForm">
+                ${["id","name","email","accountType","freeAccess","role","createdAt"].map(c => `<label><input type="checkbox" name="col" value="${c}" ${cuentasState.csvColumns.includes(c)?'checked':''}> ${c}</label>`).join('')}
+                <div style="margin-top:6px"><button id="cuentasCsvColumnsSave" class="primary">Guardar</button> <button id="cuentasCsvColumnsClose" type="button" class="ghost">Cerrar</button></div>
+              </form>
+            </div>
           </div>
           <div id="admCuentasTable"></div>
           <div class="admin-inline">
@@ -318,6 +325,7 @@ export function render(host, state){
 }
 
 function wireEvents(state){
+  const isCompanyAdmin = state.profile === "empresa";
   document.querySelectorAll("[data-admin-tab]").forEach(btn => btn.addEventListener("click", () => showTab(btn.dataset.adminTab)));
   document.querySelector("#adminSaveBtn").addEventListener("click", () => saveAdminForm(state, true));
   document.querySelector("#adminBackupBtn").addEventListener("click", () => downloadBackup(state));
@@ -344,6 +352,9 @@ function wireEvents(state){
   document.querySelector("#cuentasSort")?.addEventListener("change", (e) => { const [k,d]= (e.target.value||'name:asc').split(':'); cuentasState.sortBy=k; cuentasState.sortDir=d; paintCuentas(state); });
   document.querySelector("#cuentasPageSize")?.addEventListener("change", (e) => { cuentasState.pageSize = Number(e.target.value||10); cuentasState.page = 1; paintCuentas(state); });
   document.querySelector("#cuentasExportCsv")?.addEventListener("click", () => exportCuentasCsv(state));
+  document.querySelector("#cuentasCsvColumnsBtn")?.addEventListener("click", (e) => { const p = document.querySelector('#cuentasCsvColumnsPanel'); if(p) p.style.display = p.style.display === 'none' ? 'block' : 'none'; });
+  document.querySelector("#cuentasCsvColumnsClose")?.addEventListener("click", () => { const p = document.querySelector('#cuentasCsvColumnsPanel'); if(p) p.style.display = 'none'; });
+  document.querySelector("#cuentasCsvColumnsSave")?.addEventListener("click", (ev) => { ev.preventDefault(); const form = document.querySelector('#cuentasCsvColumnsForm'); if(!form) return; const cols = Array.from(form.querySelectorAll('input[name="col"]:checked')).map(i => i.value); cuentasState.csvColumns = cols.length ? cols : cuentasState.csvColumns; document.querySelector('#cuentasCsvColumnsPanel').style.display = 'none'; });
   paintCuentas(state);
   document.querySelector("#admAddTemplate")?.addEventListener("click", () => addTemplate(state));
   document.querySelector("#admRunDiagnostics")?.addEventListener("click", () => paintSoftwareStatus(state, true));
@@ -514,7 +525,10 @@ function getFilteredCuentas(state){
     if(q){ const hay = `${(u.name||'').toLowerCase()} ${(u.email||'').toLowerCase()}`; if(!hay.includes(q)) return false; }
     if(typeFilter && (u.accountType || 'empresa') !== typeFilter) return false;
     if(accessFilter === 'free' && !u.freeAccess) return false;
-    if(accessFilter === 'pending' && u.accountType === 'pueblos' && u.freeAccess) return false;
+    if(accessFilter === 'pending') {
+      // pending = pueblos técnicos WITHOUT freeAccess granted
+      if(!(u.accountType === 'pueblos' && !u.freeAccess)) return false;
+    }
     return true;
   });
   // Sorting
@@ -550,22 +564,52 @@ function paintCuentas(state){
       <td><button class="ghost" data-edit-cuenta="${u.id}">Editar</button> <button class="ghost" data-delete-cuenta="${u.id}">Borrar</button></td>
     </tr>
   `).join("");
-  host.innerHTML = `<div class="table-scroll"><table class="load-table"><thead><tr><th>N°</th><th>Nombre</th><th>Correo</th><th>Tipo</th><th>Acceso</th><th>Acciones</th></tr></thead><tbody>${rows || `<tr><td colspan="6">No hay cuentas corporativas.</td></tr>`}</tbody></table></div>`;
+  const makeIndicator = (col) => {
+    if(cuentasState.sortBy !== col) return '';
+    return cuentasState.sortDir === 'asc' ? ' ↑' : ' ↓';
+  };
+  host.innerHTML = `<div class="table-scroll"><table class="load-table"><thead><tr><th>N°</th><th data-sort="name" class="sortable">Nombre${makeIndicator('name')}</th><th data-sort="email" class="sortable">Correo${makeIndicator('email')}</th><th data-sort="accountType" class="sortable">Tipo${makeIndicator('accountType')}</th><th>Acceso</th><th>Acciones</th></tr></thead><tbody>${rows || `<tr><td colspan="6">No hay cuentas corporativas.</td></tr>`}</tbody></table></div>`;
   // pagination controls
   const pager = document.createElement('div');
   pager.className = 'admin-inline';
-  pager.innerHTML = `<button class="ghost" id="cuentasPrev" ${cuentasState.page<=1?"disabled":""}>Anterior</button><span style="margin:0 8px">Página ${cuentasState.page} / ${pages}</span><button class="ghost" id="cuentasNext" ${cuentasState.page>=pages?"disabled":""}>Siguiente</button>`;
+  pager.innerHTML = `<button class="ghost" id="cuentasPrev" ${cuentasState.page<=1?"disabled":""}>Anterior</button><span style="margin:0 8px">Página ${cuentasState.page} / ${pages}</span><button class="ghost" id="cuentasNext" ${cuentasState.page>=pages?"disabled":""}>Siguiente</button><label style="margin-left:8px">Ir a página <input id="cuentasJump" type="number" min="1" max="${pages}" value="${cuentasState.page}" style="width:60px;margin-left:6px"></label><button class="ghost" id="cuentasJumpBtn">Ir</button>`;
   host.appendChild(pager);
   document.querySelectorAll("[data-edit-cuenta]").forEach(btn => btn.addEventListener("click", () => editCuenta(btn.dataset.editCuenta)));
   document.querySelectorAll("[data-delete-cuenta]").forEach(btn => btn.addEventListener("click", () => deleteCuenta(btn.dataset.deleteCuenta)));
+  // Header click-to-sort handlers
+  document.querySelectorAll('#admCuentasTable th[data-sort]').forEach(th => {
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', () => {
+      const col = th.dataset.sort;
+      if(cuentasState.sortBy === col){
+        cuentasState.sortDir = cuentasState.sortDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        cuentasState.sortBy = col;
+        cuentasState.sortDir = 'asc';
+      }
+      // sync select control if present
+      const sel = document.querySelector('#cuentasSort');
+      if(sel){ sel.value = `${cuentasState.sortBy}:${cuentasState.sortDir}`; }
+      paintCuentas(state);
+    });
+  });
   document.querySelector('#cuentasPrev')?.addEventListener('click', () => { if(cuentasState.page>1) cuentasState.page--; paintCuentas(state); });
   document.querySelector('#cuentasNext')?.addEventListener('click', () => { const p = Math.max(1, Math.ceil(total / pageSize)); if(cuentasState.page<p) cuentasState.page++; paintCuentas(state); });
+  document.querySelector('#cuentasJumpBtn')?.addEventListener('click', () => { const v = Number(document.querySelector('#cuentasJump')?.value || cuentasState.page); const p = Math.max(1, Math.ceil(total / pageSize)); if(v >= 1 && v <= p){ cuentasState.page = v; paintCuentas(state); } else alert('Número de página fuera de rango'); });
 }
 
 function exportCuentasCsv(state){
   const users = getFilteredCuentas(state);
-  const headers = ["id","name","email","accountType","freeAccess","role","createdAt"];
-  const rows = users.map(u => headers.map(h => JSON.stringify(u[h] || "")).join(","));
+  const headers = Array.isArray(cuentasState.csvColumns) && cuentasState.csvColumns.length ? cuentasState.csvColumns : ["id","name","email","accountType","freeAccess","role","createdAt"];
+  const escape = (v) => {
+    if(v === undefined || v === null) return '';
+    const s = String(v);
+    // escape quotes by doubling them and wrap in quotes if contains comma or quote or newline
+    const needs = /[",\n]/.test(s);
+    const safe = s.replaceAll('"', '""');
+    return needs ? `"${safe}"` : safe;
+  };
+  const rows = users.map(u => headers.map(h => escape(u[h])).join(","));
   const csv = headers.join(",") + "\n" + rows.join("\n");
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
