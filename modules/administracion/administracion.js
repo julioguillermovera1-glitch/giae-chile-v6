@@ -133,8 +133,32 @@ export function render(host, state){
       </section>
 
       <section class="admin-tabs" aria-label="Secciones de administración">
-        ${isCompanyAdmin ? `<button class="active" data-admin-tab="empresa">Empresa y logo</button>` : `<button class="active" data-admin-tab="usuarios">Usuarios</button><button data-admin-tab="sesiones">Conectados</button><button data-admin-tab="empresa">Empresa y logo</button><button data-admin-tab="modulos">Módulos</button><button data-admin-tab="plantillas">Plantillas</button><button data-admin-tab="sistema">Sistema</button><button data-admin-tab="estado">Estado del software</button><button data-admin-tab="inspector">Inspector</button><button data-admin-tab="originalidad">Originalidad</button><button data-admin-tab="roadmap">Roadmap</button><button data-admin-tab="cuentas">Cuentas corporativas</button>`}
+        ${isCompanyAdmin ? `<button class="active" data-admin-tab="empleados">Empleados</button><button data-admin-tab="empresa">Empresa y logo</button><button data-admin-tab="plantillas">Plantillas</button>` : `<button class="active" data-admin-tab="usuarios">Usuarios</button><button data-admin-tab="sesiones">Conectados</button><button data-admin-tab="empresa">Empresa y logo</button><button data-admin-tab="modulos">Módulos</button><button data-admin-tab="plantillas">Plantillas</button><button data-admin-tab="sistema">Sistema</button><button data-admin-tab="estado">Estado del software</button><button data-admin-tab="inspector">Inspector</button><button data-admin-tab="originalidad">Originalidad</button><button data-admin-tab="roadmap">Roadmap</button><button data-admin-tab="cuentas">Cuentas corporativas</button>`}
       </section>
+
+      ${isCompanyAdmin ? `
+      <section id="admTabEmpleados" class="admin-tab-page active">
+        <div class="admin-card">
+          <h4>Empleados de la empresa</h4>
+          <p class="small">Gestiona los empleados de tu empresa. Asigna roles (panadero, instalador, supervisor, cotizador) y permisos de acceso.</p>
+          <div class="admin-inline">
+            <input id="empName" placeholder="Nombre completo">
+            <input id="empEmail" placeholder="correo@empresa.cl">
+            <input id="empPassword" placeholder="Contraseña" type="password">
+            <select id="empRole">
+              <option value="panadero">Panadero</option>
+              <option value="instalador">Instalador</option>
+              <option value="supervisor">Supervisor</option>
+              <option value="cotizador">Cotizador</option>
+              <option value="tecnico">Técnico</option>
+            </select>
+            <label class="checkbox-label"><input id="empActive" type="checkbox" checked> Activo</label>
+            <button id="admAddEmployee" class="primary">Agregar empleado</button>
+          </div>
+          <div id="admEmployeesTable"></div>
+        </div>
+      </section>
+      ` : ``}
 
       ${!isCompanyAdmin ? `
       <section id="admTabUsuarios" class="admin-tab-page active">
@@ -353,7 +377,7 @@ export function render(host, state){
     </article>
   `;
 
-  paintUsers(state); paintPueblos(state); paintSessions(state); paintTemplates(state); paintModules(state); paintAudit(state); wireEvents(state);
+  paintUsers(state); paintPueblos(state); paintSessions(state); paintTemplates(state); paintModules(state); paintAudit(state); if(state.profile === "empresa") paintEmployees(state); wireEvents(state);
 }
 
 function wireEvents(state){
@@ -383,7 +407,7 @@ function wireEvents(state){
   if(!isCompanyAdmin) {
     document.querySelector("#admAddUser")?.addEventListener("click", () => addUser(state));
   } else {
-    document.querySelector("#admOpenCompanyUsers")?.addEventListener("click", () => openCompanyUsers());
+    document.querySelector("#admAddEmployee")?.addEventListener("click", () => addEmployee(state));
   }
   // Corporate accounts tab handlers (super-admin / administrador)
   document.querySelector("#admAddCuenta")?.addEventListener("click", () => addCuenta(state));
@@ -709,6 +733,88 @@ function deleteCuenta(id){
   persist();
   addLog(state, `Cuenta borrada: ${id}`);
   paintCuentas(state);
+}
+
+function paintEmployees(state){
+  const host = document.querySelector("#admEmployeesTable");
+  if(!host) return;
+  const employees = state.admin.enterpriseUsers || [];
+  const rows = employees.map((emp, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${escapeHtml(emp.name)}</td>
+      <td>${escapeHtml(emp.email || "")}</td>
+      <td>${escapeHtml(emp.role || "")}</td>
+      <td><span class="status ${emp.status === "Activo" ? "on" : "off"}">${escapeHtml(emp.status)}</span></td>
+      <td><button class="ghost" data-edit-emp="${i}">Editar</button> <button class="ghost danger-text" data-delete-emp="${i}">Borrar</button></td>
+    </tr>
+  `).join("");
+  host.innerHTML = `<div class="table-scroll"><table><thead><tr><th>N°</th><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${rows || `<tr><td colspan="6">No hay empleados registrados.</td></tr>`}</tbody></table></div>`;
+  document.querySelectorAll("[data-edit-emp]").forEach(btn => btn.addEventListener("click", () => editEmployee(state, Number(btn.dataset.editEmp))));
+  document.querySelectorAll("[data-delete-emp]").forEach(btn => btn.addEventListener("click", () => deleteEmployee(state, Number(btn.dataset.deleteEmp))));
+}
+
+function addEmployee(state){
+  const name = document.querySelector("#empName")?.value.trim();
+  const email = document.querySelector("#empEmail")?.value.trim();
+  const password = document.querySelector("#empPassword")?.value || "";
+  const role = document.querySelector("#empRole")?.value || "instalador";
+  const active = !!document.querySelector("#empActive")?.checked;
+  if(!name || !email) return alert("Nombre y correo son obligatorios.");
+  
+  if(!state.admin.enterpriseUsers) state.admin.enterpriseUsers = [];
+  const id = "emp-" + Date.now();
+  state.admin.enterpriseUsers.push({
+    id, name, email, role, accountType: "empresa", status: active ? "Activo" : "Inactivo", freeAccess: true
+  });
+  // Also add to company access if needed
+  try{
+    upsertCompanyUser({ name, email, password: password || undefined, accountType: "empresa", freeAccess: true, role });
+  }catch(e){ console.error(e); }
+  
+  addLog(state, `Empleado creado: ${name} (${role})`);
+  persist();
+  document.querySelector("#empName").value = "";
+  document.querySelector("#empEmail").value = "";
+  document.querySelector("#empPassword").value = "";
+  document.querySelector("#empActive").checked = true;
+  paintEmployees(state);
+}
+
+function editEmployee(state, index){
+  const emp = state.admin.enterpriseUsers?.[index];
+  if(!emp) return alert("Empleado no encontrado");
+  document.querySelector("#empName").value = emp.name || "";
+  document.querySelector("#empEmail").value = emp.email || "";
+  document.querySelector("#empRole").value = emp.role || "instalador";
+  document.querySelector("#empActive").checked = emp.status === "Activo";
+  const btn = document.querySelector("#admAddEmployee");
+  btn.textContent = "Guardar cambios";
+  btn.onclick = () => {
+    emp.name = document.querySelector("#empName").value.trim();
+    emp.email = document.querySelector("#empEmail").value.trim();
+    emp.role = document.querySelector("#empRole").value;
+    emp.status = document.querySelector("#empActive").checked ? "Activo" : "Inactivo";
+    addLog(state, `Empleado actualizado: ${emp.name}`);
+    persist();
+    btn.textContent = "Agregar empleado";
+    btn.onclick = () => addEmployee(state);
+    document.querySelector("#empName").value = "";
+    document.querySelector("#empEmail").value = "";
+    document.querySelector("#empPassword").value = "";
+    document.querySelector("#empActive").checked = true;
+    paintEmployees(state);
+  };
+}
+
+function deleteEmployee(state, index){
+  const emp = state.admin.enterpriseUsers?.[index];
+  if(!emp) return;
+  if(!confirm(`¿Borrar empleado ${emp.name}?`)) return;
+  state.admin.enterpriseUsers.splice(index, 1);
+  addLog(state, `Empleado borrado: ${emp.name}`);
+  persist();
+  paintEmployees(state);
 }
 
 function countLocalProjects(state){
