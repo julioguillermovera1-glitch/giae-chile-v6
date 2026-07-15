@@ -183,6 +183,8 @@ const GIAE_APP_SHELL = [
   "./modules/flujo-guiado/flujo-guiado.js",
   "./modules/proyectos/proyectos.js",
   "./modules/informes/informes.js",
+  "./modules/ia-electrico/ia-electrico.js",
+  "./core/ia/iaEngine.js",
   "./modules/tableros/tableros.js",
   "./modules/tierra/tierra.js",
   "./modules/unilineal/unilineal.js",

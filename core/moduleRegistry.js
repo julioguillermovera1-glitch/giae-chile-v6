@@ -36,6 +36,7 @@ export const modules = [
 
   { id: "educacion", label: "Aula tecnica", group: "educacion", path: "../modules/educacion/educacion.js", profiles: ["aula", "estudiante"] },
   { id: "informes", label: "Generador de informes", group: "educacion", path: "../modules/informes/informes.js", profiles: ["aula", "estudiante"] },
+  { id: "ia-electrico", label: "Asistente Eléctrico IA", group: "educacion", path: "../modules/ia-electrico/ia-electrico.js" },
 
   { id: "administracion", label: "Panel de reparacion", group: "administracion", path: "../modules/administracion/administracion.js", profiles: ["administrador"] },
   { id: "biblioteca", label: "Base de conocimiento", group: "administracion", path: "../modules/biblioteca/biblioteca.js", profiles: ["administrador"] },
