@@ -33,8 +33,9 @@ const moduleLabels = {
 
 function ensureAdminData(state){
   state.admin = state.admin || {};
+  const companyName = (state.currentProject && state.currentProject.company) ? state.currentProject.company : "GIAE Chile";
   state.admin.company = state.admin.company || {
-    name: state.currentProject.company || "GIAE Chile",
+    name: companyName,
     rut: "76.000.000-0",
     address: "Av. Providencia 1234, Santiago, Chile",
     phone: "+56 9 1234 5678",
@@ -42,7 +43,7 @@ function ensureAdminData(state){
     logoName: "Logo interno GIAE",
     logoData: "",
     brand: {
-      name: state.currentProject.company || "GIAE Chile",
+      name: companyName,
       primaryColor: "#102033",
       accentColor: "#1456a0",
       backgroundColor: "#eef3f8",
