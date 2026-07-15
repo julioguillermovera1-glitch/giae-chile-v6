@@ -187,6 +187,7 @@ export function render(host, state){
         <textarea id="iaPrompt" rows="4" placeholder="${esc(messages.prompt)}"></textarea>
         <div class="button-row">
           <button class="primary" id="iaAnalyzeBtn">Analizar proyecto</button>
+          <button class="primary ghost" id="iaSendBtn">Enviar</button>
           <button class="secondary" id="iaReportBtn">Generar informe Markdown</button>
           <button class="secondary" id="iaReportHtmlBtn">Generar informe HTML</button>
           <button class="secondary" id="iaReportPdfBtn">Generar informe PDF</button>
@@ -208,6 +209,7 @@ export function render(host, state){
   `;
 
   host.querySelector("#iaAnalyzeBtn").addEventListener("click", () => analyze(host, state));
+  host.querySelector("#iaSendBtn").addEventListener("click", () => analyze(host, state));
   host.querySelector("#iaReportBtn").addEventListener("click", () => generateReport(host, state));
   host.querySelector("#iaReportHtmlBtn").addEventListener("click", () => generateReportHtml(host, state));
   host.querySelector("#iaReportPdfBtn").addEventListener("click", () => generateReportPdf(host, state));
@@ -217,4 +219,15 @@ export function render(host, state){
     host.querySelector("#iaDetails").innerHTML = "";
     host.querySelector("#iaPrompt").value = "";
   });
+
+  // Keyboard shortcut: Ctrl/Cmd + Enter to send the prompt
+  const promptEl = host.querySelector("#iaPrompt");
+  if(promptEl){
+    promptEl.addEventListener("keydown", (ev) => {
+      if(ev.key === "Enter" && (ev.ctrlKey || ev.metaKey)){
+        ev.preventDefault();
+        analyze(host, state);
+      }
+    });
+  }
 }

@@ -1,4 +1,4 @@
-import { persist, importProjectFile, hasCompanyPermission, recalculateProject, state, ensureCompanyAccess } from "../../core/store.js";
+import { persist, importProjectFile, hasCompanyPermission, recalculateProject, state, ensureCompanyAccess, upsertCompanyUser } from "../../core/store.js";
 
 const moduleLabels = {
   dashboard: "Dashboard",
@@ -108,12 +108,21 @@ export function render(host, state){
             <div class="admin-inline admin-inline-5">
               <input id="admUserName" placeholder="Nombre usuario">
               <input id="admUserEmail" placeholder="correo@empresa.cl">
+              <input id="admUserPassword" placeholder="Contraseña (opcional)" type="password">
               <select id="admUserRole">
                 <option>Administrador</option><option>Supervisor</option><option>Instalador</option><option>Cotizador</option><option>Estudiante</option><option>Solo lectura</option>
               </select>
               <select id="admUserProfile">
                 <option value="administrador">Administrador</option><option value="empresa">Empresa</option><option value="independiente">Independiente</option><option value="estudiante">Estudiante</option>
               </select>
+              <label>Cuenta corporativa
+                <select id="admUserAccountType">
+                  <option value="">-- Ninguna --</option>
+                  <option value="empresa">Empresa</option>
+                  <option value="pueblos">Pueblos técnicos</option>
+                </select>
+              </label>
+              <label class="checkbox-label"><input id="admUserFreeAccess" type="checkbox"> Acceso gratuito (solo para Pueblos técnicos)</label>
               <button id="admAddUser">Agregar usuario</button>
             </div>
             <div id="admUsersTable"></div>
@@ -346,12 +355,28 @@ function saveAdminForm(state, notify=false){
 function addUser(state){
   const name = document.querySelector("#admUserName").value.trim();
   const email = document.querySelector("#admUserEmail").value.trim();
+  const password = document.querySelector("#admUserPassword")?.value || "";
   const role = document.querySelector("#admUserRole").value;
   const profile = document.querySelector("#admUserProfile").value;
+  const accountType = document.querySelector("#admUserAccountType")?.value || "";
+  const freeAccess = !!document.querySelector("#admUserFreeAccess")?.checked;
   if(!name) return alert("Ingresa un nombre de usuario.");
   state.admin.users.push({ name, email, role, profile, status: "Activo" });
   addLog(state, `Usuario creado: ${name}.`);
+  // If admin requested a corporate account, create/update it in companyAccess as well
+  if(accountType === "empresa" || accountType === "pueblos"){
+    try{
+      upsertCompanyUser({ name, email, role, accountType, freeAccess, password });
+      addLog(state, `Cuenta ${accountType} creada/actualizada para: ${email || name}.`);
+    }catch(e){
+      console.error(e);
+      addLog(state, `Error creando cuenta corporativa para ${email || name}.`);
+    }
+  }
   document.querySelector("#admUserName").value = ""; document.querySelector("#admUserEmail").value = "";
+  document.querySelector("#admUserPassword").value = "";
+  document.querySelector("#admUserAccountType").value = "";
+  document.querySelector("#admUserFreeAccess").checked = false;
   persist(); paintUsers(state); paintAudit(state);
 }
 
@@ -375,7 +400,7 @@ function paintPueblos(state){
       <td>${escapeHtml(u.email || "")}</td>
       <td><span class="status ${u.status === "Activo" ? "on" : "off"}">${escapeHtml(u.status)}</span></td>
       <td>${u.freeAccess ? `<span class="tag tag-success">Acceso gratuito</span>` : `<span class="tag tag-muted">Pendiente</span>`}</td>
-      <td><button class="ghost" data-toggle-pueblos="${escapeHtml(u.id)}">${u.freeAccess ? "Revocar" : "Conceder"}</button></td>
+      <td><button class="ghost" data-toggle-pueblos="${u.id}">${u.freeAccess ? "Revocar" : "Conceder"}</button></td>
     </tr>
   `).join("");
 
