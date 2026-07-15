@@ -35,6 +35,7 @@ export const modules = [
   { id: "presupuesto", label: "Presupuesto", group: "documentacion", path: "../modules/presupuesto/presupuesto.js", profiles: profesionales, hiddenInMenu: true, permission: "budget.view" },
 
   { id: "educacion", label: "Aula tecnica", group: "educacion", path: "../modules/educacion/educacion.js", profiles: ["aula", "estudiante"] },
+  { id: "informes", label: "Generador de informes", group: "educacion", path: "../modules/informes/informes.js", profiles: ["aula", "estudiante"] },
 
   { id: "administracion", label: "Panel de reparacion", group: "administracion", path: "../modules/administracion/administracion.js", profiles: ["administrador"] },
   { id: "biblioteca", label: "Base de conocimiento", group: "administracion", path: "../modules/biblioteca/biblioteca.js", profiles: ["administrador"] },
