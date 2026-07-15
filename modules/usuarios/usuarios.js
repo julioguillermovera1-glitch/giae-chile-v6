@@ -38,9 +38,11 @@ function permissionChecks(selected = []){
 function userRows(users, activeId){
   return users.map(user => `<tr class="${user.id === activeId ? "active-user-row" : ""}">
     <td><strong>${esc(user.name)}</strong><br><small>${esc(user.email || "Sin correo")}</small></td>
+    <td>${esc(user.accountType === "pueblos" ? "Pueblos técnicos" : "Empresa")}</td>
     <td>${esc(roleLabel(user.role))}</td>
     <td>${esc(permissionList(user))}</td>
     <td>${esc(user.status || "Activo")}</td>
+    <td>${user.accountType === "pueblos" ? `<span class="tag ${user.freeAccess ? "tag-success" : "tag-muted"}">${user.freeAccess ? "Acceso gratuito" : "Sin acceso"}</span>` : ""}</td>
     <td class="project-actions-cell">
       <button data-activate-user="${esc(user.id)}">Usar perfil</button>
       <button data-edit-user="${esc(user.id)}">Editar</button>
@@ -61,7 +63,13 @@ function form(user = defaultFormUser()){
       <label>Nombre <input id="userName" value="${esc(user.name || "")}" placeholder="Ej: Juan Perez"></label>
       <label>Correo / usuario <input id="userEmail" value="${esc(user.email || "")}" placeholder="usuario@empresa.cl"></label>
       <label>Contraseña <input id="userPassword" type="password" value="${esc(user.password || "")}" placeholder="${user.id ? "Dejar vacío para mantener la contraseña actual" : "Crear contraseña"}"></label>
-      <p class="small note">La contraseña debe ser creada por la empresa y se usa para el ingreso de usuarios de empresa.</p>
+      <p class="small note">La contraseña debe ser creada por la empresa o pueblos técnicos y se usa para el ingreso del usuario.</p>
+      <label>Tipo de cuenta
+        <select id="userAccountType">
+          <option value="empresa" ${user.accountType !== "pueblos" ? "selected" : ""}>Empresa</option>
+          <option value="pueblos" ${user.accountType === "pueblos" ? "selected" : ""}>Pueblos técnicos</option>
+        </select>
+      </label>
       <label>Rol
         <select id="userRole">
           ${Object.entries(roles).map(([id, role]) => `<option value="${id}" ${user.role === id ? "selected" : ""}>${esc(role.label)}</option>`).join("")}
@@ -70,6 +78,7 @@ function form(user = defaultFormUser()){
       <label>Estado
         <select id="userStatus"><option ${user.status !== "Bloqueado" ? "selected" : ""}>Activo</option><option ${user.status === "Bloqueado" ? "selected" : ""}>Bloqueado</option></select>
       </label>
+      <label class="checkbox-label"><input id="userFreeAccess" type="checkbox" ${user.freeAccess ? "checked" : ""} ${user.accountType === "pueblos" ? "" : "disabled"}> Acceso gratuito (solo para pueblos técnicos)</label>
     </div>
     <div class="permission-grid" id="permissionGrid">${permissionChecks(user.permissions || [])}</div>
     <div class="top-actions wrap-actions"><button id="saveCompanyUser" class="primary-action">Guardar usuario</button><button id="clearUserForm" class="secondary">Nuevo usuario</button></div>
@@ -91,7 +100,7 @@ export function render(host, state) {
   host.innerHTML = `
     <section class="module-window company-users-module">
       <section class="dashboard-grid kpi-row company-user-kpis">
-        <article><small>Usuarios de empresa</small><strong>${companyUsers.length}</strong></article>
+        <article><small>Usuarios de empresa y pueblos</small><strong>${companyUsers.length}</strong></article>
         <article><small>Usuarios activos</small><strong>${connectedUsers}</strong></article>
         <article><small>Usuario activo</small><strong>${esc(active?.name || "Super administrador")}</strong></article>
       </section>
@@ -113,6 +122,8 @@ export function render(host, state) {
       <section class="dashboard-grid kpi-row company-user-kpis">
         <article><small>Usuarios</small><strong>${access.users.length}</strong></article>
         <article><small>Super admin</small><strong>${access.users.filter(user => user.role === "super_admin").length}</strong></article>
+        <article><small>Pueblos técnicos</small><strong>${access.users.filter(user => user.accountType === "pueblos").length}</strong></article>
+        <article><small>Acceso gratuito</small><strong>${access.users.filter(user => user.accountType === "pueblos" && user.freeAccess).length}</strong></article>
         <article><small>Con inventario</small><strong>${access.users.filter(user => user.permissions?.includes("inventory.view")).length}</strong></article>
         <article><small>Con proyectos</small><strong>${access.users.filter(user => user.permissions?.includes("project.manage")).length}</strong></article>
       </section>
@@ -122,7 +133,7 @@ export function render(host, state) {
       <article class="dashboard-card">
         <h4>Usuarios de la empresa</h4>
         <div class="data-table-wrap wide-table"><table>
-          <thead><tr><th>Usuario</th><th>Rol</th><th>Permisos</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <thead><tr><th>Usuario</th><th>Tipo</th><th>Rol</th><th>Permisos</th><th>Estado</th><th>Acceso</th><th>Acciones</th></tr></thead>
           <tbody>${userRows(access.users, access.activeUserId)}</tbody>
         </table></div>
       </article>
@@ -136,15 +147,32 @@ export function render(host, state) {
       name: host.querySelector("#userName").value.trim(),
       email: host.querySelector("#userEmail").value.trim(),
       password: host.querySelector("#userPassword").value,
+      accountType: host.querySelector("#userAccountType").value,
+      freeAccess: host.querySelector("#userFreeAccess").checked,
       role,
       status: host.querySelector("#userStatus").value,
       permissions: role === "super_admin" ? roles.super_admin.permissions : checked
     };
   };
 
-  host.querySelector("#userRole")?.addEventListener("change", event => {
-    const preset = roles[event.target.value]?.permissions || [];
+  const updatePermissionGrid = (roleValue) => {
+    const preset = roles[roleValue]?.permissions || [];
     host.querySelector("#permissionGrid").innerHTML = permissionChecks(preset);
+  };
+
+  host.querySelector("#userRole")?.addEventListener("change", event => {
+    updatePermissionGrid(event.target.value);
+  });
+
+  host.querySelector("#userAccountType")?.addEventListener("change", event => {
+    const isPueblos = event.target.value === "pueblos";
+    const freeAccessLabel = host.querySelector("label[for=freeAccessNote]");
+    if(isPueblos){
+      host.querySelector("#userFreeAccess").disabled = false;
+    } else {
+      host.querySelector("#userFreeAccess").checked = false;
+      host.querySelector("#userFreeAccess").disabled = true;
+    }
   });
 
   host.querySelector("#saveCompanyUser")?.addEventListener("click", () => {

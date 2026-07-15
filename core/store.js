@@ -100,7 +100,7 @@ export const state = {
   companyAccess: {
     activeUserId: "owner",
     users: [
-      { id: "owner", name: "Super administrador", email: "", role: "super_admin", status: "Activo", permissions: ALL_COMPANY_PERMISSIONS, createdAt: nowStamp() }
+      { id: "owner", name: "Super administrador", email: "", role: "super_admin", accountType: "empresa", freeAccess: true, status: "Activo", permissions: ALL_COMPANY_PERMISSIONS, createdAt: nowStamp() }
     ]
   }
 };
@@ -124,6 +124,7 @@ export function verifyCompanyUserCredentials(email, password){
   const normalizedEmail = String(email || "").trim().toLowerCase();
   const user = access.users.find(item => String(item.email || "").trim().toLowerCase() === normalizedEmail && item.status === "Activo");
   if(!user || !user.passwordHash) return null;
+  if(user.accountType === "pueblos" && !user.freeAccess) return null;
   return user.passwordHash === hashPassword(password) ? user : null;
 }
 
@@ -165,11 +166,14 @@ export function upsertCompanyUser(user){
   const index = access.users.findIndex(item => item.id === user.id);
   const existing = index >= 0 ? access.users[index] : null;
   const permissions = user.role === "super_admin" ? ALL_COMPANY_PERMISSIONS : Array.from(new Set(user.permissions || []));
+  const accountType = user.accountType || existing?.accountType || "empresa";
   const normalized = {
     id: user.id || createCompanyUserId(),
     name: user.name || "Usuario empresa",
     email: user.email || "",
     role: user.role || "proyectos",
+    accountType,
+    freeAccess: typeof user.freeAccess === "boolean" ? user.freeAccess : existing?.freeAccess ?? (accountType !== "pueblos"),
     status: user.status || "Activo",
     permissions,
     passwordHash: user.password ? hashPassword(user.password) : existing?.passwordHash || "",

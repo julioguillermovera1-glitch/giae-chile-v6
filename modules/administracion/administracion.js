@@ -1,4 +1,4 @@
-import { persist, importProjectFile, hasCompanyPermission, recalculateProject, state } from "../../core/store.js";
+import { persist, importProjectFile, hasCompanyPermission, recalculateProject, state, ensureCompanyAccess } from "../../core/store.js";
 
 const moduleLabels = {
   dashboard: "Dashboard",
@@ -117,6 +117,12 @@ export function render(host, state){
               <button id="admAddUser">Agregar usuario</button>
             </div>
             <div id="admUsersTable"></div>
+            <div class="spacer"></div>
+            <div class="admin-card">
+              <h4>Usuarios Pueblos técnicos</h4>
+              <p class="small">Lista de cuentas registradas como <strong>Pueblos técnicos</strong>. Desde aquí puedes conceder o revocar <em>acceso gratuito</em> para usar los módulos disponibles.</p>
+              <div id="admPueblosTable"></div>
+            </div>
         </div>
       </section>
       ` : ``}
@@ -273,7 +279,7 @@ export function render(host, state){
     </article>
   `;
 
-  paintUsers(state); paintSessions(state); paintTemplates(state); paintModules(state); paintAudit(state); wireEvents(state);
+  paintUsers(state); paintPueblos(state); paintSessions(state); paintTemplates(state); paintModules(state); paintAudit(state); wireEvents(state);
 }
 
 function wireEvents(state){
@@ -357,6 +363,40 @@ function paintUsers(state){
   document.querySelectorAll("[data-save-user]").forEach(btn => btn.addEventListener("click", () => saveUser(state, Number(btn.dataset.saveUser))));
   document.querySelectorAll("[data-toggle-user]").forEach(btn => btn.addEventListener("click", () => toggleUser(state, Number(btn.dataset.toggleUser))));
   document.querySelectorAll("[data-remove-user]").forEach(btn => btn.addEventListener("click", () => removeUser(state, Number(btn.dataset.removeUser))));
+}
+
+function paintPueblos(state){
+  const access = ensureCompanyAccess();
+  const pueblos = (access.users || []).filter(u => u.accountType === "pueblos");
+  const rows = pueblos.map((u, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${escapeHtml(u.name)}</td>
+      <td>${escapeHtml(u.email || "")}</td>
+      <td><span class="status ${u.status === "Activo" ? "on" : "off"}">${escapeHtml(u.status)}</span></td>
+      <td>${u.freeAccess ? `<span class="tag tag-success">Acceso gratuito</span>` : `<span class="tag tag-muted">Pendiente</span>`}</td>
+      <td><button class="ghost" data-toggle-pueblos="${escapeHtml(u.id)}">${u.freeAccess ? "Revocar" : "Conceder"}</button></td>
+    </tr>
+  `).join("");
+
+  const host = document.querySelector("#admPueblosTable");
+  if(!host) return;
+  host.innerHTML = `<div class="table-scroll"><table><thead><tr><th>N°</th><th>Nombre</th><th>Correo</th><th>Estado</th><th>Acceso</th><th>Acciones</th></tr></thead><tbody>${rows || `<tr><td colspan="6">No hay usuarios de pueblos técnicos.</td></tr>`}</tbody></table></div>`;
+
+  document.querySelectorAll("[data-toggle-pueblos]").forEach(btn => btn.addEventListener("click", () => togglePueblosAccess(btn.dataset.togglePueblos, state)));
+}
+
+function togglePueblosAccess(userId, state){
+  const access = ensureCompanyAccess();
+  const user = (access.users || []).find(u => u.id === userId);
+  if(!user) return alert("Usuario no encontrado.");
+  const willGrant = !user.freeAccess;
+  if(!confirm(`${willGrant ? 'Conceder' : 'Revocar'} acceso gratuito a ${user.name || user.email || user.id}?`)) return;
+  user.freeAccess = willGrant;
+  addLog(state, `${willGrant ? 'Acceso gratuito concedido' : 'Acceso gratuito revocado'} a ${user.name || user.email || user.id}.`);
+  persist();
+  paintPueblos(state);
+  paintAudit(state);
 }
 
 function saveUser(state, index){
