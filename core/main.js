@@ -63,7 +63,7 @@ companyLoginSubmit?.addEventListener("click", event => {
     companyLoginFeedback.textContent = "Ingresa correo y contraseña para acceder.";
     return;
   }
-  const user = verifyCompanyUserCredentials(email, password);
+  const user = verifyCompanyUserCredentials(email, password, companyLoginMode);
   if(!user){
     companyLoginFeedback.textContent = "Credenciales inválidas o usuario inactivo.";
     return;

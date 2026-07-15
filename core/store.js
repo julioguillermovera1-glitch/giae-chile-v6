@@ -119,11 +119,16 @@ function hashPassword(password){
   return (hash >>> 0).toString(16).padStart(8, "0");
 }
 
-export function verifyCompanyUserCredentials(email, password){
+export function verifyCompanyUserCredentials(email, password, mode){
   const access = ensureCompanyAccess();
   const normalizedEmail = String(email || "").trim().toLowerCase();
   const user = access.users.find(item => String(item.email || "").trim().toLowerCase() === normalizedEmail && item.status === "Activo");
   if(!user || !user.passwordHash) return null;
+  // If mode is provided ("empresa" or "pueblos"), require matching accountType
+  if(mode){
+    const expected = mode === "pueblos" ? "pueblos" : "empresa";
+    if(user.accountType !== expected) return null;
+  }
   if(user.accountType === "pueblos" && !user.freeAccess) return null;
   return user.passwordHash === hashPassword(password) ? user : null;
 }

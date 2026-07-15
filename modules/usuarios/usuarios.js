@@ -206,6 +206,14 @@ export function render(host, state) {
     host.querySelector("#userRole").value = user.role || "proyectos";
     host.querySelector("#userStatus").value = user.status || "Activo";
     host.querySelector("#permissionGrid").innerHTML = permissionChecks(user.permissions || []);
+    // preserve accountType and freeAccess when editing
+    if(host.querySelector("#userAccountType")){
+      host.querySelector("#userAccountType").value = user.accountType || "empresa";
+    }
+    if(host.querySelector("#userFreeAccess")){
+      host.querySelector("#userFreeAccess").checked = Boolean(user.freeAccess);
+      host.querySelector("#userFreeAccess").disabled = (user.accountType !== "pueblos");
+    }
   }));
 
   host.querySelectorAll("[data-delete-user]").forEach(button => button.addEventListener("click", () => {
