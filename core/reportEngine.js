@@ -149,6 +149,32 @@ ${makeMarkdownParagraphs(body.details)}
 ${makeMarkdownParagraphs(body.closing)}
 `;
 }
+
+export function buildReport(options){
+  const metadata = createMetadata(options || {});
+  const narrative = createNarrative({
+    type: options?.type,
+    description: options?.description,
+    fields: options?.fields || {},
+    points: options?.points || [],
+    style: options?.style
+  });
+
+  const body = {
+    intro: narrative.intro,
+    details: narrative.details,
+    closing: createConclusion({
+      fields: options?.fields || {},
+      points: options?.points || [],
+      type: options?.type
+    })
+  };
+
+  return {
+    metadata,
+    body,
+    html: buildHtmlReport(metadata, body),
+    markdown: buildMarkdownReport(metadata, body)
   };
 }
 
