@@ -116,6 +116,161 @@ export function createCadExportDxf(project = {}, document = {}){
   ].join("\r\n");
 }
 
+export function createCadExportDwt(project = {}, document = {}){
+  const doc = normalizeCadDocument(document, project);
+  
+  // Tabla de capas con colores GIAE
+  const layerTable = doc.layers.map(layer => {
+    const colorCode = { "#64748b": 8, "#f59e0b": 2, "#2563eb": 5, "#7c3aed": 4, "#0f766e": 6, "#111827": 9, "#15803d": 3, "#334155": 7, "#b42318": 1 };
+    const colorNum = colorCode[layer.color] || 7;
+    return [
+      "0", "LAYER",
+      "2", layer.id,
+      "70", "0",
+      "62", String(colorNum),
+      "6", "CONTINUOUS"
+    ].join("\r\n");
+  }).join("\r\n");
+
+  // Tabla de estilos de texto (font styles)
+  const styleTable = [
+    ["0", "STYLE", "2", "STANDARD", "70", "0", "40", "0.0", "41", "1.0", "50", "0.0", "71", "0", "42", "0.2", "3", "txt", "4", ""].join("\r\n"),
+    ["0", "STYLE", "2", "ETIQUETAS", "70", "0", "40", "0.0", "41", "1.0", "50", "0.0", "71", "0", "42", "0.2", "3", "txt", "4", ""].join("\r\n"),
+    ["0", "STYLE", "2", "TITULO", "70", "0", "40", "0.0", "41", "1.25", "50", "0.0", "71", "0", "42", "0.25", "3", "txt", "4", ""].join("\r\n")
+  ].join("\r\n");
+
+  // Tabla de tipos de línea
+  const linetypeTable = [
+    ["0", "LTYPE", "2", "CONTINUOUS", "70", "0", "3", "Linea continua", "72", "65", "73", "0", "40", "0.0"].join("\r\n"),
+    ["0", "LTYPE", "2", "DASHED", "70", "0", "3", "Linea segmentada", "72", "65", "73", "2", "40", "3.175", "49", "1.5875", "49", "-1.5875"].join("\r\n"),
+    ["0", "LTYPE", "2", "DOTTED", "70", "0", "3", "Linea punteada", "72", "65", "73", "2", "40", "1.27", "49", "0.635", "49", "-0.635"].join("\r\n")
+  ].join("\r\n");
+
+  // Tabla de estilos de dimensión
+  const dimstyleTable = [
+    ["0", "DIMSTYLE", "2", "STANDARD", "70", "0", "41", "1.0", "42", "0.625", "43", "3.75", "44", "1.25", "140", "2.5"].join("\r\n"),
+    ["0", "DIMSTYLE", "2", "ELECTRICO", "70", "0", "41", "0.75", "42", "0.5", "43", "2.5", "44", "1.0", "140", "2.0"].join("\r\n")
+  ].join("\r\n");
+
+  // Bloque de marco/recuadro (marco A4)
+  const blockTable = [
+    "0", "BLOCK",
+    "8", "0",
+    "2", "TITULO",
+    "70", "0",
+    "10", "0.0",
+    "20", "0.0",
+    "30", "0.0",
+    // Líneas del marco
+    "0", "LINE", "8", "arquitectura", "10", "10.0", "20", "10.0", "30", "0.0", "11", "200.0", "21", "10.0", "31", "0.0",
+    "0", "LINE", "8", "arquitectura", "10", "200.0", "20", "10.0", "30", "0.0", "11", "200.0", "21", "130.0", "31", "0.0",
+    "0", "LINE", "8", "arquitectura", "10", "200.0", "20", "130.0", "30", "0.0", "11", "10.0", "21", "130.0", "31", "0.0",
+    "0", "LINE", "8", "arquitectura", "10", "10.0", "20", "130.0", "30", "0.0", "11", "10.0", "21", "10.0", "31", "0.0",
+    // Cajetín (recuadro pequeño inferior derecha)
+    "0", "LINE", "8", "arquitectura", "10", "100.0", "20", "10.0", "30", "0.0", "11", "100.0", "21", "30.0", "31", "0.0",
+    "0", "LINE", "8", "arquitectura", "10", "160.0", "20", "20.0", "30", "0.0", "11", "200.0", "21", "20.0", "31", "0.0",
+    // Textos del cajetín
+    "0", "TEXT", "8", "0", "10", "105.0", "20", "25.0", "30", "0.0", "40", "2.5", "1", "GIAE CAD TEMPLATE",
+    "0", "TEXT", "8", "0", "10", "105.0", "20", "15.0", "30", "0.0", "40", "1.5", "1", "Escala: 1:50",
+    "0", "ENDBLK", "8", "0"
+  ].join("\r\n");
+
+  // Tabla de bloques (blocks)
+  const blockTableDef = [
+    "0", "TABLE",
+    "2", "BLOCK_RECORD",
+    "70", "3",
+    "0", "BLOCK_RECORD",
+    "2", "*MODEL_SPACE",
+    "70", "0",
+    "0", "BLOCK_RECORD",
+    "2", "*PAPER_SPACE",
+    "70", "0",
+    "0", "BLOCK_RECORD",
+    "2", "TITULO",
+    "70", "0",
+    "0", "ENDTAB"
+  ].join("\r\n");
+
+  return [
+    "0", "SECTION",
+    "2", "HEADER",
+    "9", "$ACADVER", "1", "AC1021",
+    "9", "$DRAWINGTYPE", "70", "1",
+    "0", "ENDSEC",
+    "0", "SECTION",
+    "2", "TABLES",
+    "0", "TABLE",
+    "2", "VPORT",
+    "70", "1",
+    "0", "VPORT",
+    "2", "*ACTIVE",
+    "70", "0",
+    "10", "0.0", "20", "0.0", "11", "1.0", "21", "1.0",
+    "12", "0.5", "22", "0.5", "13", "10.0", "23", "10.0",
+    "14", "2.0", "24", "2.0", "15", "100.0", "25", "100.0",
+    "16", "0.0", "26", "0.0", "36", "1.0",
+    "17", "0.0", "27", "0.0", "37", "0.0",
+    "40", "297.0", "41", "210.0", "42", "50.0",
+    "43", "0.0", "44", "0.0", "45", "210.0", "46", "148.5",
+    "47", "0.0", "48", "0.0",
+    "71", "0", "72", "100", "73", "1", "74", "1", "75", "0",
+    "76", "1", "77", "0", "78", "0",
+    "281", "0", "282", "0", "71", "0",
+    "0", "ENDTAB",
+    "0", "TABLE",
+    "2", "LTYPE",
+    "70", "3",
+    linetypeTable,
+    "0", "ENDTAB",
+    "0", "TABLE",
+    "2", "LAYER",
+    "70", String(doc.layers.length),
+    layerTable,
+    "0", "ENDTAB",
+    "0", "TABLE",
+    "2", "STYLE",
+    "70", "3",
+    styleTable,
+    "0", "ENDTAB",
+    "0", "TABLE",
+    "2", "DIMSTYLE",
+    "70", "2",
+    dimstyleTable,
+    "0", "ENDTAB",
+    blockTableDef,
+    "0", "ENDSEC",
+    "0", "SECTION",
+    "2", "BLOCKS",
+    blockTable,
+    "0", "BLOCK",
+    "8", "0",
+    "2", "*MODEL_SPACE",
+    "70", "0",
+    "10", "0.0", "20", "0.0", "30", "0.0",
+    "0", "ENDBLK",
+    "8", "0",
+    "0", "BLOCK",
+    "8", "0",
+    "2", "*PAPER_SPACE",
+    "70", "0",
+    "10", "0.0", "20", "0.0", "30", "0.0",
+    "0", "ENDBLK",
+    "8", "0",
+    "0", "ENDSEC",
+    "0", "SECTION",
+    "2", "ENTITIES",
+    "0", "ENDSEC",
+    "0", "SECTION",
+    "2", "OBJECTS",
+    "0", "DICTIONARY",
+    "3", "ACAD",
+    "360", "0",
+    "0", "ENDSEC",
+    "0", "EOF"
+  ].join("\r\n");
+}
+
 export function parseCadDxf(text = "", project = {}){
   const doc = createCadDocument(project);
   const lines = String(text || "").split(/\r?\n/).map(line => line.trim());

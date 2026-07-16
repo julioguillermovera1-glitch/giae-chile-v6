@@ -1,6 +1,6 @@
 import { persist, addHistory } from "../../core/store.js";
 import { CloudflareCADService } from "../../core/cad/cloudflare-service.js";
-import { buildCadFromProject, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS } from "../../core/cad/cadEngine.js";
+import { buildCadFromProject, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS } from "../../core/cad/cadEngine.js";
 
 function esc(value = ""){
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -168,7 +168,7 @@ export function render(host, state){
 
           <article class="admin-card">
             <h4>Importar / Exportar</h4>
-            <div class="row-actions"><button id="cadExportJsonSide" class="secondary">Exportar .giaecad</button><button id="cadExportDxf" class="secondary">Exportar DXF</button></div>
+            <div class="row-actions"><button id="cadExportJsonSide" class="secondary">Exportar .giaecad</button><button id="cadExportDxf" class="secondary">Exportar DXF</button><button id="cadExportDwtSide" class="secondary">Exportar .DWT</button></div>
             <div class="row-actions"><button id="cadImportDxf" class="secondary">Importar DXF</button><button id="cadImportSymbols" class="secondary">Cargar símbolos</button></div>
             <input id="cadImportDxfFile" type="file" accept=".dxf,text/plain" hidden>
             <input id="cadImportSymbolsFile" type="file" accept=".json,application/json" hidden>
@@ -200,7 +200,7 @@ export function render(host, state){
         <main class="cad-main">
           <div class="cad-topbar">
             <div><b>${esc(doc.name)}</b><span>${esc(doc.scale)} - ${esc(doc.units)} - ${esc(project.name || "Proyecto sin nombre")}</span></div>
-            <div class="row-actions"><button id="cadExportJson" class="secondary">Exportar .giaecad</button><button id="cadExportSvg" class="secondary">Exportar SVG</button><button id="cadClear" class="ghost danger-text">Reiniciar plano</button></div>
+            <div class="row-actions"><button id="cadExportJson" class="secondary">Exportar .giaecad</button><button id="cadExportDwt" class="secondary">Exportar .DWT</button><button id="cadExportSvg" class="secondary">Exportar SVG</button><button id="cadClear" class="ghost danger-text">Reiniciar plano</button></div>
           </div>
           <div class="cad-stage">${renderCadSvg(doc, ui.selectedId)}</div>
           <div class="policy-box"><b>Uso:</b> selecciona una herramienta y haz clic en el plano. En modo Cablear, dos clics crean una canalizacion. El plano es fuente de datos preliminar y requiere revision profesional.</div>
@@ -232,6 +232,7 @@ export function render(host, state){
   });
   host.querySelector("#cadExportDxf").addEventListener("click", () => downloadText(safeFileName(doc.name) + ".dxf", createCadExportDxf(project, doc), "application/dxf;charset=utf-8"));
   host.querySelector("#cadExportJsonSide")?.addEventListener("click", () => downloadText(safeFileName(doc.name) + ".giaecad", JSON.stringify(createCadExportPackage(project, doc), null, 2)));
+  host.querySelector("#cadExportDwtSide").addEventListener("click", () => downloadText(safeFileName(doc.name) + ".dwt", createCadExportDwt(project, doc), "application/dxf;charset=utf-8"));
   host.querySelector("#cadImportDxf").addEventListener("click", () => host.querySelector("#cadImportDxfFile").click());
   host.querySelector("#cadImportSymbols").addEventListener("click", () => host.querySelector("#cadImportSymbolsFile").click());
   host.querySelector("#cadImportDxfFile").addEventListener("change", async event => {
@@ -346,6 +347,7 @@ export function render(host, state){
   });
   host.querySelector("#cadValidate").addEventListener("click", () => saveAndRefresh("Plano CAD validado"));
   host.querySelector("#cadExportJson").addEventListener("click", () => downloadText(safeFileName(doc.name) + ".giaecad", JSON.stringify(createCadExportPackage(project, doc), null, 2)));
+  host.querySelector("#cadExportDwt").addEventListener("click", () => downloadText(safeFileName(doc.name) + ".dwt", createCadExportDwt(project, doc), "application/dxf;charset=utf-8"));
   host.querySelector("#cadExportSvg").addEventListener("click", () => downloadText(safeFileName(doc.name) + ".svg", host.querySelector("#cadCanvas").outerHTML, "image/svg+xml;charset=utf-8"));
   host.querySelector("#cadClear").addEventListener("click", () => {
     if(!confirm("Reiniciar el plano CAD actual?")) return;
