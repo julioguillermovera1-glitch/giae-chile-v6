@@ -1,7 +1,7 @@
-import { initChatIa } from "../educacion/chat-ia.js";
+import { render as renderChatIa } from "../educacion/chat-ia.js";
 
 export function render(host, state){
-  initChatIa(host, state);
+  renderChatIa(host, state);
 }
 
 export default { render };
