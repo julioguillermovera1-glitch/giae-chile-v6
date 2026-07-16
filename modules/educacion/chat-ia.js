@@ -6,11 +6,22 @@ const knowledgeBase = {
     "1": "Empalme: Punto de conexión entre red distribuidora e instalación del usuario.",
     "2": "Protecciones: Interruptores automáticos y diferenciales según IEC 60898 y 61008.",
     "3": "Conductores: Selección por corriente admisible (Iz) según IEC 60227 y 60228.",
-    "4": "Caída de tensión: No mayor a 3% en empalme y 5% en punto final de circuito.",
+    "4": "Canalizaciones: Tuberías, ductos, bandejas según tipo de instalación.",
     "5": "Puesta a tierra: Sistema TN-C-S con electrodo según IEC 61936.",
-    "6": "Tierra: Medición de resistencia ≤ 10Ω para viviendas, ≤ 5Ω para industria.",
-    "7": "Seccionamiento: Dispositivo que desconecta toda la instalación de la fuente.",
-    "8": "Instalador SEC: Personal autorizado por la Superintendencia de Electricidad y Combustible."
+    "6": "Tierras de protección: Medición de resistencia ≤ 10Ω para viviendas, ≤ 5Ω para industria.",
+    "7": "Instalación de baja tensión: Diseño, materiales y verificación completa.",
+    "8": "Generadores y UPS: Instalación de equipos de emergencia.",
+    "9": "Instalaciones solares fotovoltaicas: Sistemas conectados a red y aislados.",
+    "10": "Instalaciones de energías renovables: Eólica y otras fuentes.",
+    "11": "Instalaciones especiales: Piscinas, saunas, locales húmedos.",
+    "12": "Instalaciones temporales: Ferias, eventos y construcción.",
+    "13": "Instalaciones para discapacitados: Requisitos específicos de acceso.",
+    "14": "Alumbrado público: Redes de distribución urbana.",
+    "15": "Sistemas de control y automatización: Domótica e industria.",
+    "16": "Telecomunicaciones: Cableado de datos y voz.",
+    "17": "Certificación de instaladores: TE1, TE2, TE3 SEC.",
+    "18": "Seguridad y protección contra accidentes: Protección contra caídas.",
+    "19": "Inspección y verificación: Procedimientos finales de certificación."
   },
   decreto8: {
     "general": "Decreto de Ley que regula la seguridad eléctrica en instalaciones.",
@@ -62,7 +73,7 @@ function buildIaResponse(userMessage) {
   
   if (lower.includes("ric") || lower.includes("regulación")) {
     return {
-      response: `Las **Reglas de Instalaciones de Corriente (RIC)** son 8 documentos que regulan todo en Chile:\n\n• **RIC 1-8:** Cubren empalme, protecciones, tierra, materiales y certificación\n• Todas se basan en **IEC 60364** (norma internacional)\n• Complementadas por **Decreto Ley 8** de seguridad\n\n¿Necesitas detalle de alguna específica?`,
+      response: `Las **Reglas de Instalaciones de Corriente (RIC)** son 19 documentos que regulan todo en Chile:\n\n• **RIC 1-19:** Cubren desde empalme hasta inspección final\n• Todas se basan en **IEC 60364** (norma internacional)\n• Complementadas por **Decreto Ley 8** de seguridad\n\n¿Necesitas detalle de alguna específica?`,
       confidence: 0.85
     };
   }
@@ -130,7 +141,7 @@ export function initChatIa(host, state){
             Hola, soy tu asistente en instalaciones eléctricas. 
             <br><br>Sé todo sobre:
             <ul style="margin-top: 10px; margin-left: 20px;">
-              <li><strong>RIC 1-8:</strong> Reglas de instalaciones de corriente (Chile)</li>
+              <li><strong>RIC 1-19:</strong> Reglas de instalaciones de corriente (Chile)</li>
               <li><strong>IEC 60364:</strong> Norma internacional de baja tensión</li>
               <li><strong>Decreto Ley 8:</strong> Seguridad eléctrica</li>
               <li><strong>Cálculos:</strong> Caída de tensión, protecciones, tierra, materiales</li>
@@ -146,7 +157,7 @@ export function initChatIa(host, state){
           <input type="text" id="userMessage" placeholder="Pregunta sobre instalaciones eléctricas, RIC, protecciones, caída de tensión, tierra..." autofocus>
           <button id="sendBtn" class="btn-primary">Enviar</button>
         </div>
-        <small>💡 Puedes preguntar sobre: empalme, protecciones, conductores, tierra, normativas, materiales, cálculos...</small>
+        <small>💡 Puedes preguntar sobre: empalme, protecciones, conductores, tierra, normativas RIC 1-19, materiales, cálculos...</small>
       </div>
     </div>
     
