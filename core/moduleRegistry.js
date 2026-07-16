@@ -23,6 +23,7 @@ export const modules = [
   { id: "unilineal", label: "7. Unilineal", group: "proyecto", path: "../modules/unilineal/unilineal.js", profiles: usuariosPago, hiddenInMenu: true, permission: "project.manage" },
   { id: "empalme", label: "8. Empalme", group: "proyecto", path: "../modules/empalme/empalme.js", profiles: usuariosPago, hiddenInMenu: true, permission: "project.manage" },
   { id: "cad-electrico", label: "Plano CAD", group: "cad", path: "../modules/cad-electrico/cad-electrico.js", profiles: usuariosPago, permission: "project.manage" },
+  { id: "cad-symbols", label: "Creador de símbolos", group: "cad", path: "../modules/cad-symbols/cad-symbols.js", profiles: ["administrador"], hiddenInMenu: true, permission: "project.manage" },
   { id: "inventario", label: "Inventario empresa", group: "inventario", path: "../modules/inventario/inventario.js", profiles: profesionales, permission: "inventory.view" },
   { id: "flujo-guiado", label: "Flujo guiado", group: "proyecto", path: "../modules/flujo-guiado/flujo-guiado.js", profiles: usuariosPago, hiddenInMenu: true, permission: "project.manage" },
   { id: "gpe", label: "Motor de proyecto", group: "proyecto", path: "../modules/gpe.js", profiles: usuariosPago, hiddenInMenu: true, permission: "project.manage" },

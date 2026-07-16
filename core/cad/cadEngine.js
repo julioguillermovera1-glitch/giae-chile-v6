@@ -17,10 +17,14 @@ export const CAD_SYMBOLS = [
   { id: "breaker", label: "Proteccion", layer: "tablero", kind: "protection", ports: ["in", "out"] },
   { id: "light", label: "Punto luz", layer: "alumbrado", kind: "load", ports: ["phase", "neutral", "pe"] },
   { id: "switch", label: "Interruptor", layer: "alumbrado", kind: "control", ports: ["in", "out"] },
-  { id: "outlet", label: "Enchufe", layer: "enchufes", kind: "load", ports: ["phase", "neutral", "pe"] },
+  { id: "outlet", label: "Enchufe simple", layer: "enchufes", kind: "load", ports: ["phase", "neutral", "pe"] },
+  { id: "outlet-double", label: "Enchufe doble", layer: "enchufes", kind: "load", ports: ["phase", "neutral", "pe"] },
+  { id: "outlet-triple", label: "Enchufe triple", layer: "enchufes", kind: "load", ports: ["phase", "neutral", "pe"] },
   { id: "motor", label: "Motor/carga fuerza", layer: "fuerza", kind: "load", ports: ["phase", "neutral", "pe"] },
   { id: "junction", label: "Caja derivacion", layer: "canalizacion", kind: "connection", ports: ["a", "b", "c", "d"] },
   { id: "ground", label: "Puesta a tierra", layer: "tierra", kind: "ground", ports: ["pe"] },
+  { id: "window", label: "Ventana", layer: "arquitectura", kind: "building", ports: [] },
+  { id: "door", label: "Puerta", layer: "arquitectura", kind: "building", ports: [] },
   { id: "note", label: "Nota", layer: "notas", kind: "annotation", ports: [] },
   { id: "dimension", label: "Dimension", layer: "revision", kind: "annotation", ports: [] }
 ];

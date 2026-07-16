@@ -50,9 +50,13 @@ function renderToolOptions(activeTool, docSymbols = []){
     ["light", "Luz"],
     ["switch", "Interruptor"],
     ["outlet", "Enchufe"],
+    ["outlet-double", "Enchufe x2"],
+    ["outlet-triple", "Enchufe x3"],
     ["motor", "Fuerza"],
     ["junction", "Derivacion"],
     ["ground", "Tierra"],
+    ["window", "Ventana"],
+    ["door", "Puerta"],
     ["note", "Nota"]
   ];
   const defaultIds = new Set(tools.map(([id]) => id));
@@ -63,15 +67,19 @@ function renderSymbol(entity, symbols = CAD_SYMBOLS){
   const color = layerColor(entity.layer);
   const x = n(entity.x), y = n(entity.y);
   const label = esc(entity.label || symbolLabel(entity.symbolId, symbols));
-  const base = `data-entity-id="${esc(entity.id)}" class="cad-entity cad-symbol"`;
+  const base = `data-entity-id="${esc(entity.id)}" class="cad-entity cad-symbol" data-draggable="true"`;
   if(entity.symbolId === "panel") return `<g ${base} transform="translate(${x} ${y})"><rect x="-34" y="-42" width="68" height="84" rx="4" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-22" y1="-20" x2="22" y2="-20" stroke="${color}" stroke-width="1.5"/><line x1="-22" y1="0" x2="22" y2="0" stroke="${color}" stroke-width="1.5"/><line x1="-22" y1="20" x2="22" y2="20" stroke="${color}" stroke-width="1.5"/><text y="58" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
   if(entity.symbolId === "breaker") return `<g ${base} transform="translate(${x} ${y})"><rect x="-22" y="-32" width="44" height="64" rx="3" fill="none" stroke="${color}" stroke-width="2"/><path d="M -10 8 C -2 -18 8 -18 14 -30" fill="none" stroke="${color}" stroke-width="2"/><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
   if(entity.symbolId === "light") return `<g ${base} transform="translate(${x} ${y})"><circle r="25" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-17" y1="-17" x2="17" y2="17" stroke="${color}" stroke-width="1.5"/><line x1="17" y1="-17" x2="-17" y2="17" stroke="${color}" stroke-width="1.5"/><text y="46" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
   if(entity.symbolId === "switch") return `<g ${base} transform="translate(${x} ${y})"><circle r="18" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-7" y1="6" x2="16" y2="-15" stroke="${color}" stroke-width="2"/><text y="40" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
   if(entity.symbolId === "outlet") return `<g ${base} transform="translate(${x} ${y})"><circle r="24" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="-8" cy="0" r="2.5" fill="${color}"/><circle cx="8" cy="0" r="2.5" fill="${color}"/><path d="M -10 10 Q 0 17 10 10" fill="none" stroke="${color}" stroke-width="1.5"/><text y="45" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "outlet-double") return `<g ${base} transform="translate(${x} ${y})"><circle r="24" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="-12" cy="-6" r="2.5" fill="${color}"/><circle cx="4" cy="-6" r="2.5" fill="${color}"/><circle cx="-12" cy="6" r="2.5" fill="${color}"/><circle cx="4" cy="6" r="2.5" fill="${color}"/><path d="M -14 14 Q 0 20 14 14" fill="none" stroke="${color}" stroke-width="1.5"/><text y="45" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "outlet-triple") return `<g ${base} transform="translate(${x} ${y})"><circle r="28" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="-14" cy="-8" r="2.5" fill="${color}"/><circle cx="0" cy="-8" r="2.5" fill="${color}"/><circle cx="14" cy="-8" r="2.5" fill="${color}"/><circle cx="-7" cy="8" r="2.5" fill="${color}"/><circle cx="7" cy="8" r="2.5" fill="${color}"/><path d="M -18 16 Q 0 24 18 16" fill="none" stroke="${color}" stroke-width="1.5"/><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
   if(entity.symbolId === "motor") return `<g ${base} transform="translate(${x} ${y})"><circle r="27" fill="none" stroke="${color}" stroke-width="2.5"/><text y="7" text-anchor="middle" font-size="20" font-weight="800" fill="${color}">M</text><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
   if(entity.symbolId === "junction") return `<g ${base} transform="translate(${x} ${y})"><rect x="-20" y="-20" width="40" height="40" rx="4" fill="none" stroke="${color}" stroke-width="2.5"/><circle r="4" fill="${color}"/><text y="42" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
   if(entity.symbolId === "ground") return `<g ${base} transform="translate(${x} ${y})"><line x1="0" y1="-28" x2="0" y2="0" stroke="${color}" stroke-width="2.5"/><line x1="-24" y1="0" x2="24" y2="0" stroke="${color}" stroke-width="2"/><line x1="-16" y1="10" x2="16" y2="10" stroke="${color}" stroke-width="1.5"/><line x1="-8" y1="20" x2="8" y2="20" stroke="${color}" stroke-width="1"/><text y="46" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "window") return `<g ${base} transform="translate(${x} ${y})"><rect x="-40" y="-8" width="80" height="16" rx="2" fill="none" stroke="${color}" stroke-width="2"/><line x1="-20" y1="-8" x2="-20" y2="8" stroke="${color}" stroke-width="1.5"/><line x1="0" y1="-8" x2="0" y2="8" stroke="${color}" stroke-width="1.5"/><line x1="20" y1="-8" x2="20" y2="8" stroke="${color}" stroke-width="1.5"/><text y="28" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "door") return `<g ${base} transform="translate(${x} ${y})"><rect x="-20" y="-30" width="40" height="60" rx="2" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="12" cy="0" r="3" fill="${color}"/><path d="M -20 0 Q 12 0 12 0" fill="none" stroke="${color}" stroke-width="1.5" stroke-dasharray="3 3"/><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
   return `<g ${base} transform="translate(${x} ${y})"><rect x="-70" y="-22" width="140" height="44" rx="4" fill="none" stroke="${color}" stroke-width="2"/><text y="5" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
 }
 function renderWire(entity){
@@ -289,6 +297,37 @@ export function render(host, state){
     const layer = ui.layer || symbol?.layer || "notas";
     doc = addCadEntity(doc, createCadEntity(ui.tool, { x, y, layer, label: label || symbolLabel(ui.tool, doc.symbols), circuitId, source: "manual" }));
     saveAndRefresh("Entidad CAD agregada: " + symbolLabel(ui.tool, doc.symbols));
+  });
+
+  // Drag & drop con doble click
+  let selectedEntity = null;
+  host.querySelector("#cadCanvas").addEventListener("dblclick", event => {
+    const entityGroup = event.target.closest("[data-entity-id]");
+    if(entityGroup && ui.tool === "select"){
+      selectedEntity = entityGroup.dataset.entityId;
+      entityGroup.style.opacity = "0.6";
+    }
+  });
+
+  host.querySelector("#cadCanvas").addEventListener("mousemove", event => {
+    if(!selectedEntity) return;
+    const entity = doc.entities.find(e => e.id === selectedEntity);
+    if(!entity) { selectedEntity = null; return; }
+    const point = svgPoint(event, host.querySelector("#cadCanvas"));
+    const grid = doc.canvas.grid || 20;
+    entity.x = snap(point.x, grid);
+    entity.y = snap(point.y, grid);
+    render(host, state);
+  });
+
+  host.querySelector("#cadCanvas").addEventListener("mouseup", () => {
+    if(selectedEntity){
+      project.cad2d = doc;
+      addHistory("Símbolo movido en CAD", "CAD electrico", false);
+      persist();
+      selectedEntity = null;
+      render(host, state);
+    }
   });
   host.querySelectorAll("[data-select-entity]").forEach(button => button.addEventListener("click", () => { ui.selectedId = button.dataset.selectEntity; project.cadUi = ui; render(host, state); }));
   host.querySelector("#cadDeleteSelected").addEventListener("click", () => {
