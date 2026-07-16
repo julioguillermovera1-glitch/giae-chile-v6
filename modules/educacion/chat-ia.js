@@ -25,28 +25,65 @@ const knowledgeBase = {
   }
 };
 
-// Análisis del proyecto actual
+// Análisis del proyecto actual - MÁS PROFUNDO
 function analyzeProjectContext(project) {
   if (!project) return { hasProject: false, summary: "Sin proyecto activo" };
+  
+  // Leer datos del proyecto - usando los nombres correctos del estado
+  const cargas = project.loads || project.cargas || [];  // "loads" es el nombre correcto en store.js
+  const quadro = project.quadro || project.quad || {};
+  const empalme = project.empalme || project.breaker || {};
+  const tierra = project.tierra || project.ground || {};
+  
+  // Calcular totales
+  let totalPower = 0;
+  let demandaPower = 0;
+  let errors = [];
+  
+  // Analizar cargas
+  cargas.forEach((carga, idx) => {
+    const potencia = parseFloat(carga.potencia) || parseFloat(carga.power) || 0;
+    const demanda = parseFloat(carga.demanda) || parseFloat(carga.demand) || potencia;
+    totalPower += potencia;
+    demandaPower += demanda;
+    
+    // Detectar errores en cargas
+    if (carga.proteccion && carga.conductor) {
+      const iz = parseFloat(carga.iz) || 0;
+      const protection = parseFloat(carga.proteccion.split(" ")[1]) || 0;
+      if (protection > iz) {
+        errors.push(`Carga ${idx + 1}: Protección ${carga.proteccion} supera Iz ${iz}A`);
+      }
+    }
+    
+    // Detectar voltaje caído alto
+    if (carga.deltaV) {
+      const dv = parseFloat(carga.deltaV);
+      if (dv > 3) {
+        errors.push(`Carga ${idx + 1}: Caída de tensión ${dv.toFixed(2)}% > 3% (máximo permitido)`);
+      }
+    }
+  });
   
   const analysis = {
     hasProject: true,
     name: project.name || "Sin nombre",
-    client: project.client || "No especificado",
-    distributor: project.distributor || "No especificada",
-    supplyType: project.supplyType || "No especificado",
-    powerDemand: project.powerDemand || 0,
-    hasCargas: project.cargas && project.cargas.length > 0,
-    hasQuadro: project.quadro && Object.keys(project.quadro).length > 0,
-    hasEmpalme: project.empalme && project.empalme.status,
-    hasTierra: project.tierra && project.tierra.resistance,
-    circuitCount: (project.cargas || []).length,
-    totalPower: 0
+    client: project.client || project.customer || "No especificado",
+    distributor: project.distributor || project.utility || "No especificada",
+    supplyType: project.supplyType || project.supply || "No especificado",
+    hasCargas: cargas.length > 0,
+    hasQuadro: Object.keys(quadro).length > 0,
+    hasEmpalme: !!empalme.proteccion || !!empalme.protection,
+    hasTierra: !!tierra.resistance || !!tierra.ohms,
+    circuitCount: cargas.length,
+    totalPower: totalPower / 1000,  // Convertir a kW
+    demandaPower: demandaPower / 1000,  // Convertir a kW
+    cargas: cargas,
+    quadro: quadro,
+    empalme: empalme,
+    tierra: tierra,
+    errors: errors
   };
-  
-  if (analysis.hasCargas) {
-    analysis.totalPower = project.cargas.reduce((sum, c) => sum + (parseFloat(c.potencia) || 0), 0);
-  }
   
   return analysis;
 }
@@ -104,39 +141,122 @@ function buildIaResponse(userMessage, project) {
     return { response, confidence: 0.9 };
   }
   
-  // RECOMENDACIONES PARA EMPALME
-  if ((lower.includes("empalme") || lower.includes("conexion")) && projectAnalysis.hasProject) {
-    let response = `**Análisis de empalme (RIC 1)**\n\n`;
+  // RECOMENDACIONES PARA EMPALME - CON ANÁLISIS DEL PROYECTO
+  if ((lower.includes("empalme") || lower.includes("conexion") || lower.includes("disyuntor")) && projectAnalysis.hasProject) {
+    let response = `**Análisis de empalme (RIC 1) - Integrado con tu proyecto**\n\n`;
     
-    response += `📊 Demanda del proyecto: ${projectAnalysis.totalPower.toFixed(2)} kW\n`;
-    response += `🏢 Distribuidora: ${projectAnalysis.distributor}\n`;
-    response += `⚡ Tipo: ${projectAnalysis.supplyType}\n\n`;
+    response += `📊 **Demanda calculada:** ${projectAnalysis.demandaPower.toFixed(2)} kW\n`;
+    response += `🏢 **Distribuidora:** ${projectAnalysis.distributor}\n`;
+    response += `⚡ **Sistema:** ${projectAnalysis.supplyType}\n`;
+    response += `🔌 **Circuitos:** ${projectAnalysis.circuitCount}\n\n`;
     
-    response += `Requisitos según RIC 1:\n`;
-    response += `• Empalme: Conexión regulada a tierra TN-C-S\n`;
-    response += `• Protección general: Disyuntor coordinado con protecciones de circuito\n`;
-    response += `• Medidor: Ubicación accesible y segura\n`;
-    response += `• Documentación: Debe incluir planos y cálculos\n`;
-    response += `• Certificación: TE1 SEC para vivienda\n`;
+    // Calcular protección general recomendada
+    const corrienteProyecto = (projectAnalysis.demandaPower * 1000) / 220; // Para monofásico
+    let proteccionRecomendada = 25;
+    if (corrienteProyecto < 16) proteccionRecomendada = 16;
+    else if (corrienteProyecto < 20) proteccionRecomendada = 20;
+    else if (corrienteProyecto < 25) proteccionRecomendada = 25;
+    else if (corrienteProyecto < 32) proteccionRecomendada = 32;
+    
+    response += `**Requisitos RIC 1 para tu proyecto:**\n`;
+    response += `• **Protección general:** ${proteccionRecomendada}A (30mA tipo AC/A) coordinada con circuitos\n`;
+    response += `• **Conductor:** Según demanda calculada (verificar sección)\n`;
+    response += `• **Esquema:** TN-C-S (neutro y tierra separados en empalme)\n`;
+    response += `• **Medidor:** Debe estar accesible y protegido\n`;
+    response += `• **Documentación:** Proyecto ejecutivo + certificado TE1\n\n`;
+    
+    if (projectAnalysis.empalme && projectAnalysis.empalme.proteccion) {
+      response += `**Empalme actual:**\n`;
+      response += `• Protección: ${projectAnalysis.empalme.proteccion}\n`;
+      response += `• Conductor: ${projectAnalysis.empalme.conductor || 'No especificado'}\n`;
+    } else {
+      response += `⚠️ Aún no se ha configurado el empalme en el proyecto.\n`;
+    }
     
     return { response, confidence: 0.88 };
   }
   
-  // RECOMENDACIONES PARA TIERRA
-  if ((lower.includes("tierra") || lower.includes("puesta") || lower.includes("electrodo")) && projectAnalysis.hasProject) {
-    let response = `**Análisis de puesta a tierra (RIC 5)**\n\n`;
+  // RECOMENDACIONES PARA TIERRA - CON ANÁLISIS DEL PROYECTO
+  if ((lower.includes("tierra") || lower.includes("puesta") || lower.includes("electrodo") || lower.includes("resistencia")) && projectAnalysis.hasProject) {
+    let response = `**Análisis de puesta a tierra (RIC 5) - Integrado con tu proyecto**\n\n`;
     
-    response += `Sistema TN-C-S (estándar en Chile):\n`;
-    response += `• **Máxima resistencia:** ${projectAnalysis.supplyType.includes("industrial") ? "≤ 5Ω" : "≤ 10Ω"}\n`;
-    response += `• **Electrodo:** Varilla cobrizada ≥ 2m profundidad\n`;
-    response += `• **Conductor:** Cobre desnudo ≥ 6mm²\n`;
-    response += `• **Medición:** Con telúrometro 4 puntos\n`;
-    response += `• **Mantenimiento:** Revisar cada 2 años\n\n`;
+    const isIndustrial = projectAnalysis.supplyType.includes("industrial") || projectAnalysis.demandaPower > 10;
+    const maxResistencia = isIndustrial ? 5 : 10;
     
-    response += `Para tu proyecto:\n`;
-    response += `${projectAnalysis.hasTierra ? "✅ Ya hay medida de tierra" : "❌ Aún no se ha medido la tierra"}\n`;
+    response += `**Sistema TN-C-S recomendado para Chile:**\n`;
+    response += `• **Máxima resistencia de tierra:** ${maxResistencia}Ω\n`;
+    response += `• **Electrodo:** Varilla cobrizada ≥ 2m profundidad mínimo\n`;
+    response += `• **Conductor PE:** 6mm² hasta 10mm² según demanda\n`;
+    response += `• **Medición:** Con telúrometro 4 puntos (Wenner o Fall)\n`;
+    response += `• **Frecuencia:** Cada 2 años o después de trabajos en terreno\n\n`;
+    
+    response += `**Datos de tu proyecto:**\n`;
+    response += `• **Demanda:** ${projectAnalysis.demandaPower.toFixed(2)} kW\n`;
+    response += `• **Corriente:** ${(projectAnalysis.demandaPower * 1000 / 220).toFixed(2)}A (monofásico)\n`;
+    response += `• **Circuitos con diferencial:** ${projectAnalysis.circuitCount} (30mA según tipo)\n\n`;
+    
+    if (projectAnalysis.tierra && projectAnalysis.tierra.resistance) {
+      response += `**Tierra actual medida:**\n`;
+      response += `• **Resistencia:** ${projectAnalysis.tierra.resistance}Ω\n`;
+      const estado = projectAnalysis.tierra.resistance <= maxResistencia ? "✅ CUMPLE" : "❌ NO CUMPLE";
+      response += `• **Estado:** ${estado} con máximo de ${maxResistencia}Ω\n`;
+      
+      if (projectAnalysis.tierra.resistance > maxResistencia) {
+        response += `\n⚠️ **Acción requerida:**\n`;
+        response += `• Aumentar profundidad del electrodo\n`;
+        response += `• Agregar electrodos en paralelo\n`;
+        response += `• Mejorar terreno con bentonita\n`;
+      }
+    } else {
+      response += `⚠️ Aún no se ha medido la puesta a tierra.\n`;
+      response += `• Ve al módulo "Puesta a tierra" para calcular la solución recomendada\n`;
+    }
     
     return { response, confidence: 0.9 };
+  }
+  
+  // DETECTAR Y REPORTAR ERRORES DEL PROYECTO
+  if ((lower.includes("error") || lower.includes("problema") || lower.includes("fallo") || lower.includes("incumpl")) && projectAnalysis.hasProject) {
+    let response = `**Validación y errores detectados en "${projectAnalysis.name}"**\n\n`;
+    
+    if (projectAnalysis.errors.length === 0 && projectAnalysis.hasCargas) {
+      response += `✅ No se detectaron errores críticos en las cargas.\n\n`;
+    } else if (projectAnalysis.errors.length > 0) {
+      response += `⚠️ **Errores detectados:**\n`;
+      projectAnalysis.errors.forEach(error => {
+        response += `• ${error}\n`;
+      });
+      response += `\n`;
+    }
+    
+    // Validación de estado general
+    if (!projectAnalysis.hasCargas) {
+      response += `❌ **Cargas:** No hay cargas ingresadas\n`;
+    } else {
+      response += `✅ **Cargas:** ${projectAnalysis.circuitCount} circuitos, ${projectAnalysis.demandaPower.toFixed(2)} kW de demanda\n`;
+    }
+    
+    if (!projectAnalysis.hasEmpalme) {
+      response += `❌ **Empalme:** No configurado - Ve a RIC 1 para calcular protección general\n`;
+    } else {
+      response += `✅ **Empalme:** Configurado\n`;
+    }
+    
+    if (!projectAnalysis.hasTierra) {
+      response += `❌ **Tierra:** No medida - Ve a RIC 5 para calcular la solución recomendada\n`;
+    } else {
+      const maxRes = projectAnalysis.supplyType.includes("industrial") ? 5 : 10;
+      const estado = projectAnalysis.tierra.resistance <= maxRes ? "✅ Cumple" : "❌ No cumple";
+      response += `${estado} **Tierra:** ${projectAnalysis.tierra.resistance}Ω (máx ${maxRes}Ω)\n`;
+    }
+    
+    response += `\n**Siguiente paso:**\n`;
+    response += `1. Revisar cada error y hacer correcciones\n`;
+    response += `2. Validar cargas vs. protecciones\n`;
+    response += `3. Confirmar medición de tierra en terreno\n`;
+    response += `4. Generar certificado final\n`;
+    
+    return { response, confidence: 0.92 };
   }
   
   // BÚSQUEDA EN CONOCIMIENTO (normas)
