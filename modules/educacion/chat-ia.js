@@ -22,55 +22,136 @@ const knowledgeBase = {
     "17": "Certificación de instaladores: TE1, TE2, TE3 SEC.",
     "18": "Seguridad y protección contra accidentes: Protección contra caídas.",
     "19": "Inspección y verificación: Procedimientos finales de certificación."
-  },
-  decreto8: {
-    "general": "Decreto de Ley que regula la seguridad eléctrica en instalaciones.",
-    "articuloIII": "Toda instalación debe cumplir con las normas RIC, IEC y disposiciones SEC.",
-    "articuloV": "Las protecciones deben coordinar: disyuntor de empalme, protecciones de circuito y diferencial.",
-    "verificacion": "Toda instalación completada debe ser verificada y certificada por TE1, TE2 o TE3."
-  },
-  iec: {
-    "60227": "Cables de cobre con aislación PVC. Especifica secciones y corrientes admisibles (Iz).",
-    "60228": "Cables desnudos y aislados de cobre. Establece tabla de resistencia para caída de tensión.",
-    "60898": "Interruptores automáticos. Define características de disparo y coordinación.",
-    "61008": "Interruptores diferenciales. Sensibilidad en mA (30, 100, 300 mA típicos).",
-    "61936": "Sistemas de puesta a tierra. Configuración TT, TN-S, TN-C-S según topología.",
-    "60364": "Instalaciones de baja tensión. Norma madre que cubre diseño, ejecución y verificación."
-  },
-  electricidad: {
-    "demanda": "Potencia que consume la instalación en el peor escenario de uso simultáneo de aparatos.",
-    "factor_potencia": "Relación entre potencia real (W) y aparente (VA). Rango 0.8 a 1.0 típico.",
-    "caida_tension": "Pérdida de voltaje en conductor por efecto resistivo. Se expresa en % respecto a tensión nominal.",
-    "protecciones": "Dispositivos que desconectan circuitos ante sobrecarga o falla: automáticos y diferenciales.",
-    "puesta_tierra": "Conexión deliberada a tierra para estabilizar referencias de seguridad y drenar corrientes de falla.",
-    "circuitos": "Conjunto de conductores y cargas que forman un camino cerrado para la corriente eléctrica."
   }
 };
 
-// Respuestas personalizadas con tono humano
-function buildIaResponse(userMessage) {
-  const lower = userMessage.toLowerCase();
+// Análisis del proyecto actual
+function analyzeProjectContext(project) {
+  if (!project) return { hasProject: false, summary: "Sin proyecto activo" };
   
-  // Búsqueda en conocimiento
+  const analysis = {
+    hasProject: true,
+    name: project.name || "Sin nombre",
+    client: project.client || "No especificado",
+    distributor: project.distributor || "No especificada",
+    supplyType: project.supplyType || "No especificado",
+    powerDemand: project.powerDemand || 0,
+    hasCargas: project.cargas && project.cargas.length > 0,
+    hasQuadro: project.quadro && Object.keys(project.quadro).length > 0,
+    hasEmpalme: project.empalme && project.empalme.status,
+    hasTierra: project.tierra && project.tierra.resistance,
+    circuitCount: (project.cargas || []).length,
+    totalPower: 0
+  };
+  
+  if (analysis.hasCargas) {
+    analysis.totalPower = project.cargas.reduce((sum, c) => sum + (parseFloat(c.potencia) || 0), 0);
+  }
+  
+  return analysis;
+}
+
+// Respuesta contextual con análisis del proyecto
+function buildIaResponse(userMessage, project) {
+  const lower = userMessage.toLowerCase();
+  const projectAnalysis = analyzeProjectContext(project);
+  
+  // ANÁLISIS DEL PROYECTO
+  if (lower.includes("analiz") || lower.includes("cómo va") || lower.includes("diagnostico") || lower.includes("diagnóstico")) {
+    let response = `**Análisis del proyecto "${projectAnalysis.name}"**\n\n`;
+    
+    if (!projectAnalysis.hasProject) {
+      return {
+        response: "No hay proyecto activo. Abre o crea un proyecto para que pueda analizarlo y ayudarte.",
+        confidence: 0.95
+      };
+    }
+    
+    response += `📋 **Cliente:** ${projectAnalysis.client}\n`;
+    response += `🏢 **Distribuidora:** ${projectAnalysis.distributor}\n`;
+    response += `⚡ **Suministro:** ${projectAnalysis.supplyType}\n`;
+    response += `💡 **Demanda total:** ${projectAnalysis.totalPower.toFixed(2)} kW\n\n`;
+    
+    response += `**Estado del proyecto:**\n`;
+    response += `${projectAnalysis.hasCargas ? "✅" : "❌"} Cargas ingresadas (${projectAnalysis.circuitCount} circuitos)\n`;
+    response += `${projectAnalysis.hasQuadro ? "✅" : "❌"} Cuadro de carga calculado\n`;
+    response += `${projectAnalysis.hasEmpalme ? "✅" : "❌"} Empalme configurado\n`;
+    response += `${projectAnalysis.hasTierra ? "✅" : "❌"} Puesta a tierra medida\n\n`;
+    
+    response += `¿Qué necesitas revisar o corregir?`;
+    
+    return { response, confidence: 0.95 };
+  }
+  
+  // RECOMENDACIONES PARA CARGAS
+  if ((lower.includes("cargas") || lower.includes("demanda") || lower.includes("circuitos")) && projectAnalysis.hasProject) {
+    let response = `**Análisis de cargas del proyecto**\n\n`;
+    
+    if (!projectAnalysis.hasCargas) {
+      response += `⚠️ Aún no hay cargas ingresadas. Necesitas:\n`;
+      response += `1. Ir al módulo "Cargas"\n`;
+      response += `2. Ingresar todos los circuitos\n`;
+      response += `3. Especificar potencia y factor de carga\n\n`;
+    } else {
+      response += `Total de circuitos: ${projectAnalysis.circuitCount}\n`;
+      response += `Demanda total: ${projectAnalysis.totalPower.toFixed(2)} kW\n\n`;
+      response += `Recomendaciones RIC 1:\n`;
+      response += `• Potencia debe incluir factor de simultaneidad\n`;
+      response += `• Revisar tipo de suministro según demanda\n`;
+      response += `• Validar con distribuidora\n`;
+    }
+    
+    return { response, confidence: 0.9 };
+  }
+  
+  // RECOMENDACIONES PARA EMPALME
+  if ((lower.includes("empalme") || lower.includes("conexion")) && projectAnalysis.hasProject) {
+    let response = `**Análisis de empalme (RIC 1)**\n\n`;
+    
+    response += `📊 Demanda del proyecto: ${projectAnalysis.totalPower.toFixed(2)} kW\n`;
+    response += `🏢 Distribuidora: ${projectAnalysis.distributor}\n`;
+    response += `⚡ Tipo: ${projectAnalysis.supplyType}\n\n`;
+    
+    response += `Requisitos según RIC 1:\n`;
+    response += `• Empalme: Conexión regulada a tierra TN-C-S\n`;
+    response += `• Protección general: Disyuntor coordinado con protecciones de circuito\n`;
+    response += `• Medidor: Ubicación accesible y segura\n`;
+    response += `• Documentación: Debe incluir planos y cálculos\n`;
+    response += `• Certificación: TE1 SEC para vivienda\n`;
+    
+    return { response, confidence: 0.88 };
+  }
+  
+  // RECOMENDACIONES PARA TIERRA
+  if ((lower.includes("tierra") || lower.includes("puesta") || lower.includes("electrodo")) && projectAnalysis.hasProject) {
+    let response = `**Análisis de puesta a tierra (RIC 5)**\n\n`;
+    
+    response += `Sistema TN-C-S (estándar en Chile):\n`;
+    response += `• **Máxima resistencia:** ${projectAnalysis.supplyType.includes("industrial") ? "≤ 5Ω" : "≤ 10Ω"}\n`;
+    response += `• **Electrodo:** Varilla cobrizada ≥ 2m profundidad\n`;
+    response += `• **Conductor:** Cobre desnudo ≥ 6mm²\n`;
+    response += `• **Medición:** Con telúrometro 4 puntos\n`;
+    response += `• **Mantenimiento:** Revisar cada 2 años\n\n`;
+    
+    response += `Para tu proyecto:\n`;
+    response += `${projectAnalysis.hasTierra ? "✅ Ya hay medida de tierra" : "❌ Aún no se ha medido la tierra"}\n`;
+    
+    return { response, confidence: 0.9 };
+  }
+  
+  // BÚSQUEDA EN CONOCIMIENTO (normas)
   for (const category in knowledgeBase) {
     for (const key in knowledgeBase[category]) {
       if (lower.includes(key.replace(/_/g, " ")) || lower.includes(key)) {
         return {
-          response: `Claro, te explico:\n\n**${key}:** ${knowledgeBase[category][key]}\n\nEs importante que entiendas esto correctamente para un proyecto seguro.`,
+          response: `Claro:\n\n**${key}:** ${knowledgeBase[category][key]}\n\n¿Cómo aplica esto a tu proyecto?`,
           confidence: 0.9
         };
       }
     }
   }
   
-  // Respuestas temáticas generales
-  if (lower.includes("enchufe") || lower.includes("outlet")) {
-    return {
-      response: `Los enchufes se clasifican según RIC 1:\n\n• **Enchufe simple:** 1 contacto, hasta 16 A monofásico\n• **Enchufe doble:** 2 contactos independientes\n• **Enchufe trifásico:** 3 fases + neutro + tierra\n\nCada tipo tiene su identificación. ¿Qué necesitas saber más?`,
-      confidence: 0.8
-    };
-  }
-  
+  // EDUCACIÓN GENERAL
   if (lower.includes("ric") || lower.includes("regulación")) {
     return {
       response: `Las **Reglas de Instalaciones de Corriente (RIC)** son 19 documentos que regulan todo en Chile:\n\n• **RIC 1-19:** Cubren desde empalme hasta inspección final\n• Todas se basan en **IEC 60364** (norma internacional)\n• Complementadas por **Decreto Ley 8** de seguridad\n\n¿Necesitas detalle de alguna específica?`,
@@ -80,73 +161,48 @@ function buildIaResponse(userMessage) {
   
   if (lower.includes("caida") || lower.includes("tensión") || lower.includes("voltaje")) {
     return {
-      response: `La **caída de tensión** es importante:\n\n• Máximo **3%** en el tramo empalme-tablero general\n• Máximo **5%** desde empalme hasta punto final del circuito\n• Se calcula: ΔV = 2 × ρ × L × I / S\n  - ρ = resistividad del cobre (0.0175 Ω·mm²/m)\n  - L = longitud del conductor (m)\n  - I = corriente (A)\n  - S = sección del conductor (mm²)\n\n¿Necesitas calcular una caída específica?`,
+      response: `La **caída de tensión** es importante:\n\n• Máximo **3%** en empalme-tablero general\n• Máximo **5%** desde empalme hasta punto final\n• Fórmula: ΔV = 2 × ρ × L × I / S\n\nPara tu proyecto de ${projectAnalysis.totalPower.toFixed(2)} kW, la caída debe revisarse en cada circuito.`,
       confidence: 0.9
     };
   }
   
   if (lower.includes("protección") || lower.includes("disyuntor") || lower.includes("automático")) {
     return {
-      response: `Las **protecciones** son críticas:\n\n• **Interruptor automático** (IEC 60898): Protege contra sobrecarga y cortocircuito\n  - Curva C: 5-10 In para circuitos normales\n  - Curva D: Motor arrancadores\n• **Interruptor diferencial** (IEC 61008): Protege contra fugas a tierra\n  - 30 mA: Protección de personas\n  - 100-300 mA: Protección de instalación\n• Deben **coordinar** entre sí\n\n¿Qué tipo de circuito necesitas proteger?`,
+      response: `Las **protecciones** son críticas:\n\n• **Automático** (IEC 60898): Sobrecarga y cortocircuito\n  - Curva C: Circuitos normales\n  - Curva D: Motores\n• **Diferencial** (IEC 61008): Fugas a tierra\n  - 30 mA: Personas\n  - 100-300 mA: Instalación\n\nDeben coordinar entre sí en cascada.`,
       confidence: 0.88
     };
   }
   
-  if (lower.includes("tierra") || lower.includes("puesta") || lower.includes("electrodo")) {
-    return {
-      response: `La **puesta a tierra** es fundamental:\n\n• **Sistema TN-C-S:** Estándar en Chile (RIC 5)\n• **Resistencia:** ≤ 10Ω para viviendas, ≤ 5Ω para industria\n• **Electrodo:** Varilla cobrizada mínimo 2m de profundidad\n• **Conductor:** Cobre desnudo ≥ 6 mm², sin empalmes\n• **Medición:** Se debe medir con telúrometro\n\nUna buena tierra es seguridad. ¿Dónde la necesitas?`,
-      confidence: 0.87
-    };
-  }
-  
-  if (lower.includes("materiales") || lower.includes("conductor") || lower.includes("cable")) {
-    return {
-      response: `Los **materiales** deben cumplir normas:\n\n• **Conductores:** Cobre (IEC 60227 o 60228)\n  - Secciones: 1.5, 2.5, 4, 6, 10, 16, 25, 35 mm²\n  - Corriente admisible (Iz) según tabla de IEC\n• **Canalización:** Ducto, tubería, bandeja según uso\n• **Interruptores:** IEC 60898 (automáticos) o 61008 (diferenciales)\n• **Disyuntores:** Coordinados con protección de empalme\n\n¿Qué circuito estás diseñando?`,
-      confidence: 0.8
-    };
-  }
-  
-  if (lower.includes("nch4")) {
-    return {
-      response: `⚠️ **NCH4 está obsoleta.** No se usa más en Chile.\n\nUsa en su lugar:\n• **RIC 1-8:** Reglas oficiales de instalaciones\n• **IEC 60364:** Norma internacional en que se basan las RIC\n• **Decreto Ley 8:** Marco de seguridad\n\nTodos los proyectos nuevos deben cumplir RIC e IEC.`,
-      confidence: 0.95
-    };
-  }
-  
-  if (lower.includes("sec") || lower.includes("superintendencia")) {
-    return {
-      response: `La **SEC** (Superintendencia de Electricidad y Combustible) es la autoridad:\n\n• Autoriza **instaladores TE1, TE2, TE3**\n• Certifica plataforma **E-Declarador** para trámites\n• Supervisa cumplimiento de **Decreto Ley 8** y **RIC**\n• Realiza fiscalizaciones en proyectos\n\nTodo trabajo debe registrarse en SEC y ser verificado por TE autorizado.`,
-      confidence: 0.85
-    };
-  }
-  
-  // Respuesta genérica educada
+  // Respuesta por defecto educada
   return {
-    response: `Interesante pregunta. Basándome en normas RIC, IEC y Decreto Ley 8:\n\nTu consulta sobre "${userMessage}" se relaciona con instalaciones eléctricas, pero necesito más detalle para darte una respuesta precisa. ¿Podrías decirme:\n\n• ¿Qué tipo de instalación? (vivienda, comercio, industria)\n• ¿Qué potencia aproximada?\n• ¿Qué parte te interesa? (diseño, protección, materiales, cálculos)\n\nEstoy aquí para ayudarte a aprender lo correcto.`,
+    response: `Interesante. Basándome en normas RIC 1-19, IEC y Decreto Ley 8:\n\n"${userMessage.substring(0, 50)}..." se relaciona con instalaciones eléctricas.\n\n¿Puedes preguntarme sobre:\n• Análisis de tu proyecto actual\n• Cargas y demanda\n• Protecciones y disyuntores\n• Puesta a tierra\n• Empalme\n• Normas RIC específicas\n\n¿Qué necesitas que revise?`,
     confidence: 0.6
   };
 }
 
-export function initChatIa(host, state){
+export function render(host, state) {
+  const project = state.currentProject;
+  
   host.innerHTML = `
     <div class="chat-ia-container">
       <div class="chat-header">
-        <h2>🤖 Asistente IA Eléctrico</h2>
-        <p>Consulta sobre instalaciones eléctricas, RIC, IEC y Decreto Ley 8</p>
+        <h2>🤖 Asistente IA Eléctrico Integrado</h2>
+        <p>Análisis inteligente de tu proyecto: cargas, protecciones, empalme, tierra y cumplimiento RIC</p>
       </div>
       
       <div class="chat-messages" id="chatMessages">
         <div class="message bot">
           <div class="message-content">
-            Hola, soy tu asistente en instalaciones eléctricas. 
-            <br><br>Sé todo sobre:
+            Hola, soy tu asistente especializado en electricidad integrado con tu proyecto.
+            <br><br>Puedo:
             <ul style="margin-top: 10px; margin-left: 20px;">
-              <li><strong>RIC 1-19:</strong> Reglas de instalaciones de corriente (Chile)</li>
-              <li><strong>IEC 60364:</strong> Norma internacional de baja tensión</li>
-              <li><strong>Decreto Ley 8:</strong> Seguridad eléctrica</li>
-              <li><strong>Cálculos:</strong> Caída de tensión, protecciones, tierra, materiales</li>
+              <li><strong>Analizar tu proyecto:</strong> Revisar cargas, cuadro, empalme y tierra</li>
+              <li><strong>Corregir errores:</strong> Validar contra RIC 1-19, IEC y Decreto Ley 8</li>
+              <li><strong>Hacer recomendaciones:</strong> Mejorar diseño y cumplimiento normativo</li>
+              <li><strong>Educarte:</strong> Explicar normas y conceptos técnicos</li>
             </ul>
-            <br>¿Qué quieres aprender hoy?
+            <br>${project ? `📊 Proyecto actual: <strong>${project.name || "Sin nombre"}</strong>` : "⚠️ Sin proyecto activo"}
+            <br><br>¿Qué necesitas?
           </div>
           <small>Hace un momento</small>
         </div>
@@ -154,10 +210,10 @@ export function initChatIa(host, state){
       
       <div class="chat-input-area">
         <div class="input-group">
-          <input type="text" id="userMessage" placeholder="Pregunta sobre instalaciones eléctricas, RIC, protecciones, caída de tensión, tierra..." autofocus>
+          <input type="text" id="userMessage" placeholder="Pregunta: analizar, cargas, protecciones, tierra, empalme, RIC..." autofocus>
           <button id="sendBtn" class="btn-primary">Enviar</button>
         </div>
-        <small>💡 Puedes preguntar sobre: empalme, protecciones, conductores, tierra, normativas RIC 1-19, materiales, cálculos...</small>
+        <small>💡 Puedo: analizar proyecto | revisar cargas | revisar protecciones | revisar tierra | revisar empalme | normas RIC</small>
       </div>
     </div>
     
@@ -180,7 +236,7 @@ export function initChatIa(host, state){
       
       .chat-header h2 {
         margin: 0 0 5px 0;
-        font-size: 20px;
+        font-size: 18px;
       }
       
       .chat-header p {
@@ -229,7 +285,7 @@ export function initChatIa(host, state){
         color: #e2e8f0;
         padding: 12px 15px;
         border-radius: 8px;
-        max-width: 80%;
+        max-width: 85%;
         word-wrap: break-word;
         line-height: 1.5;
       }
@@ -318,7 +374,7 @@ export function initChatIa(host, state){
     const div = document.createElement("div");
     div.className = `message ${isUser ? "user" : "bot"}`;
     div.innerHTML = `
-      <div class="message-content">${text.replace(/\n/g, "<br>").replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")}</div>
+      <div class="message-content">${text.replace(/\n/g, "<br>").replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/✅|❌|⚠️|📊|💡|🏢|⚡|📋/g, m => m)}</div>
       <small>${isUser ? "Ahora" : "Hace un momento"}</small>
     `;
     chatMessages.appendChild(div);
@@ -332,14 +388,10 @@ export function initChatIa(host, state){
     addMessage(message, true);
     userInput.value = "";
     
-    // Simulate thinking
-    addMessage("Pensando...", false);
-    
     setTimeout(() => {
-      chatMessages.removeChild(chatMessages.lastChild);
-      const response = buildIaResponse(message);
+      const response = buildIaResponse(message, project);
       addMessage(response.response, false);
-      addHistory("Chat IA: " + message.substring(0, 50), "Asistente IA Educativo", false);
+      addHistory("Chat IA Proyecto: " + message.substring(0, 50), "Asistente IA Integrado", false);
       persist();
     }, 500);
   }
@@ -350,4 +402,4 @@ export function initChatIa(host, state){
   });
 }
 
-export default { initChatIa };
+export default { render };
