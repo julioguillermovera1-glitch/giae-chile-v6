@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-07-29 - Fase 1 cerrada con prueba manual aprobada
+
+- Se ejecuta la prueba manual completa en la app real y se registra en `docs/PRUEBA_MANUAL_FASE1_2026_07_29.md`.
+- Cubre: crear proyecto, 6 cargas (4.26 kW), puesta a tierra con medicion real, exportar/importar `.giae` (ciclo integro, datos identicos) y vista movil 375x812 sin desborde.
+- Cero errores de consola. Fase 1 cumple su criterio de salida.
+
+## 2026-07-29 - Diagnostico Fase 1 actualizado al estado sin legado
+
+- `tools/phase1-publicable-check.mjs`: el check `legado-identificado` exigia que `js/app.js` y `css/styles.css` existieran para pasar. Tras retirar el legado quedaba marcando REVISAR por un motivo obsoleto.
+- Se reemplaza por `legado-retirado`, que valida el estado correcto: legado fuera de rutas activas, archivado en `docs/_duplicados_retirados/` y documentado en README.
+- Fase 1 queda en 100% (12/12 verificaciones). Las 7 fases diagnosticadas (1, 2, 3, 4, 5, 5.5 y 5.6) dan 100% estructural.
+
+## 2026-07-29 - Puesta a tierra conectada al recalculo del proyecto
+
+- `modules/tierra/tierra.js` ahora llama a `recalculateProject()` al guardar el diseno de tierra, siguiendo el mismo patron que `cargas`, `balance`, `gpe` y `presupuesto`.
+- Antes, guardar la puesta a tierra dejaba desactualizados el presupuesto (materiales y mano de obra de tierra), la auditoria integral (GND-001/GND-002), el centro documental, el checklist y el flujo guiado, que seguia reportando "No hay diseno de puesta a tierra guardado" hasta abrir otro modulo.
+
+## 2026-07-29 - Limpieza de legado Fase 1
+
+- Se retiran `js/app.js`, `js/giae-fix-botones.js` y `css/styles.css` a `docs/_duplicados_retirados/js` y `docs/_duplicados_retirados/css`: no eran referenciados por `index.html` ni por el cache de la PWA (`sw.js`).
+- Se retira `indice.html` de la raiz a `docs/_duplicados_retirados/indice-raiz-2026-07-01.html`: estaba desincronizado de `index.html` (sin perfil "Pueblos tecnicos", sin Chat IA, sin meta tags PWA) y no formaba parte de ninguna ruta activa.
+- Queda una sola entrada activa: `index.html`, `core/main.js`, `css/platform.css`.
+
 ## 2026-07-07 - Fase 5.6 Flujo maestro guiado
 
 - Se agrega motor de flujo guiado en `core/workflow/guidedWorkflowEngine.js`.

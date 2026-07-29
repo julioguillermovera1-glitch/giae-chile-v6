@@ -12,7 +12,7 @@ El repositorio esta en fase de depuracion para llegar a una primera version publ
 - core/main.js
 - css/platform.css
 
-La version historica contenida en js/app.js y css/styles.css debe tratarse como legado hasta confirmar su retiro seguro.
+La version historica contenida en js/app.js, js/giae-fix-botones.js y css/styles.css fue retirada el 2026-07-29 a `docs/_duplicados_retirados/` por no estar referenciada por ningun archivo activo ni por el cache de la PWA (sw.js). El archivo `indice.html` de la raiz, que habia quedado desincronizado de `index.html`, tambien fue retirado a esa misma carpeta. `docs/` esta excluido del despliegue via `.assetsignore`, por lo que este legado ya no se publica.
 
 ## Roadmap oficial
 

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "giae-local",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/local-static-server.mjs", "8787"],
+      "port": 8787
+    }
+  ]
+}

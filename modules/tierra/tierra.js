@@ -1,5 +1,5 @@
 import { calculateGroundingProject } from "../../core/engineering/groundingEngine.js";
-import { persist, addHistory } from "../../core/store.js";
+import { persist, addHistory, recalculateProject } from "../../core/store.js";
 
 function esc(value = "") {
   return String(value)
@@ -256,6 +256,7 @@ export function render(host, state) {
     project.earth = project.grounding;
     project.groundingEngine = latest;
     addHistory("Puesta a tierra inteligente guardada", "Puesta a tierra", false);
+    recalculateProject();
     persist();
     alert("Puesta a tierra guardada en el Proyecto Activo.");
   });

@@ -53,6 +53,18 @@ Para guardar un reporte JSON:
 - CAD electrico pertenece a la Fase 5.
 - El razonador tecnico verificable pertenece a la Fase 6.
 
+## Limpieza de legado (2026-07-29)
+
+Se confirmo que `js/app.js`, `js/giae-fix-botones.js` y `css/styles.css` no eran referenciados por `index.html`, por ningun modulo activo ni por el `GIAE_APP_SHELL` de `sw.js`. Se retiraron a `docs/_duplicados_retirados/`. Tambien se retiro `indice.html` de la raiz: estaba desincronizado de `index.html` (le faltaban el perfil "Pueblos tecnicos", el boton Chat IA y los meta tags PWA) y no aparecia en el cache de la PWA. Con esto, la entrada oficial (`index.html`, `core/main.js`, `css/platform.css`) queda como unica ruta activa, tal como pide el criterio de salida "Sin rutas activas duplicadas".
+
+Se actualizo `tools/phase1-publicable-check.mjs`: el check `legado-identificado` exigia que `js/app.js` y `css/styles.css` **existieran** para pasar, porque fue escrito cuando el legado seguia activo y solo habia que reconocerlo. Al retirarlo de verdad, ese check marcaba REVISAR por un motivo obsoleto. Ahora el check se llama `legado-retirado` y valida el estado correcto: que el legado no este en rutas activas, que este archivado en `docs/_duplicados_retirados/` y que el README lo documente.
+
+Diagnostico ejecutado el 2026-07-29 con Node v24.18.0: **100%**, estado `apto_para_prueba_manual`, 12 de 12 verificaciones en verde (111 archivos JS/MJS con sintaxis valida, 125 JSON/JSONC validos, 28 modulos con contrato de render).
+
+Prueba manual ejecutada el 2026-07-29 y **aprobada**: ver `docs/PRUEBA_MANUAL_FASE1_2026_07_29.md`. Cubre crear proyecto, cargas, tierra, exportar/importar `.giae` y vista movil, con cero errores de consola.
+
+**Fase 1 cumple su criterio de salida.** Queda pendiente la instalacion real de la PWA en un celular fisico, que pertenece al criterio de salida de la Fase 2, no de esta.
+
 ## Regla de publicacion
 
 Si el diagnostico o la prueba manual indican una falla critica, la version no debe anunciarse como publicable final. Debe anunciarse como alpha tecnica o base de depuracion.

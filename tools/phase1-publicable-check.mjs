@@ -30,7 +30,9 @@ function scanText(files, pattern){ const hits = []; for(const file of files){ if
 const officialFiles = ['index.html', 'core/main.js', 'css/platform.css'];
 add('entrada-oficial', 'Entrada oficial disponible', officialFiles.every(exists), officialFiles.join(', '), 'critico', officialFiles);
 if(exists('index.html')){ const index = read('index.html'); add('index-conecta-core', 'index.html conecta app nueva', index.includes('css/platform.css') && index.includes('core/main.js'), 'Debe cargar css/platform.css y core/main.js', 'critico'); }
-add('legado-identificado', 'Legado identificado', exists('js/app.js') && exists('css/styles.css') && exists('README.md') && read('README.md').toLowerCase().includes('legado'), 'js/app.js y css/styles.css quedan tratados como legado', 'medio');
+const legadoActivo = ['js/app.js', 'js/giae-fix-botones.js', 'css/styles.css', 'indice.html'].filter(exists);
+const legadoArchivado = ['docs/_duplicados_retirados/js/app.js', 'docs/_duplicados_retirados/css/styles.css'].every(exists);
+add('legado-retirado', 'Legado retirado de rutas activas', legadoActivo.length === 0 && legadoArchivado && exists('README.md') && read('README.md').toLowerCase().includes('legado'), 'js/app.js, css/styles.css e indice.html retirados a docs/_duplicados_retirados y documentados en README', 'medio', legadoActivo);
 const modules = parseModuleRegistry();
 const missingModules = []; const missingRender = [];
 for(const item of modules){ const file = resolveModulePath(item.importPath); if(!exists(file)) missingModules.push({ id: item.id, file }); else if(!/export\s+(async\s+)?function\s+render\s*\(/.test(read(file))) missingRender.push({ id: item.id, file }); }
