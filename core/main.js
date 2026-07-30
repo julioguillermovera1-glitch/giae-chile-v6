@@ -55,7 +55,7 @@ function configurePrivateAdminAccess(){
 
 document.querySelectorAll("[data-profile]").forEach(button => {
   button.addEventListener("click", () => {
-    if(!GIAE_DEV_ACCESO_ABIERTO && button.dataset.profile === "empresa"){
+    if(!GIAE_DEV_ACCESO_ABIERTO && (button.dataset.profile === "empresa" || button.dataset.profile === "independiente")){
       companyLoginMode = button.dataset.profile;
       showCompanyLogin(button.dataset.profile);
       return;
@@ -91,15 +91,33 @@ companyLoginBack?.addEventListener("click", event => {
   hideCompanyLogin();
 });
 
+function accountTypeForMode(mode){
+  if(mode === "pueblos") return "pueblos";
+  if(mode === "independiente") return "independiente";
+  return "empresa";
+}
+
+function accountTypeNoun(mode){
+  if(mode === "pueblos") return "de Pueblos Originarios";
+  if(mode === "independiente") return "de instalador independiente";
+  return "de empresa";
+}
+
+function accountTypeOwner(mode){
+  if(mode === "pueblos") return "programa de Pueblos Originarios";
+  if(mode === "independiente") return "cuenta de instalador independiente";
+  return "empresa";
+}
+
 function showCompanyLogin(mode){
   profileGrid?.classList.add("hidden");
   companyLoginPanel?.classList.remove("hidden");
   companyLoginFeedback.textContent = "";
   const access = ensureCompanyAccess();
-  const companyUsers = access.users.filter(user => user.role !== "super_admin" && user.accountType === (mode === "pueblos" ? "pueblos" : "empresa"));
+  const companyUsers = access.users.filter(user => user.role !== "super_admin" && user.accountType === accountTypeForMode(mode));
   companyLoginHint.textContent = companyUsers.length === 0
-    ? `No hay usuarios ${mode === "pueblos" ? "de Pueblos Originarios" : "de empresa"} creados. Inicia sesión como Administrador y crea usuarios para este tipo.`
-    : `Este acceso usa el correo y la contraseña creados por tu ${mode === "pueblos" ? "programa de Pueblos Originarios" : "empresa"}.`;
+    ? `No hay usuarios ${accountTypeNoun(mode)} creados. Inicia sesión como Administrador y crea usuarios para este tipo.`
+    : `Este acceso usa el correo y la contraseña creados por tu ${accountTypeOwner(mode)}.`;
   companyLoginEmail.value = "";
   companyLoginPassword.value = "";
 }
@@ -376,7 +394,7 @@ function refreshActiveModule(){
 function profileLabel(profile) {
   const user = currentCompanyUser();
   const labels = {
-    independiente: "Instalador independiente",
+    independiente: `Instalador independiente - ${user?.name || ""}${user?.email ? ` (${user.email})` : ""}`,
     empresa: `Empresa - ${user?.name || "Super administrador"}${user?.email ? ` (${user.email})` : ""}`,
     pueblos: "Pueblos Originarios - acceso libre",
     estudiante: "Estudiante - acceso libre",
@@ -394,7 +412,7 @@ function markSession(profile){
   state.admin = state.admin || {};
   state.admin.sessions = state.admin.sessions || [];
   let name = profileLabel(profile);
-  if(profile === "empresa"){
+  if(profile === "empresa" || profile === "independiente"){
     const user = currentCompanyUser();
     if(user){
       name = `${user.name}${user.email ? ` (${user.email})` : ""}`;

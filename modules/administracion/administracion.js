@@ -154,6 +154,7 @@ export function render(host, state){
                 <select id="admUserAccountType">
                   <option value="">-- Ninguna --</option>
                   <option value="empresa">Empresa</option>
+                  <option value="independiente">Instalador independiente</option>
                   <option value="pueblos">Pueblos Originarios</option>
                 </select>
               </label>
@@ -175,7 +176,7 @@ export function render(host, state){
           <p class="small">Gestiona las cuentas registradas en el sistema (empresas y Pueblos Originarios). Aquí puedes crear, editar, otorgar/revocar acceso gratuito y eliminar cuentas.</p>
           <div class="admin-inline">
             <input id="cuentasSearch" placeholder="Buscar por nombre o correo">
-            <select id="cuentasFilterType"><option value="">Todos los tipos</option><option value="empresa">Empresa</option><option value="pueblos">Pueblos Originarios</option></select>
+            <select id="cuentasFilterType"><option value="">Todos los tipos</option><option value="empresa">Empresa</option><option value="independiente">Instalador independiente</option><option value="pueblos">Pueblos Originarios</option></select>
             <select id="cuentasFilterAccess"><option value="">Todos</option><option value="free">Acceso gratuito</option><option value="pending">Pendientes</option></select>
             <select id="cuentasSort"><option value="name:asc">Orden: Nombre ↑</option><option value="name:desc">Nombre ↓</option><option value="email:asc">Correo ↑</option><option value="email:desc">Correo ↓</option><option value="type:asc">Tipo ↑</option><option value="createdAt:desc">Creado ↓</option></select>
             <select id="cuentasPageSize"><option value="5">5</option><option value="10" selected>10</option><option value="25">25</option><option value="50">50</option></select>
@@ -193,7 +194,7 @@ export function render(host, state){
             <input id="cuentaName" placeholder="Nombre cuenta">
             <input id="cuentaEmail" placeholder="correo@cuenta.cl">
             <input id="cuentaPassword" placeholder="Contraseña (opcional)" type="password">
-            <select id="cuentaType"><option value="empresa">Empresa</option><option value="pueblos">Pueblos Originarios</option></select>
+            <select id="cuentaType"><option value="empresa">Empresa</option><option value="independiente">Instalador independiente</option><option value="pueblos">Pueblos Originarios</option></select>
             <label class="checkbox-label"><input id="cuentaFreeAccess" type="checkbox"> Acceso gratuito (solo para Pueblos)</label>
             <button id="admAddCuenta" class="primary">Crear cuenta</button>
           </div>
@@ -451,7 +452,7 @@ function addUser(state){
   state.admin.users.push({ name, email, role, profile, status: "Activo" });
   addLog(state, `Usuario creado: ${name}.`);
   // If admin requested a corporate account, create/update it in companyAccess as well
-  if(accountType === "empresa" || accountType === "pueblos"){
+  if(accountType === "empresa" || accountType === "independiente" || accountType === "pueblos"){
     try{
       upsertCompanyUser({ name, email, role, accountType, freeAccess, password });
       addLog(state, `Cuenta ${accountType} creada/actualizada para: ${email || name}.`);

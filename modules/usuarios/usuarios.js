@@ -38,7 +38,7 @@ function permissionChecks(selected = []){
 function userRows(users, activeId){
   return users.map(user => `<tr class="${user.id === activeId ? "active-user-row" : ""}">
     <td><strong>${esc(user.name)}</strong><br><small>${esc(user.email || "Sin correo")}</small></td>
-    <td>${esc(user.accountType === "pueblos" ? "Pueblos Originarios" : "Empresa")}</td>
+    <td>${esc(user.accountType === "pueblos" ? "Pueblos Originarios" : user.accountType === "independiente" ? "Instalador independiente" : "Empresa")}</td>
     <td>${esc(roleLabel(user.role))}</td>
     <td>${esc(permissionList(user))}</td>
     <td>${esc(user.status || "Activo")}</td>
@@ -66,7 +66,8 @@ function form(user = defaultFormUser()){
       <p class="small note">La contraseña debe ser creada por la empresa o Pueblos Originarios y se usa para el ingreso del usuario.</p>
       <label>Tipo de cuenta
         <select id="userAccountType">
-          <option value="empresa" ${user.accountType !== "pueblos" ? "selected" : ""}>Empresa</option>
+          <option value="empresa" ${!user.accountType || user.accountType === "empresa" ? "selected" : ""}>Empresa</option>
+          <option value="independiente" ${user.accountType === "independiente" ? "selected" : ""}>Instalador independiente</option>
           <option value="pueblos" ${user.accountType === "pueblos" ? "selected" : ""}>Pueblos Originarios</option>
         </select>
       </label>

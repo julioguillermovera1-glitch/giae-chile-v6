@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-07-30 - Instalador independiente pasa a requerir cuenta, igual que Empresa
+
+- "Instalador independiente" nunca pidio clave, desde antes de esta sesion de trabajo (confirmado en el historial de commits). Maneja datos reales de proyectos igual que Empresa, asi que se le agrega el mismo sistema de cuentas.
+- `core/store.js`: `verifyCompanyUserCredentials` reconoce el nuevo accountType `independiente`.
+- `core/main.js`: el perfil "independiente" pasa por el mismo login de correo/contrasena que "empresa"; se agregan las variantes de texto correspondientes.
+- `modules/administracion/administracion.js` y `modules/usuarios/usuarios.js`: se agrega la opcion "Instalador independiente" en los selectores de tipo de cuenta.
+- Probado end-to-end: crear cuenta -> login con clave correcta entra, clave incorrecta rechaza, una cuenta de "independiente" no sirve para entrar como "empresa".
+- Pendiente sin resolver (anotado como tarea aparte): el perfil "Administrador" sigue sin pedir ninguna clave.
+
 ## 2026-07-30 - Pueblos Originarios y Estudiante quedan de acceso libre permanente
 
 - Se retira la exigencia de correo/contrasena para el perfil "Pueblos Originarios": ahora entra directo, igual que "Aula educativa", sin depender del modo desarrollo.

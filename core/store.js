@@ -124,9 +124,9 @@ export function verifyCompanyUserCredentials(email, password, mode){
   const normalizedEmail = String(email || "").trim().toLowerCase();
   const user = access.users.find(item => String(item.email || "").trim().toLowerCase() === normalizedEmail && item.status === "Activo");
   if(!user || !user.passwordHash) return null;
-  // If mode is provided ("empresa" or "pueblos"), require matching accountType
+  // If mode is provided ("empresa", "independiente" o "pueblos"), require matching accountType
   if(mode){
-    const expected = mode === "pueblos" ? "pueblos" : "empresa";
+    const expected = mode === "pueblos" ? "pueblos" : mode === "independiente" ? "independiente" : "empresa";
     if(user.accountType !== expected) return null;
   }
   if(user.accountType === "pueblos" && !user.freeAccess) return null;
