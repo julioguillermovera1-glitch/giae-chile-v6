@@ -10,6 +10,11 @@ import { evaluateGuidedWorkflow } from "./workflow/guidedWorkflowEngine.js";
 const STORAGE_KEY = "giae_chile_v1_workspace";
 const LIBRARY_KEY = "giae_chile_v1_project_library";
 const ALL_COMPANY_PERMISSIONS = ["project.manage", "inventory.view", "inventory.manage", "users.manage", "docs.view", "budget.view"];
+// Credenciales iniciales del Administrador. Cambialas desde "Cuentas corporativas"
+// apenas inicies sesion la primera vez: edita el usuario "Super administrador"
+// con tu propio correo y una contrasena nueva.
+const DEFAULT_ADMIN_EMAIL = "administrador@giae.cl";
+const DEFAULT_ADMIN_PASSWORD_HASH = "5d898978";
 
 function nowStamp(){
   return new Date().toLocaleString("es-CL");
@@ -100,7 +105,7 @@ export const state = {
   companyAccess: {
     activeUserId: "owner",
     users: [
-      { id: "owner", name: "Super administrador", email: "", role: "super_admin", accountType: "empresa", freeAccess: true, status: "Activo", permissions: ALL_COMPANY_PERMISSIONS, createdAt: nowStamp() }
+      { id: "owner", name: "Super administrador", email: DEFAULT_ADMIN_EMAIL, role: "super_admin", accountType: "empresa", freeAccess: true, status: "Activo", permissions: ALL_COMPANY_PERMISSIONS, passwordHash: DEFAULT_ADMIN_PASSWORD_HASH, createdAt: nowStamp() }
     ]
   }
 };
@@ -124,8 +129,10 @@ export function verifyCompanyUserCredentials(email, password, mode){
   const normalizedEmail = String(email || "").trim().toLowerCase();
   const user = access.users.find(item => String(item.email || "").trim().toLowerCase() === normalizedEmail && item.status === "Activo");
   if(!user || !user.passwordHash) return null;
-  // If mode is provided ("empresa", "independiente" o "pueblos"), require matching accountType
-  if(mode){
+  // If mode is provided ("administrador", "empresa", "independiente" o "pueblos"), require matching tipo
+  if(mode === "administrador"){
+    if(user.role !== "super_admin") return null;
+  } else if(mode){
     const expected = mode === "pueblos" ? "pueblos" : mode === "independiente" ? "independiente" : "empresa";
     if(user.accountType !== expected) return null;
   }
@@ -138,11 +145,14 @@ export function ensureCompanyAccess(){
   state.companyAccess.users = Array.isArray(state.companyAccess.users) ? state.companyAccess.users : [];
   let owner = state.companyAccess.users.find(user => user.role === "super_admin") || state.companyAccess.users.find(user => user.id === "owner");
   if(!owner){
-    owner = { id: "owner", name: "Super administrador", email: "", role: "super_admin", status: "Activo", permissions: ALL_COMPANY_PERMISSIONS, createdAt: nowStamp() };
+    owner = { id: "owner", name: "Super administrador", email: DEFAULT_ADMIN_EMAIL, role: "super_admin", status: "Activo", permissions: ALL_COMPANY_PERMISSIONS, passwordHash: DEFAULT_ADMIN_PASSWORD_HASH, createdAt: nowStamp() };
     state.companyAccess.users.unshift(owner);
   }
   owner.permissions = ALL_COMPANY_PERMISSIONS;
   owner.status = owner.status || "Activo";
+  // Sesiones creadas antes de existir login de Administrador: completar credenciales iniciales.
+  if(!owner.email) owner.email = DEFAULT_ADMIN_EMAIL;
+  if(!owner.passwordHash) owner.passwordHash = DEFAULT_ADMIN_PASSWORD_HASH;
   state.companyAccess.activeUserId = state.companyAccess.activeUserId || owner.id;
   if(!state.companyAccess.users.some(user => user.id === state.companyAccess.activeUserId)) state.companyAccess.activeUserId = owner.id;
   return state.companyAccess;

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-07-30 - Administrador ahora exige correo y contraseña
+
+- El perfil "Administrador" nunca tuvo clave, desde antes de esta sesion de trabajo. Cualquiera con el link publico podia entrar directo al panel de reparacion completo.
+- `core/store.js`: se agrega un usuario "Super administrador" con correo y contrasena inicial por defecto (`administrador@giae.cl`), generada de forma segura. `ensureCompanyAccess()` completa estas credenciales tambien en sesiones que ya existian sin ellas (backfill), no solo en instalaciones nuevas.
+- `core/main.js`: el boton "Administrador" pasa por el mismo login de correo/contrasena que Empresa e Independiente. `verifyCompanyUserCredentials` reconoce el modo `administrador` validando `role === "super_admin"`.
+- La clave inicial se entrega solo por fuera del repositorio (chat + archivo local en `docs/_secretos_locales/`, cubierto por `.gitignore`). El propio texto de la app instruye cambiarla desde "Cuentas corporativas" en el primer ingreso.
+- Probado end-to-end en navegador: sesion nueva pide clave, clave incorrecta rechaza, clave inicial entra, y la cuenta del Administrador aparece editable en Cuentas corporativas para poder cambiarla.
+- Cierra la tarea pendiente anotada el 2026-07-29 sobre este mismo hueco.
+
 ## 2026-07-30 - Instalador independiente pasa a requerir cuenta, igual que Empresa
 
 - "Instalador independiente" nunca pidio clave, desde antes de esta sesion de trabajo (confirmado en el historial de commits). Maneja datos reales de proyectos igual que Empresa, asi que se le agrega el mismo sistema de cuentas.

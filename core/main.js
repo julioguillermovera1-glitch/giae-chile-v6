@@ -55,7 +55,7 @@ function configurePrivateAdminAccess(){
 
 document.querySelectorAll("[data-profile]").forEach(button => {
   button.addEventListener("click", () => {
-    if(!GIAE_DEV_ACCESO_ABIERTO && (button.dataset.profile === "empresa" || button.dataset.profile === "independiente")){
+    if(!GIAE_DEV_ACCESO_ABIERTO && (button.dataset.profile === "empresa" || button.dataset.profile === "independiente" || button.dataset.profile === "administrador")){
       companyLoginMode = button.dataset.profile;
       showCompanyLogin(button.dataset.profile);
       return;
@@ -114,10 +114,14 @@ function showCompanyLogin(mode){
   companyLoginPanel?.classList.remove("hidden");
   companyLoginFeedback.textContent = "";
   const access = ensureCompanyAccess();
-  const companyUsers = access.users.filter(user => user.role !== "super_admin" && user.accountType === accountTypeForMode(mode));
-  companyLoginHint.textContent = companyUsers.length === 0
-    ? `No hay usuarios ${accountTypeNoun(mode)} creados. Inicia sesión como Administrador y crea usuarios para este tipo.`
-    : `Este acceso usa el correo y la contraseña creados por tu ${accountTypeOwner(mode)}.`;
+  if(mode === "administrador"){
+    companyLoginHint.textContent = "Ingresa el correo y la contraseña del Administrador. Si es tu primer ingreso, usa la clave inicial que te entregaron y cámbiala luego desde Cuentas corporativas.";
+  } else {
+    const companyUsers = access.users.filter(user => user.role !== "super_admin" && user.accountType === accountTypeForMode(mode));
+    companyLoginHint.textContent = companyUsers.length === 0
+      ? `No hay usuarios ${accountTypeNoun(mode)} creados. Inicia sesión como Administrador y crea usuarios para este tipo.`
+      : `Este acceso usa el correo y la contraseña creados por tu ${accountTypeOwner(mode)}.`;
+  }
   companyLoginEmail.value = "";
   companyLoginPassword.value = "";
 }
