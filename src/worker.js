@@ -310,6 +310,18 @@ function mapNormativeRow(row) {
   };
 }
 
+// Palabras demasiado comunes para servir como termino de busqueda por si solas.
+// Sin este filtro, una pregunta como "necesito la memoria explicativa del
+// proyecto" nunca encontraria nada si se buscara la frase completa tal cual.
+const STOPWORDS_ES = new Set(["el","la","los","las","de","del","que","un","una","unos","unas","y","o","en","para","con","por","es","son","al","lo","mi","tu","su","este","esta","esto","necesito","quiero","como","cómo","qué","donde","dónde","cuando","cuándo","proyecto","tengo","hay","mis"]);
+
+function extractSearchTerms(q) {
+  return q
+    .toLowerCase()
+    .split(/[^a-zA-ZÀ-ÿ0-9]+/)
+    .filter(word => word.length >= 4 && !STOPWORDS_ES.has(word));
+}
+
 // Publico y de solo lectura: contenido normativo, no datos de usuarios. Solo
 // devuelve lo que ya esta realmente cargado en D1 - documentos sin extraer
 // simplemente no aparecen, nunca se inventa contenido para completar.
@@ -323,7 +335,16 @@ async function normativeSearch(request, env) {
   const binds = [];
   if (documento) { conditions.push("documento LIKE ?"); binds.push(`%${documento}%`); }
   if (categoria) { conditions.push("categoria LIKE ?"); binds.push(`%${categoria}%`); }
-  if (q) { conditions.push("(titulo LIKE ? OR verifica LIKE ? OR categoria LIKE ? OR correccion LIKE ?)"); binds.push(`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`); }
+  const terms = q ? extractSearchTerms(q) : [];
+  if (terms.length) {
+    const termConditions = terms.map(() => "(titulo LIKE ? OR verifica LIKE ? OR categoria LIKE ? OR correccion LIKE ?)");
+    conditions.push(`(${termConditions.join(" OR ")})`);
+    for (const term of terms) binds.push(`%${term}%`, `%${term}%`, `%${term}%`, `%${term}%`);
+  } else if (q) {
+    // Query muy corta o solo con palabras comunes: usarla igual, tal cual.
+    conditions.push("(titulo LIKE ? OR verifica LIKE ? OR categoria LIKE ? OR correccion LIKE ?)");
+    binds.push(`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`);
+  }
   const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
   const stmt = env.GIAE_DB.prepare(`SELECT * FROM normative_rules ${where} ORDER BY documento, numeral LIMIT 30`);
   const rows = await (binds.length ? stmt.bind(...binds) : stmt).all();
