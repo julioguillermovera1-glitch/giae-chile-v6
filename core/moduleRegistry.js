@@ -13,6 +13,7 @@ const usuariosPago = [...profesionales, "estudiante"];
 
 export const modules = [
   { id: "inicio-proyecto", label: "Inicio", group: "inicio", path: "../modules/proyectos/proyectos.js", profiles: usuariosPago, permission: "project.manage" },
+  { id: "dashboard", label: "Escritorio", group: "inicio", path: "../modules/dashboard/dashboard.js", profiles: ["empresa", "independiente", "pueblos", "estudiante", "aula", "administrador"] },
 
   { id: "proyectos", label: "1. Crear proyecto", group: "proyecto", path: "../modules/proyectos/proyectos.js", profiles: usuariosPago, permission: "project.manage" },
   { id: "cargas", label: "2. Cargas", group: "proyecto", path: "../modules/cargas/cargas.js", profiles: usuariosPago, hiddenInMenu: true, permission: "project.manage" },

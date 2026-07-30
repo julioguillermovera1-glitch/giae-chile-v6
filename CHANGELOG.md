@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-07-30 - Etapa 2: dashboard reconectado + boton roto arreglado
+
+- `modules/dashboard/dashboard.js` era inalcanzable desde la UI (su id nunca se agrego a `moduleRegistry.js`), pero el diagnostico de Fase 5.6 ya lo usaba como evidencia real. Se agrega su entrada (`id: "dashboard"`, label "Escritorio", grupo "inicio") sin tocar el "Inicio" existente ni cambiar el modulo por defecto de ningun perfil.
+- Al reconectarlo se encontro un bug independiente: los botones "Nuevo proyecto"/"Proyecto de practica" del propio dashboard apuntaban al id `'proyecto'` (singular), que nunca existio en el registro - llevaban rotos desde antes de cualquier retiro de hoy. Se corrigen a `'proyectos'` (plural, el modulo real).
+- Probado en navegador: "Escritorio" abre para varios perfiles con contenido real, y el boton antes roto ahora navega correctamente a "1. Crear proyecto". Los 7 diagnosticos de fase en 100% (29 modulos revisados, antes 28).
+
 ## 2026-07-30 - Etapa 2: retiro de modulo duplicado sin uso
 
 - Se retira `modules/proyecto/proyecto.js` (singular) a `docs/_duplicados_retirados/modules/proyecto/`: no estaba registrado en `moduleRegistry.js` (era inalcanzable desde la UI, `openModule()` nunca podia encontrarlo), y ningun `tools/phase*-check.mjs` dependia de el. Era una version anterior de "Proyecto activo", reemplazada por `modules/proyectos/proyectos.js` (plural).

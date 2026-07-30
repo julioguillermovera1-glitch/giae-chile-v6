@@ -13,14 +13,14 @@ const quickByProfile = {
     ['educacion', 'Aula Técnica', 'Revisar contenidos de acceso libre.']
   ],
   empresa: [
-    ['proyecto', 'Nuevo proyecto', 'Crear o continuar un proyecto eléctrico.'],
+    ['proyectos', 'Nuevo proyecto', 'Crear o continuar un proyecto eléctrico.'],
     ['flujo-guiado', 'Flujo guiado', 'Ver que falta, que bloquea y cual es la siguiente accion.'],
     ['usuarios', 'Trabajadores', 'Gestionar usuarios internos de la empresa.'],
     ['presupuesto', 'Presupuestos', 'Generar cotizaciones con marca de empresa.'],
     ['documentacion', 'Documentación', 'Preparar informes y antecedentes.']
   ],
   independiente: [
-    ['proyecto', 'Nuevo proyecto', 'Registrar cliente, dirección y datos técnicos base.'],
+    ['proyectos', 'Nuevo proyecto', 'Registrar cliente, dirección y datos técnicos base.'],
     ['flujo-guiado', 'Flujo guiado', 'Avanzar paso a paso sin saltar faltantes.'],
     ['cargas', 'Cargas', 'Ingresar consumos y circuitos.'],
     ['unilineal', 'Unilineal', 'Generar diagrama automático desde el cuadro.'],
@@ -28,7 +28,7 @@ const quickByProfile = {
   ],
   estudiante: [
     ['educacion', 'Continuar aprendizaje', 'Aula Técnica, conceptos y guías.'],
-    ['proyecto', 'Proyecto de práctica', 'Practicar un flujo de proyecto eléctrico.'],
+    ['proyectos', 'Proyecto de práctica', 'Practicar un flujo de proyecto eléctrico.'],
     ['flujo-guiado', 'Revision guiada', 'Aprender que datos faltan antes de avanzar.'],
     ['cargas', 'Ejercicios de cargas', 'Ingresar cargas y revisar resultados.'],
     ['auditoria', 'Revisión guiada', 'Comprender observaciones del sistema.'],
