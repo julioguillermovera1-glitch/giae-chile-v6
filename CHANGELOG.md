@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-07-30 - Cuentas nuevas de Empresa/Independiente quedaban con el menu vacio
+
+- Bug real encontrado al probar la primera cuenta Empresa creada en produccion: `upsertCompanyUser` asignaba `permissions: []` a cualquier cuenta nueva que no fuera "super_admin", y no existe ninguna pantalla en la app para asignar permisos manualmente. Resultado: el menu quedaba casi vacio, solo visible lo que no exige permiso (Chat tecnico IA).
+- `core/store.js`: `upsertCompanyUser` ahora usa todos los permisos disponibles por defecto cuando no se especifican explicitos (no existe hoy forma de especificarlos desde la interfaz).
+- `ensureCompanyAccess()` repara automaticamente las cuentas ya creadas antes de este arreglo (permissions vacio se completa solo, sin que el usuario tenga que recrear nada).
+- Probado end-to-end: cuenta con `permissions: []` se autorepara al recargar; login como Empresa muestra los 7 grupos del menu (Inicio, Proyecto, Inventario, CAD, Documentacion, Educacion/IA, Reparacion), no solo Chat IA.
+
 ## 2026-07-30 - Administrador ahora exige correo y contraseña
 
 - El perfil "Administrador" nunca tuvo clave, desde antes de esta sesion de trabajo. Cualquiera con el link publico podia entrar directo al panel de reparacion completo.

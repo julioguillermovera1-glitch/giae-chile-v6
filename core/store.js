@@ -153,6 +153,13 @@ export function ensureCompanyAccess(){
   // Sesiones creadas antes de existir login de Administrador: completar credenciales iniciales.
   if(!owner.email) owner.email = DEFAULT_ADMIN_EMAIL;
   if(!owner.passwordHash) owner.passwordHash = DEFAULT_ADMIN_PASSWORD_HASH;
+  // Cuentas creadas antes de este arreglo quedaron con permissions:[] y sin forma de
+  // corregirlo desde la interfaz. Se completan aqui mismo, cada vez que se usa el acceso.
+  state.companyAccess.users.forEach(user => {
+    if(user.role !== "super_admin" && (!Array.isArray(user.permissions) || user.permissions.length === 0)){
+      user.permissions = ALL_COMPANY_PERMISSIONS;
+    }
+  });
   state.companyAccess.activeUserId = state.companyAccess.activeUserId || owner.id;
   if(!state.companyAccess.users.some(user => user.id === state.companyAccess.activeUserId)) state.companyAccess.activeUserId = owner.id;
   return state.companyAccess;
@@ -180,7 +187,13 @@ export function upsertCompanyUser(user){
   const access = ensureCompanyAccess();
   const index = access.users.findIndex(item => item.id === user.id);
   const existing = index >= 0 ? access.users[index] : null;
-  const permissions = user.role === "super_admin" ? ALL_COMPANY_PERMISSIONS : Array.from(new Set(user.permissions || []));
+  // No existe hoy ninguna pantalla para asignar permisos individuales a un usuario.
+  // Mientras eso no exista, una cuenta nueva sin permisos explicitos queda con el
+  // menu vacio y sin forma de arreglarlo desde la interfaz. Se usan todos los
+  // permisos por defecto, y solo se restringen si en el futuro se pasan explicitos.
+  const permissions = user.role === "super_admin"
+    ? ALL_COMPANY_PERMISSIONS
+    : Array.from(new Set(user.permissions || existing?.permissions || ALL_COMPANY_PERMISSIONS));
   const accountType = user.accountType || existing?.accountType || "empresa";
   const normalized = {
     id: user.id || createCompanyUserId(),
