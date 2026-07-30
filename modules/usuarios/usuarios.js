@@ -1,4 +1,8 @@
-import { ensureCompanyAccess, currentCompanyUser, hasCompanyPermission, setActiveCompanyUser, upsertCompanyUser, deleteCompanyUser } from "../../core/store.js";
+import { ensureCompanyAccess, currentCompanyUser, hasCompanyPermission, setActiveCompanyUser, upsertCompanyUser, deleteCompanyUser, listCompanyUsersFromServer, getApiToken } from "../../core/store.js";
+
+// Evita volver a pedir el listado al servidor en cada re-render dentro de la
+// misma carga de pagina (se resetea solo al recargar el navegador).
+const usuariosModuleState = { loaded: false };
 
 const permissions = [
   { id: "project.manage", label: "Crear y modificar proyectos" },
@@ -93,8 +97,16 @@ export function render(host, state) {
     host.innerHTML = `<section class="module-window"><div class="result-box danger"><strong>Acceso restringido.</strong><br>Este usuario no puede administrar trabajadores ni permisos.</div></section>`;
     return;
   }
+  if(!getApiToken()){
+    host.innerHTML = `<section class="module-window"><div class="result-box info"><strong>Falta el token de administrador en esta pestaña.</strong><br>Las cuentas ahora viven en la nube (D1), no en este navegador. Pide al Administrador que te comparta el token y pégalo en Panel de reparación → Cuentas corporativas para poder ver y editar trabajadores.</div></section>`;
+    return;
+  }
+  if(!usuariosModuleState.loaded){
+    usuariosModuleState.loaded = true;
+    listCompanyUsersFromServer().then(() => render(host, state));
+  }
 
-  const companyUsers = access.users.filter(user => user.role !== "super_admin");
+  const companyUsers = access.users.filter(user => user.accountType !== "super_admin");
   const noUsers = companyUsers.length === 0;
   const connectedUsers = companyUsers.filter(user => user.status === "Activo").length;
 
@@ -176,13 +188,15 @@ export function render(host, state) {
     }
   });
 
-  host.querySelector("#saveCompanyUser")?.addEventListener("click", () => {
+  host.querySelector("#saveCompanyUser")?.addEventListener("click", async () => {
     const user = readForm();
     if(!user.name) return alert("Ingresa el nombre del usuario.");
     if(!user.email) return alert("Ingresa el correo del usuario.");
     if(!user.id && !user.password) return alert("Crea una contraseña para el nuevo usuario.");
     if(user.role !== "super_admin" && !user.permissions.length) return alert("Asigna al menos un permiso.");
-    upsertCompanyUser(user);
+    const result = await upsertCompanyUser(user);
+    if(!result.ok) return alert(result.error || "No se pudo guardar el usuario.");
+    await listCompanyUsersFromServer();
     window.dispatchEvent(new Event("giae:admin-updated"));
     render(host, state);
   });
@@ -217,9 +231,10 @@ export function render(host, state) {
     }
   }));
 
-  host.querySelectorAll("[data-delete-user]").forEach(button => button.addEventListener("click", () => {
-    if(confirm("Eliminar este usuario de empresa?")){
-      deleteCompanyUser(button.dataset.deleteUser);
+  host.querySelectorAll("[data-delete-user]").forEach(button => button.addEventListener("click", async () => {
+    if(confirm("Desactivar este usuario de empresa?")){
+      const result = await deleteCompanyUser(button.dataset.deleteUser);
+      if(!result.ok) return alert(result.error || "No se pudo desactivar el usuario.");
       window.dispatchEvent(new Event("giae:admin-updated"));
       render(host, state);
     }

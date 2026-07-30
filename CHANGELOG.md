@@ -1,5 +1,34 @@
 # Changelog
 
+## 2026-07-30 - Ingreso real contra D1 + trabajo offline con sincronizacion
+
+Etapa 1 de la hoja de ruta hacia el termino provisorio del proyecto (ver
+`docs/ROADMAP_6_FASES_GIAE_CHILE.md` y la skill giae-madurez-comercial). El ingreso deja
+de vivir solo en el navegador de cada persona y pasa a la base de datos real.
+
+- **Migracion `migrations/0002_giae_auth.sql`**: agrega `password_hash`, `account_type` y
+  `permissions_json` a la tabla `users` (no destructivo, `ALTER TABLE ADD COLUMN`).
+- **`src/worker.js`**: 3 endpoints nuevos - `POST /auth/login` (publico, hash con sal
+  SHA-256, crea el super_admin por defecto la primera vez que no existe ninguno),
+  `POST /auth/users` (crear/editar cuentas, protegido con `GIAE_API_TOKEN`) y
+  `GET /auth/users` (listado, protegido).
+- **`core/store.js`**: `verifyCompanyUserCredentials`/`upsertCompanyUser` pasan a ser
+  async y consultan el Worker en vez de un arreglo local. Se agrega sesion offline-first:
+  si no hay internet, se restaura la ultima sesion ya validada en este dispositivo (nunca
+  la contrasena) en vez de bloquear a la persona; con internet, siempre se verifica de
+  nuevo contra el servidor. Se agrega `flushSyncQueue()` que sube automaticamente al
+  Worker los proyectos que quedaron en la cola de sincronizacion (`cloudWorkspaceEngine.js`,
+  ya existia pero era 100% manual) apenas vuelve la conexion (`window.addEventListener('online', ...)`).
+- **`core/main.js`**: login async, aviso visible "Trabajando sin conexión" cuando la
+  sesion viene del cache offline.
+- **Panel de Administrador**: campo para pegar el `GIAE_API_TOKEN` (vive en
+  `sessionStorage`, no permanente), listados y altas de cuentas conectados al servidor.
+- **Limite honesto documentado**: crear/editar/listar cuentas y sincronizar proyectos
+  todavia dependen del token unico de administrador, no de autenticacion por usuario real
+  - eso es explicitamente Fase 6 segun el roadmap del proyecto. Las cuentas de prueba
+  creadas antes de este cambio (`empresa@giaechile.cl`, etc.) no se migran: se recrean
+  directo contra el sistema nuevo.
+
 ## 2026-07-30 - Multiples ventanas con sesiones distintas al mismo tiempo
 
 - Antes, "quien esta conectado" se guardaba en `localStorage`, compartido por todas las pestanas del mismo navegador: iniciar sesion en una pestana desconectaba o mezclaba la sesion de otra.

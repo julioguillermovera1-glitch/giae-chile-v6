@@ -1,4 +1,4 @@
-import { persist, importProjectFile, hasCompanyPermission, recalculateProject, state, ensureCompanyAccess, upsertCompanyUser } from "../../core/store.js";
+import { persist, importProjectFile, hasCompanyPermission, recalculateProject, state, ensureCompanyAccess, upsertCompanyUser, deleteCompanyUser, listCompanyUsersFromServer, getApiToken, setApiToken } from "../../core/store.js";
 
 // UI state for cuentas corporativas
 let cuentasState = { page: 1, pageSize: 10, sortBy: 'name', sortDir: 'asc', csvColumns: ["id","name","email","accountType","freeAccess","role","createdAt"] };
@@ -172,8 +172,17 @@ export function render(host, state){
       </section>
       <section id="admTabCuentas" class="admin-tab-page">
         <div class="admin-card">
+          <h4>Conexión con la nube</h4>
+          <p class="small">Las cuentas ya se guardan en la base de datos real (D1), no en este navegador. Para crear, editar o ver cuentas necesitas pegar aquí el token de administrador del Worker (el mismo <code>GIAE_API_TOKEN</code> configurado en Cloudflare). Se guarda solo mientras esta pestaña esté abierta, nunca de forma permanente.</p>
+          <div class="admin-inline">
+            <input id="admApiToken" type="password" placeholder="Token de administrador (GIAE_API_TOKEN)" value="${escapeHtml(getApiToken())}">
+            <button id="admSaveApiToken" class="primary">Guardar token</button>
+            <span id="admApiTokenStatus" class="small">${getApiToken() ? "Token cargado en esta pestaña." : "Sin token: las cuentas no se podrán crear ni listar."}</span>
+          </div>
+        </div>
+        <div class="admin-card">
           <h4>Cuentas corporativas</h4>
-          <p class="small">Gestiona las cuentas registradas en el sistema (empresas y Pueblos Originarios). Aquí puedes crear, editar, otorgar/revocar acceso gratuito y eliminar cuentas.</p>
+          <p class="small">Gestiona las cuentas registradas en el sistema (empresas, instaladores independientes y Pueblos Originarios). Aquí puedes crear, editar, otorgar/revocar acceso gratuito y eliminar cuentas.</p>
           <div class="admin-inline">
             <input id="cuentasSearch" placeholder="Buscar por nombre o correo">
             <select id="cuentasFilterType"><option value="">Todos los tipos</option><option value="empresa">Empresa</option><option value="independiente">Instalador independiente</option><option value="pueblos">Pueblos Originarios</option></select>
@@ -193,7 +202,7 @@ export function render(host, state){
           <div class="admin-inline">
             <input id="cuentaName" placeholder="Nombre cuenta">
             <input id="cuentaEmail" placeholder="correo@cuenta.cl">
-            <input id="cuentaPassword" placeholder="Contraseña (opcional)" type="password">
+            <input id="cuentaPassword" placeholder="Contraseña (obligatoria para cuentas nuevas)" type="password">
             <select id="cuentaType"><option value="empresa">Empresa</option><option value="independiente">Instalador independiente</option><option value="pueblos">Pueblos Originarios</option></select>
             <label class="checkbox-label"><input id="cuentaFreeAccess" type="checkbox"> Acceso gratuito (solo para Pueblos)</label>
             <button id="admAddCuenta" class="primary">Crear cuenta</button>
@@ -387,6 +396,11 @@ function wireEvents(state){
     document.querySelector("#admOpenCompanyUsers")?.addEventListener("click", () => openCompanyUsers());
   }
   // Corporate accounts tab handlers (super-admin / administrador)
+  document.querySelector("#admSaveApiToken")?.addEventListener("click", () => {
+    setApiToken(document.querySelector("#admApiToken").value);
+    document.querySelector("#admApiTokenStatus").textContent = getApiToken() ? "Token cargado en esta pestaña." : "Sin token: las cuentas no se podrán crear ni listar.";
+    refreshCuentasFromServer(state);
+  });
   document.querySelector("#admAddCuenta")?.addEventListener("click", () => addCuenta(state));
   document.querySelector("#cuentasSearch")?.addEventListener("input", () => { cuentasState.page = 1; paintCuentas(state); });
   document.querySelector("#cuentasFilterType")?.addEventListener("change", () => { cuentasState.page = 1; paintCuentas(state); });
@@ -398,6 +412,7 @@ function wireEvents(state){
   document.querySelector("#cuentasCsvColumnsClose")?.addEventListener("click", () => { const p = document.querySelector('#cuentasCsvColumnsPanel'); if(p) p.style.display = 'none'; });
   document.querySelector("#cuentasCsvColumnsSave")?.addEventListener("click", (ev) => { ev.preventDefault(); const form = document.querySelector('#cuentasCsvColumnsForm'); if(!form) return; const cols = Array.from(form.querySelectorAll('input[name="col"]:checked')).map(i => i.value); cuentasState.csvColumns = cols.length ? cols : cuentasState.csvColumns; document.querySelector('#cuentasCsvColumnsPanel').style.display = 'none'; });
   paintCuentas(state);
+  refreshCuentasFromServer(state);
   document.querySelector("#admAddTemplate")?.addEventListener("click", () => addTemplate(state));
   document.querySelector("#admRunDiagnostics")?.addEventListener("click", () => paintSoftwareStatus(state, true));
   document.querySelector("#admDownloadDiagnostics")?.addEventListener("click", () => downloadDiagnostics(state));
@@ -440,7 +455,7 @@ function saveAdminForm(state, notify=false){
   if(notify) alert("Configuración administrativa guardada.");
 }
 
-function addUser(state){
+async function addUser(state){
   const name = document.querySelector("#admUserName").value.trim();
   const email = document.querySelector("#admUserEmail").value.trim();
   const password = document.querySelector("#admUserPassword")?.value || "";
@@ -451,14 +466,14 @@ function addUser(state){
   if(!name) return alert("Ingresa un nombre de usuario.");
   state.admin.users.push({ name, email, role, profile, status: "Activo" });
   addLog(state, `Usuario creado: ${name}.`);
-  // If admin requested a corporate account, create/update it in companyAccess as well
+  // Si ademas se pidio una cuenta corporativa (con clave real en D1), se crea aparte.
   if(accountType === "empresa" || accountType === "independiente" || accountType === "pueblos"){
-    try{
-      upsertCompanyUser({ name, email, role, accountType, freeAccess, password });
-      addLog(state, `Cuenta ${accountType} creada/actualizada para: ${email || name}.`);
-    }catch(e){
-      console.error(e);
-      addLog(state, `Error creando cuenta corporativa para ${email || name}.`);
+    if(!password){
+      addLog(state, `No se creo cuenta corporativa para ${email || name}: falta contraseña.`);
+    } else {
+      const result = await upsertCompanyUser({ name, email, role, accountType, freeAccess, password });
+      addLog(state, result.ok ? `Cuenta ${accountType} creada/actualizada para: ${email || name}.` : `Error creando cuenta corporativa: ${result.error}`);
+      if(result.ok) await refreshCuentasFromServer(state);
     }
   }
   document.querySelector("#admUserName").value = ""; document.querySelector("#admUserEmail").value = "";
@@ -658,20 +673,31 @@ function exportCuentasCsv(state){
   const a = document.createElement('a'); a.href = url; a.download = 'giae-cuentas-corporativas.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 
-function addCuenta(state){
+async function refreshCuentasFromServer(state){
+  const status = document.querySelector("#admApiTokenStatus");
+  const result = await listCompanyUsersFromServer();
+  if(!result.ok){
+    if(status) status.textContent = result.error || "No se pudo obtener el listado de cuentas.";
+    return;
+  }
+  if(status) status.textContent = `Token cargado en esta pestaña. ${result.users.length} cuenta(s) en la nube.`;
+  paintCuentas(state);
+}
+
+async function addCuenta(state){
   const name = document.querySelector("#cuentaName").value.trim();
   const email = document.querySelector("#cuentaEmail").value.trim();
   const password = document.querySelector("#cuentaPassword").value || "";
   const accountType = document.querySelector("#cuentaType").value || "empresa";
   const freeAccess = !!document.querySelector("#cuentaFreeAccess").checked;
   if(!name || !email) return alert("Nombre y correo son obligatorios.");
-  try{
-    upsertCompanyUser({ name, email, password, accountType, freeAccess, role: accountType === 'pueblos' ? 'proyectos' : 'proyectos' });
-    addLog(state, `Cuenta corporativa creada: ${email}`);
-    persist();
-    document.querySelector("#cuentaName").value = ""; document.querySelector("#cuentaEmail").value = ""; document.querySelector("#cuentaPassword").value = ""; document.querySelector("#cuentaFreeAccess").checked = false;
-    paintCuentas(state);
-  }catch(e){ console.error(e); alert('Error creando cuenta. Revisa la consola.'); }
+  if(!password) return alert("Crea una contraseña para la cuenta nueva.");
+  const result = await upsertCompanyUser({ name, email, password, accountType, freeAccess, role: accountType === 'pueblos' ? 'proyectos' : 'proyectos' });
+  if(!result.ok) return alert(result.error || 'Error creando cuenta.');
+  addLog(state, `Cuenta corporativa creada: ${email}`);
+  persist();
+  document.querySelector("#cuentaName").value = ""; document.querySelector("#cuentaEmail").value = ""; document.querySelector("#cuentaPassword").value = ""; document.querySelector("#cuentaFreeAccess").checked = false;
+  await refreshCuentasFromServer(state);
 }
 
 function editCuenta(id){
@@ -685,31 +711,29 @@ function editCuenta(id){
   // Set add button to save mode
   const btn = document.querySelector("#admAddCuenta");
   btn.textContent = "Guardar cambios";
-  btn.onclick = () => {
+  btn.onclick = async () => {
     const name = document.querySelector("#cuentaName").value.trim();
     const email = document.querySelector("#cuentaEmail").value.trim();
     const password = document.querySelector("#cuentaPassword").value || "";
     const accountType = document.querySelector("#cuentaType").value || "empresa";
     const freeAccess = !!document.querySelector("#cuentaFreeAccess").checked;
-    try{
-      upsertCompanyUser({ id: user.id, name, email, password: password || undefined, accountType, freeAccess, role: user.role });
-      addLog(state, `Cuenta actualizada: ${email}`);
-      persist();
-      btn.textContent = "Crear cuenta";
-      btn.onclick = () => addCuenta(state);
-      document.querySelector("#cuentaName").value = ""; document.querySelector("#cuentaEmail").value = ""; document.querySelector("#cuentaPassword").value = ""; document.querySelector("#cuentaFreeAccess").checked = false;
-      paintCuentas(state);
-    }catch(e){ console.error(e); alert('Error guardando cuenta.'); }
+    const result = await upsertCompanyUser({ id: user.id, name, email, password: password || undefined, accountType, freeAccess, role: user.role, permissions: user.permissions });
+    if(!result.ok) return alert(result.error || 'Error guardando cuenta.');
+    addLog(state, `Cuenta actualizada: ${email}`);
+    persist();
+    btn.textContent = "Crear cuenta";
+    btn.onclick = () => addCuenta(state);
+    document.querySelector("#cuentaName").value = ""; document.querySelector("#cuentaEmail").value = ""; document.querySelector("#cuentaPassword").value = ""; document.querySelector("#cuentaFreeAccess").checked = false;
+    await refreshCuentasFromServer(state);
   };
 }
 
-function deleteCuenta(id){
-  if(!confirm('¿Borrar cuenta corporativa?')) return;
-  const access = ensureCompanyAccess();
-  access.users = (access.users || []).filter(u => u.id !== id);
-  persist();
-  addLog(state, `Cuenta borrada: ${id}`);
-  paintCuentas(state);
+async function deleteCuenta(id){
+  if(!confirm('¿Desactivar esta cuenta corporativa? Podrás reactivarla despues editandola.')) return;
+  const result = await deleteCompanyUser(id);
+  if(!result.ok) return alert(result.error || 'No se pudo desactivar la cuenta.');
+  addLog(state, `Cuenta desactivada: ${id}`);
+  await refreshCuentasFromServer(state);
 }
 
 function countLocalProjects(state){

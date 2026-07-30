@@ -1,5 +1,10 @@
 const API_PREFIX = "/api/giae";
 const R2_BINDINGS = ["GIAE_PROJECT_BACKUPS", "GIAE_PROJECT_DOCUMENTS", "GIAE_BRAND_ASSETS", "GIAE_FIELD_MEDIA"];
+const ALL_PERMISSIONS = ["project.manage", "inventory.view", "inventory.manage", "users.manage", "docs.view", "budget.view"];
+const DEFAULT_COMPANY_ID = "giae-default";
+const DEFAULT_ADMIN_EMAIL = "administrador@giae.cl";
+const DEFAULT_ADMIN_PASSWORD = "Vwe6PTk5KgW";
+const ACCOUNT_TYPES_BY_MODE = { administrador: "super_admin", independiente: "independiente", pueblos: "pueblos", empresa: "empresa" };
 const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
   "cache-control": "no-store"
@@ -62,6 +67,42 @@ async function sha256Hex(value) {
   return Array.from(new Uint8Array(digest)).map(byte => byte.toString(16).padStart(2, "0")).join("");
 }
 
+function randomSalt() {
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  return Array.from(bytes).map(byte => byte.toString(16).padStart(2, "0")).join("");
+}
+
+async function hashPasswordWithSalt(password, salt) {
+  const digest = await sha256Hex(`${salt}:${password}`);
+  return `${salt}:${digest}`;
+}
+
+async function verifyPassword(password, stored) {
+  if (!stored || !stored.includes(":")) return false;
+  const salt = stored.split(":")[0];
+  const computed = await hashPasswordWithSalt(password, salt);
+  return computed === stored;
+}
+
+async function ensureDefaultCompanyAndAdmin(env) {
+  const createdAt = now();
+  await env.GIAE_DB.prepare(
+    "INSERT INTO companies (id, name, status, created_at, updated_at) VALUES (?, ?, 'activo', ?, ?) ON CONFLICT(id) DO NOTHING"
+  ).bind(DEFAULT_COMPANY_ID, "GIAE Chile", createdAt, createdAt).run();
+
+  const existingAdmin = await env.GIAE_DB.prepare(
+    "SELECT id FROM users WHERE account_type = 'super_admin' LIMIT 1"
+  ).first();
+  if (existingAdmin) return;
+
+  const salt = randomSalt();
+  const passwordHash = await hashPasswordWithSalt(DEFAULT_ADMIN_PASSWORD, salt);
+  await env.GIAE_DB.prepare(
+    `INSERT INTO users (id, company_id, email, name, role_id, status, account_type, password_hash, permissions_json, created_at, updated_at)
+     VALUES (?, ?, ?, ?, 'super_admin', 'Activo', 'super_admin', ?, ?, ?, ?)`
+  ).bind(uid("user"), DEFAULT_COMPANY_ID, DEFAULT_ADMIN_EMAIL, "Super administrador", passwordHash, JSON.stringify(ALL_PERMISSIONS), createdAt, createdAt).run();
+}
+
 function requireWriteAuth(request, env) {
   if (!env?.GIAE_API_TOKEN) {
     return {
@@ -104,6 +145,9 @@ async function health(env) {
     bindings: envStatus(env),
     endpoints: [
       "GET /api/giae/health",
+      "POST /api/giae/auth/login",
+      "POST /api/giae/auth/users",
+      "GET /api/giae/auth/users",
       "POST /api/giae/session/start",
       "POST /api/giae/license/check",
       "GET /api/giae/workspaces/:workspaceId",
@@ -146,6 +190,103 @@ async function licenseCheck(request, env) {
     validUntil: row?.valid_until || "",
     source: row ? "d1" : "fallback"
   });
+}
+
+async function login(request, env) {
+  if (!hasDb(env)) return json({ ok: false, error: "Base de datos no disponible" }, { status: 503 });
+  const payload = await readJson(request);
+  const email = String(payload.email || "").trim().toLowerCase();
+  const password = String(payload.password || "");
+  const mode = payload.mode || "empresa";
+  if (!email || !password) return json({ ok: false, error: "Correo y contraseña requeridos" }, { status: 400 });
+
+  await ensureDefaultCompanyAndAdmin(env);
+
+  const expectedType = ACCOUNT_TYPES_BY_MODE[mode] || "empresa";
+  const user = await env.GIAE_DB.prepare(
+    "SELECT * FROM users WHERE lower(email) = ? AND status = 'Activo'"
+  ).bind(email).first();
+
+  if (!user || user.account_type !== expectedType) {
+    return json({ ok: false, error: "Credenciales inválidas o usuario inactivo" }, { status: 401 });
+  }
+
+  const valid = await verifyPassword(password, user.password_hash);
+  if (!valid) return json({ ok: false, error: "Credenciales inválidas o usuario inactivo" }, { status: 401 });
+
+  let permissions = [];
+  try { permissions = JSON.parse(user.permissions_json || "[]"); } catch { permissions = []; }
+  if (user.account_type === "super_admin" || !permissions.length) permissions = ALL_PERMISSIONS;
+
+  await env.GIAE_DB.prepare("UPDATE users SET last_seen_at = ? WHERE id = ?").bind(now(), user.id).run();
+  await writeAudit(env, { companyId: user.company_id, userId: user.id, action: "auth.login", detail: { email, mode } });
+
+  return json({
+    ok: true,
+    user: { id: user.id, name: user.name, email: user.email, accountType: user.account_type, role: user.role_id || "proyectos", permissions, companyId: user.company_id }
+  });
+}
+
+async function upsertUser(request, env) {
+  const auth = requireWriteAuth(request, env);
+  if (!auth.ok) return auth.response;
+  if (!hasDb(env)) return json({ ok: false, error: "Base de datos no disponible" }, { status: 503 });
+
+  const payload = await readJson(request);
+  const email = String(payload.email || "").trim().toLowerCase();
+  if (!email) return json({ ok: false, error: "Correo requerido" }, { status: 400 });
+  const accountType = ["independiente", "pueblos", "super_admin"].includes(payload.accountType) ? payload.accountType : "empresa";
+  const createdAt = now();
+
+  const existing = await env.GIAE_DB.prepare("SELECT * FROM users WHERE lower(email) = ?").bind(email).first();
+
+  let passwordHash = existing?.password_hash || null;
+  if (payload.password) {
+    const salt = randomSalt();
+    passwordHash = await hashPasswordWithSalt(payload.password, salt);
+  }
+  if (!passwordHash) return json({ ok: false, error: "Se requiere una contraseña para una cuenta nueva" }, { status: 400 });
+
+  let permissions = Array.isArray(payload.permissions) && payload.permissions.length ? payload.permissions : null;
+  if (!permissions) permissions = existing ? (JSON.parse(existing.permissions_json || "[]").length ? JSON.parse(existing.permissions_json) : ALL_PERMISSIONS) : ALL_PERMISSIONS;
+
+  const id = existing?.id || uid("user");
+  const companyId = existing?.company_id || payload.companyId || DEFAULT_COMPANY_ID;
+  const name = payload.name || existing?.name || "Usuario";
+  const status = payload.status || existing?.status || "Activo";
+  const roleId = payload.role || existing?.role_id || "proyectos";
+
+  await env.GIAE_DB.prepare(
+    `INSERT INTO users (id, company_id, email, name, role_id, status, account_type, password_hash, permissions_json, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT(id) DO UPDATE SET name=excluded.name, status=excluded.status, account_type=excluded.account_type, password_hash=excluded.password_hash, permissions_json=excluded.permissions_json, role_id=excluded.role_id, updated_at=excluded.updated_at`
+  ).bind(id, companyId, email, name, roleId, status, accountType, passwordHash, JSON.stringify(permissions), existing?.created_at || createdAt, createdAt).run();
+
+  await writeAudit(env, { companyId, userId: id, action: "user.upsert", detail: { email, accountType } });
+
+  return json({ ok: true, user: { id, name, email, accountType, status, role: roleId, permissions } });
+}
+
+async function listUsers(request, env) {
+  const auth = requireWriteAuth(request, env);
+  if (!auth.ok) return auth.response;
+  if (!hasDb(env)) return json({ ok: false, error: "Base de datos no disponible" }, { status: 503 });
+  const rows = await env.GIAE_DB.prepare(
+    "SELECT id, company_id, email, name, role_id, status, account_type, permissions_json, last_seen_at, created_at FROM users ORDER BY created_at DESC"
+  ).all();
+  const users = (rows.results || []).map(row => ({
+    id: row.id,
+    companyId: row.company_id,
+    email: row.email,
+    name: row.name,
+    role: row.role_id,
+    status: row.status,
+    accountType: row.account_type,
+    permissions: (() => { try { return JSON.parse(row.permissions_json || "[]"); } catch { return []; } })(),
+    lastSeenAt: row.last_seen_at,
+    createdAt: row.created_at
+  }));
+  return json({ ok: true, users });
 }
 
 async function workspaceRead(env, workspaceId) {
@@ -246,6 +387,9 @@ async function routeApi(request, env) {
   const url = new URL(request.url);
   const path = url.pathname;
   if (path === `${API_PREFIX}/health` && request.method === "GET") return health(env);
+  if (path === `${API_PREFIX}/auth/login` && request.method === "POST") return login(request, env);
+  if (path === `${API_PREFIX}/auth/users` && request.method === "POST") return upsertUser(request, env);
+  if (path === `${API_PREFIX}/auth/users` && request.method === "GET") return listUsers(request, env);
   if (path === `${API_PREFIX}/session/start` && request.method === "POST") return startSession(request, env);
   if (path === `${API_PREFIX}/license/check` && request.method === "POST") return licenseCheck(request, env);
   if (path.startsWith(`${API_PREFIX}/workspaces/`) && request.method === "GET") return workspaceRead(env, decodeURIComponent(path.split("/").pop() || "workspace-local"));

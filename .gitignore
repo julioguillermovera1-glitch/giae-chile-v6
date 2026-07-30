@@ -13,3 +13,4 @@ node_modules/
 
 # Secretos locales (tokens, claves). Nunca deben subirse al repositorio.
 docs/_secretos_locales/
+.dev.vars

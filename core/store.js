@@ -7,6 +7,7 @@ import { runProjectEngine, createProjectRevision } from "./projectEngine.js";
 import { calculateCommercialProject } from "./commercial/budgetEngine.js";
 import { runIntegralAudit } from "./audit/integralAuditEngine.js";
 import { evaluateGuidedWorkflow } from "./workflow/guidedWorkflowEngine.js";
+import { ensureCloudWorkspace } from "./cloud/cloudWorkspaceEngine.js";
 const STORAGE_KEY = "giae_chile_v1_workspace";
 const LIBRARY_KEY = "giae_chile_v1_project_library";
 // La sesion (quien esta conectado en ESTA pestana) se guarda aparte, en
@@ -18,22 +19,38 @@ const SESSION_KEY = "giae_chile_v1_tab_session";
 function applyTabSession(){
   const raw = sessionStorage.getItem(SESSION_KEY);
   if(!raw){
+    // Pestana nueva (o la app instalada se cerro y volvio a abrir): si no hay
+    // internet, se restaura la ultima sesion ya validada en este dispositivo en
+    // vez de dejar a la persona bloqueada sin poder trabajar. Con internet,
+    // siempre se pide iniciar sesion de nuevo (por si la cuenta cambio de estado).
     state.profile = null;
+    state.offlineSession = false;
+    if(!isOnline()){
+      const restored = restoreLastValidatedSession();
+      if(restored){
+        state.profile = restored.accountType === "super_admin" ? "administrador" : restored.accountType;
+        state.offlineSession = true;
+        saveTabSession();
+      }
+    }
     return;
   }
   try{
     const session = JSON.parse(raw);
     state.profile = session.profile ?? null;
+    state.offlineSession = Boolean(session.offlineSession);
     if(state.companyAccess && session.activeUserId) state.companyAccess.activeUserId = session.activeUserId;
   }catch{
     state.profile = null;
+    state.offlineSession = false;
   }
 }
 
 function saveTabSession(){
   sessionStorage.setItem(SESSION_KEY, JSON.stringify({
     profile: state.profile ?? null,
-    activeUserId: state.companyAccess?.activeUserId ?? null
+    activeUserId: state.companyAccess?.activeUserId ?? null,
+    offlineSession: Boolean(state.offlineSession)
   }));
 }
 
@@ -41,11 +58,86 @@ function clearTabSession(){
   sessionStorage.removeItem(SESSION_KEY);
 }
 const ALL_COMPANY_PERMISSIONS = ["project.manage", "inventory.view", "inventory.manage", "users.manage", "docs.view", "budget.view"];
-// Credenciales iniciales del Administrador. Cambialas desde "Cuentas corporativas"
-// apenas inicies sesion la primera vez: edita el usuario "Super administrador"
-// con tu propio correo y una contrasena nueva.
-const DEFAULT_ADMIN_EMAIL = "administrador@giae.cl";
-const DEFAULT_ADMIN_PASSWORD_HASH = "5d898978";
+
+// --- Ingreso real contra el Worker/D1 (en vez de una copia local) ---
+const API_BASE = "/api/giae";
+// Token de escritura del Worker (el mismo GIAE_API_TOKEN configurado como secreto de
+// Cloudflare). Vive en sessionStorage, no en localStorage, para no dejarlo guardado
+// de forma permanente en el dispositivo. Lo pega el Administrador una vez por pestana
+// en el panel de Cuentas corporativas.
+const API_TOKEN_KEY = "giae_chile_v1_api_token";
+// Ultima sesion que se verifico con exito contra el servidor. Permite seguir
+// trabajando sin conexion despues de haber iniciado sesion una vez; nunca guarda la
+// contrasena, solo los datos ya verificados (nombre, correo, tipo, permisos).
+const LAST_SESSION_KEY = "giae_chile_v1_last_validated_session";
+
+function apiUrl(path){ return API_BASE + path; }
+
+export function getApiToken(){
+  try{ return sessionStorage.getItem(API_TOKEN_KEY) || ""; }catch{ return ""; }
+}
+
+export function setApiToken(token){
+  sessionStorage.setItem(API_TOKEN_KEY, String(token || "").trim());
+}
+
+export function clearApiToken(){
+  sessionStorage.removeItem(API_TOKEN_KEY);
+}
+
+function rememberValidatedSession(user){
+  localStorage.setItem(LAST_SESSION_KEY, JSON.stringify({ user, validatedAt: Date.now() }));
+}
+
+function getLastValidatedSession(){
+  try{
+    const raw = localStorage.getItem(LAST_SESSION_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch{ return null; }
+}
+
+function isOnline(){
+  return typeof navigator === "undefined" || navigator.onLine !== false;
+}
+
+/**
+ * Sube al Worker los paquetes de proyecto que quedaron pendientes en la cola
+ * local (ver core/cloud/cloudWorkspaceEngine.js) mientras no habia conexion.
+ * Requiere el token de administrador, igual que el resto de las escrituras -
+ * hasta que exista autenticacion por usuario real (Fase 6), sincronizar
+ * depende de que esta pestana tenga el token cargado.
+ */
+export async function flushSyncQueue(){
+  if(!isOnline()) return { ok: false, error: "Sin conexión." };
+  const token = getApiToken();
+  if(!token) return { ok: false, error: "Falta el token de administrador para sincronizar." };
+  const cloud = ensureCloudWorkspace(state);
+  const pending = cloud.syncQueue.filter(item => item.status === "pendiente");
+  let synced = 0;
+  for(const item of pending){
+    let response;
+    try{
+      response = await fetch(apiUrl(`/projects/${encodeURIComponent(item.projectId)}/sync`), {
+        method: "POST",
+        headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+        body: JSON.stringify(item.envelope)
+      });
+    }catch{
+      break; // sigue sin conexion real (navigator.onLine puede mentir) - se reintenta despues
+    }
+    const payload = await response.json().catch(() => ({}));
+    if(response.ok && payload.ok){
+      item.status = "sincronizado";
+      synced++;
+    }
+  }
+  persist();
+  return { ok: true, synced, pending: cloud.syncQueue.filter(item => item.status === "pendiente").length };
+}
+
+if(typeof window !== "undefined"){
+  window.addEventListener("online", () => { flushSyncQueue().catch(() => {}); });
+}
 
 function nowStamp(){
   return new Date().toLocaleString("es-CL");
@@ -133,66 +225,75 @@ export const state = {
     mode: "estricto",
     noInventar: true
   },
+  // Se llena con la respuesta real del Worker al iniciar sesion o al listar
+  // cuentas - ya no se crea una cuenta de administrador local por defecto aqui,
+  // eso lo hace el Worker contra D1 la primera vez que arranca sin ninguna.
   companyAccess: {
-    activeUserId: "owner",
-    users: [
-      { id: "owner", name: "Super administrador", email: DEFAULT_ADMIN_EMAIL, role: "super_admin", accountType: "empresa", freeAccess: true, status: "Activo", permissions: ALL_COMPANY_PERMISSIONS, passwordHash: DEFAULT_ADMIN_PASSWORD_HASH, createdAt: nowStamp() }
-    ]
+    activeUserId: null,
+    users: []
   }
 };
 
 
-function createCompanyUserId(){
-  return "USR-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).slice(2,5).toUpperCase();
-}
-
-function hashPassword(password){
-  let hash = 2166136261;
-  for(const char of String(password || "")){
-    hash ^= char.charCodeAt(0);
-    hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+/**
+ * Verifica correo/contrasena contra el Worker (D1), no contra una copia local.
+ * Devuelve { ok, user } en exito, { ok:false, error } si las credenciales no
+ * sirven, o { ok:false, offline:true, error } si no se pudo ni siquiera
+ * consultar el servidor (sin internet, Worker caido).
+ */
+export async function verifyCompanyUserCredentials(email, password, mode){
+  let response;
+  try{
+    response = await fetch(apiUrl("/auth/login"), {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email, password, mode })
+    });
+  }catch{
+    return { ok: false, offline: true, error: "No se pudo conectar con el servidor. Revisa tu conexión a internet." };
   }
-  return (hash >>> 0).toString(16).padStart(8, "0");
-}
-
-export function verifyCompanyUserCredentials(email, password, mode){
+  let payload;
+  try{ payload = await response.json(); }catch{ payload = {}; }
+  if(!response.ok || !payload.ok){
+    return { ok: false, offline: false, error: payload.error || "Credenciales inválidas o usuario inactivo." };
+  }
   const access = ensureCompanyAccess();
-  const normalizedEmail = String(email || "").trim().toLowerCase();
-  const user = access.users.find(item => String(item.email || "").trim().toLowerCase() === normalizedEmail && item.status === "Activo");
-  if(!user || !user.passwordHash) return null;
-  // If mode is provided ("administrador", "empresa", "independiente" o "pueblos"), require matching tipo
-  if(mode === "administrador"){
-    if(user.role !== "super_admin") return null;
-  } else if(mode){
-    const expected = mode === "pueblos" ? "pueblos" : mode === "independiente" ? "independiente" : "empresa";
-    if(user.accountType !== expected) return null;
-  }
-  if(user.accountType === "pueblos" && !user.freeAccess) return null;
-  return user.passwordHash === hashPassword(password) ? user : null;
+  access.users = [payload.user];
+  access.activeUserId = payload.user.id;
+  rememberValidatedSession(payload.user);
+  persist();
+  return { ok: true, user: payload.user };
+}
+
+/**
+ * Restaura, sin red, la ultima sesion que alguna vez se valido con exito en
+ * este dispositivo (nunca la contrasena). Se usa solo cuando esta pestana no
+ * tiene sesion propia todavia y no hay conexion para verificar una nueva.
+ * Devuelve el usuario restaurado o null si nunca hubo una sesion valida aqui.
+ */
+export function restoreLastValidatedSession(){
+  const cached = getLastValidatedSession();
+  if(!cached?.user) return null;
+  const access = ensureCompanyAccess();
+  access.users = [cached.user];
+  access.activeUserId = cached.user.id;
+  return cached.user;
 }
 
 export function ensureCompanyAccess(){
   state.companyAccess = state.companyAccess || {};
   state.companyAccess.users = Array.isArray(state.companyAccess.users) ? state.companyAccess.users : [];
-  let owner = state.companyAccess.users.find(user => user.role === "super_admin") || state.companyAccess.users.find(user => user.id === "owner");
-  if(!owner){
-    owner = { id: "owner", name: "Super administrador", email: DEFAULT_ADMIN_EMAIL, role: "super_admin", status: "Activo", permissions: ALL_COMPANY_PERMISSIONS, passwordHash: DEFAULT_ADMIN_PASSWORD_HASH, createdAt: nowStamp() };
-    state.companyAccess.users.unshift(owner);
-  }
-  owner.permissions = ALL_COMPANY_PERMISSIONS;
-  owner.status = owner.status || "Activo";
-  // Sesiones creadas antes de existir login de Administrador: completar credenciales iniciales.
-  if(!owner.email) owner.email = DEFAULT_ADMIN_EMAIL;
-  if(!owner.passwordHash) owner.passwordHash = DEFAULT_ADMIN_PASSWORD_HASH;
-  // Cuentas creadas antes de este arreglo quedaron con permissions:[] y sin forma de
-  // corregirlo desde la interfaz. Se completan aqui mismo, cada vez que se usa el acceso.
+  // Cuentas ya cargadas (via login o listado del servidor) que por alguna razon
+  // llegaron sin permisos quedan con el menu vacio y sin forma de arreglarlo
+  // desde la interfaz - se completan aqui mismo, igual que antes.
   state.companyAccess.users.forEach(user => {
-    if(user.role !== "super_admin" && (!Array.isArray(user.permissions) || user.permissions.length === 0)){
+    if(user.accountType !== "super_admin" && (!Array.isArray(user.permissions) || user.permissions.length === 0)){
       user.permissions = ALL_COMPANY_PERMISSIONS;
     }
   });
-  state.companyAccess.activeUserId = state.companyAccess.activeUserId || owner.id;
-  if(!state.companyAccess.users.some(user => user.id === state.companyAccess.activeUserId)) state.companyAccess.activeUserId = owner.id;
+  if(!state.companyAccess.users.some(user => user.id === state.companyAccess.activeUserId)){
+    state.companyAccess.activeUserId = state.companyAccess.users[0]?.id || null;
+  }
   return state.companyAccess;
 }
 
@@ -204,7 +305,7 @@ export function currentCompanyUser(){
 export function hasCompanyPermission(permission){
   const user = currentCompanyUser();
   if(!permission) return true;
-  if(user?.role === "super_admin") return true;
+  if(user?.role === "super_admin" || user?.accountType === "super_admin") return true;
   return Array.isArray(user?.permissions) && user.permissions.includes(permission);
 }
 
@@ -215,45 +316,67 @@ export function setActiveCompanyUser(userId){
   saveTabSession();
 }
 
-export function upsertCompanyUser(user){
-  const access = ensureCompanyAccess();
-  const index = access.users.findIndex(item => item.id === user.id);
-  const existing = index >= 0 ? access.users[index] : null;
-  // No existe hoy ninguna pantalla para asignar permisos individuales a un usuario.
-  // Mientras eso no exista, una cuenta nueva sin permisos explicitos queda con el
-  // menu vacio y sin forma de arreglarlo desde la interfaz. Se usan todos los
-  // permisos por defecto, y solo se restringen si en el futuro se pasan explicitos.
-  const permissions = user.role === "super_admin"
-    ? ALL_COMPANY_PERMISSIONS
-    : Array.from(new Set(user.permissions || existing?.permissions || ALL_COMPANY_PERMISSIONS));
-  const accountType = user.accountType || existing?.accountType || "empresa";
-  const normalized = {
-    id: user.id || createCompanyUserId(),
-    name: user.name || "Usuario empresa",
-    email: user.email || "",
-    role: user.role || "proyectos",
-    accountType,
-    freeAccess: typeof user.freeAccess === "boolean" ? user.freeAccess : existing?.freeAccess ?? (accountType !== "pueblos"),
-    status: user.status || "Activo",
-    permissions,
-    passwordHash: user.password ? hashPassword(user.password) : existing?.passwordHash || "",
-    createdAt: existing?.createdAt || user.createdAt || nowStamp(),
-    updatedAt: nowStamp()
-  };
-  if(index >= 0) access.users[index] = { ...access.users[index], ...normalized };
-  else access.users.push(normalized);
-  persist();
-  return normalized;
+/**
+ * Crea o edita una cuenta contra el Worker (D1). Requiere el token de
+ * administrador (ver getApiToken/setApiToken) - sin el, el Worker rechaza la
+ * escritura por diseno. Devuelve { ok, user } o { ok:false, error }.
+ */
+export async function upsertCompanyUser(user){
+  const token = getApiToken();
+  if(!token){
+    return { ok: false, error: "Falta el token de administrador para esta acción. Pídelo al Administrador y pégalo en Cuentas corporativas." };
+  }
+  let response;
+  try{
+    response = await fetch(apiUrl("/auth/users"), {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+      body: JSON.stringify(user)
+    });
+  }catch{
+    return { ok: false, offline: true, error: "No se pudo conectar con el servidor. Revisa tu conexión a internet." };
+  }
+  let payload;
+  try{ payload = await response.json(); }catch{ payload = {}; }
+  if(!response.ok || !payload.ok){
+    return { ok: false, error: payload.error || "No se pudo guardar la cuenta." };
+  }
+  return { ok: true, user: payload.user };
 }
 
-export function deleteCompanyUser(userId){
+/** Trae el listado real de cuentas desde el Worker y actualiza la copia local usada por las tablas. */
+export async function listCompanyUsersFromServer(){
+  const token = getApiToken();
+  if(!token){
+    return { ok: false, error: "Falta el token de administrador para ver las cuentas." };
+  }
+  let response;
+  try{
+    response = await fetch(apiUrl("/auth/users"), { headers: { authorization: `Bearer ${token}` } });
+  }catch{
+    return { ok: false, offline: true, error: "No se pudo conectar con el servidor. Revisa tu conexión a internet." };
+  }
+  let payload;
+  try{ payload = await response.json(); }catch{ payload = {}; }
+  if(!response.ok || !payload.ok){
+    return { ok: false, error: payload.error || "No se pudo obtener el listado de cuentas." };
+  }
+  const access = ensureCompanyAccess();
+  const keepActive = access.activeUserId;
+  access.users = payload.users;
+  access.activeUserId = payload.users.some(user => user.id === keepActive) ? keepActive : (payload.users[0]?.id || null);
+  persist();
+  return { ok: true, users: payload.users };
+}
+
+/** Baja logica: desactiva la cuenta en el servidor (no se borra el historial). */
+export async function deleteCompanyUser(userId){
   const access = ensureCompanyAccess();
   const user = access.users.find(item => item.id === userId);
-  if(!user || user.role === "super_admin") return false;
-  access.users = access.users.filter(item => item.id !== userId);
-  if(access.activeUserId === userId) access.activeUserId = access.users.find(item => item.role === "super_admin")?.id || access.users[0]?.id;
-  persist();
-  return true;
+  if(!user || user.accountType === "super_admin") return { ok: false, error: "No se puede eliminar esta cuenta." };
+  const result = await upsertCompanyUser({ email: user.email, name: user.name, accountType: user.accountType, status: "Inactivo", permissions: user.permissions, role: user.role });
+  if(result.ok) await listCompanyUsersFromServer();
+  return result;
 }
 function normalizeProject(project){
   const base = defaultProject();
@@ -279,12 +402,14 @@ function normalizeProject(project){
 
 export function setProfile(profile) {
   state.profile = profile;
+  state.offlineSession = false;
   persist();
   saveTabSession();
 }
 
 export function clearProfile() {
   state.profile = null;
+  state.offlineSession = false;
   persist();
   clearTabSession();
 }

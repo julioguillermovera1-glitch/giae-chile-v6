@@ -1,6 +1,6 @@
 import { modules, menuGroups } from "./moduleRegistry.js";
 import { registerGiaePwa } from "./pwa.js";
-import { restore, setProfile, clearProfile, state, persist, exportProjectFile, importProjectFile, saveCurrentProjectToLibrary, ensureCompanyAccess, hasCompanyPermission, currentCompanyUser, verifyCompanyUserCredentials, setActiveCompanyUser } from "./store.js";
+import { restore, setProfile, clearProfile, state, persist, exportProjectFile, importProjectFile, saveCurrentProjectToLibrary, ensureCompanyAccess, hasCompanyPermission, currentCompanyUser, verifyCompanyUserCredentials } from "./store.js";
 
 const loginView = document.querySelector("#loginView");
 const platformView = document.querySelector("#platformView");
@@ -44,6 +44,22 @@ window.GIAE.openModule = openModule;
 window.GIAE.refreshActiveModule = refreshActiveModule;
 registerGiaePwa();
 
+function updateOfflineBanner(){
+  const existente = document.querySelector("#giaeOfflineBanner");
+  if(!state.offlineSession){
+    existente?.remove();
+    return;
+  }
+  if(existente) return;
+  const aviso = document.createElement("div");
+  aviso.id = "giaeOfflineBanner";
+  aviso.textContent = "Trabajando sin conexión, con la última sesión verificada. Se sincronizará al reconectar.";
+  aviso.style.cssText = "position:fixed;bottom:0;left:0;right:0;z-index:9998;background:#7a5d0b;color:#ffe08a;font-weight:800;font-size:12px;text-align:center;padding:6px 12px;border-top:2px solid #ffb020;";
+  document.body.appendChild(aviso);
+}
+updateOfflineBanner();
+window.addEventListener("online", () => { if(state.offlineSession){ state.offlineSession = false; updateOfflineBanner(); } });
+
 window.addEventListener("giae:admin-updated", () => { applyBranding(); activeProfile.textContent = profileLabel(state.profile); renderMenu(); });
 function configurePrivateAdminAccess(){
   // Keep the administrator button visible at all times.
@@ -66,7 +82,7 @@ document.querySelectorAll("[data-profile]").forEach(button => {
   });
 });
 
-companyLoginSubmit?.addEventListener("click", event => {
+companyLoginSubmit?.addEventListener("click", async event => {
   event.preventDefault();
   const email = companyLoginEmail?.value.trim();
   const password = companyLoginPassword?.value || "";
@@ -74,12 +90,16 @@ companyLoginSubmit?.addEventListener("click", event => {
     companyLoginFeedback.textContent = "Ingresa correo y contraseña para acceder.";
     return;
   }
-  const user = verifyCompanyUserCredentials(email, password, companyLoginMode);
-  if(!user){
-    companyLoginFeedback.textContent = "Credenciales inválidas o usuario inactivo.";
+  companyLoginFeedback.textContent = "Verificando…";
+  companyLoginSubmit.disabled = true;
+  const result = await verifyCompanyUserCredentials(email, password, companyLoginMode);
+  companyLoginSubmit.disabled = false;
+  if(!result.ok){
+    companyLoginFeedback.textContent = result.offline
+      ? "No se pudo conectar con el servidor. Revisa tu conexión a internet e intenta de nuevo."
+      : (result.error || "Credenciales inválidas o usuario inactivo.");
     return;
   }
-  setActiveCompanyUser(user.id);
   setProfile(companyLoginMode);
   markSession(companyLoginMode);
   hideCompanyLogin();
@@ -144,6 +164,7 @@ const logoutBtn = document.querySelector("#logoutBtn");
 logoutBtn.addEventListener("click", () => {
   closeSession();
   clearProfile();
+  updateOfflineBanner();
   platformView.classList.add("hidden");
   loginView.classList.remove("hidden");
   activeProfile.textContent = "Sin sesión";
@@ -182,6 +203,7 @@ function openPlatform() {
   ensureCompanyAccess();
   activeProfile.textContent = profileLabel(state.profile);
   mostrarAvisoAccesoAbierto();
+  updateOfflineBanner();
   document.querySelector("#saveProjectBtn").classList.toggle("hidden", state.profile === "aula");
   document.querySelector("#exportBtn").classList.toggle("hidden", state.profile === "aula");
   renderMenu();
