@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-07-30 - Se incorporan RIC 19 y Decreto N°8 (parciales) a la normativa real
+
+- `tools/gen-normativa-sql.mjs` generaliza para soportar los 3 formatos de reglas que ya
+  existian en el proyecto (RIC18: espanol con `numeral`; seed: ingles con `chapter`/`clause`;
+  DS8: espanol con `articulo_o_apartado`), normalizandolos todos a la misma tabla
+  `normative_rules` sin transcribir nada a mano.
+- Se cargan la **1 regla real de RIC 19** (`ric-19.seed.json`, puesta en servicio - un punto
+  de partida, no el documento completo) y las **8 reglas reales del Decreto N°8**
+  (`reglas-ds8-base.json`, articulos 1, 3, 7, 8, 12, 16, 18 y 20 - de los ~25 que el propio
+  indice del proyecto, `ds8-articulos-index.json`, dice que existen).
+- Mensaje de bienvenida del Chat IA actualizado para declarar la cobertura real: RIC 18
+  completo, RIC 19 y DS8 parciales, resto sin cargar todavia.
+- Sin cambios de codigo en el Worker ni en la busqueda: reutiliza integramente lo construido
+  para RIC 18.
+
 ## 2026-07-30 - Bug real en sw.js: la API se cacheaba ignorando el query string
 
 Encontrado al probar la busqueda normativa en el navegador: funcionaba por `curl` pero

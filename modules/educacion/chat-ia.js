@@ -352,11 +352,11 @@ export function render(host, state) {
             <br><br>Puedo:
             <ul style="margin-top: 10px; margin-left: 20px;">
               <li><strong>Analizar tu proyecto:</strong> Revisar cargas, cuadro, empalme y tierra</li>
-              <li><strong>Citar normativa verificada:</strong> RIC 18 (presentación de proyectos) con numeral exacto</li>
+              <li><strong>Citar normativa verificada:</strong> RIC 18 completo, RIC 19 y Decreto N°8 parciales, con numeral/artículo exacto</li>
               <li><strong>Hacer recomendaciones:</strong> Mejorar diseño y cumplimiento normativo</li>
               <li><strong>Educarte:</strong> Explicar conceptos técnicos generales</li>
             </ul>
-            <br>⚠️ Aviso honesto: hoy solo el <strong>RIC 18</strong> está cargado con reglas reales y verificadas. El resto de los RIC, IEC y el Decreto N°8 todavía se están incorporando — para esos, siempre confirma con la norma oficial o un profesional competente.
+            <br>⚠️ Aviso honesto sobre cobertura real: <strong>RIC 18</strong> está completo (14 reglas). <strong>RIC 19</strong> y el <strong>Decreto N°8</strong> están parciales (1 y 8 reglas respectivamente, de un total mayor). El resto de los RIC e IEC todavía no están cargados — para esos, siempre confirma con la norma oficial o un profesional competente.
             <br>${project ? `📊 Proyecto actual: <strong>${project.name || "Sin nombre"}</strong>` : "⚠️ Sin proyecto activo"}
             <br><br>¿Qué necesitas?
           </div>
