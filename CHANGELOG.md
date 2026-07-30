@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-07-30 - Multiples ventanas con sesiones distintas al mismo tiempo
+
+- Antes, "quien esta conectado" se guardaba en `localStorage`, compartido por todas las pestanas del mismo navegador: iniciar sesion en una pestana desconectaba o mezclaba la sesion de otra.
+- `core/store.js`: la identidad de sesion (perfil activo, usuario corporativo activo) pasa a `sessionStorage`, que es propio de cada pestana/ventana. Los datos compartidos (usuarios creados, proyectos, configuracion) siguen en `localStorage` como antes - eso no cambia.
+- Una pestana nueva siempre pide iniciar sesion (no hereda la sesion de otra pestana ya abierta).
+- Probado con dos pestanas reales abiertas a la vez: Administrador en una y Empresa en otra, ambas sobreviven a un refresh (F5), y cerrar sesion en una no afecta a la otra.
+- Limite que sigue igual: los datos (proyectos, usuarios creados) siguen siendo del navegador, no de la cuenta - dos pestanas del mismo navegador ven la misma biblioteca de proyectos, aunque cada una tenga su propio inicio de sesion.
+
 ## 2026-07-30 - Cuentas nuevas de Empresa/Independiente quedaban con el menu vacio
 
 - Bug real encontrado al probar la primera cuenta Empresa creada en produccion: `upsertCompanyUser` asignaba `permissions: []` a cualquier cuenta nueva que no fuera "super_admin", y no existe ninguna pantalla en la app para asignar permisos manualmente. Resultado: el menu quedaba casi vacio, solo visible lo que no exige permiso (Chat tecnico IA).

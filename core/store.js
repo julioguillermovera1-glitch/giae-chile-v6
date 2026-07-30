@@ -9,6 +9,37 @@ import { runIntegralAudit } from "./audit/integralAuditEngine.js";
 import { evaluateGuidedWorkflow } from "./workflow/guidedWorkflowEngine.js";
 const STORAGE_KEY = "giae_chile_v1_workspace";
 const LIBRARY_KEY = "giae_chile_v1_project_library";
+// La sesion (quien esta conectado en ESTA pestana) se guarda aparte, en
+// sessionStorage, para que cada ventana/pestana pueda mantener su propio
+// inicio de sesion sin cerrar la de las demas. Los datos compartidos
+// (usuarios creados, proyectos, configuracion) siguen en localStorage.
+const SESSION_KEY = "giae_chile_v1_tab_session";
+
+function applyTabSession(){
+  const raw = sessionStorage.getItem(SESSION_KEY);
+  if(!raw){
+    state.profile = null;
+    return;
+  }
+  try{
+    const session = JSON.parse(raw);
+    state.profile = session.profile ?? null;
+    if(state.companyAccess && session.activeUserId) state.companyAccess.activeUserId = session.activeUserId;
+  }catch{
+    state.profile = null;
+  }
+}
+
+function saveTabSession(){
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+    profile: state.profile ?? null,
+    activeUserId: state.companyAccess?.activeUserId ?? null
+  }));
+}
+
+function clearTabSession(){
+  sessionStorage.removeItem(SESSION_KEY);
+}
 const ALL_COMPANY_PERMISSIONS = ["project.manage", "inventory.view", "inventory.manage", "users.manage", "docs.view", "budget.view"];
 // Credenciales iniciales del Administrador. Cambialas desde "Cuentas corporativas"
 // apenas inicies sesion la primera vez: edita el usuario "Super administrador"
@@ -181,6 +212,7 @@ export function setActiveCompanyUser(userId){
   const access = ensureCompanyAccess();
   if(access.users.some(user => user.id === userId)) access.activeUserId = userId;
   persist();
+  saveTabSession();
 }
 
 export function upsertCompanyUser(user){
@@ -248,11 +280,13 @@ function normalizeProject(project){
 export function setProfile(profile) {
   state.profile = profile;
   persist();
+  saveTabSession();
 }
 
 export function clearProfile() {
   state.profile = null;
   persist();
+  clearTabSession();
 }
 
 export function updateProject(patch, meta = {}) {
@@ -551,6 +585,7 @@ export function restore() {
   if (!raw) {
     ensureCompanyAccess();
     recalculateProject();
+    applyTabSession();
     return state;
   }
   try {
@@ -567,5 +602,6 @@ export function restore() {
     localStorage.removeItem(STORAGE_KEY);
     recalculateProject();
   }
+  applyTabSession();
   return state;
 }
