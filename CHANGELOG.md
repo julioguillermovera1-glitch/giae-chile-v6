@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-07-30 - Etapa 2: retiro de modulo duplicado sin uso
+
+- Se retira `modules/proyecto/proyecto.js` (singular) a `docs/_duplicados_retirados/modules/proyecto/`: no estaba registrado en `moduleRegistry.js` (era inalcanzable desde la UI, `openModule()` nunca podia encontrarlo), y ningun `tools/phase*-check.mjs` dependia de el. Era una version anterior de "Proyecto activo", reemplazada por `modules/proyectos/proyectos.js` (plural).
+- `sw.js`: se quita `modules/proyecto/proyecto.js` de la cache de la PWA y se sube `GIAE_CACHE_VERSION` para que los dispositivos con la app instalada limpien la cache vieja.
+- `modules/administracion/administracion.js`: la lista `loadProjectSources()` (usada por el Inspector para detectar duplicados/marcas de IA) referenciaba `./indice.html` (retirado hace dias) y este modulo - se corrige para reflejar solo archivos que existen.
+- Caso revisado y descartado para este retiro: `modules/dashboard/dashboard.js` tambien es inalcanzable desde la UI hoy (su id "dashboard" nunca se agrego a `moduleRegistry.js`), pero el diagnostico de Fase 5.6 (`phase56-guided-flow-check.mjs`) lo usa activamente como evidencia. No se retira: es un bug de registro por arreglar en una etapa futura, no basura.
+- Validado: los 7 diagnosticos de fase en 100%, app probada en navegador sin errores de consola.
+
 ## 2026-07-30 - Ingreso real contra D1 + trabajo offline con sincronizacion
 
 Etapa 1 de la hoja de ruta hacia el termino provisorio del proyecto (ver

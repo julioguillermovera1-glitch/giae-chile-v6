@@ -905,8 +905,8 @@ async function buildOriginalityReport(state){
 
 async function loadProjectSources(){
   const paths = [
-    "./index.html", "./indice.html", "./core/main.js", "./core/store.js", "./core/moduleRegistry.js", "./core/calculations.js", "./core/normativeGuard.js", "./css/platform.css",
-    "./modules/dashboard/dashboard.js", "./modules/proyecto/proyecto.js", "./modules/flujo-guiado/flujo-guiado.js", "./modules/proyectos/proyectos.js", "./modules/cargas/cargas.js", "./modules/cuadro-carga/cuadro-carga.js", "./modules/empalme/empalme.js", "./modules/tierra/tierra.js", "./modules/unilineal/unilineal.js", "./modules/documentacion/documentacion.js", "./modules/presupuesto/presupuesto.js", "./modules/auditoria/auditoria.js", "./modules/educacion/educacion.js", "./modules/usuarios/usuarios.js", "./modules/administracion/administracion.js"
+    "./index.html", "./core/main.js", "./core/store.js", "./core/moduleRegistry.js", "./core/calculations.js", "./core/normativeGuard.js", "./css/platform.css",
+    "./modules/dashboard/dashboard.js", "./modules/flujo-guiado/flujo-guiado.js", "./modules/proyectos/proyectos.js", "./modules/cargas/cargas.js", "./modules/cuadro-carga/cuadro-carga.js", "./modules/empalme/empalme.js", "./modules/tierra/tierra.js", "./modules/unilineal/unilineal.js", "./modules/documentacion/documentacion.js", "./modules/presupuesto/presupuesto.js", "./modules/auditoria/auditoria.js", "./modules/educacion/educacion.js", "./modules/usuarios/usuarios.js", "./modules/administracion/administracion.js"
   ];
   const loaded = [];
   for(const path of paths){

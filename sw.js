@@ -1,4 +1,4 @@
-const GIAE_CACHE_VERSION = 'giae-chile-v1-flujo-2026-07-13-cad-inventario-ventanas';
+const GIAE_CACHE_VERSION = 'giae-chile-v1-flujo-2026-07-30-limpieza-modulos';
 const GIAE_APP_SHELL = [
   "./",
   "./assets/icons/giae-icon-192.png",
@@ -179,7 +179,6 @@ const GIAE_APP_SHELL = [
   "./modules/norma-chile/norma-chile.js",
   "./modules/normativo/normativo.js",
   "./modules/presupuesto/presupuesto.js",
-  "./modules/proyecto/proyecto.js",
   "./modules/flujo-guiado/flujo-guiado.js",
   "./modules/proyectos/proyectos.js",
   "./modules/informes/informes.js",
