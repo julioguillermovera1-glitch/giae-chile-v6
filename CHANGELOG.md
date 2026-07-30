@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-07-30 - Bug real en sw.js: la API se cacheaba ignorando el query string
+
+Encontrado al probar la busqueda normativa en el navegador: funcionaba por `curl` pero
+no desde la app. `sw.js` interceptaba **cualquier** peticion GET que no fuera `.js/.css/.html`
+con `cacheFirstStatic`, y `normalizedRequest()` descartaba el query string al armar la clave
+de cache. Resultado: la primera consulta a un endpoint como `/api/giae/normativa/reglas?q=X`
+quedaba guardada para siempre, y cualquier busqueda futura (`?q=Y`) devolvia la respuesta
+vieja cacheada de la primera, ignorando el termino real. Esto no lo causo el cambio de hoy -
+ya afectaba a cualquier endpoint GET con parametros (ej. `/api/giae/audit?projectId=...`),
+solo que nadie lo habia notado.
+
+- `sw.js`: las rutas `/api/*` ahora nunca se cachean, van directo a la red.
+- `GIAE_CACHE_VERSION` actualizada para que los dispositivos con la app instalada
+  limpien la cache contaminada.
+- Confirmado en produccion: la misma busqueda que antes devolvia vacio desde el navegador
+  ahora trae las reglas correctas.
+
 ## 2026-07-30 - Etapa 3: Chat IA conectado a normativa real (RIC 18)
 
 Primer paso de la Etapa 3 (mas normativa para la IA). El Chat IA (`modules/educacion/chat-ia.js`)

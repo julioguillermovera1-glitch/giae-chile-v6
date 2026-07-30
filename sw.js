@@ -1,4 +1,4 @@
-const GIAE_CACHE_VERSION = 'giae-chile-v1-flujo-2026-07-30-limpieza-modulos';
+const GIAE_CACHE_VERSION = 'giae-chile-v1-flujo-2026-07-30-fix-cache-api';
 const GIAE_APP_SHELL = [
   "./",
   "./assets/icons/giae-icon-192.png",
@@ -205,6 +205,11 @@ self.addEventListener('fetch', event => {
   if(request.method !== 'GET') return;
   const url = new URL(request.url);
   if(url.origin !== self.location.origin) return;
+  // Las llamadas a la API del Worker (/api/giae/...) nunca deben cachearse: son
+  // datos dinamicos, y normalizedRequest() descarta el query string, lo que
+  // haria que la primera consulta (ej. una busqueda con ?q=...) quedara pegada
+  // para cualquier consulta futura, sin importar el termino de busqueda.
+  if(url.pathname.startsWith('/api/')) return;
   if(request.mode === 'navigate') {
     event.respondWith(networkFirstNavigation(request));
     return;
