@@ -148,6 +148,8 @@ async function health(env) {
       "POST /api/giae/auth/login",
       "POST /api/giae/auth/users",
       "GET /api/giae/auth/users",
+      "GET /api/giae/normativa/reglas",
+      "GET /api/giae/normativa/documentos",
       "POST /api/giae/session/start",
       "POST /api/giae/license/check",
       "GET /api/giae/workspaces/:workspaceId",
@@ -289,6 +291,56 @@ async function listUsers(request, env) {
   return json({ ok: true, users });
 }
 
+function mapNormativeRow(row) {
+  return {
+    id: row.id,
+    documento: row.documento,
+    numeral: row.numeral,
+    categoria: row.categoria,
+    tipo: row.tipo,
+    criticidad: row.criticidad,
+    titulo: row.titulo,
+    verifica: row.verifica,
+    correccion: row.correccion,
+    validacion: (() => { try { return JSON.parse(row.validacion_json || "{}"); } catch { return {}; } })(),
+    evidencia: (() => { try { return JSON.parse(row.evidencia_json || "{}"); } catch { return {}; } })(),
+    motores: (() => { try { return JSON.parse(row.motores_json || "[]"); } catch { return []; } })(),
+    baseNormativa: row.base_normativa,
+    estado: row.estado
+  };
+}
+
+// Publico y de solo lectura: contenido normativo, no datos de usuarios. Solo
+// devuelve lo que ya esta realmente cargado en D1 - documentos sin extraer
+// simplemente no aparecen, nunca se inventa contenido para completar.
+async function normativeSearch(request, env) {
+  if (!hasDb(env)) return json({ ok: false, error: "Base de datos no disponible" }, { status: 503 });
+  const url = new URL(request.url);
+  const q = (url.searchParams.get("q") || "").trim();
+  const documento = (url.searchParams.get("documento") || "").trim();
+  const categoria = (url.searchParams.get("categoria") || "").trim();
+  const conditions = [];
+  const binds = [];
+  if (documento) { conditions.push("documento LIKE ?"); binds.push(`%${documento}%`); }
+  if (categoria) { conditions.push("categoria LIKE ?"); binds.push(`%${categoria}%`); }
+  if (q) { conditions.push("(titulo LIKE ? OR verifica LIKE ? OR categoria LIKE ? OR correccion LIKE ?)"); binds.push(`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`); }
+  const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+  const stmt = env.GIAE_DB.prepare(`SELECT * FROM normative_rules ${where} ORDER BY documento, numeral LIMIT 30`);
+  const rows = await (binds.length ? stmt.bind(...binds) : stmt).all();
+  return json({ ok: true, reglas: (rows.results || []).map(mapNormativeRow) });
+}
+
+// Lista que documentos normativos ya tienen reglas reales cargadas, para que
+// el Chat IA (u otro consumidor) pueda decir con honestidad que documentos
+// todavia no estan disponibles, en vez de fingir que los conoce todos.
+async function normativeDocuments(env) {
+  if (!hasDb(env)) return json({ ok: false, error: "Base de datos no disponible" }, { status: 503 });
+  const rows = await env.GIAE_DB.prepare(
+    "SELECT documento, COUNT(*) as total FROM normative_rules GROUP BY documento ORDER BY documento"
+  ).all();
+  return json({ ok: true, documentos: (rows.results || []).map(row => ({ documento: row.documento, totalReglas: row.total })) });
+}
+
 async function workspaceRead(env, workspaceId) {
   if (!hasDb(env)) {
     return json({ ok: true, workspace: { id: workspaceId, name: "GIAE Chile", mode: "sin_d1" }, users: [], roles: [] });
@@ -390,6 +442,8 @@ async function routeApi(request, env) {
   if (path === `${API_PREFIX}/auth/login` && request.method === "POST") return login(request, env);
   if (path === `${API_PREFIX}/auth/users` && request.method === "POST") return upsertUser(request, env);
   if (path === `${API_PREFIX}/auth/users` && request.method === "GET") return listUsers(request, env);
+  if (path === `${API_PREFIX}/normativa/reglas` && request.method === "GET") return normativeSearch(request, env);
+  if (path === `${API_PREFIX}/normativa/documentos` && request.method === "GET") return normativeDocuments(env);
   if (path === `${API_PREFIX}/session/start` && request.method === "POST") return startSession(request, env);
   if (path === `${API_PREFIX}/license/check` && request.method === "POST") return licenseCheck(request, env);
   if (path.startsWith(`${API_PREFIX}/workspaces/`) && request.method === "GET") return workspaceRead(env, decodeURIComponent(path.split("/").pop() || "workspace-local"));

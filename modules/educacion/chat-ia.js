@@ -88,8 +88,37 @@ function analyzeProjectContext(project) {
   return analysis;
 }
 
+// Consulta la normativa REAL cargada en D1 (ver migrations/0003_giae_normativa.sql
+// y tools/gen-normativa-sql.mjs). Hoy solo el RIC 18 tiene reglas extraidas y
+// verificadas; el resto (RIC 1-17, RIC 19, DS8) todavia no. Esta funcion nunca
+// inventa una regla: si no hay coincidencia real, devuelve un arreglo vacio y
+// quien llama debe decirlo honestamente, no rellenar con texto generico
+// disfrazado de norma.
+async function buscarNormativaReal(query) {
+  try {
+    const response = await fetch(`/api/giae/normativa/reglas?q=${encodeURIComponent(query)}`);
+    if (!response.ok) return [];
+    const payload = await response.json();
+    return payload.ok ? (payload.reglas || []) : [];
+  } catch {
+    return []; // sin conexion al Worker: se sigue con el flujo local, sin inventar
+  }
+}
+
+function formatearReglasReales(reglas) {
+  let response = `**Esto sí está verificado en la normativa cargada:**\n\n`;
+  reglas.slice(0, 4).forEach(regla => {
+    response += `📖 **${regla.documento}, numeral ${regla.numeral} — ${regla.titulo}**\n`;
+    response += `${regla.verifica}\n`;
+    if (regla.correccion) response += `*Cómo corregirlo:* ${regla.correccion}\n`;
+    response += `\n`;
+  });
+  response += `Fuente: ${reglas[0]?.baseNormativa || "normativa cargada en el sistema"}.`;
+  return { response, confidence: 0.97 };
+}
+
 // Respuesta contextual con análisis del proyecto
-function buildIaResponse(userMessage, project) {
+async function buildIaResponse(userMessage, project) {
   const lower = userMessage.toLowerCase();
   const projectAnalysis = analyzeProjectContext(project);
   
@@ -259,13 +288,19 @@ function buildIaResponse(userMessage, project) {
     return { response, confidence: 0.92 };
   }
   
-  // BÚSQUEDA EN CONOCIMIENTO (normas)
+  // NORMATIVA REAL (D1) - se intenta primero, antes que el resumen generico
+  const reglasReales = await buscarNormativaReal(userMessage);
+  if (reglasReales.length > 0) {
+    return formatearReglasReales(reglasReales);
+  }
+
+  // BÚSQUEDA EN CONOCIMIENTO (resumen general propio, no reemplaza la norma real)
   for (const category in knowledgeBase) {
     for (const key in knowledgeBase[category]) {
       if (lower.includes(key.replace(/_/g, " ")) || lower.includes(key)) {
         return {
-          response: `Claro:\n\n**${key}:** ${knowledgeBase[category][key]}\n\n¿Cómo aplica esto a tu proyecto?`,
-          confidence: 0.9
+          response: `**RIC ${key} (resumen general, aún no extraído en detalle real):** ${knowledgeBase[category][key]}\n\n⚠️ Esto es un resumen orientativo, no una cita verificada del RIC ${key}. Hoy solo el **RIC 18** está cargado con reglas reales y verificadas. Para RIC ${key}, confirma siempre con la norma oficial o un profesional competente antes de dar algo por cumplido.`,
+          confidence: 0.6
         };
       }
     }
@@ -317,10 +352,11 @@ export function render(host, state) {
             <br><br>Puedo:
             <ul style="margin-top: 10px; margin-left: 20px;">
               <li><strong>Analizar tu proyecto:</strong> Revisar cargas, cuadro, empalme y tierra</li>
-              <li><strong>Corregir errores:</strong> Validar contra RIC 1-19, IEC y Decreto Ley 8</li>
+              <li><strong>Citar normativa verificada:</strong> RIC 18 (presentación de proyectos) con numeral exacto</li>
               <li><strong>Hacer recomendaciones:</strong> Mejorar diseño y cumplimiento normativo</li>
-              <li><strong>Educarte:</strong> Explicar normas y conceptos técnicos</li>
+              <li><strong>Educarte:</strong> Explicar conceptos técnicos generales</li>
             </ul>
+            <br>⚠️ Aviso honesto: hoy solo el <strong>RIC 18</strong> está cargado con reglas reales y verificadas. El resto de los RIC, IEC y el Decreto N°8 todavía se están incorporando — para esos, siempre confirma con la norma oficial o un profesional competente.
             <br>${project ? `📊 Proyecto actual: <strong>${project.name || "Sin nombre"}</strong>` : "⚠️ Sin proyecto activo"}
             <br><br>¿Qué necesitas?
           </div>
@@ -501,19 +537,17 @@ export function render(host, state) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
   
-  function handleSend() {
+  async function handleSend() {
     const message = userInput.value.trim();
     if (!message) return;
-    
+
     addMessage(message, true);
     userInput.value = "";
-    
-    setTimeout(() => {
-      const response = buildIaResponse(message, project);
-      addMessage(response.response, false);
-      addHistory("Chat IA Proyecto: " + message.substring(0, 50), "Asistente IA Integrado", false);
-      persist();
-    }, 500);
+
+    const response = await buildIaResponse(message, project);
+    addMessage(response.response, false);
+    addHistory("Chat IA Proyecto: " + message.substring(0, 50), "Asistente IA Integrado", false);
+    persist();
   }
   
   sendBtn.addEventListener("click", handleSend);

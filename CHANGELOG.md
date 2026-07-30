@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-07-30 - Etapa 3: Chat IA conectado a normativa real (RIC 18)
+
+Primer paso de la Etapa 3 (mas normativa para la IA). El Chat IA (`modules/educacion/chat-ia.js`)
+usaba un resumen de una linea por RIC, escrito a mano, sin relacion con los PDFs reales ya
+guardados en el proyecto. Se conecta a la normativa real en vez de inventar contenido:
+
+- `migrations/0003_giae_normativa.sql`: tabla `normative_rules` en D1 - reglas normativas
+  reales, consultables sin redesplegar codigo cada vez que se agregue o corrija una.
+- `tools/gen-normativa-sql.mjs`: script reutilizable que genera los INSERT desde un archivo
+  de reglas ya extraidas (`data/norma-chile/rules/*.json`), para no transcribir a mano.
+- Se cargan las **14 reglas reales del RIC 18** (unico documento ya extraido de los 19 RIC
+  + DS8), cada una con numeral exacto, que verifica y como corregirlo.
+- `src/worker.js`: `GET /api/giae/normativa/reglas` (busqueda, publico) y
+  `GET /api/giae/normativa/documentos` (que documentos ya estan cargados) - de solo lectura,
+  no requieren token porque es contenido normativo, no dato de usuario.
+- El chat consulta esta base real primero; si encuentra coincidencia, cita el numeral exacto.
+  Si no, sigue con su resumen general de respaldo, pero ahora **avisando explicitamente**
+  que ese resumen no es una cita verificada y que solo el RIC 18 esta cargado en detalle real.
+- **Pendiente, documentado, no resuelto:** RIC 1-17, RIC 19 y el Decreto N°8 siguen sin
+  extraer (`"estado": "pendiente_extraccion"` en sus JSON). Es contenido que hay que extraer
+  con cuidado de los PDF reales, no algo que se pueda generar sin riesgo de inventar
+  normativa falsa - principio explicito del propio proyecto.
+
 ## 2026-07-30 - Etapa 2: dashboard reconectado + boton roto arreglado
 
 - `modules/dashboard/dashboard.js` era inalcanzable desde la UI (su id nunca se agrego a `moduleRegistry.js`), pero el diagnostico de Fase 5.6 ya lo usaba como evidencia real. Se agrega su entrada (`id: "dashboard"`, label "Escritorio", grupo "inicio") sin tocar el "Inicio" existente ni cambiar el modulo por defecto de ningun perfil.
