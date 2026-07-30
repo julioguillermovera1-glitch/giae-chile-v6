@@ -31,7 +31,7 @@ let companyLoginMode = "empresa";
 // PONER EN false ANTES DE PUBLICAR EN CLOUDFLARE.
 // Ver docs/MODO_DESARROLLO_ACCESO_ABIERTO.md
 // ---------------------------------------------------------------------------
-const GIAE_DEV_ACCESO_ABIERTO = true;
+const GIAE_DEV_ACCESO_ABIERTO = false;
 
 restore();
 applyBranding();
@@ -55,7 +55,7 @@ function configurePrivateAdminAccess(){
 
 document.querySelectorAll("[data-profile]").forEach(button => {
   button.addEventListener("click", () => {
-    if(!GIAE_DEV_ACCESO_ABIERTO && (button.dataset.profile === "empresa" || button.dataset.profile === "pueblos")){
+    if(!GIAE_DEV_ACCESO_ABIERTO && button.dataset.profile === "empresa"){
       companyLoginMode = button.dataset.profile;
       showCompanyLogin(button.dataset.profile);
       return;
@@ -379,7 +379,7 @@ function profileLabel(profile) {
     independiente: "Instalador independiente",
     empresa: `Empresa - ${user?.name || "Super administrador"}${user?.email ? ` (${user.email})` : ""}`,
     pueblos: "Pueblos Originarios - acceso libre",
-    estudiante: "Estudiante",
+    estudiante: "Estudiante - acceso libre",
     administrador: "Administrador - Reparacion",
     aula: "Aula Técnica - Acceso libre"
   };

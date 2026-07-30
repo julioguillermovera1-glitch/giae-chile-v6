@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-07-30 - Pueblos Originarios y Estudiante quedan de acceso libre permanente
+
+- Se retira la exigencia de correo/contrasena para el perfil "Pueblos Originarios": ahora entra directo, igual que "Aula educativa", sin depender del modo desarrollo.
+- Se corrige la etiqueta de "Estudiante" a "Estudiante - acceso libre": ese perfil ya entraba sin clave en el codigo, pero el texto no lo reflejaba.
+- Se actualiza el texto y los botones de la portada (`index.html`) para declarar honestamente que Pueblos Originarios, Alumno/estudiante y Aula educativa son gratuitos, y que solo Empresa exige cuenta creada por el administrador.
+- Se apaga `GIAE_DEV_ACCESO_ABIERTO` (vuelve a `false`) antes de publicar: ese interruptor abria TODOS los perfiles y modulos sin clave (incluido Administrador), pensado solo para pruebas locales. El acceso libre de Pueblos Originarios y Estudiante ahora es permanente y no depende de el.
+- Hallazgo aparte, no corregido en este cambio: el perfil "Administrador" nunca pidio contrasena en este codigo, independiente del modo desarrollo. Impacto limitado hoy porque los datos son locales al navegador de cada persona; queda anotado como pendiente para cuando se conecte autenticacion real (Fase 6).
+
 ## 2026-07-29 - R2 activado con los 4 buckets reales
 
 - Se crean en Cloudflare los 4 buckets R2: `giae-project-backups`, `giae-project-documents`, `giae-brand-assets`, `giae-field-media`. Nombres confirmados uno por uno por URL antes de tocar el codigo.
