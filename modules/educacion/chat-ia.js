@@ -206,7 +206,7 @@ async function buildIaResponse(userMessage, project) {
   }
   
   // RECOMENDACIONES PARA TIERRA - CON ANÁLISIS DEL PROYECTO
-  if ((lower.includes("tierra") || lower.includes("puesta") || lower.includes("electrodo") || lower.includes("resistencia")) && projectAnalysis.hasProject) {
+  if ((lower.includes("tierra") || lower.includes("electrodo") || lower.includes("resistencia")) && projectAnalysis.hasProject) {
     let response = `**Análisis de puesta a tierra (RIC 5) - Integrado con tu proyecto**\n\n`;
     
     const isIndustrial = projectAnalysis.supplyType.includes("industrial") || projectAnalysis.demandaPower > 10;
