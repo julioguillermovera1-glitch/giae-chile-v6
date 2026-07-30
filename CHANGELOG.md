@@ -1,5 +1,37 @@
 # Changelog
 
+## 2026-07-29 - R2 activado con los 4 buckets reales
+
+- Se crean en Cloudflare los 4 buckets R2: `giae-project-backups`, `giae-project-documents`, `giae-brand-assets`, `giae-field-media`. Nombres confirmados uno por uno por URL antes de tocar el codigo.
+- `wrangler.jsonc` incorpora el bloque `r2_buckets` con los 4 bindings.
+- `GIAE_BINDINGS_MODE` pasa de `d1-activo-r2-pendiente` a `active`.
+- Diagnostico `tools/phase55-worker-backend-check.mjs`: estado `apto_para_cloudflare_con_d1_r2`, 100%.
+- Pendiente antes de publicar: migracion remota (`npm run d1:migrate:remote`), secreto `GIAE_API_TOKEN`, y revisar que `GIAE_DEV_ACCESO_ABIERTO` este en el valor correcto.
+
+## 2026-07-29 - D1 activado con database_id real
+
+- `wrangler.jsonc` incorpora el binding `GIAE_DB` con el `database_id` real de `giae-db`.
+- Migracion `0001_giae_cloud_core.sql` validada en local: 15 comandos, 9 tablas creadas.
+- R2 se mantiene deliberadamente en `wrangler.bindings.example.jsonc`: los 4 buckets aun no existen en Cloudflare y activarlos antes de crearlos hace fallar el deploy.
+- `GIAE_BINDINGS_MODE` pasa de `pending` a `d1-activo-r2-pendiente`.
+- Se agrega `.gitignore` para excluir `.wrangler/`, `node_modules/` y `.claude/`.
+- Pendiente: crear buckets R2, secreto `GIAE_API_TOKEN` y migracion remota (la base remota aun muestra 0 tablas).
+
+## 2026-07-29 - Perfil renombrado a Pueblos Originarios
+
+- "Pueblos tecnicos" pasa a llamarse **Pueblos Originarios** en toda la interfaz: `index.html`, `core/main.js`, `modules/administracion/administracion.js` y `modules/usuarios/usuarios.js`.
+- Motivo: el nombre anterior sonaba a categoria administrativa y no a personas. El nuevo es respetuoso, de uso amplio en Chile y coherente con que el modulo sea gratuito y abierto a todos los pueblos.
+- La clave interna del perfil sigue siendo `pueblos`, por lo que no se pierden cuentas ni datos ya guardados.
+- Se corrige el texto de la portada: el acceso de Pueblos Originarios se declara libre y gratuito, en vez de pedir credenciales creadas por un administrador.
+
+## 2026-07-29 - Modo desarrollo con acceso abierto
+
+- Se agrega la bandera `GIAE_DEV_ACCESO_ABIERTO` en `core/main.js`: entra sin claves en cualquier perfil y muestra los 28 modulos.
+- Motivo: "Pueblos tecnicos" exigia credenciales que solo un administrador podia crear, dejando el modulo inaccesible. La etiqueta del perfil ya decia "acceso libre", contradiciendo al codigo.
+- No se borro la logica de acceso: la bandera en `false` restaura el comportamiento original.
+- Franja de aviso fija en pantalla mientras el modo este activo. Ver `docs/MODO_DESARROLLO_ACCESO_ABIERTO.md`.
+- **Desactivar antes de publicar en Cloudflare.**
+
 ## 2026-07-29 - Fase 1 cerrada con prueba manual aprobada
 
 - Se ejecuta la prueba manual completa en la app real y se registra en `docs/PRUEBA_MANUAL_FASE1_2026_07_29.md`.

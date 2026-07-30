@@ -41,7 +41,33 @@ El despliegue actual queda en modo seguro: Worker + Static Assets publicables, s
 
 `wrangler.jsonc` queda listo para publicar el Worker y la PWA. La plantilla `wrangler.bindings.example.jsonc` conserva los bindings de D1/R2 sin activarlos todavia.
 
-## Activacion D1/R2
+## Estado de activacion (2026-07-29)
+
+**D1 y R2 activos.** `wrangler.jsonc` tiene los bindings reales:
+
+- D1: base `giae-db`, `database_id` `716dc984-14d4-4160-82bd-efc62801d84e`. Migracion
+  `0001_giae_cloud_core.sql` validada en local con `wrangler d1 migrations apply giae-db --local`:
+  15 comandos ejecutados, 9 tablas creadas. **La base remota (la real en Cloudflare) aun
+  no tiene la migracion aplicada** - ver pendientes abajo.
+- R2: los 4 buckets creados en el dashboard de Cloudflare y confirmados uno por uno por URL:
+  `giae-project-backups`, `giae-project-documents`, `giae-brand-assets`, `giae-field-media`.
+
+`GIAE_BINDINGS_MODE` paso de `pending` a `active`. Diagnostico
+`tools/phase55-worker-backend-check.mjs`: estado `apto_para_cloudflare_con_d1_r2`, 100%.
+
+Pendiente para terminar de activar la nube en produccion:
+
+1. Aplicar la migracion a la base remota (la de Cloudflare, no la local de pruebas):
+   `npm run d1:migrate:remote`.
+2. Crear el secreto `GIAE_API_TOKEN` con `wrangler secret put GIAE_API_TOKEN` - sin esto
+   el Worker sigue bloqueando toda escritura, por diseno.
+3. Publicar con `npm run deploy` y confirmar `GET /api/giae/health` en la URL real.
+
+**Aviso:** revisar el estado de `GIAE_DEV_ACCESO_ABIERTO` en `core/main.js`
+(ver `docs/MODO_DESARROLLO_ACCESO_ABIERTO.md`) antes de publicar. Sigue en `true` a peticion
+expresa del usuario.
+
+## Activacion D1/R2 (procedimiento general)
 
 Cuando Cloudflare entregue el `database_id` real de D1:
 

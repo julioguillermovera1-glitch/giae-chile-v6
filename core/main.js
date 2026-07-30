@@ -22,6 +22,17 @@ const companyLoginSubmit = document.querySelector("#companyLoginSubmit");
 const companyLoginBack = document.querySelector("#companyLoginBack");
 let companyLoginMode = "empresa";
 
+// ---------------------------------------------------------------------------
+// MODO DESARROLLO - ACCESO ABIERTO
+// Con esta bandera en true, GIAE entra sin claves en cualquier perfil y muestra
+// todos los modulos del menu. Sirve para probar el producto completo sin tener
+// que crear usuarios de empresa o de pueblos tecnicos primero.
+//
+// PONER EN false ANTES DE PUBLICAR EN CLOUDFLARE.
+// Ver docs/MODO_DESARROLLO_ACCESO_ABIERTO.md
+// ---------------------------------------------------------------------------
+const GIAE_DEV_ACCESO_ABIERTO = true;
+
 restore();
 applyBranding();
 
@@ -44,7 +55,7 @@ function configurePrivateAdminAccess(){
 
 document.querySelectorAll("[data-profile]").forEach(button => {
   button.addEventListener("click", () => {
-    if(button.dataset.profile === "empresa" || button.dataset.profile === "pueblos"){
+    if(!GIAE_DEV_ACCESO_ABIERTO && (button.dataset.profile === "empresa" || button.dataset.profile === "pueblos")){
       companyLoginMode = button.dataset.profile;
       showCompanyLogin(button.dataset.profile);
       return;
@@ -87,8 +98,8 @@ function showCompanyLogin(mode){
   const access = ensureCompanyAccess();
   const companyUsers = access.users.filter(user => user.role !== "super_admin" && user.accountType === (mode === "pueblos" ? "pueblos" : "empresa"));
   companyLoginHint.textContent = companyUsers.length === 0
-    ? `No hay usuarios ${mode === "pueblos" ? "de pueblos técnicos" : "de empresa"} creados. Inicia sesión como Administrador y crea usuarios para este tipo.`
-    : `Este acceso usa el correo y la contraseña creados por tu ${mode === "pueblos" ? "programa de pueblos técnicos" : "empresa"}.`;
+    ? `No hay usuarios ${mode === "pueblos" ? "de Pueblos Originarios" : "de empresa"} creados. Inicia sesión como Administrador y crea usuarios para este tipo.`
+    : `Este acceso usa el correo y la contraseña creados por tu ${mode === "pueblos" ? "programa de Pueblos Originarios" : "empresa"}.`;
   companyLoginEmail.value = "";
   companyLoginPassword.value = "";
 }
@@ -97,7 +108,7 @@ function hideCompanyLogin(){
   companyLoginPanel?.classList.add("hidden");
   profileGrid?.classList.remove("hidden");
   companyLoginFeedback.textContent = "";
-  companyLoginHint.textContent = "Este acceso usa el correo y la contraseña creados por tu empresa o pueblos técnicos.";
+  companyLoginHint.textContent = "Este acceso usa el correo y la contraseña creados por tu empresa o programa de Pueblos Originarios.";
   companyLoginEmail.value = "";
   companyLoginPassword.value = "";
 }
@@ -148,6 +159,7 @@ function openPlatform() {
   platformView.classList.remove("hidden");
   ensureCompanyAccess();
   activeProfile.textContent = profileLabel(state.profile);
+  mostrarAvisoAccesoAbierto();
   document.querySelector("#saveProjectBtn").classList.toggle("hidden", state.profile === "aula");
   document.querySelector("#exportBtn").classList.toggle("hidden", state.profile === "aula");
   renderMenu();
@@ -169,8 +181,22 @@ function initialModuleForProfile(available){
   return preferred.map(id => available.find(module => module.id === id)).find(Boolean) || available[0];
 }
 
+function mostrarAvisoAccesoAbierto(){
+  const existente = document.querySelector("#giaeDevAccesoAbierto");
+  if(!GIAE_DEV_ACCESO_ABIERTO){
+    existente?.remove();
+    return;
+  }
+  if(existente) return;
+  const aviso = document.createElement("div");
+  aviso.id = "giaeDevAccesoAbierto";
+  aviso.textContent = "MODO DESARROLLO: acceso sin claves y todos los modulos visibles. Desactivar GIAE_DEV_ACCESO_ABIERTO en core/main.js antes de publicar.";
+  aviso.style.cssText = "position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#7a2d0b;color:#ffe08a;font-weight:800;font-size:12px;text-align:center;padding:6px 12px;border-top:2px solid #ffb020;";
+  document.body.appendChild(aviso);
+}
+
 function availableModules(){
-  const isAdministrator = state.profile === "administrador";
+  const isAdministrator = state.profile === "administrador" || GIAE_DEV_ACCESO_ABIERTO;
   return modules.filter(module => {
     const allowed = isAdministrator || !module.profiles || module.profiles.includes(state.profile);
     const enabled = state.admin?.enabledModules?.[module.id] !== false;
@@ -181,9 +207,10 @@ function availableModules(){
 
 function renderMenu() {
   const available = availableModules();
+  const mostrarTodo = state.profile === "administrador" || GIAE_DEV_ACCESO_ABIERTO;
   const grouped = menuGroups.map(group => ({
     ...group,
-    modules: available.filter(module => module.group === group.id && (state.profile === "administrador" || !module.hiddenInMenu))
+    modules: available.filter(module => module.group === group.id && (mostrarTodo || !module.hiddenInMenu))
   })).filter(group => group.modules.length);
 
   menu.innerHTML = grouped.map((group, index) => `
@@ -351,7 +378,7 @@ function profileLabel(profile) {
   const labels = {
     independiente: "Instalador independiente",
     empresa: `Empresa - ${user?.name || "Super administrador"}${user?.email ? ` (${user.email})` : ""}`,
-    pueblos: "Pueblos técnicos - acceso libre",
+    pueblos: "Pueblos Originarios - acceso libre",
     estudiante: "Estudiante",
     administrador: "Administrador - Reparacion",
     aula: "Aula Técnica - Acceso libre"

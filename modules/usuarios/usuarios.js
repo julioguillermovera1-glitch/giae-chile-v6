@@ -38,7 +38,7 @@ function permissionChecks(selected = []){
 function userRows(users, activeId){
   return users.map(user => `<tr class="${user.id === activeId ? "active-user-row" : ""}">
     <td><strong>${esc(user.name)}</strong><br><small>${esc(user.email || "Sin correo")}</small></td>
-    <td>${esc(user.accountType === "pueblos" ? "Pueblos técnicos" : "Empresa")}</td>
+    <td>${esc(user.accountType === "pueblos" ? "Pueblos Originarios" : "Empresa")}</td>
     <td>${esc(roleLabel(user.role))}</td>
     <td>${esc(permissionList(user))}</td>
     <td>${esc(user.status || "Activo")}</td>
@@ -63,11 +63,11 @@ function form(user = defaultFormUser()){
       <label>Nombre <input id="userName" value="${esc(user.name || "")}" placeholder="Ej: Juan Perez"></label>
       <label>Correo / usuario <input id="userEmail" value="${esc(user.email || "")}" placeholder="usuario@empresa.cl"></label>
       <label>Contraseña <input id="userPassword" type="password" value="${esc(user.password || "")}" placeholder="${user.id ? "Dejar vacío para mantener la contraseña actual" : "Crear contraseña"}"></label>
-      <p class="small note">La contraseña debe ser creada por la empresa o pueblos técnicos y se usa para el ingreso del usuario.</p>
+      <p class="small note">La contraseña debe ser creada por la empresa o Pueblos Originarios y se usa para el ingreso del usuario.</p>
       <label>Tipo de cuenta
         <select id="userAccountType">
           <option value="empresa" ${user.accountType !== "pueblos" ? "selected" : ""}>Empresa</option>
-          <option value="pueblos" ${user.accountType === "pueblos" ? "selected" : ""}>Pueblos técnicos</option>
+          <option value="pueblos" ${user.accountType === "pueblos" ? "selected" : ""}>Pueblos Originarios</option>
         </select>
       </label>
       <label>Rol
@@ -78,7 +78,7 @@ function form(user = defaultFormUser()){
       <label>Estado
         <select id="userStatus"><option ${user.status !== "Bloqueado" ? "selected" : ""}>Activo</option><option ${user.status === "Bloqueado" ? "selected" : ""}>Bloqueado</option></select>
       </label>
-      <label class="checkbox-label"><input id="userFreeAccess" type="checkbox" ${user.freeAccess ? "checked" : ""} ${user.accountType === "pueblos" ? "" : "disabled"}> Acceso gratuito (solo para pueblos técnicos)</label>
+      <label class="checkbox-label"><input id="userFreeAccess" type="checkbox" ${user.freeAccess ? "checked" : ""} ${user.accountType === "pueblos" ? "" : "disabled"}> Acceso gratuito (solo para Pueblos Originarios)</label>
     </div>
     <div class="permission-grid" id="permissionGrid">${permissionChecks(user.permissions || [])}</div>
     <div class="top-actions wrap-actions"><button id="saveCompanyUser" class="primary-action">Guardar usuario</button><button id="clearUserForm" class="secondary">Nuevo usuario</button></div>
@@ -122,7 +122,7 @@ export function render(host, state) {
       <section class="dashboard-grid kpi-row company-user-kpis">
         <article><small>Usuarios</small><strong>${access.users.length}</strong></article>
         <article><small>Super admin</small><strong>${access.users.filter(user => user.role === "super_admin").length}</strong></article>
-        <article><small>Pueblos técnicos</small><strong>${access.users.filter(user => user.accountType === "pueblos").length}</strong></article>
+        <article><small>Pueblos Originarios</small><strong>${access.users.filter(user => user.accountType === "pueblos").length}</strong></article>
         <article><small>Acceso gratuito</small><strong>${access.users.filter(user => user.accountType === "pueblos" && user.freeAccess).length}</strong></article>
         <article><small>Con inventario</small><strong>${access.users.filter(user => user.permissions?.includes("inventory.view")).length}</strong></article>
         <article><small>Con proyectos</small><strong>${access.users.filter(user => user.permissions?.includes("project.manage")).length}</strong></article>

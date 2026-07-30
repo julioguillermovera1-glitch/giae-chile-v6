@@ -154,17 +154,17 @@ export function render(host, state){
                 <select id="admUserAccountType">
                   <option value="">-- Ninguna --</option>
                   <option value="empresa">Empresa</option>
-                  <option value="pueblos">Pueblos técnicos</option>
+                  <option value="pueblos">Pueblos Originarios</option>
                 </select>
               </label>
-              <label class="checkbox-label"><input id="admUserFreeAccess" type="checkbox"> Acceso gratuito (solo para Pueblos técnicos)</label>
+              <label class="checkbox-label"><input id="admUserFreeAccess" type="checkbox"> Acceso gratuito (solo para Pueblos Originarios)</label>
               <button id="admAddUser">Agregar usuario</button>
             </div>
             <div id="admUsersTable"></div>
             <div class="spacer"></div>
             <div class="admin-card">
-              <h4>Usuarios Pueblos técnicos</h4>
-              <p class="small">Lista de cuentas registradas como <strong>Pueblos técnicos</strong>. Desde aquí puedes conceder o revocar <em>acceso gratuito</em> para usar los módulos disponibles.</p>
+              <h4>Usuarios Pueblos Originarios</h4>
+              <p class="small">Lista de cuentas registradas como <strong>Pueblos Originarios</strong>. Desde aquí puedes conceder o revocar <em>acceso gratuito</em> para usar los módulos disponibles.</p>
               <div id="admPueblosTable"></div>
             </div>
         </div>
@@ -172,10 +172,10 @@ export function render(host, state){
       <section id="admTabCuentas" class="admin-tab-page">
         <div class="admin-card">
           <h4>Cuentas corporativas</h4>
-          <p class="small">Gestiona las cuentas registradas en el sistema (empresas y pueblos técnicos). Aquí puedes crear, editar, otorgar/revocar acceso gratuito y eliminar cuentas.</p>
+          <p class="small">Gestiona las cuentas registradas en el sistema (empresas y Pueblos Originarios). Aquí puedes crear, editar, otorgar/revocar acceso gratuito y eliminar cuentas.</p>
           <div class="admin-inline">
             <input id="cuentasSearch" placeholder="Buscar por nombre o correo">
-            <select id="cuentasFilterType"><option value="">Todos los tipos</option><option value="empresa">Empresa</option><option value="pueblos">Pueblos técnicos</option></select>
+            <select id="cuentasFilterType"><option value="">Todos los tipos</option><option value="empresa">Empresa</option><option value="pueblos">Pueblos Originarios</option></select>
             <select id="cuentasFilterAccess"><option value="">Todos</option><option value="free">Acceso gratuito</option><option value="pending">Pendientes</option></select>
             <select id="cuentasSort"><option value="name:asc">Orden: Nombre ↑</option><option value="name:desc">Nombre ↓</option><option value="email:asc">Correo ↑</option><option value="email:desc">Correo ↓</option><option value="type:asc">Tipo ↑</option><option value="createdAt:desc">Creado ↓</option></select>
             <select id="cuentasPageSize"><option value="5">5</option><option value="10" selected>10</option><option value="25">25</option><option value="50">50</option></select>
@@ -193,7 +193,7 @@ export function render(host, state){
             <input id="cuentaName" placeholder="Nombre cuenta">
             <input id="cuentaEmail" placeholder="correo@cuenta.cl">
             <input id="cuentaPassword" placeholder="Contraseña (opcional)" type="password">
-            <select id="cuentaType"><option value="empresa">Empresa</option><option value="pueblos">Pueblos técnicos</option></select>
+            <select id="cuentaType"><option value="empresa">Empresa</option><option value="pueblos">Pueblos Originarios</option></select>
             <label class="checkbox-label"><input id="cuentaFreeAccess" type="checkbox"> Acceso gratuito (solo para Pueblos)</label>
             <button id="admAddCuenta" class="primary">Crear cuenta</button>
           </div>
@@ -493,7 +493,7 @@ function paintPueblos(state){
 
   const host = document.querySelector("#admPueblosTable");
   if(!host) return;
-  host.innerHTML = `<div class="table-scroll"><table><thead><tr><th>N°</th><th>Nombre</th><th>Correo</th><th>Estado</th><th>Acceso</th><th>Acciones</th></tr></thead><tbody>${rows || `<tr><td colspan="6">No hay usuarios de pueblos técnicos.</td></tr>`}</tbody></table></div>`;
+  host.innerHTML = `<div class="table-scroll"><table><thead><tr><th>N°</th><th>Nombre</th><th>Correo</th><th>Estado</th><th>Acceso</th><th>Acciones</th></tr></thead><tbody>${rows || `<tr><td colspan="6">No hay usuarios de Pueblos Originarios.</td></tr>`}</tbody></table></div>`;
 
   document.querySelectorAll("[data-toggle-pueblos]").forEach(btn => btn.addEventListener("click", () => togglePueblosAccess(btn.dataset.togglePueblos, state)));
 }
@@ -567,7 +567,7 @@ function getFilteredCuentas(state){
     if(typeFilter && (u.accountType || 'empresa') !== typeFilter) return false;
     if(accessFilter === 'free' && !u.freeAccess) return false;
     if(accessFilter === 'pending') {
-      // pending = pueblos técnicos WITHOUT freeAccess granted
+      // pending = Pueblos Originarios WITHOUT freeAccess granted
       if(!(u.accountType === 'pueblos' && !u.freeAccess)) return false;
     }
     return true;
