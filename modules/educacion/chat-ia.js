@@ -295,11 +295,12 @@ async function buildIaResponse(userMessage, project) {
     }
     
     if (!projectAnalysis.hasTierra) {
-      response += `❌ **Tierra:** No medida - Ve a RIC 5 para calcular la solución recomendada\n`;
+      response += `❌ **Tierra:** No medida - Ve a RIC 6 para calcular la solución recomendada\n`;
     } else {
-      const maxRes = projectAnalysis.supplyType.includes("industrial") ? 5 : 10;
+      // Limite real RIC 6 (CHL-RIC06-SERV-001): 20 Ohm para tierra de servicio.
+      const maxRes = 20;
       const estado = projectAnalysis.tierra.resistance <= maxRes ? "✅ Cumple" : "❌ No cumple";
-      response += `${estado} **Tierra:** ${projectAnalysis.tierra.resistance}Ω (máx ${maxRes}Ω)\n`;
+      response += `${estado} **Tierra:** ${projectAnalysis.tierra.resistance}Ω (máx ${maxRes}Ω según RIC 6)\n`;
     }
     
     response += `\n**Siguiente paso:**\n`;
@@ -332,22 +333,22 @@ async function buildIaResponse(userMessage, project) {
   // EDUCACIÓN GENERAL
   if (lower.includes("ric") || lower.includes("regulación")) {
     return {
-      response: `Las **Reglas de Instalaciones de Corriente (RIC)** son 19 documentos que regulan todo en Chile:\n\n• **RIC 1-19:** Cubren desde empalme hasta inspección final\n• Todas se basan en **IEC 60364** (norma internacional)\n• Complementadas por **Decreto Ley 8** de seguridad\n\n¿Necesitas detalle de alguna específica?`,
+      response: `Los **RIC (Pliegos Técnicos Normativos)** son 19 documentos dictados por la SEC (Superintendencia de Electricidad y Combustibles), en el marco del Decreto Supremo N°8, que regulan las instalaciones de consumo de energía eléctrica en Chile:\n\n• **RIC 1-19:** Cubren desde empalme hasta inspección final\n• Cada pliego cita normas IEC (o UNE equivalentes) específicas según el tema que trata\n\n¿Necesitas detalle de alguna específica?`,
       confidence: 0.85
     };
   }
-  
+
   if (lower.includes("caida") || lower.includes("tensión") || lower.includes("voltaje")) {
     return {
-      response: `La **caída de tensión** es importante:\n\n• Máximo **3%** en empalme-tablero general\n• Máximo **5%** desde empalme hasta punto final\n• Fórmula: ΔV = 2 × ρ × L × I / S\n\nPara tu proyecto de ${projectAnalysis.totalPower.toFixed(2)} kW, la caída debe revisarse en cada circuito.`,
+      response: `La **caída de tensión** (RIC 3, límites de caída de tensión):\n\n• Máximo **3%** en alimentadores/subalimentadores\n• Máximo **5%** total hasta el punto más desfavorable\n\nPara tu proyecto de ${projectAnalysis.totalPower.toFixed(2)} kW, la caída debe revisarse en cada circuito.`,
       confidence: 0.9
     };
   }
-  
+
   if (lower.includes("protección") || lower.includes("disyuntor") || lower.includes("automático")) {
     return {
-      response: `Las **protecciones** son críticas:\n\n• **Automático** (IEC 60898): Sobrecarga y cortocircuito\n  - Curva C: Circuitos normales\n  - Curva D: Motores\n• **Diferencial** (IEC 61008): Fugas a tierra\n  - 30 mA: Personas\n  - 100-300 mA: Instalación\n\nDeben coordinar entre sí en cascada.`,
-      confidence: 0.88
+      response: `Sobre protecciones (esto es conocimiento general de electrotecnia, no una cita textual verificada en la normativa cargada):\n\n• **Automático** (IEC 60898): protege contra sobrecarga y cortocircuito\n  - Curva C: uso general en circuitos normales\n  - Curva D: cargas con alta corriente de arranque (motores)\n• **Diferencial** (IEC 61008): protege contra fugas a tierra\n  - 30 mA: protección de personas\n  - 100-300 mA: protección de instalación/incendio\n\nPara la exigencia exacta de tu caso, pregúntame por el RIC específico (ej. "RIC 2 protecciones") y te doy la regla verificada si está cargada.`,
+      confidence: 0.75
     };
   }
   
