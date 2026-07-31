@@ -1,0 +1,276 @@
+{
+  "schemaVersion": "0.9.0.019",
+  "documento": "RIC-19",
+  "titulo": "Puesta en Servicio",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 19",
+  "fuente": "Pliego Técnico Normativo RIC N°19, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC19-VERIFICACIONPREVIA-001",
+      "documento": "RIC 19",
+      "numeral": "5.1",
+      "categoria": "puesta_servicio",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Verificación, prueba y ensayo previos a la puesta en servicio",
+      "verifica": "Que toda instalación nueva, ampliación o remodelación sea verificada mediante inspección, y probada y ensayada antes de su puesta en servicio o energización.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "verificacionPreviaEnergizacion"
+      },
+      "evidencia": {
+        "si_falta": "La instalación se energiza sin evidencia de inspección, prueba y ensayo previos."
+      },
+      "correccion": "Realizar la inspección, prueba y ensayo de la instalación antes de su energización o puesta en servicio.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC19-INSTALADORVERIFICADOR-001",
+      "documento": "RIC 19",
+      "numeral": "5.4",
+      "categoria": "puesta_servicio",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Verificación realizada por instalador autorizado de la clase correspondiente",
+      "verifica": "Que todas las verificaciones sean realizadas por un instalador eléctrico autorizado por la Superintendencia, de la clase correspondiente al tipo de instalación.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "instaladorAutorizadoVerificacion"
+      },
+      "evidencia": {
+        "si_falta": "La verificación de la instalación no está a cargo de un instalador autorizado de la clase correspondiente."
+      },
+      "correccion": "Asignar la verificación a un instalador eléctrico autorizado de la clase correspondiente al tipo de instalación.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC19-INSPECCIONINICIAL-001",
+      "documento": "RIC 19",
+      "numeral": "6.1 / 6.2",
+      "categoria": "puesta_servicio",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Inspección inicial previa a pruebas y ensayos",
+      "verifica": "Que la inspección inicial preceda a las pruebas y ensayos, efectuándose antes de alimentar eléctricamente la instalación, y que constate que el proyecto cumple el reglamento y que lo ejecutado en terreno coincide con lo declarado.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "inspeccionInicialPreviaEnergizacion"
+      },
+      "evidencia": {
+        "si_falta": "No existe registro de inspección inicial previa a las pruebas, o la instalación ejecutada no coincide con el proyecto declarado."
+      },
+      "correccion": "Realizar la inspección inicial antes de energizar, verificando la conformidad del proyecto y su correspondencia con lo ejecutado en terreno.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC19-ORDENENSAYOS-001",
+      "documento": "RIC 19",
+      "numeral": "7.1.3",
+      "categoria": "puesta_servicio",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Orden de las pruebas y ensayos de verificación",
+      "verifica": "Que las pruebas y ensayos se realicen en el orden establecido: continuidad de protección y equipotenciales, resistencia de aislamiento, protección por separación de circuitos, resistencia de suelos/paredes, desconexión automática, protección complementaria, polaridad, orden de fases, caída de tensión, funcionalidad e iluminación de emergencia.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "ordenEnsayosVerificacion"
+      },
+      "evidencia": {
+        "si_falta": "El informe de ensayos no refleja el orden establecido en el punto 7.1.3, o falta alguno de los ensayos aplicables."
+      },
+      "correccion": "Ejecutar y documentar los ensayos en el orden establecido en el punto 7.1.3 del RIC 19.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC19-CONTINUIDAD-001",
+      "documento": "RIC 19",
+      "numeral": "7.2.1",
+      "categoria": "puesta_servicio",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Ensayo de continuidad de conductores de protección",
+      "verifica": "Que el ensayo de continuidad se realice con una fuente de tensión de 4 V a 24 V en vacío, en corriente continua o alterna, con una intensidad mínima de 0,2 A, sobre los conductores de protección y equipotenciales.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["tensionEnsayoContinuidad", "intensidadEnsayoContinuidad"]
+      },
+      "evidencia": {
+        "si_falta": "El ensayo de continuidad no usa una fuente entre 4-24 V con intensidad mínima de 0,2 A."
+      },
+      "correccion": "Repetir el ensayo de continuidad con una fuente de 4-24 V en vacío e intensidad mínima de 0,2 A.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC19-RESISTENCIAAISLAMIENTO-001",
+      "documento": "RIC 19",
+      "numeral": "7.3.1 / tabla 19.1",
+      "categoria": "puesta_servicio",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Valores mínimos de resistencia de aislamiento",
+      "verifica": "Que la resistencia de aislamiento medida entre conductores de fase, fase-neutro y fase/neutro-protección cumpla los valores mínimos de la tabla 19.1 según la tensión nominal del circuito (≥0,25 MΩ en MBTS/MBTP, ≥0,5 MΩ hasta 500 V, ≥1,0 MΩ sobre 500 V).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["resistenciaAislamientoMedida", "tensionNominalCircuito"]
+      },
+      "evidencia": {
+        "si_falta": "La resistencia de aislamiento medida es inferior al valor mínimo de la tabla 19.1 para la tensión nominal del circuito."
+      },
+      "correccion": "Corregir el aislamiento del circuito hasta alcanzar el valor mínimo de resistencia exigido en la tabla 19.1.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC19-BUCLEFALLA-001",
+      "documento": "RIC 19",
+      "numeral": "7.6.6.4",
+      "categoria": "puesta_servicio",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Impedancia de bucle de falla con doble protección diferencial",
+      "verifica": "Que cuando exista doble protección diferencial en el retorno de fallas a tierra, la impedancia del bucle de falla no supere 80 Ω, siempre que la sensibilidad de la máxima protección diferencial no sea mayor a 300 mA.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["impedanciaBucleFalla", "sensibilidadMaximaDiferencial"]
+      },
+      "evidencia": {
+        "si_falta": "La impedancia del bucle de falla medida supera 80 Ω con doble protección diferencial, o la sensibilidad de la protección máxima supera 300 mA."
+      },
+      "correccion": "Reducir la impedancia del bucle de falla a máximo 80 Ω o ajustar la protección diferencial a sensibilidad ≤300 mA.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC19-SISTEMAIT-001",
+      "documento": "RIC 19",
+      "numeral": "7.6.4.2",
+      "categoria": "puesta_servicio",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Límite de tensión de contacto en sistemas IT",
+      "verifica": "Que en sistemas IT se cumpla RA×Id ≤50 V en redes CA (≤25 V en equipos exteriores húmedos/mojados) y RA×Id ≤120 V en redes CC (≤60 V en equipos exteriores húmedos/mojados).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["productoRAxId", "tipoRedCA_CC", "condicionExteriorHumeda"]
+      },
+      "evidencia": {
+        "si_falta": "El producto RA×Id calculado supera los límites de tensión de contacto exigidos para el tipo de red y condición ambiental."
+      },
+      "correccion": "Ajustar la resistencia de puesta a tierra o la corriente de falla para cumplir el límite RA×Id según el tipo de red y condición ambiental.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC19-INFORMEINICIAL-001",
+      "documento": "RIC 19",
+      "numeral": "8.1.2",
+      "categoria": "puesta_servicio",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Informe de verificación inicial con registro fotográfico",
+      "verifica": "Que el informe de verificación inicial incluya la revisión documental del proyecto con inspecciones/pruebas/ensayos por cada tablero, y un informe fotográfico de los resultados y etapas de ejecución de la instalación.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "informeVerificacionInicialCompleto"
+      },
+      "evidencia": {
+        "si_falta": "El informe de verificación inicial no incluye la revisión documental por tablero o no incluye el informe fotográfico exigido."
+      },
+      "correccion": "Completar el informe de verificación inicial con la revisión documental por tablero y el registro fotográfico exigido en el punto 8.1.2.3.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC19-DESENERGIZACION-001",
+      "documento": "RIC 19",
+      "numeral": "8.2.4.2",
+      "categoria": "puesta_servicio",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Desenergización inmediata de instalación peligrosa",
+      "verifica": "Que toda instalación o parte de ella que se torne peligrosa sea inmediatamente desenergizada y puesta en servicio únicamente después de una reparación satisfactoria.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "desenergizacionInstalacionPeligrosa"
+      },
+      "evidencia": {
+        "si_falta": "Una instalación identificada como peligrosa continúa energizada sin haberse reparado."
+      },
+      "correccion": "Desenergizar de inmediato la instalación peligrosa y reponerla en servicio solo tras una reparación satisfactoria.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC19-EMPALMEINCENDIO-001",
+      "documento": "RIC 19",
+      "numeral": "8.2.4.3",
+      "categoria": "puesta_servicio",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Desconexión de empalme afectado por incendio",
+      "verifica": "Que el empalme de una instalación parcial o totalmente afectada por un incendio permanezca desconectado de la red hasta que la instalación sea verificada y declarada nuevamente por un instalador eléctrico.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "desconexionEmpalmeIncendio"
+      },
+      "evidencia": {
+        "si_falta": "El empalme de una instalación afectada por incendio permanece conectado sin haber sido re-verificado y declarado nuevamente."
+      },
+      "correccion": "Desconectar el empalme de la instalación afectada por incendio hasta su re-verificación y nueva declaración ante la Superintendencia.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC19-PLAZODECLARACION-001",
+      "documento": "RIC 19",
+      "numeral": "9.1.1",
+      "categoria": "puesta_servicio",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Plazo de anticipación para declarar la puesta en servicio",
+      "verifica": "Que la comunicación de puesta en servicio de toda instalación nueva, ampliada o modificada sea declarada con 15 días hábiles de anticipación a la Superintendencia.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "diasAnticipacionDeclaracion"
+      },
+      "evidencia": {
+        "si_falta": "La declaración de puesta en servicio se presenta con menos de 15 días hábiles de anticipación."
+      },
+      "correccion": "Presentar la declaración de puesta en servicio con al menos 15 días hábiles de anticipación.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC19-ANTECEDENTESDECLARACION-001",
+      "documento": "RIC 19",
+      "numeral": "9.2.8",
+      "categoria": "puesta_servicio",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Antecedentes mínimos para la declaración de puesta en servicio",
+      "verifica": "Que la declaración de puesta en servicio incluya planos as-built y memoria explicativa, la declaración del instalador conforme al proyecto definitivo, el informe de verificación inicial y los certificados de tercera parte cuando corresponda.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "antecedentesDeclaracionPuestaServicio"
+      },
+      "evidencia": {
+        "si_falta": "Falta alguno de los antecedentes exigidos (as-built, declaración del instalador, informe de verificación inicial, certificados de tercera parte) en la declaración."
+      },
+      "correccion": "Completar la declaración de puesta en servicio con todos los antecedentes exigidos en el punto 9.2.8.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC19-DECLARACIONUNICA-001",
+      "documento": "RIC 19",
+      "numeral": "9.2.9 / 9.2.10",
+      "categoria": "puesta_servicio",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Prohibición de declaraciones simultáneas o de reemplazo",
+      "verifica": "Que no se ingresen declaraciones simultáneas de puesta en servicio para una misma instalación en trámite, y que ante observaciones de la Superintendencia se continúe con la misma declaración en vez de presentar una nueva.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "unicidadDeclaracionPuestaServicio"
+      },
+      "evidencia": {
+        "si_falta": "Se detecta más de una declaración simultánea en trámite para la misma instalación, o una nueva declaración presentada para reemplazar una observada."
+      },
+      "correccion": "Mantener una única declaración en trámite por instalación y corregir las observaciones sobre la misma declaración, sin presentar una nueva.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    }
+  ]
+}

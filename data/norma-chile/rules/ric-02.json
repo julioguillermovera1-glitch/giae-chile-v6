@@ -1,0 +1,299 @@
+{
+  "schemaVersion": "0.9.0.010",
+  "documento": "RIC-02",
+  "titulo": "Tableros Eléctricos",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 2",
+  "fuente": "Pliego Técnico Normativo RIC N°02, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC02-UBI-001",
+      "documento": "RIC 2",
+      "numeral": "5.2.1",
+      "categoria": "ubicacion_tableros",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Tableros en locales de reunión de personas",
+      "verifica": "Si el tablero está en un local de reunión de personas, que se ubique en recinto, nicho, gabinete o caja cerrado con llave, con acceso solo a personal calificado.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "localReunionPersonas === true",
+        "campo": "tableroCerradoConLlave"
+      },
+      "evidencia": {
+        "si_falta": "El tablero está en un local de reunión de personas pero no se indica cierre con llave ni restricción de acceso."
+      },
+      "correccion": "Instalar el tablero en recinto, nicho, gabinete o caja cerrado con llave, accesible solo a personal calificado.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC02-ROT-001",
+      "documento": "RIC 2",
+      "numeral": "5.3.5",
+      "categoria": "rotulacion",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Rotulado obligatorio del tablero",
+      "verifica": "Que el tablero lleve estampada marca de fabricación, nombre del tablero, tensión de servicio, corriente nominal y número de fases, de forma indeleble y legible.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["marcaFabricacion", "nombreTablero", "tensionServicio", "corrienteNominal", "numeroFases"]
+      },
+      "evidencia": {
+        "si_falta": "Falta uno o más datos obligatorios del rotulado del tablero."
+      },
+      "correccion": "Completar el rotulado indeleble del tablero con marca, nombre, tensión, corriente nominal y número de fases.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC02-UNI-001",
+      "documento": "RIC 2",
+      "numeral": "5.3.6",
+      "categoria": "rotulacion",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Cuadro de circuitos y diagrama unilineal en el tablero",
+      "verifica": "Que el tablero tenga adherido un cuadro rotulado de circuitos y un diagrama unilineal actualizado, legible y con protección permanente.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campos": ["cuadroCircuitosTablero", "diagramaUnilinealTablero"]
+      },
+      "evidencia": {
+        "si_falta": "El tablero no tiene adherido el cuadro de circuitos o el diagrama unilineal actualizado."
+      },
+      "correccion": "Adherir al tablero el cuadro de circuitos rotulado y el diagrama unilineal actualizado y protegido.",
+      "motores": ["giae-inspector", "tableros", "unilineal", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC02-ESP-001",
+      "documento": "RIC 2",
+      "numeral": "5.4.2 / 5.4.3",
+      "categoria": "espacios_trabajo",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Espacios de trabajo mínimos frente a tableros",
+      "verifica": "Que el espacio de trabajo frente al tablero cumpla los mínimos de la tabla N°2.1 (0,90 a 1,50 m según condición) y 1,50 m si hay partes energizadas descubiertas en la parte frontal.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "espacioTrabajoTablero"
+      },
+      "evidencia": {
+        "si_falta": "No se indica o no cumple el espacio de trabajo mínimo frente al tablero según la condición aplicable."
+      },
+      "correccion": "Ajustar el espacio libre frente al tablero según la tabla N°2.1 del RIC 2, considerando si hay partes energizadas descubiertas.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC02-SAL-001",
+      "documento": "RIC 2",
+      "numeral": "5.4.10",
+      "categoria": "salas_electricas",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Alumbrado de emergencia en salas eléctricas",
+      "verifica": "Que las salas eléctricas cuenten con equipo autónomo de alumbrado de emergencia con autonomía mínima de 2 horas y nivel mínimo de 5 lux en el acceso a los tableros.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["alumbradoEmergenciaSala", "autonomiaHoras", "nivelLux"]
+      },
+      "evidencia": {
+        "si_falta": "La sala eléctrica no cuenta con alumbrado de emergencia autónomo de al menos 2 h y 5 lux."
+      },
+      "correccion": "Instalar equipo autónomo de alumbrado de emergencia con autonomía ≥ 2 h y 5 lux mínimo en el acceso a los tableros de la sala eléctrica.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC02-AMP-001",
+      "documento": "RIC 2",
+      "numeral": "6.1.16.3",
+      "categoria": "dimensionamiento",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Reserva de ampliación en tableros nuevos",
+      "verifica": "Que el tamaño inicial de gabinetes y armarios en instalaciones nuevas prevea una ampliación del 25% de la capacidad total por cada tipo de servicio.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "reservaAmpliacion25"
+      },
+      "evidencia": {
+        "si_falta": "No se declara reserva del 25% de capacidad para ampliación futura en el tablero."
+      },
+      "correccion": "Dimensionar el tablero dejando espacios disponibles en barras y riel DIN para una ampliación del 25% de su capacidad.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC02-IP-001",
+      "documento": "RIC 2",
+      "numeral": "6.1.21",
+      "categoria": "grado_proteccion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Grado IP mínimo según ubicación",
+      "verifica": "Que el tablero tenga grado IP 41 mínimo en interior, IP 44 mínimo en exterior bajo techo, o IP 54 mínimo en exterior sin techo.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["gradoIPTablero", "ubicacionTablero"]
+      },
+      "evidencia": {
+        "si_falta": "El grado IP declarado del tablero no cumple el mínimo exigido según su ubicación."
+      },
+      "correccion": "Especificar tablero con grado IP acorde a su ubicación: IP41 interior, IP44 exterior bajo techo, IP54 exterior sin techo.",
+      "motores": ["giae-inspector", "tableros", "presupuesto"]
+    },
+    {
+      "id": "CHL-RIC02-ALT-001",
+      "documento": "RIC 2",
+      "numeral": "6.1.22",
+      "categoria": "montaje",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Altura de montaje de dispositivos de comando",
+      "verifica": "Que los dispositivos de comando o accionamiento del tablero se monten entre 0,45 m y 2,0 m respecto del piso terminado.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "alturaMontajeDispositivos"
+      },
+      "evidencia": {
+        "si_falta": "No se indica la altura de montaje o excede el rango 0,45-2,0 m sin corresponder a una excepción (CCM, armarios, alumbrado público, recarga VE)."
+      },
+      "correccion": "Ajustar la altura de montaje de los dispositivos de comando al rango 0,45 m - 2,0 m desde el piso terminado.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC02-DIF-001",
+      "documento": "RIC 2",
+      "numeral": "6.2.6",
+      "categoria": "protecciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial respaldada por termomagnética",
+      "verifica": "Que toda protección diferencial esté protegida a la sobrecarga y cortocircuito por una protección termomagnética, con corriente nominal del diferencial igual o mayor a la de la termomagnética aguas arriba.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["corrienteNominalDiferencial", "corrienteNominalTermomagnetica"]
+      },
+      "evidencia": {
+        "si_falta": "El diferencial no está respaldado por una termomagnética con corriente nominal adecuada."
+      },
+      "correccion": "Verificar que la corriente nominal del diferencial sea igual o mayor a la termomagnética aguas arriba (o a la suma de las aguas abajo que dependen de él).",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC02-MED-001",
+      "documento": "RIC 2",
+      "numeral": "6.2.13",
+      "categoria": "instrumentacion",
+      "tipo": "condicional",
+      "criticidad": "media",
+      "titulo": "Instrumentos de medida en tableros ≥ 100 A",
+      "verifica": "Si el tablero tiene capacidad igual o superior a 100 A, que lleve instrumentos de medida de tensión y corriente por fase.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "capacidadTablero >= 100",
+        "campo": "instrumentosMedidaTensionCorriente"
+      },
+      "evidencia": {
+        "si_falta": "El tablero declara capacidad ≥100 A pero no incluye instrumentos de medida de tensión/corriente por fase."
+      },
+      "correccion": "Incorporar instrumentos de medida de tensión y corriente por fase en tableros de 100 A o más.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC02-TIE-001",
+      "documento": "RIC 2",
+      "numeral": "6.4.1",
+      "categoria": "puesta_tierra",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Conexión a tierra del tablero",
+      "verifica": "Que todo tablero cuente con conexión a un sistema de puesta a tierra conforme al RIC 6.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "conexionTierraTablero"
+      },
+      "evidencia": {
+        "si_falta": "No se declara conexión a tierra del tablero conforme al RIC 6."
+      },
+      "correccion": "Conectar el tablero al sistema de puesta a tierra según las exigencias del RIC 6.",
+      "motores": ["giae-inspector", "tableros", "tierra"]
+    },
+    {
+      "id": "CHL-RIC02-GEN-001",
+      "documento": "RIC 2",
+      "numeral": "6.5.3",
+      "categoria": "tablero_general",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Corte omnipolar en tablero general",
+      "verifica": "Que el tablero general, cuando alimenta más de un alimentador, cuente con interruptor o disyuntor general de corte omnipolar (incluye neutro).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "corteOmnipolarTableroGeneral"
+      },
+      "evidencia": {
+        "si_falta": "El tablero general no especifica interruptor/disyuntor de corte omnipolar."
+      },
+      "correccion": "Incorporar interruptor o disyuntor general de corte omnipolar en el tablero general.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC02-DIST-001",
+      "documento": "RIC 2",
+      "numeral": "6.6.1",
+      "categoria": "tablero_distribucion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Límite de circuitos por protección general",
+      "verifica": "Que un tablero de distribución no tenga más de 25 circuitos por cada protección general.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "circuitosPorProteccionGeneral"
+      },
+      "evidencia": {
+        "si_falta": "El tablero de distribución declara más de 25 circuitos bajo una misma protección general."
+      },
+      "correccion": "Redistribuir los circuitos de modo que no superen 25 por cada protección general del tablero de distribución.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC02-INC-001",
+      "documento": "RIC 2",
+      "numeral": "6.6.4",
+      "categoria": "seguridad_incendio",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Protección contra incendio en tableros de recintos masivos",
+      "verifica": "Si el tablero de distribución está en aeropuerto, hotel de más de 300 habitaciones, local de espectáculos de más de 1.000 personas, centro comercial de más de 2.000 m², edificio de oficinas de gran altura o ambiente explosivo, que implemente diferencial general de 300 mA con corte omnipolar, o detección de falla de arco según IEC 62606.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "tipoRecinto en (aeropuerto, hotel_300+, espectaculos_1000+, centro_comercial_2000m2+, oficina_gran_altura, ambiente_explosivo)",
+        "campo": "proteccionIncendioTablero"
+      },
+      "evidencia": {
+        "si_falta": "El recinto corresponde a uno de los tipos exigidos pero no se declara diferencial general 300 mA ni detección de falla de arco."
+      },
+      "correccion": "Implementar diferencial general de 300 mA con corte omnipolar, o dispositivos de detección de falla de arco (IEC 62606) en todos los circuitos del tablero.",
+      "motores": ["giae-inspector", "tableros", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC02-BOT-001",
+      "documento": "RIC 2",
+      "numeral": "6.7.5",
+      "categoria": "emergencia",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Botonera de desconexión general en edificios altos con respaldo",
+      "verifica": "Si el edificio tiene más de 5 pisos y cuenta con sistema de emergencia con transferencia automática o autogeneración, que exista una botonera de desconexión general en el acceso principal que desconecte todas las fuentes de alimentación.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "pisosEdificio > 5 y (transferenciaAutomatica === true o autogeneracion === true)",
+        "campo": "botoneraDesconexionGeneral"
+      },
+      "evidencia": {
+        "si_falta": "El edificio cumple la condición pero no se declara botonera de desconexión general en el acceso principal."
+      },
+      "correccion": "Instalar botonera de desconexión general en el acceso principal del edificio, conforme al punto 6.3 del RIC 8.",
+      "motores": ["giae-inspector", "tableros", "emergencia", "auditoria"]
+    }
+  ]
+}

@@ -1,0 +1,257 @@
+{
+  "schemaVersion": "0.9.0.014",
+  "documento": "RIC-14",
+  "titulo": "Exigencias de Eficiencia Energética para Edificios",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 14",
+  "fuente": "Pliego Técnico Normativo RIC N°14, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC14-ALCANCE-001",
+      "documento": "RIC 14",
+      "numeral": "2.3",
+      "categoria": "eficiencia_energetica",
+      "tipo": "informativa",
+      "criticidad": "media",
+      "titulo": "Exclusiones del alcance del RIC 14",
+      "verifica": "Que se identifique correctamente si el edificio está exceptuado: residenciales/oficinas <2.500 m² construidos, departamentos <300 m², o áreas comunes de edificios <5 pisos o <1.000 m².",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campos": ["superficieConstruidaTotal", "superficieDepartamento", "pisosEdificio", "superficieAreasComunes"]
+      },
+      "evidencia": {
+        "si_falta": "Se aplican exigencias de eficiencia energética a un edificio que califica dentro de las exclusiones del punto 2.3, o se omiten en uno que no califica."
+      },
+      "correccion": "Verificar la superficie y tipo de edificio contra los criterios de exclusión del punto 2.3 antes de aplicar o descartar las exigencias del RIC 14.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC14-CAIDATENSION-001",
+      "documento": "RIC 14",
+      "numeral": "5.1.1 / 5.1.2",
+      "categoria": "eficiencia_energetica",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Caída de tensión máxima en alimentadores y derivaciones",
+      "verifica": "Que los conductores de alimentadores estén dimensionados para una caída máxima de tensión de 2% a la carga nominal, y los de derivaciones para 3% en el punto más desfavorable.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["caidaTensionAlimentador", "caidaTensionDerivacion"]
+      },
+      "evidencia": {
+        "si_falta": "La caída de tensión calculada del alimentador supera 2% o la de la derivación supera 3%."
+      },
+      "correccion": "Redimensionar los conductores del alimentador o la derivación para cumplir la caída de tensión máxima de 2% y 3% respectivamente.",
+      "motores": ["giae-inspector", "conductores", "engineering"]
+    },
+    {
+      "id": "CHL-RIC14-MEDICIONSEPARADA-001",
+      "documento": "RIC 14",
+      "numeral": "5.2.1",
+      "categoria": "eficiencia_energetica",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Medición separada de consumos por categoría",
+      "verifica": "Que el edificio nuevo instale dispositivos de medición separados para energía total, HVAC/agua caliente, iluminación interior, iluminación exterior, enchufes, sistema sanitario y ascensores.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "medicionSeparadaPorCategoria"
+      },
+      "evidencia": {
+        "si_falta": "Falta un medidor separado para alguna de las 7 categorías de consumo exigidas en el punto 5.2.1."
+      },
+      "correccion": "Instalar medidores independientes para cada una de las categorías de consumo exigidas en el punto 5.2.1.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC14-REGISTROCONSUMO-001",
+      "documento": "RIC 14",
+      "numeral": "5.2.3",
+      "categoria": "eficiencia_energetica",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Frecuencia y retención de registro de consumos",
+      "verifica": "Que los consumos se registren al menos cada 15 minutos, con registro horario, diario, mensual y anual, manteniéndose los registros durante un mínimo de 12 meses.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["frecuenciaRegistroConsumo", "periodoRetencionRegistro"]
+      },
+      "evidencia": {
+        "si_falta": "El sistema de medición registra con una frecuencia mayor a 15 minutos o retiene los registros por menos de 12 meses."
+      },
+      "correccion": "Configurar el sistema de medición para registrar cada 15 minutos como máximo y retener los datos por al menos 12 meses.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC14-ASBUILT-001",
+      "documento": "RIC 14",
+      "numeral": "5.2.4.1",
+      "categoria": "eficiencia_energetica",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Entrega de planos as-built y documentación en 30 días",
+      "verifica": "Que dentro de los 30 días posteriores a la recepción del sistema se entregue al propietario/administrador los planos as-built con diagrama unilineal y planos de disposición por piso del sistema monitoreado/controlado.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "entregaAsBuiltEficienciaEnergetica"
+      },
+      "evidencia": {
+        "si_falta": "No se entregaron los planos as-built y diagramas unilineales dentro de los 30 días posteriores a la recepción."
+      },
+      "correccion": "Entregar al propietario/administrador los planos as-built y diagrama unilineal dentro de los 30 días posteriores a la recepción del sistema.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC14-SENSORZONA-001",
+      "documento": "RIC 14",
+      "numeral": "5.3.2.1 / 5.3.2.2",
+      "categoria": "control_iluminacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Zona máxima de control por sensor de iluminación interior",
+      "verifica": "Que cada dispositivo de control (sensor) controle una zona de no más de 200 m² cuando la superficie total a controlar es menor o igual a 1.000 m², y que exista interruptor manual en el acceso de la dependencia.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["superficieZonaControladaSensor", "interruptorManualAcceso"]
+      },
+      "evidencia": {
+        "si_falta": "El sensor controla una zona superior a 200 m², o no existe interruptor manual en el acceso de la dependencia."
+      },
+      "correccion": "Redistribuir los sensores para que cada uno controle máximo 200 m² e instalar interruptor manual en el acceso de cada dependencia.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC14-SENSORIP-001",
+      "documento": "RIC 14",
+      "numeral": "5.3.2.3",
+      "categoria": "control_iluminacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Grado de protección IP de sensores según ubicación",
+      "verifica": "Que los sensores de control de iluminación tengan IP20 mínimo en recintos cerrados, IP42 mínimo en espacios de circulación e IP44 en recintos húmedos.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["gradoIPSensor", "tipoRecintoSensor"]
+      },
+      "evidencia": {
+        "si_falta": "El sensor instalado tiene un grado IP inferior al mínimo exigido para el tipo de recinto donde se ubica."
+      },
+      "correccion": "Instalar sensores con el grado IP mínimo correspondiente al tipo de recinto (IP20 cerrado, IP42 circulación, IP44 húmedo).",
+      "motores": ["giae-inspector", "documentacion", "presupuesto"]
+    },
+    {
+      "id": "CHL-RIC14-AREACOMUNAPAGADO-001",
+      "documento": "RIC 14",
+      "numeral": "5.3.2.7",
+      "categoria": "control_iluminacion",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Control automático de iluminación en áreas comunes",
+      "verifica": "Que el sistema de iluminación de áreas comunes cuente con control automático que reduzca la potencia cuando no se detecte actividad durante 20 minutos.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "controlAutomaticoAreaComun"
+      },
+      "evidencia": {
+        "si_falta": "El área común no cuenta con sistema de control automático de iluminación por inactividad de 20 minutos."
+      },
+      "correccion": "Instalar control automático de iluminación en áreas comunes que reduzca la potencia tras 20 minutos sin actividad detectada.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC14-ESTACIONAMIENTO-001",
+      "documento": "RIC 14",
+      "numeral": "5.3.3.2",
+      "categoria": "control_iluminacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Reducción de potencia en iluminación de estacionamientos",
+      "verifica": "Que la iluminación de estacionamientos se reduzca al menos 30% automáticamente tras 20 minutos sin actividad, en zonas controladas no superiores a 350 m².",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["reduccionPotenciaEstacionamiento", "superficieZonaControlEstacionamiento"]
+      },
+      "evidencia": {
+        "si_falta": "La reducción de potencia es inferior al 30% tras 20 minutos de inactividad, o la zona controlada supera 350 m²."
+      },
+      "correccion": "Configurar el sistema para reducir al menos 30% la potencia tras 20 minutos de inactividad, en zonas de máximo 350 m².",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC14-FACHADAAPAGADO-001",
+      "documento": "RIC 14",
+      "numeral": "5.3.4.2 / 5.3.4.3",
+      "categoria": "control_iluminacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Control automático de iluminación exterior y de fachada",
+      "verifica": "Que la iluminación exterior se apague automáticamente cuando hay suficiente luz natural, y que la iluminación de fachada/paisaje se apague entre medianoche (o cierre de negocio) y las 6:00 horas (o apertura), salvo excepciones de seguridad o generación renovable propia.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["controlLuzNaturalExterior", "horarioApagadoFachada"]
+      },
+      "evidencia": {
+        "si_falta": "La iluminación exterior no cuenta con control por luz natural, o la fachada no se apaga en el horario exigido sin justificación válida."
+      },
+      "correccion": "Instalar sensor de luz natural para la iluminación exterior y programar el apagado de fachada en el horario exigido (medianoche-6:00 h).",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC14-RESPALDOTEMPORIZADOR-001",
+      "documento": "RIC 14",
+      "numeral": "5.3.4.5",
+      "categoria": "control_iluminacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Respaldo de programación de temporizadores ante corte de suministro",
+      "verifica": "Que todos los temporizadores de control de encendido/apagado mantengan la programación y ajuste de hora durante una pérdida de suministro de al menos 10 horas.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "respaldoTemporizadorHoras"
+      },
+      "evidencia": {
+        "si_falta": "El temporizador pierde la programación u hora ante un corte de suministro de menos de 10 horas."
+      },
+      "correccion": "Instalar temporizadores con respaldo de batería capaz de mantener la programación durante al menos 10 horas sin suministro.",
+      "motores": ["giae-inspector", "documentacion", "presupuesto"]
+    },
+    {
+      "id": "CHL-RIC14-MOTORESEFICIENTES-001",
+      "documento": "RIC 14",
+      "numeral": "5.5",
+      "categoria": "eficiencia_energetica",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Selección de motores eficientes",
+      "verifica": "Que en instalaciones que requieran sistemas de eficiencia energética, los motores seleccionados cumplan con la norma IEC TS 60034-31 para minimizar pérdidas.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "cumplimientoNormaMotorEficiente"
+      },
+      "evidencia": {
+        "si_falta": "El motor seleccionado no acredita cumplimiento con la norma IEC TS 60034-31 de eficiencia energética."
+      },
+      "correccion": "Seleccionar motores certificados conforme a la norma IEC TS 60034-31 para instalaciones con exigencias de eficiencia energética.",
+      "motores": ["giae-inspector", "documentacion", "presupuesto"]
+    },
+    {
+      "id": "CHL-RIC14-PRUEBASENSOR-001",
+      "documento": "RIC 14",
+      "numeral": "5.9.2.1",
+      "categoria": "eficiencia_energetica",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Protocolo de pruebas funcionales de sensores de presencia",
+      "verifica": "Que se certifique la instalación correcta de sensores de presencia y se documente su prueba en un protocolo de entrega firmado por el instalador (todos si son ≤7 sensores, por combinación tipo/geometría si son más).",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "protocoloPruebaSensorPresencia"
+      },
+      "evidencia": {
+        "si_falta": "No existe protocolo de entrega firmado por el instalador que certifique la prueba de los sensores de presencia."
+      },
+      "correccion": "Elaborar y firmar el protocolo de entrega con las pruebas de los sensores de presencia conforme al punto 5.9.2.1.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    }
+  ]
+}

@@ -1,0 +1,314 @@
+{
+  "schemaVersion": "0.9.0.012",
+  "documento": "RIC-12",
+  "titulo": "Instalaciones en Ambientes Explosivos",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 12",
+  "fuente": "Pliego Técnico Normativo RIC N°12, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC12-ARCO-001",
+      "documento": "RIC 12",
+      "numeral": "8.3.3",
+      "categoria": "ambientes_explosivos",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Detección de falla de arco en circuitos de áreas peligrosas",
+      "verifica": "Que todos los circuitos que alimenten equipos eléctricos ubicados en áreas peligrosas queden protegidos por un dispositivo de detección de falla de arco eléctrico conforme a la norma IEC 62606.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "deteccionArcoAreaPeligrosa"
+      },
+      "evidencia": {
+        "si_falta": "El circuito que alimenta un equipo en área peligrosa no declara dispositivo de detección de falla de arco (AFDD)."
+      },
+      "correccion": "Instalar un dispositivo de detección de falla de arco eléctrico (AFDD) conforme a IEC 62606 en los circuitos de áreas peligrosas.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC12-CATEGORIA-001",
+      "documento": "RIC 12",
+      "numeral": "5.1 / 5.2 / 5.3",
+      "categoria": "ambientes_explosivos",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Categoría de equipo según clasificación de zona",
+      "verifica": "Que el equipo instalado en zona 0/20 use modo de protección de categoría 1 (ia, ma, ta, sa), en zona 1/21 categoría 2, y en zona 2/22 categoría 3, conforme a los modos de protección típicos definidos por zona.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["zonaClasificada", "categoriaEquipoExplosion", "modoProteccionEquipo"]
+      },
+      "evidencia": {
+        "si_falta": "El equipo instalado no tiene la categoría de protección exigida para la zona clasificada donde se ubica."
+      },
+      "correccion": "Instalar equipos con la categoría y modo de protección adecuados a la zona clasificada (0/20→cat.1, 1/21→cat.2, 2/22→cat.3).",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC12-TEMPMARCA-001",
+      "documento": "RIC 12",
+      "numeral": "9.2.1.3",
+      "categoria": "ambientes_explosivos",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Marcado de rango de temperatura ambiente del equipo Ex",
+      "verifica": "Que si la temperatura ambiente prevista está fuera del rango -20°C a +40°C, el equipo esté marcado para trabajar en el rango de temperatura correspondiente.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["temperaturaAmbientePrevista", "marcadoRangoTemperaturaEquipo"]
+      },
+      "evidencia": {
+        "si_falta": "La temperatura ambiente prevista está fuera de -20°C a +40°C y el equipo no tiene marcado el rango correspondiente."
+      },
+      "correccion": "Especificar un equipo con marcado de rango de temperatura ambiente adecuado a las condiciones reales del sitio.",
+      "motores": ["giae-inspector", "documentacion", "presupuesto"]
+    },
+    {
+      "id": "CHL-RIC12-CABLETENSION-001",
+      "documento": "RIC 12",
+      "numeral": "11.1.2",
+      "categoria": "cableado_explosivo",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Tensión asignada mínima de cables en atmósferas explosivas",
+      "verifica": "Que los cables utilizados en las instalaciones en atmósferas explosivas (salvo seguridad intrínseca) tengan una tensión mínima asignada de 450/750 V.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "tensionAsignadaCableExplosivo"
+      },
+      "evidencia": {
+        "si_falta": "El cable declarado tiene una tensión asignada inferior a 450/750 V."
+      },
+      "correccion": "Utilizar cables con tensión asignada mínima de 450/750 V en la instalación en atmósfera explosiva.",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC12-SELLADO-001",
+      "documento": "RIC 12",
+      "numeral": "11.1.3",
+      "categoria": "cableado_explosivo",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Sellado de orificios de entrada de cables no utilizados",
+      "verifica": "Que los orificios de los equipos eléctricos para entradas de cables o tuberías que no se utilicen estén cerrados mediante piezas certificadas acordes con el modo de protección del equipo.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "selladoOrificiosNoUtilizados"
+      },
+      "evidencia": {
+        "si_falta": "Un orificio de entrada de cable no utilizado no está cerrado con pieza certificada según el modo de protección."
+      },
+      "correccion": "Cerrar todos los orificios de entrada de cables no utilizados con piezas certificadas acordes al modo de protección del equipo.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC12-INTENSIDAD-001",
+      "documento": "RIC 12",
+      "numeral": "11.1.5",
+      "categoria": "cableado_explosivo",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Reducción de intensidad admisible y protección de cables largos",
+      "verifica": "Que la intensidad admisible de los conductores en atmósfera explosiva se disminuya en un 15% respecto a una instalación convencional, y que los cables de longitud ≥5 m estén protegidos contra sobrecargas y cortocircuitos.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["intensidadAdmisibleReducida", "longitudCable", "proteccionSobrecargaCortocircuito"]
+      },
+      "evidencia": {
+        "si_falta": "La intensidad admisible no está reducida en 15%, o un cable ≥5 m no declara protección contra sobrecargas y cortocircuitos."
+      },
+      "correccion": "Reducir en 15% la intensidad admisible de los conductores y proteger contra sobrecarga/cortocircuito los cables de longitud ≥5 m.",
+      "motores": ["giae-inspector", "conductores", "engineering"]
+    },
+    {
+      "id": "CHL-RIC12-TRANSICION-001",
+      "documento": "RIC 12",
+      "numeral": "11.1.6",
+      "categoria": "cableado_explosivo",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Sellado en el punto de transición entre zonas",
+      "verifica": "Que en el punto de transición de una canalización eléctrica de una zona a otra, o de un emplazamiento peligroso a otro no peligroso, se impida el paso de gases, vapores o líquidos inflamables mediante sellado adecuado.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "selladoTransicionZona"
+      },
+      "evidencia": {
+        "si_falta": "El punto de transición entre zonas o emplazamientos no declara sellado contra el paso de gases, vapores o líquidos inflamables."
+      },
+      "correccion": "Instalar sellado (cortafuego, relleno de arena, ventilación adecuada) en el punto de transición entre zonas o emplazamientos.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC12-PORTATIL-001",
+      "documento": "RIC 12",
+      "numeral": "11.2.2",
+      "categoria": "cableado_explosivo",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Cables para equipos portátiles o móviles en atmósfera explosiva",
+      "verifica": "Que los cables para alimentación de equipos portátiles o móviles en atmósfera explosiva sean flexibles, de sección mínima 1,5 mm², tensión asignada mínima 450/750 V y longitud máxima 30 m.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["seccionCablePortatil", "longitudCablePortatil", "tensionCablePortatil"]
+      },
+      "evidencia": {
+        "si_falta": "El cable del equipo portátil/móvil tiene sección menor a 1,5 mm², tensión menor a 450/750 V, o longitud mayor a 30 m."
+      },
+      "correccion": "Utilizar cable flexible ≥1,5 mm², tensión asignada mínima 450/750 V y longitud máxima 30 m para equipos portátiles/móviles.",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC12-TUBERIATIERRA-001",
+      "documento": "RIC 12",
+      "numeral": "11.3.4",
+      "categoria": "cableado_explosivo",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Puesta a tierra de tuberías metálicas flexibles",
+      "verifica": "Que las tuberías con conductividad eléctrica estén conectadas a la red de tierra y que, en el caso de tuberías metálicas flexibles, la distancia entre dos puestas a tierra consecutivas no exceda 10 m.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "distanciaPuestaTierraTuberia"
+      },
+      "evidencia": {
+        "si_falta": "La distancia entre puestas a tierra consecutivas de la tubería metálica flexible supera 10 m, o la tubería no está conectada a tierra."
+      },
+      "correccion": "Conectar la tubería metálica a la red de tierra, asegurando que la distancia entre puestas a tierra consecutivas no exceda 10 m.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC12-SURTIDORSECCION-001",
+      "documento": "RIC 12",
+      "numeral": "12.3.2",
+      "categoria": "islas_combustible",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Sección mínima de cables en islas de combustible",
+      "verifica": "Que los cables con protección mecánica o armadura de acero galvanizado tengan sección mínima 2,5 mm² para alimentaciones de fuerza y 1,5 mm² para alumbrado y control.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["seccionCableFuerza", "seccionCableAlumbradoControl"]
+      },
+      "evidencia": {
+        "si_falta": "El cable de fuerza tiene sección menor a 2,5 mm² o el de alumbrado/control menor a 1,5 mm²."
+      },
+      "correccion": "Utilizar cables con sección mínima de 2,5 mm² para fuerza y 1,5 mm² para alumbrado y control en la isla de combustible.",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC12-ACOMETIDAPROT-001",
+      "documento": "RIC 12",
+      "numeral": "12.3.4",
+      "categoria": "islas_combustible",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección de acometidas mayores a 5 m en islas de combustible",
+      "verifica": "Que todas las acometidas a receptores de longitud superior a 5 m dispongan de protección contra cortocircuitos y contra sobrecargas.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "proteccionAcometidaSurtidor"
+      },
+      "evidencia": {
+        "si_falta": "Una acometida a receptor de más de 5 m no declara protección contra cortocircuitos y sobrecargas."
+      },
+      "correccion": "Instalar protección contra cortocircuitos y sobrecargas en toda acometida a receptor de longitud superior a 5 m.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC12-CUADRODIST-001",
+      "documento": "RIC 12",
+      "numeral": "12.5.4",
+      "categoria": "islas_combustible",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Cuadro de distribución de fuerza en islas de combustible",
+      "verifica": "Que la distribución de fuerza se realice desde un cuadro compuesto por interruptor automático de protección general, un diferencial y salidas separadas por receptor, cada una con protección contra cortocircuitos y sobrecargas.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "cuadroDistribucionFuerzaSurtidor"
+      },
+      "evidencia": {
+        "si_falta": "El cuadro de distribución de fuerza no cuenta con interruptor general, diferencial, o salidas separadas y protegidas por receptor."
+      },
+      "correccion": "Configurar el cuadro de distribución con interruptor automático general, diferencial y salidas individuales protegidas por receptor.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC12-ALUMBRADOSURTIDOR-001",
+      "documento": "RIC 12",
+      "numeral": "12.6.4",
+      "categoria": "islas_combustible",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Circuitos de alumbrado monofásicos en islas de combustible",
+      "verifica": "Que los circuitos de alumbrado en la isla de combustible sean monofásicos, separados por servicio, y protegidos con interruptores automáticos bipolares de máximo 16 A.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "proteccionCircuitoAlumbradoSurtidor"
+      },
+      "evidencia": {
+        "si_falta": "El circuito de alumbrado no es monofásico o su interruptor automático bipolar supera 16 A."
+      },
+      "correccion": "Configurar circuitos de alumbrado monofásicos, separados por servicio, con interruptor automático bipolar de máximo 16 A.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC12-TIERRAFUERZA-001",
+      "documento": "RIC 12",
+      "numeral": "12.7.3",
+      "categoria": "islas_combustible",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Puesta a tierra y diferencial en circuitos de fuerza de islas de combustible",
+      "verifica": "Que todas las partes metálicas de equipos y aparatos eléctricos se conecten a tierra a través del conductor de protección, y que todos los circuitos de fuerza dispongan de diferencial con sensibilidad máxima de 30 mA.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "tierraDiferencialCircuitoFuerzaSurtidor"
+      },
+      "evidencia": {
+        "si_falta": "Una parte metálica de un equipo no está conectada a tierra, o un circuito de fuerza no declara diferencial ≤30 mA."
+      },
+      "correccion": "Conectar a tierra todas las partes metálicas de los equipos e instalar diferencial de sensibilidad máxima 30 mA en cada circuito de fuerza.",
+      "motores": ["giae-inspector", "tierra", "tableros"]
+    },
+    {
+      "id": "CHL-RIC12-CISTERNA-001",
+      "documento": "RIC 12",
+      "numeral": "12.8.2.2",
+      "categoria": "islas_combustible",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Cable de puesta a tierra para descarga de camiones cisterna",
+      "verifica": "Que el cable de puesta a tierra para conectar la cisterna del camión sea extraflexible, aislado, con sección mínima de 16 mm².",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "seccionCablePuestaTierraCisterna"
+      },
+      "evidencia": {
+        "si_falta": "El cable de puesta a tierra para la cisterna tiene una sección inferior a 16 mm² o no es extraflexible/aislado."
+      },
+      "correccion": "Utilizar un cable extraflexible aislado de sección mínima 16 mm² para la puesta a tierra de la cisterna del camión.",
+      "motores": ["giae-inspector", "tierra", "conductores"]
+    },
+    {
+      "id": "CHL-RIC12-DOCUMENTACION-001",
+      "documento": "RIC 12",
+      "numeral": "8.4.1 / 8.4.2",
+      "categoria": "ambientes_explosivos",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Documentación de clasificación de áreas peligrosas",
+      "verifica": "Que el proyecto de instalación nueva o ampliación incluya la clasificación de áreas con lista de fuentes de escape, plano representativo, adecuación del modo de protección y condiciones especiales de instalación, y que el propietario conserve copia del proyecto, manuales, certificados de conformidad y documentos de seguridad intrínseca.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "documentacionClasificacionAreas"
+      },
+      "evidencia": {
+        "si_falta": "El proyecto no incluye la clasificación de áreas con lista de fuentes de escape y plano, o el propietario no conserva la documentación exigida."
+      },
+      "correccion": "Incorporar al proyecto la clasificación de áreas (fuentes de escape, plano, modo de protección) y conservar la documentación exigida en el punto 8.4.2.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    }
+  ]
+}

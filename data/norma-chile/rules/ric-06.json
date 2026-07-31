@@ -1,0 +1,297 @@
+{
+  "schemaVersion": "0.9.0.010",
+  "documento": "RIC-06",
+  "titulo": "Puesta a Tierra y Enlace Equipotencial",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 6",
+  "fuente": "Pliego Técnico Normativo RIC N°06, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC06-DIS-001",
+      "documento": "RIC 6",
+      "numeral": "5.1",
+      "categoria": "puesta_tierra",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Diseño justificado del sistema de puesta a tierra",
+      "verifica": "Que el sistema de puesta a tierra (SPT) esté diseñado y calculado por un profesional o instalador autorizado, evitando diferencias de potencial peligrosas.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "calculoJustificativoSPT"
+      },
+      "evidencia": {
+        "si_falta": "No se encuentra el cálculo justificativo del sistema de puesta a tierra firmado por el responsable."
+      },
+      "correccion": "Incorporar el cálculo justificativo del SPT elaborado por el profesional o instalador autorizado.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC06-MED-001",
+      "documento": "RIC 6",
+      "numeral": "5.15",
+      "categoria": "puesta_tierra",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Punto accesible de medición",
+      "verifica": "Que el SPT cuente con camarilla de registro de diámetro mínimo 160 mm, o caja/cámara de registro de dimensiones mínimas 30x30 cm.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "puntoAccesibleMedicion"
+      },
+      "evidencia": {
+        "si_falta": "No se declara camarilla o caja de registro con las dimensiones mínimas exigidas."
+      },
+      "correccion": "Instalar camarilla de registro ≥160 mm de diámetro o caja/cámara ≥30x30 cm para medición del SPT.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC06-SERV-001",
+      "documento": "RIC 6",
+      "numeral": "6.1 / 6.2",
+      "categoria": "tierra_servicio",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Límites de la puesta a tierra de servicio",
+      "verifica": "Que la puesta a tierra de servicio no supere 20 Ohm (o 80 Ohm en instalaciones ≤10 kW con corte omnipolar y diferenciales 300 mA/30 mA, o con protecciones de sobretensión permanente/transitoria), y que la tensión de conductor activo respecto a tierra no exceda 250 V en falla permanente.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["resistenciaPuestaTierraServicio", "tensionConductorActivoFalla", "condicionExcepcion80Ohm"]
+      },
+      "evidencia": {
+        "si_falta": "La resistencia de puesta a tierra de servicio excede 20 Ohm sin cumplir las condiciones de excepción a 80 Ohm, o la tensión de falla supera 250 V."
+      },
+      "correccion": "Reducir la resistencia de puesta a tierra de servicio a ≤20 Ohm, o justificar la excepción a 80 Ohm cumpliendo todas las condiciones del punto 6.2.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC06-NEU-001",
+      "documento": "RIC 6",
+      "numeral": "6.5 / 6.6.1",
+      "categoria": "tierra_servicio",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Corte omnipolar y sección del neutro",
+      "verifica": "Que el conductor neutro esté protegido por interruptor de corte omnipolar (fase y neutro simultáneo) y que su sección sea al menos igual a la de fase, con mínimo 4 mm².",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["corteOmnipolarNeutro", "seccionNeutro", "seccionFase"]
+      },
+      "evidencia": {
+        "si_falta": "No se especifica corte omnipolar del neutro o su sección es inferior a la de fase / menor a 4 mm²."
+      },
+      "correccion": "Incorporar interruptor de corte omnipolar y ajustar la sección del neutro a al menos la de fase (mínimo 4 mm²).",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC06-SUBEST-001",
+      "documento": "RIC 6",
+      "numeral": "6.7",
+      "categoria": "tierra_servicio",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Puesta a tierra de servicio en red interna con subestación MT/BT",
+      "verifica": "Si la instalación se conecta a MT mediante subestación propia, que el neutro se ponga a tierra en la subestación y cada 5 postes/cámaras (máx. 200 m), con resistencia combinada ≤5 Ohm.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "conectadoViaSubestacionMT === true",
+        "campo": "resistenciaCombinadaPuestasTierra"
+      },
+      "evidencia": {
+        "si_falta": "La instalación tiene subestación MT/BT pero no cumple la resistencia combinada ≤5 Ohm ni la puesta a tierra cada 200 m."
+      },
+      "correccion": "Diseñar las puestas a tierra de servicio de la red interna cumpliendo resistencia combinada ≤5 Ohm y puntos de tierra cada 200 m máximo.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC06-RTP-001",
+      "documento": "RIC 6",
+      "numeral": "7.3",
+      "categoria": "tierra_proteccion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Cálculo de resistencia de puesta a tierra de protección",
+      "verifica": "Que la resistencia de puesta a tierra de protección cumpla RTP = VS/I0, donde VS es la tensión de seguridad del RIC 5 e I0 la corriente de operación de la protección.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["resistenciaPuestaTierraProteccion", "tensionSeguridadVS", "corrienteOperacionI0"]
+      },
+      "evidencia": {
+        "si_falta": "No se verifica que RTP ≤ VS/I0 para la puesta a tierra de protección."
+      },
+      "correccion": "Calcular y ajustar la resistencia de puesta a tierra de protección para cumplir RTP ≤ VS/I0.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC06-NOFUS-001",
+      "documento": "RIC 6",
+      "numeral": "7.6",
+      "categoria": "tierra_proteccion",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Prohibición de fusibles o dispositivos de corte en conductor de protección",
+      "verifica": "Que no se intercalen dispositivos de desconexión ni fusibles en los conductores de tierra de protección.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "dispositivoEnConductorProteccion"
+      },
+      "evidencia": {
+        "si_falta": "Se detecta un fusible o dispositivo de desconexión intercalado en el conductor de tierra de protección."
+      },
+      "correccion": "Eliminar cualquier fusible o dispositivo de desconexión del conductor de tierra de protección.",
+      "motores": ["giae-inspector", "tierra", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC06-PROH-001",
+      "documento": "RIC 6",
+      "numeral": "7.10",
+      "categoria": "tierra_proteccion",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Elementos prohibidos como conductor de protección",
+      "verifica": "Que no se usen canalizaciones metálicas de agua/gas, partes de la construcción, conductos flexibles no diseñados para ello, cables fiadores, ni cuerpos de bandejas/escalerillas/canastillos como conductor de protección.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "elementoProhibidoComoProteccion"
+      },
+      "evidencia": {
+        "si_falta": "Se usa un elemento de la lista prohibida del punto 7.10 como conductor de protección o equipotencialidad."
+      },
+      "correccion": "Reemplazar el conductor de protección por uno dedicado, sin usar canalizaciones de otros servicios ni partes estructurales.",
+      "motores": ["giae-inspector", "tierra", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC06-UNION-001",
+      "documento": "RIC 6",
+      "numeral": "7.11",
+      "categoria": "tierra_proteccion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Métodos de unión de puestas a tierra",
+      "verifica": "Que las uniones del conductor de puesta a tierra usen soldadura de alto punto de fusión o prensas de unión, y que las conexiones bajo el nivel del suelo usen soldadura exotérmica o conector aprobado para enterramiento.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["metodoUnionTierra", "metodoUnionSubterranea"]
+      },
+      "evidencia": {
+        "si_falta": "No se especifica un método de unión aprobado para las conexiones de puesta a tierra, especialmente las subterráneas."
+      },
+      "correccion": "Especificar soldadura de alto punto de fusión/prensas para uniones visibles y soldadura exotérmica o conector aprobado para uniones subterráneas.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC06-MAT-001",
+      "documento": "RIC 6",
+      "numeral": "8.9",
+      "categoria": "electrodos",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Material de electrodos: cobre nuevo",
+      "verifica": "Que los electrodos y conductores desnudos de puesta a tierra sean de cobre nuevo, sin permitir reutilizados, reparados, ni de aluminio/fierro/acero no protegido en contacto directo con el suelo.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "materialElectrodoTierra"
+      },
+      "evidencia": {
+        "si_falta": "Se especifica un electrodo o conductor de puesta a tierra reutilizado, reparado, o de material prohibido (aluminio/fierro/acero no protegido) en contacto con el suelo."
+      },
+      "correccion": "Reemplazar por electrodos y conductores de cobre nuevo, conforme al punto 8.9 del RIC 6.",
+      "motores": ["giae-inspector", "tierra", "presupuesto"]
+    },
+    {
+      "id": "CHL-RIC06-PROF-001",
+      "documento": "RIC 6",
+      "numeral": "8.11",
+      "categoria": "electrodos",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Profundidad mínima de mallas de puesta a tierra",
+      "verifica": "Que la profundidad mínima de enterramiento de las mallas de puesta a tierra no sea inferior a 0,5 m.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "profundidadMallaTierra"
+      },
+      "evidencia": {
+        "si_falta": "La profundidad de enterramiento declarada de la malla es inferior a 0,5 m."
+      },
+      "correccion": "Ajustar la profundidad de enterramiento de la malla de puesta a tierra a un mínimo de 0,5 m.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC06-INDEP-001",
+      "documento": "RIC 6",
+      "numeral": "9.1 / 10.1",
+      "categoria": "independencia_tierras",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Independencia entre puestas a tierra de BT y MT",
+      "verifica": "Que las puestas a tierra de las masas de baja tensión no estén unidas a la puesta a tierra de protección de un centro de transformación MT, salvo que se cumplan las condiciones de independencia eléctrica o de resistencia combinada suficientemente baja.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["separacionTierrasBTMT", "condicionIndependenciaElectrica"]
+      },
+      "evidencia": {
+        "si_falta": "Las puestas a tierra de BT y MT están unidas sin cumplir las condiciones de independencia o de resistencia combinada del punto 10 del RIC 6."
+      },
+      "correccion": "Separar las puestas a tierra de BT y MT según el punto 10 del RIC 6, o verificar la condición de resistencia combinada suficientemente baja.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC06-CALIB-001",
+      "documento": "RIC 6",
+      "numeral": "11.4",
+      "categoria": "medicion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Calibración vigente del instrumento de medición",
+      "verifica": "Que el instrumento usado para medir la resistencia de puesta a tierra cuente con certificado de calibración vigente, con antigüedad no superior a 24 meses.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "certificadoCalibracionInstrumento"
+      },
+      "evidencia": {
+        "si_falta": "No se adjunta certificado de calibración vigente (≤24 meses) del instrumento de medición de puesta a tierra."
+      },
+      "correccion": "Adjuntar certificado de calibración vigente (≤24 meses) del instrumento utilizado para medir la puesta a tierra.",
+      "motores": ["giae-inspector", "tierra", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC06-MANT-001",
+      "documento": "RIC 6",
+      "numeral": "12.2 / 12.3",
+      "categoria": "mantenimiento",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Registro de inspección y mantenimiento del SPT",
+      "verifica": "Que la inspección del SPT incluya ensayo de equipotencialidad, medición de resistencia, corrientes no deseadas y continuidad, con registro que documente condiciones, corrosión, uniones y resultados.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "registroInspeccionSPT"
+      },
+      "evidencia": {
+        "si_falta": "No existe registro de inspección del SPT con las pruebas y contenidos mínimos exigidos."
+      },
+      "correccion": "Generar registro de inspección del SPT incluyendo las 4 pruebas exigidas y el contenido mínimo del punto 12.3 del RIC 6.",
+      "motores": ["giae-inspector", "tierra", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC06-RAYO-001",
+      "documento": "RIC 6",
+      "numeral": "13.14",
+      "categoria": "proteccion_rayos",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Número y sección mínima de bajantes de pararrayos",
+      "verifica": "Si la instalación requiere protección contra rayos, que existan al menos 2 bajantes ubicadas en el perímetro de la estructura, con sección mínima de 50 mm².",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "requiereProteccionRayos === true",
+        "campo": "numeroBajantesYSeccion"
+      },
+      "evidencia": {
+        "si_falta": "El proyecto requiere protección contra rayos pero declara menos de 2 bajantes o sección inferior a 50 mm²."
+      },
+      "correccion": "Diseñar al menos 2 bajantes perimetrales con sección mínima de 50 mm² según el punto 13.14 del RIC 6.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    }
+  ]
+}

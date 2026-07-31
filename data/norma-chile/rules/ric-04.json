@@ -1,0 +1,296 @@
+{
+  "schemaVersion": "0.9.0.010",
+  "documento": "RIC-04",
+  "titulo": "Conductores, Materiales y Sistemas de Canalización",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 4",
+  "fuente": "Pliego Técnico Normativo RIC N°04, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC04-SEC-001",
+      "documento": "RIC 4",
+      "numeral": "5.4",
+      "categoria": "conductores",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Secciones mínimas de conductores",
+      "verifica": "Que la sección de los conductores no sea inferior a 1,5 mm² en circuitos de iluminación, 2,5 mm² en enchufes/mixtos/subalimentadores y 4,0 mm² en alimentadores.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["seccionCircuitoIluminacion", "seccionCircuitoEnchufes", "seccionSubalimentador", "seccionAlimentador"]
+      },
+      "evidencia": {
+        "si_falta": "Algún circuito declara una sección de conductor inferior al mínimo exigido según su tipo."
+      },
+      "correccion": "Ajustar la sección de los conductores a los mínimos del punto 5.4 del RIC 4 según el tipo de circuito.",
+      "motores": ["giae-inspector", "conductores", "engineering"]
+    },
+    {
+      "id": "CHL-RIC04-REU-001",
+      "documento": "RIC 4",
+      "numeral": "5.5",
+      "categoria": "materiales",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Materiales para lugares de reunión de personas",
+      "verifica": "Si la instalación sirve un lugar de reunión de personas, que los conductores y canalizaciones no metálicas sean retardantes de llama, no propagadores de incendio, de baja emisión de humos, libres de halógenos y de baja toxicidad.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "localReunionPersonas === true",
+        "campo": "materialesCanalizacionCertificados"
+      },
+      "evidencia": {
+        "si_falta": "El proyecto sirve un lugar de reunión de personas pero no se certifican los conductores/canalizaciones con las 5 características exigidas."
+      },
+      "correccion": "Especificar conductores y canalizaciones certificados como retardantes de llama, no propagadores de incendio, baja emisión de humos, libres de halógenos y de baja toxicidad.",
+      "motores": ["giae-inspector", "conductores", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC04-COL-001",
+      "documento": "RIC 4",
+      "numeral": "5.32",
+      "categoria": "identificacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Código de colores de conductores",
+      "verifica": "Que los conductores usen el código de colores: fase 1 azul, fase 2 negro, fase 3 rojo, neutro blanco, protección verde o verde/amarillo; y que no se usen rojo, amarillo o azul en canalizaciones no eléctricas.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "codigoColoresConductores"
+      },
+      "evidencia": {
+        "si_falta": "Los conductores no respetan el código de colores oficial del RIC 4 o se usa verde/verde-amarillo para un fin distinto a protección."
+      },
+      "correccion": "Corregir la identificación de conductores según el código de colores del punto 5.32 del RIC 4.",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC04-CONT-001",
+      "documento": "RIC 4",
+      "numeral": "5.34",
+      "categoria": "conductores",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Continuidad de conductores sin uniones en tableros o ductos",
+      "verifica": "Que los conductores sean continuos entre tableros, entre cajas o entre artefactos, sin uniones dentro de tableros eléctricos ni dentro de ductos.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "unionesEnTablerosODuctos"
+      },
+      "evidencia": {
+        "si_falta": "Se detectan uniones de conductores dentro de un tablero o de un ducto."
+      },
+      "correccion": "Eliminar las uniones dentro de tableros o ductos; las uniones deben hacerse solo en cajas destinadas para ese fin.",
+      "motores": ["giae-inspector", "conductores", "tableros", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC04-CAP-001",
+      "documento": "RIC 4",
+      "numeral": "6.2.2 / 6.2.4 / 6.2.5",
+      "categoria": "conductores",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Capacidad de transporte corregida por agrupamiento y temperatura",
+      "verifica": "Que la capacidad de transporte de corriente del conductor se determine desde las tablas del RIC 4 y se corrija con los factores por cantidad de conductores (tabla 4.6) y por temperatura ambiente (tabla 4.7) cuando corresponda.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["capacidadTransporteBase", "factorCorreccionCantidad", "factorCorreccionTemperatura"]
+      },
+      "evidencia": {
+        "si_falta": "El cálculo de capacidad de transporte no aplica los factores de corrección exigidos por agrupamiento o temperatura."
+      },
+      "correccion": "Recalcular la capacidad de transporte aplicando Ic = It × fn × ft según las tablas 4.6 y 4.7 del RIC 4.",
+      "motores": ["giae-inspector", "conductores", "engineering"]
+    },
+    {
+      "id": "CHL-RIC04-SUBT-001",
+      "documento": "RIC 4",
+      "numeral": "7.9.7.2",
+      "categoria": "canalizaciones_subterraneas",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Profundidad mínima de canalización subterránea",
+      "verifica": "Que la canalización subterránea tenga una profundidad mínima de 0,45 m en zonas de tránsito peatonal o liviano, y de 0,8 m en zonas de tránsito vehicular o pesado.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["profundidadCanalizacionSubterranea", "tipoTransitoZona"]
+      },
+      "evidencia": {
+        "si_falta": "La profundidad declarada de la canalización subterránea es inferior al mínimo exigido para el tipo de tránsito de la zona."
+      },
+      "correccion": "Ajustar la profundidad de la zanja a 0,45 m (peatonal/liviano) o 0,8 m (vehicular/pesado) como mínimo.",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC04-CF-001",
+      "documento": "RIC 4",
+      "numeral": "7.14.5 / 7.15.1.7",
+      "categoria": "seguridad_incendio",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Sellos cortafuego en pasos entre recintos",
+      "verifica": "Que toda canalización o ducto de barras que atraviese de un recinto a otro cuente con sello cortafuego de resistencia al fuego mínima F120 (o equivalente al muro que atraviesa).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "selloCortafuegoPasoRecintos"
+      },
+      "evidencia": {
+        "si_falta": "No se declara sello cortafuego F120 en un paso de canalización o ducto de barras entre recintos."
+      },
+      "correccion": "Instalar sellos cortafuego con resistencia al fuego mínima F120 en cada paso de canalización entre recintos.",
+      "motores": ["giae-inspector", "conductores", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC04-DESV-001",
+      "documento": "RIC 4",
+      "numeral": "7.16.1.6",
+      "categoria": "tuberias",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Límite de desviación en tramos de tubería",
+      "verifica": "Que no exista una desviación mayor a 180° entre dos cajas o accesorios en un tramo de tubería, salvo tramos de hasta 5 m que aceptan 270°, colocando cajas intermedias en caso contrario.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["desviacionTotalTramo", "distanciaEntreCajas"]
+      },
+      "evidencia": {
+        "si_falta": "El tramo de tubería excede la desviación máxima permitida sin cajas intermedias."
+      },
+      "correccion": "Agregar cajas intermedias o reducir la desviación del tramo conforme al punto 7.16.1.6 del RIC 4.",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC04-TIE-001",
+      "documento": "RIC 4",
+      "numeral": "7.16.2.4 / 7.16.2.5",
+      "categoria": "tuberias_metalicas",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Conexión a tierra de tuberías metálicas",
+      "verifica": "Que todos los ductos metálicos estén conectados a tierra con continuidad eléctrica asegurada, sin usarlos como conductor de protección o de neutro.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["conexionTierraDuctoMetalico", "usoDuctoComoConductor"]
+      },
+      "evidencia": {
+        "si_falta": "El ducto metálico no está conectado a tierra o se usa como conductor de protección/neutro."
+      },
+      "correccion": "Conectar el ducto metálico a tierra asegurando continuidad eléctrica; nunca usarlo como conductor de protección o neutro.",
+      "motores": ["giae-inspector", "conductores", "tierra", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC04-OCUP-001",
+      "documento": "RIC 4",
+      "numeral": "7.16.1.14 / tabla 4.21",
+      "categoria": "tuberias",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Porcentaje máximo de ocupación de tuberías",
+      "verifica": "Que el conjunto de conductores no ocupe más del 50% (1 conductor) o 33% (2 o más conductores) de la sección transversal de la tubería.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["numeroConductores", "porcentajeOcupacionTuberia"]
+      },
+      "evidencia": {
+        "si_falta": "El porcentaje de ocupación de la tubería excede el máximo permitido según la cantidad de conductores."
+      },
+      "correccion": "Aumentar el diámetro de la tubería o reducir la cantidad de conductores para cumplir el porcentaje máximo de ocupación de la tabla N°4.21.",
+      "motores": ["giae-inspector", "conductores", "engineering"]
+    },
+    {
+      "id": "CHL-RIC04-BAND-001",
+      "documento": "RIC 4",
+      "numeral": "7.10.19 / 7.11.16 / 7.7.9",
+      "categoria": "canalizaciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Ocupación máxima de bandejas, escalerillas y molduras",
+      "verifica": "Que los conductores no ocupen más del 40% de la sección transversal de bandejas portaconductores, escalerillas o molduras/bandejas livianas.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "porcentajeOcupacionBandejaEscalerilla"
+      },
+      "evidencia": {
+        "si_falta": "La cantidad de conductores declarada supera el 40% de la sección transversal de la bandeja o escalerilla."
+      },
+      "correccion": "Redistribuir los conductores o aumentar la sección de la bandeja/escalerilla para no superar el 40% de ocupación.",
+      "motores": ["giae-inspector", "conductores", "engineering"]
+    },
+    {
+      "id": "CHL-RIC04-CV-001",
+      "documento": "RIC 4",
+      "numeral": "7.13.16",
+      "categoria": "puesta_tierra",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Conductor de protección en canaletas",
+      "verifica": "Que el conductor o barra de protección de una canaleta esté conectado a la puesta a tierra al menos en cada extremo, con conexiones intermedias en tramos superiores a 50 m.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["conexionTierraExtremos", "longitudTramoCanaleta"]
+      },
+      "evidencia": {
+        "si_falta": "El conductor de protección de la canaleta no está conectado a tierra en ambos extremos o falta conexión intermedia en tramos >50 m."
+      },
+      "correccion": "Conectar el conductor/barra de protección de la canaleta a tierra en cada extremo y agregar conexiones intermedias cada 50 m.",
+      "motores": ["giae-inspector", "conductores", "tierra"]
+    },
+    {
+      "id": "CHL-RIC04-EMB-001",
+      "documento": "RIC 4",
+      "numeral": "7.16.3.2",
+      "categoria": "tuberias_no_metalicas",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Restricciones de uso de tuberías no metálicas",
+      "verifica": "Que las tuberías no metálicas no se usen en lugares con riesgo de incendio/explosión, como soporte de equipos, expuestas a radiación solar sin certificación, ni en ambientes que excedan su temperatura o resistencia mecánica certificada.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "usoTuberiaNoMetalicaRestringido"
+      },
+      "evidencia": {
+        "si_falta": "Se detecta uso de tubería no metálica en una condición prohibida por el punto 7.16.3.2 del RIC 4."
+      },
+      "correccion": "Reemplazar por tubería metálica o certificada para la condición específica (radiación solar, temperatura, riesgo de incendio/explosión).",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC04-DUCT-001",
+      "documento": "RIC 4",
+      "numeral": "7.14.2 / 7.14.8",
+      "categoria": "ducto_barras",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Diseño sísmico y protecciones de ductos de barra",
+      "verifica": "Que el trazado de ducto de barras cuente con medios aprobados para resistir sismos según NCh 433, y que el sistema esté protegido contra sobrecarga y cortocircuito según su capacidad de transporte.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["disenoSismicoDuctoBarra", "proteccionSobrecargaCortocircuito"]
+      },
+      "evidencia": {
+        "si_falta": "No se declara diseño sísmico conforme a NCh 433 o protecciones adecuadas para el ducto de barras."
+      },
+      "correccion": "Incorporar soportes sísmicos según NCh 433 y protecciones dimensionadas para la capacidad de transporte y cortocircuito del ducto de barras.",
+      "motores": ["giae-inspector", "conductores", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC04-EMP-001",
+      "documento": "RIC 4",
+      "numeral": "5.11",
+      "categoria": "conexiones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Métodos aprobados de unión de conductores",
+      "verifica": "Que las uniones y derivaciones entre conductores usen métodos aprobados (soldadura, conectores por compresión) que garanticen conexión eléctrica e integridad mecánica, sin depender solo de la fuerza manual.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "metodoUnionConductores"
+      },
+      "evidencia": {
+        "si_falta": "No se especifica un método de unión aprobado (soldadura o conector por compresión certificado) para las uniones de conductores."
+      },
+      "correccion": "Especificar un método de unión aprobado según el punto 5.11 del RIC 4 (soldadura de bajo/alto punto de fusión o conectores por compresión certificados).",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    }
+  ]
+}

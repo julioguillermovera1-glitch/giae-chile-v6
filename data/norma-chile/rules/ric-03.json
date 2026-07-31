@@ -1,0 +1,183 @@
+{
+  "schemaVersion": "0.9.0.010",
+  "documento": "RIC-03",
+  "titulo": "Alimentadores y Demanda de una Instalación",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 3",
+  "fuente": "Pliego Técnico Normativo RIC N°03 V1.1, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC03-SEC-001",
+      "documento": "RIC 3",
+      "numeral": "5.1.2",
+      "categoria": "conductores",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Sección mínima de alimentadores y subalimentadores",
+      "verifica": "Que la sección de alimentadores sea al menos 4 mm² y la de subalimentadores al menos 2,5 mm².",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["seccionAlimentador", "seccionSubalimentador"]
+      },
+      "evidencia": {
+        "si_falta": "La sección declarada de un alimentador o subalimentador es inferior al mínimo exigido."
+      },
+      "correccion": "Ajustar la sección del alimentador a mínimo 4 mm² y del subalimentador a mínimo 2,5 mm².",
+      "motores": ["giae-inspector", "conductores", "engineering"]
+    },
+    {
+      "id": "CHL-RIC03-CDT-001",
+      "documento": "RIC 3",
+      "numeral": "5.1.3",
+      "categoria": "caida_tension",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Límites de caída de tensión",
+      "verifica": "Que la caída de tensión en alimentadores/subalimentadores no exceda 3% de la tensión nominal y que la caída total hasta el punto más desfavorable no exceda 5%.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["caidaTensionAlimentador", "caidaTensionTotal"]
+      },
+      "evidencia": {
+        "si_falta": "La caída de tensión calculada supera el 3% (alimentador) o el 5% (total) de la tensión nominal."
+      },
+      "correccion": "Redimensionar la sección de los conductores para que la caída de tensión no exceda 3% (alimentador) ni 5% (total).",
+      "motores": ["giae-inspector", "conductores", "engineering"]
+    },
+    {
+      "id": "CHL-RIC03-SHA-001",
+      "documento": "RIC 3",
+      "numeral": "5.1.5",
+      "categoria": "canalizaciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Shaft vertical de alimentadores",
+      "verifica": "Que el shaft vertical de alimentadores sea de uso exclusivo, con resistencia al fuego mínima RF120, dimensiones uniformes en todo su trayecto y accesible en todos los pisos incluyendo subterráneos.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["usoExclusivoShaftAlimentadores", "resistenciaFuegoShaft", "accesibilidadTodosPisos"]
+      },
+      "evidencia": {
+        "si_falta": "El shaft de alimentadores no cumple uso exclusivo, RF120 o accesibilidad en todos los pisos."
+      },
+      "correccion": "Adecuar el shaft vertical de alimentadores según el punto 5.1.5 del RIC 3 (uso exclusivo, RF120, dimensiones uniformes y accesibilidad).",
+      "motores": ["giae-inspector", "conductores", "unilineal", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC03-PE-001",
+      "documento": "RIC 3",
+      "numeral": "5.2.3",
+      "categoria": "protecciones",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Conductor PE sin protecciones asociadas",
+      "verifica": "Que el conductor de puesta a tierra de protección (PE) de alimentadores o subalimentadores no tenga protecciones asociadas.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "proteccionEnConductorPE"
+      },
+      "evidencia": {
+        "si_falta": "Se detecta una protección instalada sobre el conductor PE del alimentador o subalimentador."
+      },
+      "correccion": "Eliminar cualquier dispositivo de protección instalado sobre el conductor PE.",
+      "motores": ["giae-inspector", "conductores", "tierra"]
+    },
+    {
+      "id": "CHL-RIC03-DISP-001",
+      "documento": "RIC 3",
+      "numeral": "5.2.5",
+      "categoria": "protecciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Dispositivo individual y corte omnipolar del alimentador principal",
+      "verifica": "Que cada alimentador o subalimentador tenga un dispositivo individual de protección, y que el del alimentador principal sea de corte omnipolar (salvo dispositivos mayores a 630 A).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["dispositivoProteccionIndividual", "corteOmnipolarAlimentadorPrincipal"]
+      },
+      "evidencia": {
+        "si_falta": "Falta dispositivo individual de protección o el alimentador principal no especifica corte omnipolar sin justificar excepción >630A."
+      },
+      "correccion": "Asignar dispositivo individual de protección a cada alimentador/subalimentador y verificar corte omnipolar en el principal (salvo >630A).",
+      "motores": ["giae-inspector", "conductores", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC03-DER-001",
+      "documento": "RIC 3",
+      "numeral": "5.2.6",
+      "categoria": "protecciones",
+      "tipo": "condicional",
+      "criticidad": "media",
+      "titulo": "Protección de derivaciones desde un alimentador",
+      "verifica": "Que las derivaciones tomadas desde un alimentador estén protegidas contra sobrecarga y cortocircuito, salvo derivaciones ≤5 m en ducto cerrado protegidas por la protección del alimentador.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "longitudDerivacion > 5",
+        "campo": "proteccionDerivacionAlimentador"
+      },
+      "evidencia": {
+        "si_falta": "Existe una derivación mayor a 5 m sin protección propia contra sobrecarga/cortocircuito."
+      },
+      "correccion": "Proteger la derivación con dispositivo propio, o limitarla a 5 m en ducto cerrado si se ampara en la protección del alimentador.",
+      "motores": ["giae-inspector", "conductores", "tableros"]
+    },
+    {
+      "id": "CHL-RIC03-FD-001",
+      "documento": "RIC 3",
+      "numeral": "6.3",
+      "categoria": "dimensionamiento",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Factores de demanda de alumbrado por tipo de consumidor",
+      "verifica": "Que el cálculo de demanda de alimentadores de alumbrado aplique el factor de demanda de la tabla N°3.1 según tipo de consumidor (casa habitación, hospital, hotel, bodega, local comercial, etc.) y tramo de potencia.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["tipoConsumidor", "factorDemandaAplicado", "tramoPotencia"]
+      },
+      "evidencia": {
+        "si_falta": "El cálculo de demanda no aplica el factor de demanda correspondiente al tipo de consumidor y tramo de potencia."
+      },
+      "correccion": "Aplicar el factor de demanda de la tabla N°3.1 del RIC 3 según el tipo de consumidor y tramo de potencia, o justificar un factor distinto con estudio fundamentado.",
+      "motores": ["giae-inspector", "cargas", "engineering"]
+    },
+    {
+      "id": "CHL-RIC03-NEU-001",
+      "documento": "RIC 3",
+      "numeral": "6.4",
+      "categoria": "dimensionamiento",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Dimensionamiento del conductor neutro",
+      "verifica": "Que el neutro se dimensione igual a la fase en monofásico y trifásico con cargas lineales, y con sección reforzada (50% mayor o igual según tipo de filtro) cuando sirve cargas no lineales generadoras de armónicas.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["tipoCarga", "seccionNeutro", "seccionFase", "tipoFiltroArmonico"]
+      },
+      "evidencia": {
+        "si_falta": "El neutro no cumple el criterio de dimensionamiento correspondiente al tipo de carga (lineal o no lineal) que sirve."
+      },
+      "correccion": "Redimensionar el neutro según el punto 6.4 del RIC 3: igual a la fase para cargas lineales; reforzado (≥ fase o +50%) para cargas no lineales según el tipo de filtro armónico instalado.",
+      "motores": ["giae-inspector", "conductores", "engineering"]
+    },
+    {
+      "id": "CHL-RIC03-FS-001",
+      "documento": "RIC 3",
+      "numeral": "6.5",
+      "categoria": "dimensionamiento",
+      "tipo": "condicional",
+      "criticidad": "media",
+      "titulo": "Factor de simultaneidad en conjuntos de viviendas",
+      "verifica": "Si el alimentador sirve alumbrado de un conjunto de viviendas con empalme único (condominio, parcelación), que se aplique el factor de simultaneidad de la tabla N°3.2 según número de viviendas.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "conjuntoViviendasEmpalmeUnico === true",
+        "campo": "factorSimultaneidadAplicado"
+      },
+      "evidencia": {
+        "si_falta": "El proyecto es un conjunto de viviendas con empalme único pero no aplica el factor de simultaneidad de la tabla N°3.2."
+      },
+      "correccion": "Aplicar el factor de simultaneidad de la tabla N°3.2 del RIC 3 según el número de viviendas del conjunto.",
+      "motores": ["giae-inspector", "cargas", "engineering"]
+    }
+  ]
+}

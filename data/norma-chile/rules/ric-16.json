@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "0.9.0.016",
+  "documento": "RIC-16",
+  "titulo": "Subsistemas de Distribución",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 16",
+  "fuente": "Pliego Técnico Normativo RIC N°16, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC16-FACTIBILIDAD-001",
+      "documento": "RIC 16",
+      "numeral": "4.2",
+      "categoria": "subsistema_distribucion",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Factibilidad de suministro previa a la ejecución",
+      "verifica": "Que las instalaciones de un subsistema de distribución solo se ejecuten cuando los interesados cuenten con la factibilidad de suministro eléctrico otorgada por la empresa distribuidora de la zona.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "factibilidadSuministroSubsistema"
+      },
+      "evidencia": {
+        "si_falta": "No existe documento de factibilidad de suministro otorgado por la empresa distribuidora antes de ejecutar el subsistema de distribución."
+      },
+      "correccion": "Obtener la factibilidad de suministro eléctrico de la empresa distribuidora antes de ejecutar las instalaciones del subsistema.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC16-INSTALADORCLASE-001",
+      "documento": "RIC 16",
+      "numeral": "4.5",
+      "categoria": "subsistema_distribucion",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Instalador eléctrico autorizado según clase de instalación",
+      "verifica": "Que las instalaciones del subsistema de distribución sean proyectadas, ejecutadas y declaradas por instaladores eléctricos autorizados de la clase que corresponda al tipo de instalación.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "instaladorAutorizadoSubsistema"
+      },
+      "evidencia": {
+        "si_falta": "El proyecto, ejecución o declaración del subsistema de distribución no está a cargo de un instalador eléctrico autorizado de la clase correspondiente."
+      },
+      "correccion": "Asignar el proyecto, ejecución y declaración del subsistema a un instalador eléctrico autorizado de la clase correspondiente al tipo de instalación.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC16-PUESTASERVICIO-001",
+      "documento": "RIC 16",
+      "numeral": "4.6",
+      "categoria": "subsistema_distribucion",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Instalaciones terminadas y declaradas antes de la puesta en servicio",
+      "verifica": "Que para su puesta en servicio, las instalaciones del subsistema de distribución y de las unidades de la comunidad estén totalmente terminadas y declaradas e inscritas en la Superintendencia.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "declaracionInscripcionSubsistema"
+      },
+      "evidencia": {
+        "si_falta": "El subsistema de distribución entra en servicio sin estar totalmente terminado o sin declaración/inscripción en la Superintendencia."
+      },
+      "correccion": "Completar las instalaciones y su declaración e inscripción ante la Superintendencia antes de la puesta en servicio del subsistema.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC16-CONEXIONDIRECTA-001",
+      "documento": "RIC 16",
+      "numeral": "4.7",
+      "categoria": "subsistema_distribucion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Servidumbres y espacios para conexión directa individual",
+      "verifica": "Que el subsistema de distribución se proyecte y construya dejando las servidumbres y espacios comunes que permitan a cualquier usuario conectarse directamente a las líneas de la empresa distribuidora concesionaria.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "servidumbreConexionDirectaSubsistema"
+      },
+      "evidencia": {
+        "si_falta": "El proyecto del subsistema no contempla servidumbres ni espacios comunes para que un usuario se conecte directamente a la red de la distribuidora."
+      },
+      "correccion": "Incluir en el proyecto las servidumbres y espacios comunes necesarios para permitir la conexión directa individual a la red de la distribuidora.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC16-INDEPENDENCIAFALLAS-001",
+      "documento": "RIC 16",
+      "numeral": "4.8",
+      "categoria": "subsistema_distribucion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Independencia de fallas entre unidades de la comunidad",
+      "verifica": "Que el subsistema de distribución se proyecte y construya de modo que la falla de una unidad de la comunidad no afecte al resto de los usuarios, y que existan medios materiales y humanos para resolver una falla general dentro de plazos prudentes.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "independenciaFallasSubsistema"
+      },
+      "evidencia": {
+        "si_falta": "El diseño del subsistema no garantiza independencia ante fallas individuales, o no existe un plan/medios para resolver fallas generales."
+      },
+      "correccion": "Rediseñar el subsistema para garantizar independencia entre unidades ante fallas y establecer los medios materiales/humanos para resolver fallas generales.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC16-RESPONSABILIDADMANTENIMIENTO-001",
+      "documento": "RIC 16",
+      "numeral": "4.10",
+      "categoria": "subsistema_distribucion",
+      "tipo": "informativa",
+      "criticidad": "media",
+      "titulo": "Responsabilidad de seguridad, operación y mantenimiento del subsistema",
+      "verifica": "Que quienes hayan constituido el subsistema de distribución asuman la responsabilidad de la seguridad, operación y mantenimiento de las instalaciones que permiten la puesta en servicio de las unidades de la comunidad.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "responsableMantenimientoSubsistema"
+      },
+      "evidencia": {
+        "si_falta": "No existe un responsable identificado de la seguridad, operación y mantenimiento del subsistema de distribución."
+      },
+      "correccion": "Designar formalmente al responsable de la seguridad, operación y mantenimiento del subsistema conforme al artículo 11 del DS N°8/2019.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    }
+  ]
+}

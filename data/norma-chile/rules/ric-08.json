@@ -1,0 +1,241 @@
+{
+  "schemaVersion": "0.9.0.010",
+  "documento": "RIC-08",
+  "titulo": "Sistemas de Emergencia",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 8",
+  "fuente": "Pliego Técnico Normativo RIC N°08, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC08-REQ-001",
+      "documento": "RIC 8",
+      "numeral": "6.1",
+      "categoria": "sistemas_emergencia",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Recintos que requieren sistema de emergencia",
+      "verifica": "Si el proyecto corresponde a recinto asistencial, educacional, hotel, teatro, cine, aeropuerto, edificio de 5+ pisos, estacionamiento cerrado >5 vehículos u otro recinto listado, que cuente con sistema de emergencia.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "tipoRecinto en (asistencial, educacional, hotel, teatro, cine, aeropuerto, edificio_5_mas_pisos, estacionamiento_cerrado_5_mas_vehiculos, terminal_transporte)",
+        "campo": "sistemaEmergenciaInstalado"
+      },
+      "evidencia": {
+        "si_falta": "El recinto corresponde a uno de los tipos exigidos pero no se declara sistema de emergencia."
+      },
+      "correccion": "Diseñar e instalar un sistema de emergencia conforme al RIC 8 para el tipo de recinto correspondiente.",
+      "motores": ["giae-inspector", "emergencia", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC08-CONS-001",
+      "documento": "RIC 8",
+      "numeral": "6.3",
+      "categoria": "sistemas_emergencia",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Consumos obligatorios del sistema de emergencia",
+      "verifica": "Que el sistema de emergencia alimente al menos alumbrado de escape, sistemas de alarma, sistemas de combate/extinción de incendios y otros consumos críticos de seguridad listados en el punto 6.3.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "consumosAlimentadosPorEmergencia"
+      },
+      "evidencia": {
+        "si_falta": "El sistema de emergencia no alimenta uno o más de los consumos obligatorios del punto 6.3 del RIC 8."
+      },
+      "correccion": "Verificar que el sistema de emergencia alimente todos los consumos obligatorios listados en el punto 6.3 del RIC 8.",
+      "motores": ["giae-inspector", "emergencia", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC08-PLACA-001",
+      "documento": "RIC 8",
+      "numeral": "6.7",
+      "categoria": "sistemas_emergencia",
+      "tipo": "condicional",
+      "criticidad": "media",
+      "titulo": "Placa identificatoria de sistema de emergencia",
+      "verifica": "Si la instalación cuenta con sistema de emergencia de transferencia/partida automática o autogeneración, que exista placa visible en el empalme y tablero general indicando su existencia y forma de desconexión.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "transferenciaAutomaticaOAutogeneracion === true",
+        "campo": "placaIdentificatoriaEmergencia"
+      },
+      "evidencia": {
+        "si_falta": "Existe sistema de emergencia con transferencia automática/autogeneración pero no se declara placa identificatoria en empalme y tablero general."
+      },
+      "correccion": "Instalar placa visible en el empalme y tablero general indicando la existencia del sistema de emergencia y su desconexión.",
+      "motores": ["giae-inspector", "emergencia", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC08-PRUEBA-001",
+      "documento": "RIC 8",
+      "numeral": "6.9 / 6.10",
+      "categoria": "mantenimiento",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Pruebas periódicas y registro del sistema de emergencia",
+      "verifica": "Que el sistema de emergencia se pruebe periódicamente (máximo cada 1 año) y que exista registro escrito de las pruebas, frecuencias y resultados.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campos": ["registroPruebasEmergencia", "periodicidadPruebas"]
+      },
+      "evidencia": {
+        "si_falta": "No existe registro de pruebas periódicas del sistema de emergencia, o su periodicidad excede 1 año."
+      },
+      "correccion": "Establecer pruebas periódicas (máximo anuales) del sistema de emergencia y mantener registro escrito de frecuencias, pruebas y resultados.",
+      "motores": ["giae-inspector", "emergencia", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC08-BAT-001",
+      "documento": "RIC 8",
+      "numeral": "8.7.1.c",
+      "categoria": "fuentes_alimentacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Autonomía de baterías de acumuladores",
+      "verifica": "Que las baterías de acumuladores mantengan tensión ≥85% del valor nominal durante mínimo 60 minutos a plena carga (120 minutos para edificios de más de 5 pisos).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["autonomiaBateriaMinutos", "pisosEdificio"]
+      },
+      "evidencia": {
+        "si_falta": "La autonomía declarada de la batería es inferior a 60 minutos (o 120 minutos en edificios >5 pisos)."
+      },
+      "correccion": "Dimensionar la batería para mantener ≥85% de tensión nominal durante 60 minutos (120 minutos si el edificio tiene más de 5 pisos).",
+      "motores": ["giae-inspector", "emergencia", "engineering"]
+    },
+    {
+      "id": "CHL-RIC08-GRUPO-001",
+      "documento": "RIC 8",
+      "numeral": "8.8.2",
+      "categoria": "fuentes_alimentacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Autonomía de combustible de grupos motor-generador",
+      "verifica": "Que el grupo motor-generador cuente con depósito de combustible que permita funcionamiento a plena carga durante mínimo 120 minutos.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "autonomiaCombustibleMinutos"
+      },
+      "evidencia": {
+        "si_falta": "La autonomía de combustible declarada del grupo motor-generador es inferior a 120 minutos."
+      },
+      "correccion": "Dimensionar el depósito de combustible para asegurar 120 minutos de funcionamiento a plena carga.",
+      "motores": ["giae-inspector", "emergencia", "engineering"]
+    },
+    {
+      "id": "CHL-RIC08-AUTOEN-001",
+      "documento": "RIC 8",
+      "numeral": "8.10.2",
+      "categoria": "fuentes_alimentacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Autonomía de unidades autoenergizadas",
+      "verifica": "Que las unidades autoenergizadas mantengan 87,5% de tensión nominal durante mínimo 60 minutos (edificios hasta 5 pisos) o 120 minutos (recintos asistenciales, educacionales, cines, teatros, mall, aeropuertos y edificios >5 pisos).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["autonomiaAutoenergizadaMinutos", "tipoRecinto"]
+      },
+      "evidencia": {
+        "si_falta": "La autonomía de la unidad autoenergizada es inferior al mínimo exigido según el tipo de recinto."
+      },
+      "correccion": "Dimensionar la unidad autoenergizada para cumplir 60 minutos (edificios ≤5 pisos) o 120 minutos (recintos especiales/edificios >5 pisos).",
+      "motores": ["giae-inspector", "emergencia", "engineering"]
+    },
+    {
+      "id": "CHL-RIC08-TRANSF-001",
+      "documento": "RIC 8",
+      "numeral": "8.14",
+      "categoria": "fuentes_alimentacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Umbral automático de transferencia a emergencia",
+      "verifica": "Que la transferencia al modo emergencia se inicie automáticamente si la tensión cae bajo 0,6 veces la nominal durante al menos 0,5 s, restableciéndose sobre 0,85 veces la nominal.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "umbralTransferenciaAutomatica"
+      },
+      "evidencia": {
+        "si_falta": "No se especifica el umbral de transferencia automática (0,6x caída / 0,85x restablecimiento) del sistema."
+      },
+      "correccion": "Configurar la transferencia automática según los umbrales 0,6x (activación) y 0,85x (restablecimiento) de la tensión nominal.",
+      "motores": ["giae-inspector", "emergencia", "engineering"]
+    },
+    {
+      "id": "CHL-RIC08-CANAL-001",
+      "documento": "RIC 8",
+      "numeral": "9.4 / 9.5",
+      "categoria": "circuitos_emergencia",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Canalización y conductor de circuitos de emergencia",
+      "verifica": "Que los circuitos de emergencia usen canalización retardante a la llama, no propagadora, libre de gases tóxicos y halógenos, con conductor tipo RZ1-K (AS+) para servicios de seguridad críticos.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["tipoCanalizacionEmergencia", "tipoConductorServicioSeguridad"]
+      },
+      "evidencia": {
+        "si_falta": "El circuito de emergencia no especifica canalización retardante/libre de halógenos ni conductor RZ1-K (AS+) según corresponda."
+      },
+      "correccion": "Especificar canalización retardante a la llama, libre de halógenos, y conductor RZ1-K (AS+) según la tabla N°8.1 del RIC 8.",
+      "motores": ["giae-inspector", "conductores", "emergencia", "engineering"]
+    },
+    {
+      "id": "CHL-RIC08-REDINERTE-001",
+      "documento": "RIC 8",
+      "numeral": "9.11",
+      "categoria": "red_inerte",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Red inerte obligatoria en edificios de 5+ niveles",
+      "verifica": "Si el edificio tiene 5 o más niveles, que cuente con red inerte para bomberos, con enchufe P17 en fachada del primer piso, al menos una alimentación por piso (≤40 m de la salida de emergencia), capacidad mínima 5 kW monofásico y conductores de sección mínima 4 mm².",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "nivelesEdificio >= 5",
+        "campo": "redInerteInstalada"
+      },
+      "evidencia": {
+        "si_falta": "El edificio tiene 5+ niveles pero no se declara red inerte con las características mínimas exigidas."
+      },
+      "correccion": "Instalar red inerte según el punto 9.11 del RIC 8: enchufe P17 en fachada, alimentación por piso, 5 kW mínimo, conductores ≥4 mm².",
+      "motores": ["giae-inspector", "emergencia", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC08-UBIC-001",
+      "documento": "RIC 8",
+      "numeral": "10.7",
+      "categoria": "iluminacion_seguridad",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Ubicación mínima de iluminación de seguridad",
+      "verifica": "Que se instale iluminación de seguridad cerca de equipos de extinción/alarmas, sobre puertas de salida de emergencia, escaleras, cambios de nivel, cambios de dirección e intersecciones de vías de escape (≤2 m).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "ubicacionesIluminacionSeguridad"
+      },
+      "evidencia": {
+        "si_falta": "Falta iluminación de seguridad en uno o más de los puntos exigidos por el punto 10.7 del RIC 8."
+      },
+      "correccion": "Instalar iluminación de seguridad en todos los puntos exigidos por el punto 10.7 del RIC 8 (≤2 m de cada elemento crítico).",
+      "motores": ["giae-inspector", "emergencia", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC08-LUX-001",
+      "documento": "RIC 8",
+      "numeral": "tabla 8.3",
+      "categoria": "iluminacion_seguridad",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Iluminancia y autonomía mínima de iluminación de seguridad",
+      "verifica": "Que la iluminación de evacuación entregue ≥1 lux (5 lux en puntos críticos) con autonomía ≥1 hora (2 horas en edificios >5 pisos y recintos asistenciales/educacionales), y la antipánico ≥0,5 lux con autonomía ≥1 hora.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["iluminanciaEvacuacion", "iluminanciaAntipanico", "autonomiaIluminacionSeguridad"]
+      },
+      "evidencia": {
+        "si_falta": "La iluminancia o autonomía declarada no cumple los mínimos de la tabla N°8.3 del RIC 8."
+      },
+      "correccion": "Ajustar el sistema de iluminación de seguridad para cumplir los valores mínimos de iluminancia y autonomía de la tabla N°8.3.",
+      "motores": ["giae-inspector", "emergencia", "engineering"]
+    }
+  ]
+}

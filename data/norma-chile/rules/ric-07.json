@@ -1,0 +1,281 @@
+{
+  "schemaVersion": "0.9.0.010",
+  "documento": "RIC-07",
+  "titulo": "Instalaciones de Equipos",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 7",
+  "fuente": "Pliego Técnico Normativo RIC N°07, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC07-PLACA-001",
+      "documento": "RIC 7",
+      "numeral": "5.2.3",
+      "categoria": "equipos_fuerza",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Placa de características de motores",
+      "verifica": "Que todo motor tenga placa legible e indeleble con fabricante, tensión nominal, corriente de plena carga, frecuencia, número de fases, temperatura y potencia nominal.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "placaCaracteristicasMotor"
+      },
+      "evidencia": {
+        "si_falta": "El motor no declara placa de características con los datos mínimos exigidos."
+      },
+      "correccion": "Verificar que el motor cuente con placa de características completa según el punto 5.2.3 del RIC 7.",
+      "motores": ["giae-inspector", "engineering", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC07-TIE-001",
+      "documento": "RIC 7",
+      "numeral": "5.4.5",
+      "categoria": "equipos_fuerza",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Conexión a tierra de carcasas de máquinas rotativas",
+      "verifica": "Que las carcasas de las máquinas eléctricas rotativas (motores, generadores) estén conectadas sólidamente a tierra.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "conexionTierraCarcasaMotor"
+      },
+      "evidencia": {
+        "si_falta": "No se declara conexión a tierra de la carcasa de la máquina rotativa."
+      },
+      "correccion": "Conectar sólidamente a tierra la carcasa de toda máquina eléctrica rotativa.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC07-EMERG-001",
+      "documento": "RIC 7",
+      "numeral": "5.4.9",
+      "categoria": "equipos_fuerza",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Parada de emergencia en equipos con riesgo mecánico",
+      "verifica": "Si el sistema accionado por motor implica riesgo mecánico y su control no está al alcance del operario, que exista parada de emergencia cercana y visible (cada 20 m en bandas transportadoras).",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "riesgoMecanicoOperario === true",
+        "campo": "paradaEmergenciaInstalada"
+      },
+      "evidencia": {
+        "si_falta": "El equipo implica riesgo mecánico pero no se declara parada de emergencia cercana y visible."
+      },
+      "correccion": "Instalar parada de emergencia cercana y a la vista del operario (cada 20 m en bandas transportadoras).",
+      "motores": ["giae-inspector", "engineering", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC07-GUARD-001",
+      "documento": "RIC 7",
+      "numeral": "5.4.11",
+      "categoria": "equipos_fuerza",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Protector termomagnético y guardamotor dedicados",
+      "verifica": "Si el motor (trifásico o monofásico) tiene corriente nominal ≥3 A, que cuente con protector termomagnético y guardamotor dedicados y exclusivos para ese motor.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "corrienteNominalMotor >= 3",
+        "campo": "proteccionDedicadaMotor"
+      },
+      "evidencia": {
+        "si_falta": "El motor tiene corriente ≥3 A pero no se declara protector termomagnético y guardamotor dedicados."
+      },
+      "correccion": "Asignar protector termomagnético y guardamotor dedicados y exclusivos al motor con corriente ≥3 A.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC07-SEC-001",
+      "documento": "RIC 7",
+      "numeral": "5.5.2",
+      "categoria": "equipos_fuerza",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Sección de conductores para motor de régimen permanente",
+      "verifica": "Que la sección del conductor que alimenta un motor de régimen permanente asegure una capacidad de transporte ≥1,25 veces la corriente de plena carga del motor.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["capacidadTransporteConductor", "corrientePlenaCargaMotor"]
+      },
+      "evidencia": {
+        "si_falta": "La capacidad de transporte del conductor es inferior a 1,25 veces la corriente de plena carga del motor."
+      },
+      "correccion": "Redimensionar el conductor para que su capacidad de transporte sea ≥1,25 veces la corriente de plena carga del motor.",
+      "motores": ["giae-inspector", "conductores", "engineering"]
+    },
+    {
+      "id": "CHL-RIC07-SOBREC-001",
+      "documento": "RIC 7",
+      "numeral": "5.6.1.2",
+      "categoria": "protecciones_motores",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Protección de sobrecarga en motores >1 HP",
+      "verifica": "Si el motor de régimen permanente tiene potencia >1 HP, que cuente con protección de sobrecarga regulada a ≤1,25 veces (factor de servicio ≥1,15) o ≤1,15 veces la corriente nominal.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "potenciaMotorHP > 1",
+        "campo": "proteccionSobrecargaRegulada"
+      },
+      "evidencia": {
+        "si_falta": "El motor >1 HP no declara protección de sobrecarga regulada según el factor correspondiente."
+      },
+      "correccion": "Regular la protección de sobrecarga a ≤1,25x (factor servicio ≥1,15) o ≤1,15x la corriente nominal del motor.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC07-CC-001",
+      "documento": "RIC 7",
+      "numeral": "5.6.2.1",
+      "categoria": "protecciones_motores",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección de cortocircuito en todo motor",
+      "verifica": "Que todo motor cuente con protección de cortocircuito dimensionada para soportar sin operar la corriente de partida del motor.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "proteccionCortocircuitoMotor"
+      },
+      "evidencia": {
+        "si_falta": "El motor no declara protección de cortocircuito dimensionada para la corriente de partida."
+      },
+      "correccion": "Dimensionar la protección de cortocircuito del motor para soportar la corriente de partida sin operar.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC07-ASIM-001",
+      "documento": "RIC 7",
+      "numeral": "5.6.2.8",
+      "categoria": "protecciones_motores",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Protección de asimetría obligatoria en motores ≥5 HP",
+      "verifica": "Si el motor tiene potencia ≥5 HP, que cuente con protección de asimetría (puede ser común en un tablero de control de máquina con múltiples motores).",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "potenciaMotorHP >= 5",
+        "campo": "proteccionAsimetria"
+      },
+      "evidencia": {
+        "si_falta": "El motor tiene potencia ≥5 HP pero no se declara protección de asimetría."
+      },
+      "correccion": "Incorporar protección de asimetría para el motor de ≥5 HP.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC07-DIF-001",
+      "documento": "RIC 7",
+      "numeral": "5.6.2.9",
+      "categoria": "protecciones_motores",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protector diferencial en todo motor",
+      "verifica": "Que todo motor cuente con protector diferencial.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "protectorDiferencialMotor"
+      },
+      "evidencia": {
+        "si_falta": "El motor no declara protector diferencial."
+      },
+      "correccion": "Incorporar protector diferencial dedicado al motor.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC07-INTER-001",
+      "documento": "RIC 7",
+      "numeral": "5.6.3.9 / 5.6.3.12",
+      "categoria": "partidores",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Interruptor de desconexión con vistas al motor",
+      "verifica": "Que todo circuito de motor tenga un interruptor accesible, ubicado con vistas al partidor, que interrumpa todos los conductores activos.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["interruptorConVistasMotor", "interrupcionTodosConductores"]
+      },
+      "evidencia": {
+        "si_falta": "No se declara interruptor con vistas al partidor del motor que interrumpa todos los conductores activos."
+      },
+      "correccion": "Instalar interruptor accesible con vistas al partidor que interrumpa todos los conductores activos del motor.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC07-COND-001",
+      "documento": "RIC 7",
+      "numeral": "6.1.3 / 6.1.4",
+      "categoria": "condensadores",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Puesta a tierra y resistencia de inserción en condensadores",
+      "verifica": "Que las carcasas metálicas de condensadores estén puestas a tierra y que todos los condensadores se conecten al sistema eléctrico a través de resistencias de inserción.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["puestaTierraCarcasaCondensador", "resistenciaInsercion"]
+      },
+      "evidencia": {
+        "si_falta": "No se declara puesta a tierra de la carcasa metálica del condensador o conexión mediante resistencia de inserción."
+      },
+      "correccion": "Conectar a tierra la carcasa metálica del condensador e instalar resistencias de inserción según el punto 6.1 del RIC 7.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC07-DESC-001",
+      "documento": "RIC 7",
+      "numeral": "6.2.2",
+      "categoria": "condensadores",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Tensión residual de descarga de condensadores",
+      "verifica": "Que la tensión residual del condensador se reduzca a ≤75 V en 3 minutos o ≤50 V en 5 minutos tras su desconexión, con esta información en la señalética del tablero.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["tensionResidualCondensador", "tiempoDescarga", "senaleticaTablero"]
+      },
+      "evidencia": {
+        "si_falta": "No se declara circuito de descarga que cumpla los tiempos/valores exigidos, ni la señalética correspondiente."
+      },
+      "correccion": "Instalar circuito de descarga que reduzca la tensión residual a ≤75 V (3 min) o ≤50 V (5 min), señalizado en el tablero.",
+      "motores": ["giae-inspector", "tableros", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC07-CLIMA-001",
+      "documento": "RIC 7",
+      "numeral": "7.2.8",
+      "categoria": "climatizacion",
+      "tipo": "condicional",
+      "criticidad": "media",
+      "titulo": "Interruptor en equipo de climatización >1 kW",
+      "verifica": "Si el equipo de climatización tiene potencia superior a 1 kW, que cuente con interruptor incorporado que corte todas sus líneas activas, o se conecte mediante tablero de comando.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "potenciaClimatizacion > 1",
+        "campo": "interruptorOTableroComando"
+      },
+      "evidencia": {
+        "si_falta": "El equipo de climatización supera 1 kW pero no declara interruptor incorporado ni tablero de comando."
+      },
+      "correccion": "Incorporar interruptor que corte todas las líneas activas o conectar el equipo a través de tablero de comando.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC07-CLIMADIF-001",
+      "documento": "RIC 7",
+      "numeral": "7.4.5",
+      "categoria": "climatizacion",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección termomagnética y diferencial en circuitos de climatización",
+      "verifica": "Que todos los circuitos destinados a servir equipos de climatización cuenten con protección termomagnética y protección diferencial, debidamente coordinadas.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["proteccionTermomagneticaClima", "proteccionDiferencialClima"]
+      },
+      "evidencia": {
+        "si_falta": "El circuito de climatización no declara protección termomagnética y diferencial coordinadas."
+      },
+      "correccion": "Incorporar protección termomagnética y diferencial coordinadas en el circuito de climatización.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    }
+  ]
+}

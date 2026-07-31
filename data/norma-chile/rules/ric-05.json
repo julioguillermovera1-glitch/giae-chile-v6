@@ -1,0 +1,241 @@
+{
+  "schemaVersion": "0.9.0.010",
+  "documento": "RIC-05",
+  "titulo": "Medidas de Protección contra Tensiones Peligrosas y Descargas Eléctricas",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 5",
+  "fuente": "Pliego Técnico Normativo RIC N°05, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC05-PAT-001",
+      "documento": "RIC 5",
+      "numeral": "5.1",
+      "categoria": "puesta_tierra",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Sistema de puesta a tierra obligatorio",
+      "verifica": "Que toda instalación de consumo disponga de un sistema de puesta a tierra conforme al RIC 6, para evitar tensiones de paso, contacto o transferidas peligrosas.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "sistemaPuestaTierra"
+      },
+      "evidencia": {
+        "si_falta": "No se declara sistema de puesta a tierra conforme al RIC 6."
+      },
+      "correccion": "Diseñar e implementar el sistema de puesta a tierra según las exigencias del RIC 6.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC05-UL-001",
+      "documento": "RIC 5",
+      "numeral": "5.8",
+      "categoria": "tension_seguridad",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Tensiones límite de seguridad",
+      "verifica": "Que las tensiones de contacto no excedan 50 V CA / 120 V CC en lugares secos, ni 24 V CA / 60 V CC en lugares húmedos o mojados y salas de operaciones quirúrgicas.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["tipoLugar", "tensionContactoCalculada"]
+      },
+      "evidencia": {
+        "si_falta": "La tensión de contacto calculada excede el límite de seguridad aplicable al tipo de lugar (seco o húmedo/mojado)."
+      },
+      "correccion": "Ajustar el diseño de protecciones para que la tensión de contacto no supere el límite UL correspondiente al tipo de lugar.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC05-ESQ-001",
+      "documento": "RIC 5",
+      "numeral": "6.7.1.1 / 6.7.1.2",
+      "categoria": "esquema_conexion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Esquema de conexión a tierra según tipo de alimentación",
+      "verifica": "Que una instalación alimentada directamente de red pública de distribución use esquema TT, y que TN-S, TT o IT sean los esquemas preferentes en instalaciones de consumo, usando TN-C o TN-C-S solo en casos justificados técnicamente.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["tipoAlimentacion", "esquemaConexionTierra", "justificacionTecnica"]
+      },
+      "evidencia": {
+        "si_falta": "Se usa esquema TN-C o TN-C-S sin justificación técnica documentada, o no corresponde TT para alimentación directa de red pública."
+      },
+      "correccion": "Adoptar esquema TT para alimentación directa de red pública; usar TN-C/TN-C-S solo con justificación técnica documentada de que TN-S es inaplicable.",
+      "motores": ["giae-inspector", "tierra", "engineering", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC05-IP-001",
+      "documento": "RIC 5",
+      "numeral": "7.5.1 / 7.5.2",
+      "categoria": "contacto_directo",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Grado IP mínimo de barreras y envolventes",
+      "verifica": "Que las partes activas estén protegidas por envolventes o barreras con grado mínimo IP2X, o IP4X/IPXXD si son superficies superiores horizontales fácilmente accesibles.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["gradoIPBarrera", "orientacionSuperficie"]
+      },
+      "evidencia": {
+        "si_falta": "El grado IP declarado de la barrera/envolvente es inferior al mínimo exigido según su orientación y accesibilidad."
+      },
+      "correccion": "Especificar barreras/envolventes con grado IP2X mínimo (IP4X/IPXXD en superficies superiores horizontales accesibles).",
+      "motores": ["giae-inspector", "tierra", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC05-DIF-001",
+      "documento": "RIC 5",
+      "numeral": "7.8.2",
+      "categoria": "protecciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Sensibilidad del protector diferencial complementario",
+      "verifica": "Que la protección diferencial complementaria contra contactos directos tenga sensibilidad igual o inferior a 30 mA.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "sensibilidadDiferencial"
+      },
+      "evidencia": {
+        "si_falta": "El protector diferencial complementario declarado tiene sensibilidad superior a 30 mA."
+      },
+      "correccion": "Especificar protector diferencial con sensibilidad ≤ 30 mA como protección complementaria contra contactos directos.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC05-CLASE-001",
+      "documento": "RIC 5",
+      "numeral": "7.8.3",
+      "categoria": "protecciones",
+      "tipo": "condicional",
+      "criticidad": "media",
+      "titulo": "Clase de protector diferencial según tipo de carga",
+      "verifica": "Si el circuito tiene cargas no lineales o corrientes no senoidales, que se use protector diferencial clase A (o clase B si las cargas pueden no tener paso por cero).",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "cargaNoLinealOSinPasoPorCero === true",
+        "campo": "claseProtectorDiferencial"
+      },
+      "evidencia": {
+        "si_falta": "El circuito tiene cargas no lineales pero no se especifica protector diferencial clase A o B según corresponda."
+      },
+      "correccion": "Especificar protector diferencial clase A (corrientes no senoidales) o clase B (cargas sin paso por cero) según el tipo de carga del circuito.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC05-AISL-001",
+      "documento": "RIC 5",
+      "numeral": "8.2",
+      "categoria": "aislamiento",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Resistencia de aislamiento mínima por tramo",
+      "verifica": "Que la resistencia de aislamiento de la instalación cumpla el valor mínimo de la tabla N°19.1 del RIC 19, midiendo por tramos no superiores a 100 m si la instalación excede esa extensión.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["resistenciaAislamientoMedida", "extensionInstalacion"]
+      },
+      "evidencia": {
+        "si_falta": "No se registra medición de resistencia de aislamiento por tramos de máximo 100 m, o el valor no cumple el mínimo del RIC 19."
+      },
+      "correccion": "Medir la resistencia de aislamiento en tramos ≤100 m y verificar que cumpla el valor mínimo de la tabla N°19.1 del RIC 19.",
+      "motores": ["giae-inspector", "tierra", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC05-TN-001",
+      "documento": "RIC 5",
+      "numeral": "8.7.6.3 / 8.7.6.4",
+      "categoria": "esquema_tn",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Protecciones exigidas en esquema TN",
+      "verifica": "Que el esquema TN use dispositivos de protección de máxima corriente y protector diferencial ≤30 mA, y que en esquema TN-C no se utilicen protectores diferenciales (neutro y protección combinados).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["esquemaConexion", "proteccionMaximaCorriente", "protectorDiferencial"]
+      },
+      "evidencia": {
+        "si_falta": "El esquema TN no especifica protección de máxima corriente y diferencial ≤30 mA, o se usa diferencial en un esquema TN-C."
+      },
+      "correccion": "Incorporar protección de máxima corriente y diferencial ≤30 mA en esquema TN; nunca usar diferencial en TN-C.",
+      "motores": ["giae-inspector", "tableros", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC05-SUBEST-001",
+      "documento": "RIC 5",
+      "numeral": "8.7.6.8",
+      "categoria": "puesta_tierra",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Resistencia de puesta a tierra en subestación propia",
+      "verifica": "Si la instalación se alimenta desde subestación propia, que la resistencia de puesta a tierra única sea el menor valor entre 20 Ohm y el determinado por el cálculo de condiciones de operación en MT.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "alimentadoDesdeSubestacionPropia === true",
+        "campo": "resistenciaPuestaTierraSubestacion"
+      },
+      "evidencia": {
+        "si_falta": "La instalación se alimenta desde subestación propia pero no se declara resistencia de puesta a tierra ≤20 Ohm ni cálculo de condiciones MT."
+      },
+      "correccion": "Calcular y verificar que la resistencia de puesta a tierra sea el menor valor entre 20 Ohm y el resultante del cálculo de condiciones de operación de MT.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC05-TT-001",
+      "documento": "RIC 5",
+      "numeral": "8.7.7.3 / 8.7.7.4",
+      "categoria": "esquema_tt",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Condición RA x Ia en esquema TT",
+      "verifica": "Que en esquema TT se cumpla RA × Ia ≤ UL, utilizando protectores diferenciales de sensibilidad ≤30 mA como protección principal.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["resistenciaPuestaTierraRA", "corrienteDisparoIa", "tensionLimiteUL"]
+      },
+      "evidencia": {
+        "si_falta": "No se verifica la condición RA × Ia ≤ UL o no se especifica protector diferencial ≤30 mA en esquema TT."
+      },
+      "correccion": "Verificar RA × Ia ≤ UL y especificar protector diferencial de sensibilidad ≤30 mA para el esquema TT.",
+      "motores": ["giae-inspector", "tierra", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC05-IT-001",
+      "documento": "RIC 5",
+      "numeral": "8.7.8.6 / 8.7.8.7",
+      "categoria": "esquema_it",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Controlador permanente de aislamiento en esquema IT",
+      "verifica": "Que el esquema IT cuente con controlador o monitor permanente de aislamiento que active señal acústica o visual ante un primer defecto, además de protectores diferenciales ≤30 mA o dispositivos de máxima corriente.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["controladorAislamientoPermanente", "senalizacionPrimerDefecto"]
+      },
+      "evidencia": {
+        "si_falta": "El esquema IT no declara controlador permanente de aislamiento con señalización de primer defecto."
+      },
+      "correccion": "Instalar controlador o monitor permanente de aislamiento con señal acústica o visual ante el primer defecto, según el punto 8.7.8 del RIC 5.",
+      "motores": ["giae-inspector", "tierra", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC05-EQUIP-001",
+      "documento": "RIC 5",
+      "numeral": "8.6.4",
+      "categoria": "conexiones_equipotenciales",
+      "tipo": "condicional",
+      "criticidad": "media",
+      "titulo": "Conexión equipotencial en lugares mojados",
+      "verifica": "Si la instalación está en un lugar mojado, que se implemente conexión equipotencial de partes metálicas y masas, asociada a un sistema de protección clase B.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "lugarMojado === true",
+        "campo": "conexionEquipotencialImplementada"
+      },
+      "evidencia": {
+        "si_falta": "El proyecto está en un lugar mojado pero no se declara conexión equipotencial ni su asociación a protección clase B."
+      },
+      "correccion": "Implementar conexión equipotencial de masas y elementos conductores accesibles, asociada a protección por corte automático (clase B).",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "schemaVersion": "0.9.0.010",
+  "documento": "RIC-10",
+  "titulo": "Instalaciones de Uso General",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 10",
+  "fuente": "Pliego Técnico Normativo RIC N°10, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC10-ARRANQUE-001",
+      "documento": "RIC 10",
+      "numeral": "5.1.1.4",
+      "categoria": "alumbrado",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Prohibición de arranques con potencia futura",
+      "verifica": "Que no se proyecten arranques con potencias futuras; todo arranque sin carga instalada debe declararse con potencia 0 W.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "arranquesConPotenciaFutura"
+      },
+      "evidencia": {
+        "si_falta": "Se detecta un arranque proyectado con potencia futura en lugar de 0 W."
+      },
+      "correccion": "Declarar con potencia 0 W todo arranque que no tenga carga instalada actualmente.",
+      "motores": ["giae-inspector", "cargas", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC10-INTERR-001",
+      "documento": "RIC 10",
+      "numeral": "5.1.2.4",
+      "categoria": "alumbrado",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Altura de montaje de interruptores",
+      "verifica": "Que los interruptores de comando se instalen entre 0,80 m y 1,40 m sobre el nivel del piso terminado.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "alturaMontajeInterruptor"
+      },
+      "evidencia": {
+        "si_falta": "La altura de montaje declarada del interruptor está fuera del rango 0,80-1,40 m."
+      },
+      "correccion": "Reubicar el interruptor dentro del rango de 0,80 m a 1,40 m desde el piso terminado.",
+      "motores": ["giae-inspector", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC10-TIERRA-001",
+      "documento": "RIC 10",
+      "numeral": "5.1.2.13",
+      "categoria": "alumbrado",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Conductor de puesta a tierra en centros de iluminación",
+      "verifica": "Que todos los centros de iluminación cuenten con conductor de puesta a tierra de protección.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "conductorTierraCentroIluminacion"
+      },
+      "evidencia": {
+        "si_falta": "Un centro de iluminación no declara conductor de puesta a tierra de protección."
+      },
+      "correccion": "Incorporar conductor de puesta a tierra de protección en todos los centros de iluminación.",
+      "motores": ["giae-inspector", "tierra", "conductores"]
+    },
+    {
+      "id": "CHL-RIC10-TABPROH-001",
+      "documento": "RIC 10",
+      "numeral": "5.1.3.2",
+      "categoria": "tableros",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Prohibición de tableros en dormitorios y baños",
+      "verifica": "Que no se instalen tableros en dormitorios, baños, lavaderos, closets no destinados para uso eléctrico ni lugares de difícil acceso.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "ubicacionTableroProhibida"
+      },
+      "evidencia": {
+        "si_falta": "Se detecta un tablero ubicado en dormitorio, baño, lavadero, closet no eléctrico o lugar de difícil acceso."
+      },
+      "correccion": "Reubicar el tablero fuera de dormitorios, baños, lavaderos, closets no eléctricos y lugares de difícil acceso.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC10-DIF-001",
+      "documento": "RIC 10",
+      "numeral": "5.1.3.5 / 5.1.3.7",
+      "categoria": "protecciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial y límite de circuitos derivados",
+      "verifica": "Que todo circuito de alumbrado tenga protección diferencial ≤30 mA, y que desde una protección diferencial no se deriven más de 3 circuitos ni el 100% de la instalación (salvo diferencial de 300 mA de protección general).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["sensibilidadDiferencial", "circuitosDerivadosDiferencial"]
+      },
+      "evidencia": {
+        "si_falta": "El diferencial supera 30 mA, o agrupa más de 3 circuitos, o cubre el 100% de la instalación sin ser el diferencial general de 300 mA."
+      },
+      "correccion": "Ajustar la sensibilidad del diferencial a ≤30 mA y limitar a 3 circuitos derivados como máximo, sin cubrir el 100% de la instalación.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC10-CAP-001",
+      "documento": "RIC 10",
+      "numeral": "5.1.4.1",
+      "categoria": "circuitos",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Capacidad del circuito con reserva del 10%",
+      "verifica": "Que la capacidad del circuito de alumbrado considere la potencia requerida más un 10% de capacidad adicional disponible.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["potenciaRequeridaCircuito", "capacidadNominalCircuito"]
+      },
+      "evidencia": {
+        "si_falta": "La capacidad del circuito no incluye el 10% de reserva sobre la potencia requerida."
+      },
+      "correccion": "Dimensionar el circuito considerando la potencia requerida más un 10% adicional disponible.",
+      "motores": ["giae-inspector", "cargas", "engineering"]
+    },
+    {
+      "id": "CHL-RIC10-VIV-001",
+      "documento": "RIC 10",
+      "numeral": "5.2.1",
+      "categoria": "vivienda",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Empalme mínimo y circuitos mínimos en viviendas",
+      "verifica": "Que la vivienda tenga empalme con protección mínima 25 A, alimentador ≥4 mm², y al menos 2 circuitos (superficie <30 m²) o 3 circuitos (superficie ≥30 m²), todos con protección diferencial y de sobrecarga/cortocircuito.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["capacidadEmpalmeVivienda", "seccionAlimentadorVivienda", "cantidadCircuitosVivienda", "superficieVivienda"]
+      },
+      "evidencia": {
+        "si_falta": "El empalme, alimentador o cantidad de circuitos de la vivienda no cumple los mínimos exigidos según su superficie."
+      },
+      "correccion": "Ajustar empalme (≥25 A), alimentador (≥4 mm²) y cantidad de circuitos (2 o 3 según superficie) conforme al punto 5.2.1 del RIC 10.",
+      "motores": ["giae-inspector", "empalme", "conductores", "engineering"]
+    },
+    {
+      "id": "CHL-RIC10-COCINA-001",
+      "documento": "RIC 10",
+      "numeral": "5.2.1.d / 5.2.1.e",
+      "categoria": "vivienda",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Circuitos exclusivos de cocina, lavadero y horno eléctrico",
+      "verifica": "Que exista circuito exclusivo para enchufes de cocina/lavadero (≥16 A) y, si hay horno u cocina eléctrica, un circuito adicional independiente (≥16 A).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["circuitoExclusivoCocinaLavadero", "circuitoHornoElectrico"]
+      },
+      "evidencia": {
+        "si_falta": "No existe circuito exclusivo de cocina/lavadero ≥16 A, o falta el circuito adicional para horno/cocina eléctrica."
+      },
+      "correccion": "Proyectar circuito exclusivo de cocina/lavadero (≥16 A) y circuito adicional independiente para horno/cocina eléctrica (≥16 A) si corresponde.",
+      "motores": ["giae-inspector", "cargas", "engineering"]
+    },
+    {
+      "id": "CHL-RIC10-TNS-001",
+      "documento": "RIC 10",
+      "numeral": "5.2.1.f",
+      "categoria": "vivienda",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Esquema de conexión TN-S obligatorio en viviendas",
+      "verifica": "Que el esquema de conexión a tierra utilizado en la vivienda sea TN-S.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "esquemaConexionTierraVivienda"
+      },
+      "evidencia": {
+        "si_falta": "El esquema de conexión a tierra declarado para la vivienda no es TN-S."
+      },
+      "correccion": "Adoptar el esquema TN-S de conexión a tierra para la instalación de la vivienda.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC10-CENTROS-001",
+      "documento": "RIC 10",
+      "numeral": "5.2.2.a",
+      "categoria": "vivienda",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Centros de iluminación mínimos por recinto de vivienda",
+      "verifica": "Que cada recinto de la vivienda (dormitorio, cocina, baño, living, comedor) tenga al menos 1 centro de iluminación (2 si supera 10 m²), no alimentado desde un enchufe, con interruptor independiente.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["centrosIluminacionPorRecinto", "superficieRecinto"]
+      },
+      "evidencia": {
+        "si_falta": "Un recinto no cumple el mínimo de centros de iluminación exigido según su superficie, o el centro está alimentado desde un enchufe."
+      },
+      "correccion": "Instalar el número mínimo de centros de iluminación por recinto según su superficie, con interruptor independiente y no alimentados desde enchufe.",
+      "motores": ["giae-inspector", "cargas", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC10-IP-001",
+      "documento": "RIC 10",
+      "numeral": "5.2.4",
+      "categoria": "vivienda",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Grado IP de equipos exteriores en viviendas",
+      "verifica": "Que los equipos eléctricos instalados al exterior tengan grado IP44 mínimo (bajo alero) o IP54 mínimo (expuestos a la intemperie/lluvia directa).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["gradoIPEquipoExterior", "condicionExposicion"]
+      },
+      "evidencia": {
+        "si_falta": "El grado IP declarado del equipo exterior es inferior al mínimo exigido según su condición de exposición."
+      },
+      "correccion": "Especificar equipos con IP44 (bajo alero) o IP54 (intemperie) según su condición de exposición.",
+      "motores": ["giae-inspector", "documentacion", "presupuesto"]
+    },
+    {
+      "id": "CHL-RIC10-ENCHUFES-001",
+      "documento": "RIC 10",
+      "numeral": "5.3.6 / 5.3.7",
+      "categoria": "local_comercial",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Cantidad mínima de enchufes en locales comerciales y oficinas",
+      "verifica": "Que los locales comerciales tengan al menos 1 enchufe triple por cada 15 m² (mínimo 3), y las oficinas al menos 1 enchufe triple por cada 6 m de perímetro (si <40 m²) o según la escala de 40 m² del punto 5.3.8.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["cantidadEnchufesLocal", "superficieLocal", "perimetroOficina"]
+      },
+      "evidencia": {
+        "si_falta": "La cantidad de enchufes del local comercial u oficina es inferior al mínimo exigido según su superficie o perímetro."
+      },
+      "correccion": "Ajustar la cantidad de enchufes triples según los mínimos de los puntos 5.3.6 a 5.3.8 del RIC 10.",
+      "motores": ["giae-inspector", "cargas", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC10-DIFCOM-001",
+      "documento": "RIC 10",
+      "numeral": "5.3.10",
+      "categoria": "local_comercial",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial en locales comerciales y oficinas",
+      "verifica": "Que todos los circuitos (iluminación y enchufes) en locales comerciales y oficinas estén protegidos con diferencial ≤30 mA y protecciones de sobrecarga/cortocircuito.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "proteccionDiferencialLocalComercial"
+      },
+      "evidencia": {
+        "si_falta": "Un circuito del local comercial u oficina no declara protección diferencial ≤30 mA."
+      },
+      "correccion": "Incorporar protección diferencial ≤30 mA y protección de sobrecarga/cortocircuito en todos los circuitos.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC10-LUX-001",
+      "documento": "RIC 10",
+      "numeral": "5.3 / anexo 10.1",
+      "categoria": "iluminacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Nivel de iluminación mínimo según tipo de local",
+      "verifica": "Que el nivel de iluminación (iluminancia media, UGR, uniformidad, índice de rendimiento de color) cumpla los valores mínimos del anexo 10.1 según el tipo de local y tarea desarrollada.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["tipoLocalYTarea", "iluminanciaMediaCalculada", "UGRCalculado", "indiceRendimientoColor"]
+      },
+      "evidencia": {
+        "si_falta": "Los parámetros de iluminación calculados no alcanzan los valores mínimos de la tabla del anexo 10.1 para el tipo de local."
+      },
+      "correccion": "Rediseñar la iluminación para cumplir los valores mínimos de Em, UGR, uniformidad y Ra según el anexo 10.1 del RIC 10.",
+      "motores": ["giae-inspector", "engineering", "documentacion"]
+    }
+  ]
+}

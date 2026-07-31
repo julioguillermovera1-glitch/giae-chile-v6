@@ -1,0 +1,523 @@
+{
+  "schemaVersion": "0.9.0.015",
+  "documento": "RIC-15",
+  "titulo": "Infraestructura para la Recarga de Vehículos Eléctricos",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 15",
+  "fuente": "Pliego Técnico Normativo RIC N°15, Versión 2024, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC15-TABLEROPLACA-001",
+      "documento": "RIC 15",
+      "numeral": "8.3",
+      "categoria": "irve_tableros",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Tablero específico con placa identificatoria para IRVE",
+      "verifica": "Que las protecciones de la IRVE estén contenidas en un tablero específico o existente, con puerta, cubierta cubre equipos y placa que indique 'Alimentación de infraestructura de recarga de vehículos eléctricos IRVE'.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "placaTableroIRVE"
+      },
+      "evidencia": {
+        "si_falta": "El tablero de la IRVE no cuenta con puerta, cubierta cubre equipos o la placa identificatoria exigida."
+      },
+      "correccion": "Instalar puerta, cubierta cubre equipos y placa 'Alimentación de infraestructura de recarga de vehículos eléctricos IRVE' en el tablero correspondiente.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC15-ALTURACOMANDO-001",
+      "documento": "RIC 15",
+      "numeral": "8.6",
+      "categoria": "irve_tableros",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Altura de montaje de dispositivos de comando en tableros IRVE",
+      "verifica": "Que la altura de montaje de los dispositivos de comando o accionamiento en tableros esté entre 0,45 m y 2,0 m (hasta 4,0 m en recarga pública con acceso seguro garantizado).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["alturaMontajeDispositivoComando", "tipoServicioRecarga"]
+      },
+      "evidencia": {
+        "si_falta": "El dispositivo de comando está montado fuera del rango 0,45-2,0 m (o 4,0 m en recarga pública con acceso seguro)."
+      },
+      "correccion": "Reubicar el dispositivo de comando dentro del rango de altura exigido según el tipo de servicio de recarga.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC15-SECCIONALIMENTADOR-001",
+      "documento": "RIC 15",
+      "numeral": "9.2",
+      "categoria": "irve_alimentadores",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Sección mínima de conductores de alimentadores IRVE",
+      "verifica": "Que los conductores de alimentadores y subalimentadores de la IRVE sean de cobre con sección no inferior a 4,0 mm² (salvo instalaciones en media tensión donde se acepta aluminio bajo el RIC N°04).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "seccionAlimentadorIRVE"
+      },
+      "evidencia": {
+        "si_falta": "El conductor del alimentador o subalimentador de la IRVE tiene sección inferior a 4,0 mm²."
+      },
+      "correccion": "Utilizar conductores de cobre con sección mínima de 4,0 mm² en los alimentadores y subalimentadores de la IRVE.",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC15-CANALIZTOTAL-001",
+      "documento": "RIC 15",
+      "numeral": "10.3",
+      "categoria": "irve_canalizaciones",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Canalización completa de conductores de la IRVE",
+      "verifica": "Que los conductores eléctricos de la IRVE vayan canalizados en toda su extensión, permitiendo sin canalizar solo el cable de salida del SAVE con el conector hacia el vehículo.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "canalizacionCompletaIRVE"
+      },
+      "evidencia": {
+        "si_falta": "Un tramo de conductor de la IRVE (distinto del cable de salida del SAVE) queda sin canalizar."
+      },
+      "correccion": "Canalizar todos los conductores de la IRVE, dejando sin canalizar únicamente el cable de salida del SAVE hacia el vehículo.",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC15-TENSIONSERVICIO-001",
+      "documento": "RIC 15",
+      "numeral": "10.4",
+      "categoria": "irve_canalizaciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Tensión de servicio mínima de conductores IRVE",
+      "verifica": "Que la tensión de servicio mínima de los conductores sea 450/750 V en instalaciones monofásicas, 0,6/1 kV en trifásicas y 1,5 kVcc en sistemas de distribución CC.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["tensionServicioConductorIRVE", "tipoInstalacionIRVE"]
+      },
+      "evidencia": {
+        "si_falta": "El conductor declarado tiene una tensión de servicio inferior a la mínima exigida según el tipo de instalación."
+      },
+      "correccion": "Utilizar conductores con tensión de servicio mínima según tipo (450/750 V monofásico, 0,6/1 kV trifásico, 1,5 kVcc en CC).",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC15-NOCCCA-001",
+      "documento": "RIC 15",
+      "numeral": "10.6",
+      "categoria": "irve_canalizaciones",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Prohibición de compartir canalización CC con CA",
+      "verifica": "Que en ningún caso se compartan las canalizaciones de circuitos de corriente continua con las de corriente alterna en la IRVE.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "canalizacionSeparadaCCCA"
+      },
+      "evidencia": {
+        "si_falta": "Se detecta una canalización compartida entre circuitos de corriente continua y corriente alterna."
+      },
+      "correccion": "Separar completamente las canalizaciones de circuitos CC y CA de la IRVE.",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC15-COLORCC-001",
+      "documento": "RIC 15",
+      "numeral": "10.7",
+      "categoria": "irve_canalizaciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Código de colores del cableado en corriente continua",
+      "verifica": "Que los conductores del cableado en corriente continua se identifiquen en rojo (positivo), negro (negativo) y verde o verde/amarillo (tierra de protección).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "colorConductorCC"
+      },
+      "evidencia": {
+        "si_falta": "Un conductor de corriente continua no está identificado con el color correspondiente según su función."
+      },
+      "correccion": "Identificar los conductores CC con el color correspondiente: rojo (positivo), negro (negativo), verde/amarillo (tierra).",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC15-ESQUEMATNS-001",
+      "documento": "RIC 15",
+      "numeral": "11.2",
+      "categoria": "irve_tierra",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Esquema TN-S obligatorio en modo de carga 1 y PCS",
+      "verifica": "Que las tomas de corriente de modo de carga 1 y los PCS estén conectados a un esquema de alimentación TN-S.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "esquemaConexionModo1PCS"
+      },
+      "evidencia": {
+        "si_falta": "La toma de corriente modo 1 o el PCS declara un esquema de conexión distinto de TN-S."
+      },
+      "correccion": "Configurar el esquema de alimentación TN-S para todas las tomas de corriente modo 1 y PCS.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC15-TIERRAMETAL-001",
+      "documento": "RIC 15",
+      "numeral": "11.4 / 11.5",
+      "categoria": "irve_tierra",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Puesta a tierra de partes metálicas de la IRVE",
+      "verifica": "Que todas las partes metálicas de la IRVE estén conectadas a tierra de protección, con un valor de resistencia que no genere tensiones de contacto superiores a las definidas en el RIC N°05 ni superior a lo señalado en el RIC N°06.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["conexionTierraPartesMetalicasIRVE", "resistenciaPuestaTierraIRVE"]
+      },
+      "evidencia": {
+        "si_falta": "Una parte metálica de la IRVE no está conectada a tierra de protección, o la resistencia medida supera los límites del RIC N°06."
+      },
+      "correccion": "Conectar todas las partes metálicas de la IRVE a tierra de protección y verificar que la resistencia cumpla los límites del RIC N°05 y N°06.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC15-CIRCUITOEXCLUSIVO-001",
+      "documento": "RIC 15",
+      "numeral": "12.1",
+      "categoria": "irve_protecciones",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Uso exclusivo de circuitos para SAVE o PCS",
+      "verifica": "Que los circuitos de recarga sean de uso exclusivo para SAVE o PCS, sin alimentar otro equipo eléctrico distinto de las cargas auxiliares del propio SAVE.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "usoExclusivoCircuitoRecarga"
+      },
+      "evidencia": {
+        "si_falta": "El circuito de recarga alimenta un equipo eléctrico distinto del SAVE/PCS o de sus cargas auxiliares."
+      },
+      "correccion": "Reconfigurar el circuito de recarga para que alimente exclusivamente al SAVE o PCS correspondiente.",
+      "motores": ["giae-inspector", "cargas", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC15-SECCIONCIRCUITO-001",
+      "documento": "RIC 15",
+      "numeral": "12.4",
+      "categoria": "irve_protecciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Sección mínima de conductores en circuitos IRVE",
+      "verifica": "Que la sección mínima de los conductores instalados en circuitos de la IRVE sea de 2,5 mm².",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "seccionConductorCircuitoIRVE"
+      },
+      "evidencia": {
+        "si_falta": "El conductor del circuito de recarga tiene una sección inferior a 2,5 mm²."
+      },
+      "correccion": "Utilizar conductores con sección mínima de 2,5 mm² en los circuitos de la IRVE.",
+      "motores": ["giae-inspector", "conductores", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC15-DIFMODO12-001",
+      "documento": "RIC 15",
+      "numeral": "12.5.2 / 12.5.3",
+      "categoria": "irve_protecciones",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial en circuitos de modo de carga 1 y 2",
+      "verifica": "Que los circuitos que alimenten tomas de corriente de modo de carga 1 o PCS de modo de carga 2 estén protegidos con diferencial al menos tipo A y sensibilidad no superior a 30 mA.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "proteccionDiferencialModo1o2"
+      },
+      "evidencia": {
+        "si_falta": "El circuito de modo de carga 1 o 2 no declara diferencial tipo A de sensibilidad ≤30 mA."
+      },
+      "correccion": "Instalar protección diferencial tipo A con sensibilidad ≤30 mA en los circuitos de modo de carga 1 y 2.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC15-DIFMODO3-001",
+      "documento": "RIC 15",
+      "numeral": "12.5.4",
+      "categoria": "irve_protecciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial en circuitos de modo de carga 3",
+      "verifica": "Que los circuitos que alimenten SAVE con modo de carga 3 cuenten con diferencial tipo B, o diferencial tipo A ≤30 mA más un equipo que desconecte ante fuga de corriente continua mayor a 6 mA.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "proteccionDiferencialModo3"
+      },
+      "evidencia": {
+        "si_falta": "El circuito de modo de carga 3 no cuenta con diferencial tipo B ni con la combinación tipo A + detector de fuga CC de 6 mA."
+      },
+      "correccion": "Instalar diferencial tipo B, o diferencial tipo A ≤30 mA combinado con detector de fuga CC ≥6 mA, en los circuitos de modo de carga 3.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC15-DIFMODO4-001",
+      "documento": "RIC 15",
+      "numeral": "12.5.6",
+      "categoria": "irve_protecciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial en circuitos de modo de carga 4",
+      "verifica": "Que los circuitos que alimenten SAVE con modo de carga 4 cuenten con diferencial tipo A de al menos 30 mA (hasta 300 mA permitido si el SAVE supera 100 kW).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["proteccionDiferencialModo4", "potenciaSAVE"]
+      },
+      "evidencia": {
+        "si_falta": "El circuito de modo de carga 4 no declara diferencial tipo A de 30 mA (o hasta 300 mA si el SAVE supera 100 kW)."
+      },
+      "correccion": "Instalar diferencial tipo A de 30 mA (o hasta 300 mA si el SAVE supera 100 kW) en los circuitos de modo de carga 4.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC15-DIMSOBRECORRIENTE-001",
+      "documento": "RIC 15",
+      "numeral": "12.6.2 / 12.6.3",
+      "categoria": "irve_protecciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Dimensionamiento de protección contra sobrecorriente en SAVE y PCS",
+      "verifica": "Que la protección contra sobrecorriente de circuitos SAVE se ajuste a 1,10 x In (corriente nominal del SAVE), y la de circuitos PCS se ajuste a la capacidad nominal del PCS.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["capacidadProteccionSAVE", "corrienteNominalSAVE", "capacidadProteccionPCS"]
+      },
+      "evidencia": {
+        "si_falta": "La protección de sobrecorriente del SAVE no coincide con 1,10 x In, o la del PCS no coincide con su capacidad nominal."
+      },
+      "correccion": "Ajustar la protección de sobrecorriente a 1,10 x In para SAVE y a la capacidad nominal del PCS correspondiente.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC15-INTERRUPTOROMNIPOLAR-001",
+      "documento": "RIC 15",
+      "numeral": "12.6.4",
+      "categoria": "irve_protecciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Interruptor magnetotérmico omnipolar en circuitos de recarga",
+      "verifica": "Que los circuitos de recarga hasta el punto de conexión se protejan mediante interruptor magnetotérmico omnipolar (bipolar en monofásico, tetrapolar en trifásico, o tripolar si el SAVE incluye protección tetrapolar interna).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "tipoInterruptorOmnipolar"
+      },
+      "evidencia": {
+        "si_falta": "El circuito de recarga no cuenta con interruptor magnetotérmico omnipolar acorde a su configuración monofásica o trifásica."
+      },
+      "correccion": "Instalar interruptor magnetotérmico omnipolar bipolar (monofásico) o tetrapolar (trifásico) en el circuito de recarga.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC15-SOBRETENSIONPUBLICO-001",
+      "documento": "RIC 15",
+      "numeral": "12.7.1",
+      "categoria": "irve_protecciones",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección contra sobretensiones en recarga pública",
+      "verifica": "Que en instalaciones de servicio de recarga pública exista un equipo de protección contra sobretensiones transitorias al menos tipo 2, conforme a la norma IEC 61643-11.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "proteccionSobretensionRecargaPublica"
+      },
+      "evidencia": {
+        "si_falta": "La instalación de recarga pública no declara protección contra sobretensiones transitorias tipo 2."
+      },
+      "correccion": "Instalar un dispositivo de protección contra sobretensiones transitorias tipo 2 conforme a IEC 61643-11 en la instalación de recarga pública.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC15-DIFTABLEROEXISTENTE-001",
+      "documento": "RIC 15",
+      "numeral": "13.2.1",
+      "categoria": "irve_interconexion",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial en tablero existente intervenido para IRVE",
+      "verifica": "Que al conectar la IRVE a un tablero existente, todos los circuitos de dicho tablero estén protegidos con diferenciales (o al menos los circuitos de enchufes, si la instalación es anterior al DS N°8/2019).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "proteccionDiferencialTableroIntervenido"
+      },
+      "evidencia": {
+        "si_falta": "Un circuito del tablero existente intervenido para la IRVE no cuenta con protección diferencial."
+      },
+      "correccion": "Instalar protección diferencial en todos los circuitos del tablero existente que se intervenga para conectar la IRVE.",
+      "motores": ["giae-inspector", "tableros", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC15-POTENCIAPUBLICA-001",
+      "documento": "RIC 15",
+      "numeral": "14.3.1",
+      "categoria": "irve_publica",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Potencia mínima de SAVE en recarga pública (BNUP o interurbana)",
+      "verifica": "Que los SAVE de recarga pública ubicados en BNUP o Áreas de Servicio interurbanas tengan potencia mínima de salida por conector de 11 kW (trifásico) o 7 kW (monofásico).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["potenciaSalidaConectorSAVE", "tipoAlimentacionSAVE"]
+      },
+      "evidencia": {
+        "si_falta": "El SAVE de recarga pública en BNUP o vía interurbana tiene una potencia de salida inferior a 11 kW (trifásico) o 7 kW (monofásico)."
+      },
+      "correccion": "Ajustar la potencia de salida del SAVE público a un mínimo de 11 kW trifásico o 7 kW monofásico.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC15-ANTIVANDALICA-001",
+      "documento": "RIC 15",
+      "numeral": "14.3.4",
+      "categoria": "irve_publica",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Protección antivandálica en SAVE ubicados en BNUP",
+      "verifica": "Que las instalaciones de modo de carga 3 ubicadas en bienes nacionales de uso público (BNUP) cuenten con protección antivandálica.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "proteccionAntivandalicaBNUP"
+      },
+      "evidencia": {
+        "si_falta": "El SAVE instalado en BNUP no declara protección antivandálica."
+      },
+      "correccion": "Instalar protección antivandálica en los SAVE de modo de carga 3 ubicados en BNUP.",
+      "motores": ["giae-inspector", "documentacion", "presupuesto"]
+    },
+    {
+      "id": "CHL-RIC15-ILUMINANCIA-001",
+      "documento": "RIC 15",
+      "numeral": "15.1",
+      "categoria": "irve_montaje",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Iluminancia mínima en la zona de recarga",
+      "verifica": "Que el sistema de iluminación en la zona de recarga garantice una iluminancia horizontal mínima a nivel de suelo de 20 lux en exterior y 50 lux en interior.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["iluminanciaZonaRecarga", "tipoUbicacionRecarga"]
+      },
+      "evidencia": {
+        "si_falta": "La iluminancia medida en la zona de recarga es inferior a 20 lux (exterior) o 50 lux (interior)."
+      },
+      "correccion": "Ajustar el sistema de iluminación para cumplir 20 lux en exterior o 50 lux en interior en la zona de recarga.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC15-ALTURASAVE-001",
+      "documento": "RIC 15",
+      "numeral": "15.2",
+      "categoria": "irve_montaje",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Altura mínima de instalación del SAVE respecto al suelo",
+      "verifica": "Que el SAVE se instale a una altura superior a 10 cm desde el nivel del suelo para evitar riesgos por inundación, salvo que su base de diseño ya cumpla esa altura.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "alturaInstalacionSAVE"
+      },
+      "evidencia": {
+        "si_falta": "El SAVE está instalado a una altura igual o inferior a 10 cm del nivel del suelo sin base de diseño que lo compense."
+      },
+      "correccion": "Elevar la instalación del SAVE a más de 10 cm sobre el nivel del suelo o utilizar un SAVE con base de altura adecuada.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC15-DISTANCIACONECTOR-001",
+      "documento": "RIC 15",
+      "numeral": "15.3",
+      "categoria": "irve_montaje",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Distancia máxima del SAVE al punto de conexión del vehículo",
+      "verifica": "Que el SAVE no se sitúe a una distancia mayor a 5 metros de los puntos de conexión de entrada de los vehículos eléctricos (salvo buses/camiones, según especificación del fabricante).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "distanciaSAVEVehiculo"
+      },
+      "evidencia": {
+        "si_falta": "El SAVE está a más de 5 metros del punto de conexión de entrada del vehículo, sin ser una instalación para buses/camiones justificada por el fabricante."
+      },
+      "correccion": "Reubicar el SAVE a una distancia máxima de 5 metros del punto de conexión del vehículo.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC15-ALTURACONECTOR-001",
+      "documento": "RIC 15",
+      "numeral": "15.4",
+      "categoria": "irve_montaje",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Altura de instalación de conectores según tipo de SAVE",
+      "verifica": "Que los conectores en SAVE montados en pared estén entre 1,0 m y 1,3 m de altura, y en SAVE tipo tótem entre 0,6 m y 1,3 m, sobre el nivel de piso terminado.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["alturaConectorSAVE", "tipoMontajeSAVE"]
+      },
+      "evidencia": {
+        "si_falta": "El conector del SAVE está montado fuera del rango de altura exigido según su tipo de instalación (pared o tótem)."
+      },
+      "correccion": "Ajustar la altura del conector al rango exigido: 1,0-1,3 m (pared) o 0,6-1,3 m (tótem).",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC15-GRADOIPSAVE-001",
+      "documento": "RIC 15",
+      "numeral": "16.3.5 / 16.3.6",
+      "categoria": "irve_equipos",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Grado de protección IP del SAVE según ubicación",
+      "verifica": "Que los SAVE instalados al exterior tengan IP54 mínimo (IP44 si están en viviendas/edificios/conjuntos habitacionales) y los instalados en interior tengan IP44 mínimo, con resistencia mecánica IK08 (IK10 en BNUP exterior).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["gradoIPSAVE", "gradoIKSAVE", "ubicacionSAVE"]
+      },
+      "evidencia": {
+        "si_falta": "El SAVE declara un grado IP o IK inferior al mínimo exigido según su ubicación (exterior, interior, BNUP)."
+      },
+      "correccion": "Instalar SAVE con el grado IP e IK mínimo correspondiente a su ubicación (exterior IP54/IK08, BNUP IK10, interior IP44/IK08).",
+      "motores": ["giae-inspector", "documentacion", "presupuesto"]
+    },
+    {
+      "id": "CHL-RIC15-ANTIISLA-001",
+      "documento": "RIC 15",
+      "numeral": "17.5",
+      "categoria": "irve_v2g",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección anti-isla y tiempo de desconexión en IRVE-V2G",
+      "verifica": "Que las instalaciones IRVE que inyecten energía a la red cuenten con protección anti-isla que desconecte la IRVE del sistema de distribución en un tiempo máximo de 2 segundos ante una situación de isla eléctrica.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "tiempoDesconexionAntiIslaIRVE"
+      },
+      "evidencia": {
+        "si_falta": "La IRVE-V2G no cuenta con protección anti-isla o su tiempo de desconexión supera los 2 segundos."
+      },
+      "correccion": "Instalar protección anti-isla (ROCOF, Vector Shift o equivalente) que desconecte la IRVE en máximo 2 segundos.",
+      "motores": ["giae-inspector", "engineering", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC15-PLACASAVE-001",
+      "documento": "RIC 15",
+      "numeral": "18.2",
+      "categoria": "irve_rotulacion",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Placa de parámetros del SAVE",
+      "verifica": "Que todos los SAVE cuenten con una placa que indique corriente de entrada, potencia de entrada, potencia de salida, voltaje de entrada, corriente de salida y rango de voltaje de salida.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "placaParametrosSAVE"
+      },
+      "evidencia": {
+        "si_falta": "El SAVE no presenta placa con los parámetros mínimos exigidos (corriente/potencia/voltaje de entrada y salida)."
+      },
+      "correccion": "Instalar en el SAVE una placa con todos los parámetros mínimos exigidos en el punto 18.2.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    }
+  ]
+}

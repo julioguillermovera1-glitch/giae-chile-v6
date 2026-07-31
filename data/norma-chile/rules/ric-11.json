@@ -1,0 +1,618 @@
+{
+  "schemaVersion": "0.9.0.011",
+  "documento": "RIC-11",
+  "titulo": "Instalaciones Especiales",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 11",
+  "fuente": "Pliego Técnico Normativo RIC N°11, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC11-SALAOP-001",
+      "documento": "RIC 11",
+      "numeral": "3.6.4.1",
+      "categoria": "centros_asistenciales",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Esquema IT obligatorio en salas de operaciones",
+      "verifica": "Que las salas de operaciones, clasificadas como grupo 2, utilicen el esquema de conexión a tierra IT.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "esquemaConexionSalaOperaciones"
+      },
+      "evidencia": {
+        "si_falta": "La sala de operaciones declara un esquema de conexión a tierra distinto de IT."
+      },
+      "correccion": "Adoptar el esquema médico IT para la sala de operaciones conforme al punto 3.6.4.1 del RIC 11.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-EQUIPOT-001",
+      "documento": "RIC 11",
+      "numeral": "3.8.4.2",
+      "categoria": "centros_asistenciales",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Resistencia y sección del conductor equipotencial en recintos médicos grupo 2",
+      "verifica": "Que la resistencia de los conductores de equipotencialidad en recintos médicos del grupo 2 no supere 0,2 Ω y que el conductor de equipotencialidad no sea menor a 4 mm².",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["resistenciaConductorEquipotencial", "seccionConductorEquipotencial"]
+      },
+      "evidencia": {
+        "si_falta": "La resistencia medida supera 0,2 Ω o la sección del conductor de equipotencialidad es menor a 4 mm²."
+      },
+      "correccion": "Ajustar el conductor de equipotencialidad a una sección mínima de 4 mm² y verificar que la resistencia no supere 0,2 Ω.",
+      "motores": ["giae-inspector", "tierra", "conductores"]
+    },
+    {
+      "id": "CHL-RIC11-ENCHUFEMED-001",
+      "documento": "RIC 11",
+      "numeral": "3.9.5.1",
+      "categoria": "centros_asistenciales",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Cantidad mínima de enchufes en áreas de pacientes",
+      "verifica": "Que las áreas de pacientes generales tengan un mínimo de 4 enchufes y las áreas de pacientes críticos un mínimo de 6 enchufes, todos conectados a tierra con conductor de cobre aislado.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["cantidadEnchufesAreaPaciente", "tipoAreaPaciente"]
+      },
+      "evidencia": {
+        "si_falta": "El área de paciente general u crítica declara una cantidad de enchufes inferior al mínimo exigido."
+      },
+      "correccion": "Instalar el mínimo de enchufes exigido (4 en áreas generales, 6 en áreas críticas) conectados a tierra con conductor de cobre aislado.",
+      "motores": ["giae-inspector", "cargas", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-TRAFOMED-001",
+      "documento": "RIC 11",
+      "numeral": "3.9.1.6",
+      "categoria": "centros_asistenciales",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Potencia del transformador de aislación médico",
+      "verifica": "Que el transformador de aislación monofásico del esquema IT médico tenga una potencia asignada entre 0,5 kVA y 10 kVA como mínimo uno por local o grupo funcional de uso médico.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "potenciaTransformadorAislacionMedico"
+      },
+      "evidencia": {
+        "si_falta": "La potencia del transformador de aislación médico está fuera del rango 0,5-10 kVA o no existe uno por local médico."
+      },
+      "correccion": "Instalar al menos un transformador de aislación monofásico con potencia entre 0,5 y 10 kVA por local o grupo funcional médico.",
+      "motores": ["giae-inspector", "engineering", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-EDUENCHUFE-001",
+      "documento": "RIC 11",
+      "numeral": "4.3.3",
+      "categoria": "recintos_educacionales",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Enchufes mínimos en salas de clases",
+      "verifica": "Que cada sala de clases de enseñanza básica y media tenga un mínimo de 3 enchufes hembra triple (2 en salas de párvulos), con uno instalado a máximo 1 m del fondo de la sala.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["cantidadEnchufesSalaClase", "tipoSalaEducacional"]
+      },
+      "evidencia": {
+        "si_falta": "La sala de clases declara menos enchufes hembra triple que el mínimo exigido según su tipo."
+      },
+      "correccion": "Instalar el mínimo de enchufes hembra triple exigido (3 en básica/media, 2 en párvulos), con uno a máximo 1 m del fondo de la sala.",
+      "motores": ["giae-inspector", "cargas", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-EDUDIF-001",
+      "documento": "RIC 11",
+      "numeral": "4.3.5",
+      "categoria": "recintos_educacionales",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial dedicada en circuitos educacionales",
+      "verifica": "Que todos los circuitos de enchufes en recintos educacionales tengan un dispositivo de protección diferencial dedicado y enchufes de alvéolos protegidos, y que los circuitos de iluminación también estén protegidos con diferencial.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "proteccionDiferencialCircuitoEducacional"
+      },
+      "evidencia": {
+        "si_falta": "Un circuito de enchufes o iluminación de un recinto educacional no cuenta con protección diferencial dedicada."
+      },
+      "correccion": "Instalar un protector diferencial dedicado para cada circuito de enchufes e iluminación en recintos educacionales.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC11-MOJADO-001",
+      "documento": "RIC 11",
+      "numeral": "5.6.1",
+      "categoria": "ambientes_humedos",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Sensibilidad diferencial en locales mojados",
+      "verifica": "Que los circuitos en locales mojados estén protegidos con diferencial ≤30 mA, y los circuitos que alimenten aparatos móviles o portátiles con diferencial ≤10 mA o tensiones extra bajas.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["sensibilidadDiferencialLocalMojado", "tipoCargaMovilPortatil"]
+      },
+      "evidencia": {
+        "si_falta": "El diferencial del circuito en local mojado supera 30 mA, o el de aparatos móviles/portátiles supera 10 mA sin usar tensión extra baja."
+      },
+      "correccion": "Ajustar la sensibilidad del diferencial a ≤30 mA en locales mojados y ≤10 mA para circuitos de aparatos móviles o portátiles.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC11-SUBACUATICA-001",
+      "documento": "RIC 11",
+      "numeral": "5.7.7.1",
+      "categoria": "ambientes_humedos",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Tensión extra baja en iluminación subacuática de piscinas",
+      "verifica": "Que la iluminación subacuática de piscinas se alimente únicamente con tensión extra baja, máximo 24 V CA o 60 V CC, sin funcionar en ningún caso a 220 V CA.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "tensionIluminacionSubacuatica"
+      },
+      "evidencia": {
+        "si_falta": "La iluminación subacuática declara una tensión de alimentación superior a 24 V CA o 60 V CC."
+      },
+      "correccion": "Alimentar la iluminación subacuática exclusivamente con tensión extra baja (máximo 24 V CA o 60 V CC).",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC11-BANERA-001",
+      "documento": "RIC 11",
+      "numeral": "6.4.2.2",
+      "categoria": "banos_duchas",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Conexión equipotencial suplementaria en volúmenes de baños y duchas",
+      "verifica": "Que exista una conexión equipotencial local suplementaria que una el conductor de protección con las partes conductoras accesibles de los equipos clase I en los volúmenes 1, 2 y 3 del baño o ducha.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "conexionEquipotencialBanoDucha"
+      },
+      "evidencia": {
+        "si_falta": "No se declara conexión equipotencial suplementaria en los volúmenes 1, 2 o 3 del baño o ducha."
+      },
+      "correccion": "Instalar la conexión equipotencial local suplementaria uniendo el conductor de protección con las partes conductoras accesibles en los volúmenes 1, 2 y 3.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-GRUATIERRA-001",
+      "documento": "RIC 11",
+      "numeral": "7.7.1",
+      "categoria": "gruas",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Puesta a tierra de partes metálicas de grúas y polipastos",
+      "verifica": "Que las partes metálicas expuestas no portadoras de corriente de grúas, polipastos y sus accesorios estén mecánicamente unidas y puestas a tierra conforme a la sección 7 del RIC N°06.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "puestaTierraGrua"
+      },
+      "evidencia": {
+        "si_falta": "Las partes metálicas expuestas de la grúa o polipasto no declaran conexión de puesta a tierra."
+      },
+      "correccion": "Conectar mecánicamente y poner a tierra todas las partes metálicas expuestas de la grúa o polipasto conforme al RIC N°06.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-ASCTENSION-001",
+      "documento": "RIC 11",
+      "numeral": "8.3.1",
+      "categoria": "ascensores",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Tensión máxima de suministro en ascensores",
+      "verifica": "Que la tensión de suministro entre conductores para el ascensor no exceda los 400 V.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "tensionSuministroAscensor"
+      },
+      "evidencia": {
+        "si_falta": "La tensión de suministro declarada para el ascensor supera los 400 V entre conductores."
+      },
+      "correccion": "Ajustar la tensión de suministro del ascensor a un máximo de 400 V entre conductores.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC11-ASCENCHUFE-001",
+      "documento": "RIC 11",
+      "numeral": "8.18.4",
+      "categoria": "ascensores",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Protección diferencial de enchufes en pozos de ascensores",
+      "verifica": "Que los enchufes monofásicos de 220 V y 16 A instalados en pozos y encima de cabinas de ascensores estén protegidos contra cortocircuito y sobrecarga y conectados a un diferencial de 30 mA tipo A.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "proteccionEnchufePozoAscensor"
+      },
+      "evidencia": {
+        "si_falta": "El enchufe del pozo del ascensor no declara protección diferencial de 30 mA tipo A."
+      },
+      "correccion": "Conectar los enchufes del pozo del ascensor a un protector diferencial de 30 mA tipo A, con protección contra cortocircuito y sobrecarga.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-DATACENTERDIF-001",
+      "documento": "RIC 11",
+      "numeral": "9.5.3.1",
+      "categoria": "data_center",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial obligatoria en data center",
+      "verifica": "Que al interior de los data center se utilicen protectores diferenciales tipo A, tipo B o un monitor de corriente residual (RCM).",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "proteccionDiferencialDataCenter"
+      },
+      "evidencia": {
+        "si_falta": "El data center no declara protección diferencial tipo A/B ni monitor de corriente residual."
+      },
+      "correccion": "Instalar protectores diferenciales tipo A, tipo B o un monitor de corriente residual (RCM) en el data center.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-DATACENTERARCO-001",
+      "documento": "RIC 11",
+      "numeral": "9.5.3.5",
+      "categoria": "data_center",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Detección de falla de arco en circuitos de data center",
+      "verifica": "Que los circuitos del data center estén protegidos por un dispositivo de detección de falla de arco eléctrico conforme a la norma IEC 62606.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "deteccionArcoDataCenter"
+      },
+      "evidencia": {
+        "si_falta": "El circuito del data center no declara dispositivo de detección de falla de arco eléctrico (AFDD)."
+      },
+      "correccion": "Instalar un dispositivo de detección de falla de arco eléctrico (AFDD) conforme a la norma IEC 62606 en los circuitos del data center.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC11-PREFAB-001",
+      "documento": "RIC 11",
+      "numeral": "10.3.5",
+      "categoria": "construcciones_prefabricadas",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Puesta a tierra de piezas metálicas en construcciones prefabricadas",
+      "verifica": "Que los paneles precableados o componentes de construcciones prefabricadas dispongan de puentes de unión y puesta a tierra de las piezas metálicas descubiertas que pudieran quedar en contacto con partes activas.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "puestaTierraPiezasMetalicasPrefab"
+      },
+      "evidencia": {
+        "si_falta": "Una pieza metálica descubierta del panel prefabricado no declara puente de unión ni puesta a tierra."
+      },
+      "correccion": "Instalar puentes de unión y puesta a tierra en todas las piezas metálicas descubiertas de los paneles prefabricados.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-AGRICOLADIF-001",
+      "documento": "RIC 11",
+      "numeral": "11.4.5",
+      "categoria": "construcciones_agricolas",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial en instalaciones agrícolas",
+      "verifica": "Que todo circuito o equipo de una instalación en construcciones agrícolas esté protegido mediante protectores diferenciales de sensibilidad adecuada al equipo o zona.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "proteccionDiferencialAgricola"
+      },
+      "evidencia": {
+        "si_falta": "Un circuito o equipo de la instalación agrícola no declara protección diferencial."
+      },
+      "correccion": "Instalar protectores diferenciales de sensibilidad adecuada en todos los circuitos y equipos de la instalación agrícola.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-CERCOCERT-001",
+      "documento": "RIC 11",
+      "numeral": "12.4.1",
+      "categoria": "cercos_electricos",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Certificación del energizador de cerco eléctrico",
+      "verifica": "Que el energizador del cerco eléctrico cuente con certificado de aprobación otorgado por un organismo de certificación aprobado por la SEC, conforme a la norma IEC 60335-2-76.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "certificadoEnergizadorCerco"
+      },
+      "evidencia": {
+        "si_falta": "El energizador del cerco eléctrico no presenta certificado de aprobación SEC conforme a IEC 60335-2-76."
+      },
+      "correccion": "Utilizar un energizador con certificado de aprobación SEC conforme a la norma IEC 60335-2-76.",
+      "motores": ["giae-inspector", "documentacion", "presupuesto"]
+    },
+    {
+      "id": "CHL-RIC11-CERCOALTURA-001",
+      "documento": "RIC 11",
+      "numeral": "12.5.4",
+      "categoria": "cercos_electricos",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Altura mínima del cerco eléctrico de seguridad",
+      "verifica": "Que el cerco eléctrico de seguridad instalado sobre rejas o murallas tenga una altura igual o superior a 2000 mm, o en su defecto una barrera física de altura mínima 1800 mm situada entre 200 mm y 1000 mm de distancia.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["alturaCercoSeguridad", "alturaBarreraFisica"]
+      },
+      "evidencia": {
+        "si_falta": "El cerco eléctrico de seguridad no alcanza 2000 mm de altura ni cuenta con barrera física de 1800 mm en la distancia exigida."
+      },
+      "correccion": "Ajustar el cerco eléctrico de seguridad a 2000 mm de altura o instalar una barrera física de 1800 mm entre 200 mm y 1000 mm de distancia.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC11-MINAPOLVORIN-001",
+      "documento": "RIC 11",
+      "numeral": "13.5.12",
+      "categoria": "faenas_mineras",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Distancias mínimas de polvorines en superficie",
+      "verifica": "Que los polvorines en superficie estén ubicados a un mínimo de 60 m de redes aéreas y a un mínimo de 100 m de subestaciones eléctricas.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["distanciaPolvorinRedAerea", "distanciaPolvorinSubestacion"]
+      },
+      "evidencia": {
+        "si_falta": "El polvorín está ubicado a menos de 60 m de una red aérea o menos de 100 m de una subestación eléctrica."
+      },
+      "correccion": "Reubicar el polvorín a una distancia mínima de 60 m de redes aéreas y 100 m de subestaciones eléctricas.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC11-MINAIT-001",
+      "documento": "RIC 11",
+      "numeral": "13.6.1",
+      "categoria": "faenas_mineras",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Monitoreo de aislación en sistema IT de minas",
+      "verifica": "Que cuando se utilice sistema IT en instalaciones mineras, exista un sistema de vigilancia o monitoreo del aislamiento que proteja mediante desconexión en máximo 1,5 segundos o active un sistema de alarma.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "monitoreoAislacionSistemaITMina"
+      },
+      "evidencia": {
+        "si_falta": "El sistema IT de la mina no declara monitoreo de aislamiento con desconexión ≤1,5 s o alarma."
+      },
+      "correccion": "Instalar un sistema de monitoreo de aislamiento en el esquema IT que desconecte en máximo 1,5 segundos o active una alarma.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC11-FLOTANTEDIF-001",
+      "documento": "RIC 11",
+      "numeral": "14.3.2.1",
+      "categoria": "construcciones_flotantes",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Diferencial de cabecera en construcciones flotantes",
+      "verifica": "Que todo empalme que alimente una construcción flotante cuente con un protector diferencial de cabecera de sensibilidad no superior a 30 mA.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "diferencialCabeceraFlotante"
+      },
+      "evidencia": {
+        "si_falta": "El empalme de la construcción flotante no declara protector diferencial de cabecera ≤30 mA."
+      },
+      "correccion": "Instalar un protector diferencial de cabecera de sensibilidad ≤30 mA en el empalme que alimenta la construcción flotante.",
+      "motores": ["giae-inspector", "empalme", "tableros"]
+    },
+    {
+      "id": "CHL-RIC11-MUELLEENCHUFE-001",
+      "documento": "RIC 11",
+      "numeral": "15.3.5",
+      "categoria": "muelles",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial de enchufes costa-embarcación en muelles",
+      "verifica": "Que los enchufes destinados a suministrar potencia desde la costa a las embarcaciones estén protegidos por un diferencial de sensibilidad no superior a 30 mA y encerrados en salidas marinas aprobadas.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "proteccionEnchufeMuelle"
+      },
+      "evidencia": {
+        "si_falta": "El enchufe de suministro costa-embarcación no declara protección diferencial ≤30 mA."
+      },
+      "correccion": "Instalar protección diferencial ≤30 mA en los enchufes de suministro costa-embarcación del muelle.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-PROVISORIO-001",
+      "documento": "RIC 11",
+      "numeral": "16.3.2",
+      "categoria": "instalaciones_provisionales",
+      "tipo": "informativa",
+      "criticidad": "media",
+      "titulo": "Vigencia del empalme provisional",
+      "verifica": "Que el empalme provisional tenga una vigencia de 18 meses, renovable por una única vez y por el mismo plazo.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "vigenciaEmpalmeProvisional"
+      },
+      "evidencia": {
+        "si_falta": "El empalme provisional supera los 18 meses de vigencia o ha sido renovado más de una vez."
+      },
+      "correccion": "Regularizar el empalme provisional dentro del plazo de 18 meses, con una única renovación posible por el mismo plazo.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC11-PROVISORIODIF-001",
+      "documento": "RIC 11",
+      "numeral": "16.4.3.4",
+      "categoria": "instalaciones_provisionales",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial en instalaciones provisionales",
+      "verifica": "Que todos los circuitos o equipos de una instalación provisional estén protegidos mediante protectores diferenciales.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "proteccionDiferencialProvisional"
+      },
+      "evidencia": {
+        "si_falta": "Un circuito o equipo de la instalación provisional no declara protección diferencial."
+      },
+      "correccion": "Instalar protectores diferenciales en todos los circuitos y equipos de la instalación provisional.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-FERIADIF-001",
+      "documento": "RIC 11",
+      "numeral": "17.3.1",
+      "categoria": "eventos_masivos",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Diferencial de cabecera en carnavales, circos y ferias",
+      "verifica": "Que todo circuito que funcione con energía eléctrica en carnavales, circos, ferias y eventos masivos lleve un protector diferencial de cabecera con sensibilidad máxima de 30 mA.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "diferencialCabeceraEvento"
+      },
+      "evidencia": {
+        "si_falta": "El circuito del evento masivo no declara protector diferencial de cabecera ≤30 mA."
+      },
+      "correccion": "Instalar un protector diferencial de cabecera de sensibilidad máxima 30 mA en cada circuito del evento.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-JUEGODISTANCIA-001",
+      "documento": "RIC 11",
+      "numeral": "17.3.4",
+      "categoria": "eventos_masivos",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Distancia de juegos mecánicos a cables aéreos",
+      "verifica": "Que los juegos mecánicos y atracciones para diversión estén a una distancia no menor de 4 m en cualquier dirección de los cables aéreos de 600 V o menos, salvo los conductores que los alimentan.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "distanciaJuegoMecanicoCableAereo"
+      },
+      "evidencia": {
+        "si_falta": "El juego mecánico o atracción está a menos de 4 m de un cable aéreo de 600 V o menos."
+      },
+      "correccion": "Reubicar el juego mecánico o la atracción a una distancia mínima de 4 m de cables aéreos de 600 V o menos.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC11-TEATRODIF-001",
+      "documento": "RIC 11",
+      "numeral": "18.4.11",
+      "categoria": "teatros",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial y detección de arco en teatros",
+      "verifica": "Que las instalaciones eléctricas en teatros, áreas de audiencia de estudios cinematográficos, televisión y lugares similares estén protegidas mediante protectores diferenciales y un dispositivo de detección de falla de arco eléctrico conforme a IEC 62606.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "proteccionDiferencialArcoTeatro"
+      },
+      "evidencia": {
+        "si_falta": "La instalación del teatro o estudio no declara protección diferencial o dispositivo de detección de falla de arco."
+      },
+      "correccion": "Instalar protectores diferenciales y un dispositivo de detección de falla de arco eléctrico (AFDD) conforme a IEC 62606.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC11-PUBLICODIF-001",
+      "documento": "RIC 11",
+      "numeral": "19.3.1",
+      "categoria": "lugares_publicos",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial en instalaciones de lugares públicos",
+      "verifica": "Que todas las instalaciones en lugares públicos usen protectores diferenciales como medio de protección contra contactos indirectos, de sensibilidad no superior a 30 mA.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "proteccionDiferencialLugarPublico"
+      },
+      "evidencia": {
+        "si_falta": "La instalación del lugar público no declara protección diferencial ≤30 mA."
+      },
+      "correccion": "Instalar protectores diferenciales de sensibilidad ≤30 mA en la instalación del lugar público.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-PUBLICOIP-001",
+      "documento": "RIC 11",
+      "numeral": "19.3.3",
+      "categoria": "lugares_publicos",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Grado de protección mínimo de equipos en lugares públicos",
+      "verifica": "Que los artefactos, cajas de derivación y equipos eléctricos empleados en lugares públicos tengan un índice de protección mínimo IP54 y un grado de impacto mínimo IK44.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["gradoIPEquipoLugarPublico", "gradoIKEquipoLugarPublico"]
+      },
+      "evidencia": {
+        "si_falta": "El equipo instalado en el lugar público declara un grado IP o IK inferior a los mínimos exigidos."
+      },
+      "correccion": "Especificar equipos con grado de protección mínimo IP54 e IK44 para instalaciones en lugares públicos.",
+      "motores": ["giae-inspector", "documentacion", "presupuesto"]
+    },
+    {
+      "id": "CHL-RIC11-LETRERODIF-001",
+      "documento": "RIC 11",
+      "numeral": "20.5.4",
+      "categoria": "letreros_publicitarios",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Protección diferencial en alumbrado de paletas publicitarias",
+      "verifica": "Que toda instalación eléctrica para alumbrado de paletas publicitarias cuente con un protector diferencial de sensibilidad no mayor a 30 mA.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "diferencialPaletaPublicitaria"
+      },
+      "evidencia": {
+        "si_falta": "La instalación de la paleta publicitaria no declara protector diferencial ≤30 mA."
+      },
+      "correccion": "Instalar un protector diferencial de sensibilidad ≤30 mA en la instalación de la paleta publicitaria.",
+      "motores": ["giae-inspector", "tableros", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC11-DEPORTIVOLUZ-001",
+      "documento": "RIC 11",
+      "numeral": "21.4.3",
+      "categoria": "recintos_deportivos",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Iluminación de seguridad en recintos deportivos",
+      "verifica": "Que todo recinto deportivo cuente con iluminación de seguridad, en conformidad con la sección 10 del Pliego Técnico Normativo RIC N°08.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "iluminacionSeguridadRecintoDeportivo"
+      },
+      "evidencia": {
+        "si_falta": "El recinto deportivo no declara sistema de iluminación de seguridad conforme al RIC N°08."
+      },
+      "correccion": "Instalar el sistema de iluminación de seguridad exigido por la sección 10 del RIC N°08 en el recinto deportivo.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC11-INTELIGENTE-001",
+      "documento": "RIC 11",
+      "numeral": "22.4.1",
+      "categoria": "instalaciones_inteligentes",
+      "tipo": "informativa",
+      "criticidad": "media",
+      "titulo": "Instrucciones de instalación de sistemas inteligentes",
+      "verifica": "Que todos los elementos del sistema domótico o inmótico incorporen instrucciones o referencias a las condiciones de instalación y uso necesarias para garantizar seguridad y compatibilidad electromagnética.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "instruccionesSistemaInteligente"
+      },
+      "evidencia": {
+        "si_falta": "El elemento del sistema domótico o inmótico no adjunta instrucciones de instalación y compatibilidad electromagnética."
+      },
+      "correccion": "Adjuntar las instrucciones del fabricante sobre condiciones de instalación y compatibilidad electromagnética del sistema inteligente.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    }
+  ]
+}

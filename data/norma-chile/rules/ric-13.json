@@ -1,0 +1,314 @@
+{
+  "schemaVersion": "0.9.0.013",
+  "documento": "RIC-13",
+  "titulo": "Subestaciones y Salas Eléctricas",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 13",
+  "fuente": "Pliego Técnico Normativo RIC N°13, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC13-UNILINEAL-001",
+      "documento": "RIC 13",
+      "numeral": "6.1.3",
+      "categoria": "subestaciones",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Esquema unilineal visible en subestación",
+      "verifica": "Que se coloque en ubicación visible, próxima a los tableros, un esquema unilineal completo de la instalación con tensiones nominales, potencia de transformadores, designación de circuitos, protecciones y características de la puesta a tierra.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "esquemaUnilinealSubestacion"
+      },
+      "evidencia": {
+        "si_falta": "No existe esquema unilineal visible próximo a los tableros de la subestación, o falta alguno de los datos mínimos exigidos."
+      },
+      "correccion": "Instalar en lugar visible el esquema unilineal completo de la subestación con todos los datos exigidos en el punto 6.1.3.",
+      "motores": ["giae-inspector", "documentacion", "tableros"]
+    },
+    {
+      "id": "CHL-RIC13-PLACATRAFO-001",
+      "documento": "RIC 13",
+      "numeral": "6.2.5",
+      "categoria": "subestaciones",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Placa de características del transformador",
+      "verifica": "Que todo transformador cuente con placa de características que incluya fabricante, número de serie, fases, tensiones nominales, potencia (kVA), frecuencia, impedancia, tipo de aislante y diagrama de conexiones, entre otros datos mínimos.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "placaCaracteristicasTransformador"
+      },
+      "evidencia": {
+        "si_falta": "El transformador no presenta placa de características o le falta alguno de los datos mínimos exigidos en el punto 6.2.5."
+      },
+      "correccion": "Verificar que el transformador cuente con placa de características completa según los 18 datos mínimos del punto 6.2.5.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC13-DISTANCIA-001",
+      "documento": "RIC 13",
+      "numeral": "6.4.1 / tabla 13.1",
+      "categoria": "subestaciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Distancias de seguridad entre fases y a tierra",
+      "verifica": "Que las distancias entre conductores/barras desnudas energizadas (entre fases y fase a tierra) cumplan los mínimos de la tabla 13.1 según la tensión nominal y si la subestación es interior o a la intemperie.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["tensionNominalSubestacion", "distanciaEntreFases", "distanciaFaseTierra", "tipoInstalacion"]
+      },
+      "evidencia": {
+        "si_falta": "Las distancias entre fases o fase a tierra medidas son inferiores a los mínimos de la tabla 13.1 para la tensión y tipo de instalación."
+      },
+      "correccion": "Ajustar las distancias entre fases y fase a tierra a los valores mínimos de la tabla 13.1 según tensión y tipo de instalación.",
+      "motores": ["giae-inspector", "engineering", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC13-ESPACIOTRABAJO-001",
+      "documento": "RIC 13",
+      "numeral": "6.4.8",
+      "categoria": "subestaciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Espacios libres de circulación y maniobra en subestación",
+      "verifica": "Que existan espacios libres frente a los equipos de al menos 1.000 mm de ancho y 3.000 mm de altura (equipo a un lado), o 1.200 mm de ancho y 2.000 mm de altura (equipos a ambos lados).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["anchoEspacioTrabajoSubestacion", "alturaEspacioTrabajoSubestacion"]
+      },
+      "evidencia": {
+        "si_falta": "El espacio de circulación frente a los equipos es inferior a los mínimos exigidos según su configuración."
+      },
+      "correccion": "Ajustar el espacio libre de circulación a los mínimos exigidos (1.000x3.000 mm o 1.200x2.000 mm según configuración).",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC13-BASECONCRETO-001",
+      "documento": "RIC 13",
+      "numeral": "7.2.3",
+      "categoria": "subestaciones_intemperie",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Base de concreto para equipo a nivel de suelo",
+      "verifica": "Que el equipo eléctrico instalado a nivel del suelo esté montado sobre una base de concreto de al menos 0,25 m de espesor, que sobresalga horizontalmente al menos 0,15 m desde los ejes de apoyo.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["espesorBaseConcreto", "sobresalienteHorizontalBase"]
+      },
+      "evidencia": {
+        "si_falta": "La base de concreto tiene un espesor menor a 0,25 m o no sobresale al menos 0,15 m de los ejes de apoyo."
+      },
+      "correccion": "Construir la base de concreto con espesor mínimo de 0,25 m y sobresaliente horizontal mínimo de 0,15 m.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC13-CIERREPROTECCION-001",
+      "documento": "RIC 13",
+      "numeral": "7.2.6",
+      "categoria": "subestaciones_intemperie",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Altura del cierre de protección de subestación a nivel de suelo",
+      "verifica": "Que el cierre de protección tenga altura mínima de 2,00 m (2,50 m si colinda con sitio público, con protección antiescalamiento), y quede a distancia horizontal no menor a 1,50 m de cualquier punto del equipo eléctrico.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["alturaCierreProteccion", "distanciaCierreEquipo", "colindanciaSitioPublico"]
+      },
+      "evidencia": {
+        "si_falta": "El cierre de protección tiene altura inferior a la exigida o queda a menos de 1,50 m del equipo eléctrico."
+      },
+      "correccion": "Ajustar el cierre de protección a la altura mínima exigida (2,00 m o 2,50 m si colinda con sitio público) y a 1,50 m del equipo.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC13-REJATIERRA-001",
+      "documento": "RIC 13",
+      "numeral": "7.2.10",
+      "categoria": "subestaciones_intemperie",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Puesta a tierra de la reja de protección metálica",
+      "verifica": "Que la reja de protección metálica esté puesta a tierra, existiendo al menos una conexión a tierra por cada 15 m de perímetro de cierre, con un mínimo de dos conexiones.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["conexionesTierraRejaCierre", "perimetroCierre"]
+      },
+      "evidencia": {
+        "si_falta": "La reja de protección no tiene al menos una conexión a tierra por cada 15 m de perímetro, o tiene menos de 2 conexiones en total."
+      },
+      "correccion": "Instalar conexiones a tierra en la reja de protección: una por cada 15 m de perímetro, con un mínimo de dos.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC13-PUERTASERVICIO-001",
+      "documento": "RIC 13",
+      "numeral": "8.6",
+      "categoria": "subestaciones_interior",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Dimensiones y apertura de la puerta de servicio",
+      "verifica": "Que la puerta de servicio tenga al menos 0,80 x 2,10 m, abra hacia el exterior y cuente con cerradura de seguridad que permita abrir desde dentro sin llave.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["dimensionPuertaServicio", "sentidoAperturaPuerta", "cerraduraSeguridad"]
+      },
+      "evidencia": {
+        "si_falta": "La puerta de servicio tiene dimensiones menores a 0,80x2,10 m, no abre hacia el exterior, o no tiene cerradura que permita salir sin llave."
+      },
+      "correccion": "Ajustar la puerta de servicio a un mínimo de 0,80x2,10 m, con apertura hacia el exterior y cerradura de seguridad interior sin llave.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC13-FOSOACEITE-001",
+      "documento": "RIC 13",
+      "numeral": "8.8",
+      "categoria": "subestaciones_interior",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Capacidad del foso colector de aceite",
+      "verifica": "Que los transformadores refrigerados por aceite se coloquen sobre fosos colectores con capacidad suficiente para contener el aceite del transformador de mayor potencia más el 30% del contenido de aceite de los demás.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "capacidadFosoColectorAceite"
+      },
+      "evidencia": {
+        "si_falta": "La capacidad del foso colector es inferior al volumen de aceite del transformador mayor más el 30% de los demás."
+      },
+      "correccion": "Dimensionar el foso colector de aceite considerando el volumen del transformador de mayor potencia más el 30% de los restantes.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC13-VENTILACION-001",
+      "documento": "RIC 13",
+      "numeral": "8.10",
+      "categoria": "subestaciones_interior",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Ventilación mínima del recinto de subestación",
+      "verifica": "Que la superficie libre de ventilación natural sea de 20 cm² por cada kVA de potencia (mínimo 0,1 m²), o que la ventilación forzada produzca un mínimo de 20 renovaciones de aire por hora.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["superficieVentilacionNatural", "renovacionesAireHora", "potenciaTransformadorKVA"]
+      },
+      "evidencia": {
+        "si_falta": "La superficie de ventilación natural o el número de renovaciones de aire por hora es inferior a los mínimos exigidos."
+      },
+      "correccion": "Ajustar la ventilación natural a 20 cm²/kVA (mínimo 0,1 m²) o la forzada a un mínimo de 20 renovaciones/hora.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC13-MUROFUEGO-001",
+      "documento": "RIC 13",
+      "numeral": "9.4",
+      "categoria": "subestaciones_edificio",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Resistencia al fuego de muros en subestaciones con transformador en aceite",
+      "verifica": "Que las subestaciones con transformadores en aceite dentro de edificios de uso general tengan muros de albañilería de 0,20 m de espesor o de concreto armado de 0,10 m de espesor como mínimo, con piso y cielo resistentes al fuego.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["espesorMuroSubestacion", "materialMuroSubestacion"]
+      },
+      "evidencia": {
+        "si_falta": "El muro de la subestación con transformador en aceite es de espesor inferior al mínimo exigido según su material."
+      },
+      "correccion": "Construir muros de albañilería de 0,20 m o concreto armado de 0,10 m mínimo, con piso y cielo resistentes al fuego.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC13-VIAESCAPE-001",
+      "documento": "RIC 13",
+      "numeral": "9.5",
+      "categoria": "subestaciones_edificio",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Distancia de la vía de escape en subestaciones con aceite",
+      "verifica": "Que la vía de escape desde el recinto de la subestación con transformadores en aceite hasta el exterior del edificio tenga una distancia inferior a 10 m y no interfiera con los escapes del edificio.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "distanciaViaEscapeSubestacion"
+      },
+      "evidencia": {
+        "si_falta": "La vía de escape desde la subestación con aceite hasta el exterior supera 10 m o interfiere con los escapes del edificio."
+      },
+      "correccion": "Reubicar la subestación o modificar el trazado para que la vía de escape hasta el exterior sea inferior a 10 m.",
+      "motores": ["giae-inspector", "documentacion", "engineering"]
+    },
+    {
+      "id": "CHL-RIC13-SONDATEMPERATURA-001",
+      "documento": "RIC 13",
+      "numeral": "9.7 / 9.8",
+      "categoria": "subestaciones_edificio",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Detección de sobretemperatura en transformadores de potencia elevada",
+      "verifica": "Que los transformadores secos >100 kVA cuenten con sondas de temperatura (PT100) o equivalentes, y los transformadores en aceite >250 kVA cuenten con detector de sobretemperatura o relé Buchholz, dentro de edificios de uso general.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["potenciaTransformador", "tipoTransformador", "dispositivoDeteccionSobretemperatura"]
+      },
+      "evidencia": {
+        "si_falta": "El transformador seco >100 kVA o en aceite >250 kVA no declara dispositivo de detección de sobretemperatura."
+      },
+      "correccion": "Instalar sondas PT100 (transformadores secos >100 kVA) o detector de sobretemperatura/relé Buchholz (transformadores en aceite >250 kVA).",
+      "motores": ["giae-inspector", "engineering", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC13-PROTPRIMARIO-001",
+      "documento": "RIC 13",
+      "numeral": "13.2",
+      "categoria": "protecciones_subestacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Dimensionamiento de la protección individual del transformador",
+      "verifica": "Que la protección individual en el lado primario del transformador no exceda 1,5 veces la corriente nominal (fusibles) o 3 veces la corriente nominal (interruptores automáticos).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["capacidadProteccionPrimario", "corrienteNominalTransformador", "tipoProteccionPrimario"]
+      },
+      "evidencia": {
+        "si_falta": "La protección primaria del transformador supera 1,5 veces (fusible) o 3 veces (interruptor) la corriente nominal."
+      },
+      "correccion": "Ajustar la capacidad de la protección primaria a máximo 1,5x (fusible) o 3x (interruptor automático) la corriente nominal del transformador.",
+      "motores": ["giae-inspector", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC13-TIERRAPROTECCION-001",
+      "documento": "RIC 13",
+      "numeral": "14.1.1",
+      "categoria": "puesta_tierra_subestacion",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Puesta a tierra de protección de partes metálicas no activas",
+      "verifica": "Que las partes metálicas no activas de equipos que operen en media tensión y toda parte metálica del recinto que pueda energizarse por falla se conecten a una puesta a tierra de protección conforme al RIC N°06.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "tierraProteccionPartesMetalicasSubestacion"
+      },
+      "evidencia": {
+        "si_falta": "Una parte metálica no activa de la subestación (carcasa, puerta, cerco, soporte de aisladores, etc.) no declara conexión a tierra de protección."
+      },
+      "correccion": "Conectar a la puesta a tierra de protección todas las partes metálicas no activas indicadas en el punto 14.1.2, conforme al RIC N°06.",
+      "motores": ["giae-inspector", "tierra", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC13-AISLACIONTIERRA-001",
+      "documento": "RIC 13",
+      "numeral": "14.2.3",
+      "categoria": "puesta_tierra_subestacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Aislación de líneas de acometida en puesta a tierra de servicio con tensión elevada",
+      "verifica": "Que en una puesta a tierra de servicio donde se presenten tensiones mayores a 125 V ante un contacto a tierra, las líneas de acometida a los electrodos de tierra estén aisladas y protegidas contra contactos directos.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["tensionContactoTierraServicio", "aislacionLineaAcometidaTierra"]
+      },
+      "evidencia": {
+        "si_falta": "La tensión de contacto a tierra supera 125 V y la línea de acometida al electrodo no está aislada ni protegida contra contacto directo."
+      },
+      "correccion": "Aislar y proteger contra contacto directo las líneas de acometida a los electrodos de tierra cuando la tensión de contacto supere 125 V.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "schemaVersion": "0.9.0.010",
+  "documento": "RIC-01",
+  "titulo": "Empalmes",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 1",
+  "fuente": "Pliego Técnico Normativo RIC N°01, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC01-ENE-001",
+      "documento": "RIC 1",
+      "numeral": "5.2",
+      "categoria": "energizacion",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Comunicación de energización previa",
+      "verifica": "Que la instalación cuente con comunicación de energización inscrita ante la Superintendencia antes de otorgar el empalme.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "comunicacionEnergizacionSEC"
+      },
+      "evidencia": {
+        "si_falta": "No se encontró comunicación de energización inscrita ante la SEC."
+      },
+      "correccion": "Registrar la comunicación de energización ante la Superintendencia antes de solicitar el empalme.",
+      "motores": ["giae-inspector", "empalme", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC01-CAP-001",
+      "documento": "RIC 1",
+      "numeral": "5.3",
+      "categoria": "capacidad_empalme",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Capacidad del empalme según potencia instalada",
+      "verifica": "Que la capacidad del empalme se ajuste a valores normalizados en función de la potencia total instalada, sin superarla.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["potenciaTotalInstalada", "capacidadEmpalmeNormalizada"]
+      },
+      "evidencia": {
+        "si_falta": "La capacidad del empalme declarada supera la potencia total instalada o no está normalizada."
+      },
+      "correccion": "Ajustar la capacidad del empalme a un valor normalizado igual o inferior a la potencia total instalada (ver Anexo 1.3 del RIC 1).",
+      "motores": ["giae-inspector", "empalme", "engineering"]
+    },
+    {
+      "id": "CHL-RIC01-UNI-001",
+      "documento": "RIC 1",
+      "numeral": "5.6",
+      "categoria": "conexion",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Empalme único por instalación",
+      "verifica": "Que cada instalación de consumo se conecte a la red mediante un empalme único, salvo instalaciones separadas que no compartan canalizaciones ni tableros.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "empalmesPorInstalacion"
+      },
+      "evidencia": {
+        "si_falta": "El proyecto declara múltiples empalmes para una misma instalación sin justificación de separación."
+      },
+      "correccion": "Verificar que cada instalación eléctrica separada tenga su propio empalme, sin compartir canalizaciones ni tableros.",
+      "motores": ["giae-inspector", "empalme", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC01-CAJ-001",
+      "documento": "RIC 1",
+      "numeral": "6.5",
+      "categoria": "materiales_equipos",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Resistencia mecánica de cajas de empalme",
+      "verifica": "Que las cajas de empalme tengan resistencia mecánica mínima IK 09.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "resistenciaMecanicaCajaEmpalme"
+      },
+      "evidencia": {
+        "si_falta": "No se especifica el grado IK de la caja de empalme o es inferior a IK 09."
+      },
+      "correccion": "Especificar caja de empalme con resistencia mecánica mínima IK 09.",
+      "motores": ["giae-inspector", "empalme", "presupuesto"]
+    },
+    {
+      "id": "CHL-RIC01-UBI-001",
+      "documento": "RIC 1",
+      "numeral": "7.1 / 7.2",
+      "categoria": "condiciones_diseno",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Ubicación de la unidad de medida",
+      "verifica": "Que la unidad de medida esté ubicada en la fachada principal, con vista frontal desde la vía pública, dentro de un semicírculo de radio no superior a 15 m desde el acceso, permitiendo fácil lectura e impidiendo manipulación por terceros.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["ubicacionUnidadMedida", "distanciaAccesoPublico"]
+      },
+      "evidencia": {
+        "si_falta": "No se indica la ubicación de la unidad de medida o excede el radio de 15 m sin justificación de zona rural o telemedida."
+      },
+      "correccion": "Reubicar la unidad de medida dentro del semicírculo de 15 m desde el acceso público, en fachada principal con vista frontal (ver Anexo 1.1 RIC 1).",
+      "motores": ["giae-inspector", "empalme", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC01-REC-001",
+      "documento": "RIC 1",
+      "numeral": "7.8",
+      "categoria": "recintos_empalme",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Requisitos del recinto de empalmes concentrados",
+      "verifica": "Que el recinto de empalmes concentrados sea de uso exclusivo, con paredes no combustibles, ventilación, alumbrado de emergencia autónomo (mínimo 2 h, 5 lux) y cajas ubicadas entre 0,80 m y 2,10 m de altura.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["usoExclusivoRecinto", "paredesNoCombustibles", "alumbradoEmergencia", "alturaCajasEmpalme"]
+      },
+      "evidencia": {
+        "si_falta": "El recinto de empalmes no cumple con uso exclusivo, materiales, alumbrado de emergencia o rango de alturas exigido."
+      },
+      "correccion": "Adecuar el recinto de empalmes concentrados a los requisitos del punto 7.8 del RIC 1 (uso exclusivo, paredes no combustibles, alumbrado de emergencia, alturas de montaje).",
+      "motores": ["giae-inspector", "empalme", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC01-RES-001",
+      "documento": "RIC 1",
+      "numeral": "7.8.5 / 7.9.2",
+      "categoria": "recintos_empalme",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Superficie disponible para futuros aumentos",
+      "verifica": "Que el recinto o armario de empalmes deje disponible al menos un 15% de la superficie utilizada por los empalmes proyectados, salvo excepción del RIC 15 punto 13.2.1.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "superficieDisponibleReserva"
+      },
+      "evidencia": {
+        "si_falta": "No se declara reserva del 15% de superficie disponible en el recinto/armario de empalmes."
+      },
+      "correccion": "Dimensionar el recinto o armario dejando al menos un 15% de superficie disponible para futuros aumentos de capacidad o cantidad de empalmes.",
+      "motores": ["giae-inspector", "empalme", "engineering"]
+    },
+    {
+      "id": "CHL-RIC01-EXT-001",
+      "documento": "RIC 1",
+      "numeral": "7.10",
+      "categoria": "condiciones_diseno",
+      "tipo": "condicional",
+      "criticidad": "media",
+      "titulo": "Prohibición de medidores al exterior",
+      "verifica": "Que no se ubiquen medidores o equipos de medida al exterior de edificios, salvo viviendas sociales con nicho destinado para este fin.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "tipoInmueble !== 'vivienda_social'",
+        "campo": "medidorExteriorEdificio"
+      },
+      "evidencia": {
+        "si_falta": "Se declara medidor al exterior del edificio sin corresponder a vivienda social con nicho habilitado."
+      },
+      "correccion": "Reubicar el medidor al interior del edificio, salvo vivienda social con nicho especialmente destinado.",
+      "motores": ["giae-inspector", "empalme", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC01-SHA-001",
+      "documento": "RIC 1",
+      "numeral": "7.12.4",
+      "categoria": "canalizaciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Shaft vertical de empalmes",
+      "verifica": "Que el shaft vertical de empalmes sea de uso exclusivo para canalizaciones eléctricas de potencia, accesible desde todos los pisos, con resistencia al fuego mínima RF120 y 15% de volumen disponible para aumentos futuros.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["usoExclusivoShaft", "resistenciaFuegoShaft", "volumenDisponibleShaft"]
+      },
+      "evidencia": {
+        "si_falta": "El shaft de empalmes no cumple resistencia al fuego RF120, uso exclusivo o reserva de volumen del 15%."
+      },
+      "correccion": "Adecuar el shaft vertical de empalmes según el punto 7.12.4 del RIC 1 (uso exclusivo, RF120, accesibilidad y 15% de reserva).",
+      "motores": ["giae-inspector", "empalme", "unilineal", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC01-DER-001",
+      "documento": "RIC 1",
+      "numeral": "7.19",
+      "categoria": "canalizaciones",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Prohibición de derivaciones en el alimentador de empalme",
+      "verifica": "Que no existan derivaciones desde el alimentador que conecta el empalme con el primer tablero de la instalación.",
+      "validacion": {
+        "tipo": "revision_formal",
+        "campo": "derivacionesAlimentadorEmpalme"
+      },
+      "evidencia": {
+        "si_falta": "Se detectan derivaciones no permitidas en el tramo entre el empalme y el primer tablero."
+      },
+      "correccion": "Eliminar cualquier derivación en el alimentador entre el empalme y el primer tablero de la instalación.",
+      "motores": ["giae-inspector", "empalme", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC01-SUB-001",
+      "documento": "RIC 1",
+      "numeral": "7.20",
+      "categoria": "empalmes_subterraneos",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Empalmes subterráneos sellados y probados",
+      "verifica": "Que los empalmes subterráneos sean mecánicamente resistentes, estén sellados contra el ingreso de agua y hayan sido probados en continuidad y aislamiento antes de su puesta en servicio.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["selladoEmpalmeSubterraneo", "pruebaContinuidadAislamiento"]
+      },
+      "evidencia": {
+        "si_falta": "No hay evidencia de sellado adecuado o de pruebas de continuidad/aislamiento del empalme subterráneo."
+      },
+      "correccion": "Sellar el empalme subterráneo contra ingreso de agua y documentar las pruebas de continuidad y aislamiento antes de la puesta en servicio.",
+      "motores": ["giae-inspector", "empalme", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC01-PROT-001",
+      "documento": "RIC 1",
+      "numeral": "8.1 / 8.2",
+      "categoria": "protecciones",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Curva y poder de corte de protecciones de empalme",
+      "verifica": "Que las protecciones o limitadores del empalme usen la curva más lenta de operación (salvo estudio de coordinación) y tengan poder de corte igual o superior a 1,2 veces la corriente de cortocircuito prevista.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["curvaOperacionProteccion", "poderCorteProteccion", "corrienteCortocircuito"]
+      },
+      "evidencia": {
+        "si_falta": "No se especifica la curva de operación o el poder de corte de la protección del empalme, o no cumple el factor 1,2."
+      },
+      "correccion": "Especificar protección con curva más lenta (o justificar con estudio de coordinación) y poder de corte ≥ 1,2 veces la corriente de cortocircuito.",
+      "motores": ["giae-inspector", "empalme", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC01-MT-001",
+      "documento": "RIC 1",
+      "numeral": "8.3",
+      "categoria": "protecciones",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Interruptor de poder en empalmes MT ≥ 500 kW",
+      "verifica": "Si el empalme de media tensión tiene potencia igual o superior a 500 kW, que cuente con interruptor de poder o reconectador con funciones de sobrecorriente de fase (50/51), sobrecorriente residual (50N/51N) y sobretensión de secuencia cero (59N).",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "potenciaEmpalmeMT >= 500",
+        "campo": "interruptorPoderReconectador"
+      },
+      "evidencia": {
+        "si_falta": "El empalme MT declara potencia ≥ 500 kW pero no especifica interruptor de poder/reconectador con las funciones exigidas."
+      },
+      "correccion": "Incorporar interruptor de poder o reconectador con funciones 50/51, 50N/51N y 59N para empalmes MT ≥ 500 kW.",
+      "motores": ["giae-inspector", "empalme", "tableros", "engineering"]
+    },
+    {
+      "id": "CHL-RIC01-CEL-001",
+      "documento": "RIC 1",
+      "numeral": "7.21",
+      "categoria": "condiciones_diseno",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Separación de celdas de empalme MT",
+      "verifica": "Que las celdas de los empalmes de media tensión estén separadas al menos 1,5 m de los demás tableros eléctricos de baja tensión.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "distanciaCeldaMTTablerosBT"
+      },
+      "evidencia": {
+        "si_falta": "No se indica o no se cumple la distancia mínima de 1,5 m entre celdas MT y tableros BT."
+      },
+      "correccion": "Reubicar tableros o celdas para cumplir la distancia mínima de 1,5 m entre celdas de empalme MT y tableros BT.",
+      "motores": ["giae-inspector", "empalme", "tableros"]
+    }
+  ]
+}

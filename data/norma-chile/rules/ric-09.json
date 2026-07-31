@@ -1,0 +1,260 @@
+{
+  "schemaVersion": "0.9.0.010",
+  "documento": "RIC-09",
+  "titulo": "Sistemas de Autogeneración",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 9",
+  "fuente": "Pliego Técnico Normativo RIC N°09, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC09-POT-001",
+      "documento": "RIC 9",
+      "numeral": "5.2",
+      "categoria": "autogeneracion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Potencia máxima de autogeneración limitada al empalme",
+      "verifica": "Que la potencia máxima del sistema de autogeneración no sea superior a la capacidad del empalme eléctrico de la instalación de consumo.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["potenciaMaximaAutogeneracion", "capacidadEmpalme"]
+      },
+      "evidencia": {
+        "si_falta": "La potencia declarada del sistema de autogeneración excede la capacidad del empalme."
+      },
+      "correccion": "Ajustar la potencia del sistema de autogeneración para que no exceda la capacidad del empalme, o solicitar ampliación de éste.",
+      "motores": ["giae-inspector", "empalme", "engineering"]
+    },
+    {
+      "id": "CHL-RIC09-FACT-001",
+      "documento": "RIC 9",
+      "numeral": "5.6 / 5.7",
+      "categoria": "autogeneracion",
+      "tipo": "condicional",
+      "criticidad": "alta",
+      "titulo": "Factibilidad técnica y comunicación de energización previa",
+      "verifica": "Si el sistema de autogeneración funcionará en paralelo con la red, que se haya solicitado factibilidad técnica de suministro a la distribuidora y declarado comunicación de energización ante la SEC antes de la puesta en servicio.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "funcionamientoEnParalelo === true",
+        "campo": "factibilidadYComunicacionEnergizacion"
+      },
+      "evidencia": {
+        "si_falta": "El sistema funcionará en paralelo pero no se declara factibilidad técnica ni comunicación de energización previa."
+      },
+      "correccion": "Solicitar factibilidad técnica de suministro a la distribuidora y declarar la comunicación de energización ante la SEC antes de operar.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC09-PROT-001",
+      "documento": "RIC 9",
+      "numeral": "6.2",
+      "categoria": "protecciones_autogeneracion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Funciones de protección obligatorias en paralelo con la red",
+      "verifica": "Que el sistema de autogeneración en paralelo cuente con protección de sobrecorriente de fases, falla a tierra, protección RI (sobre/baja tensión, sobre/baja frecuencia, anti-isla) y protección de potencia inversa según corresponda.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "proteccionesInterconexionCompletas"
+      },
+      "evidencia": {
+        "si_falta": "Falta una o más de las funciones de protección obligatorias del punto 6.2 del RIC 9 según el anexo 9.1."
+      },
+      "correccion": "Verificar contra el anexo 9.1 del RIC 9 que todas las protecciones exigidas según la potencia y relación con el empalme estén presentes.",
+      "motores": ["giae-inspector", "engineering", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC09-DIF-001",
+      "documento": "RIC 9",
+      "numeral": "6.4.1",
+      "categoria": "protecciones_autogeneracion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Sensibilidad del diferencial según potencia instalada",
+      "verifica": "Que el diferencial de falla a tierra sea tipo A o B, con corriente diferencial ≤30 mA (potencia <10 kW) o ≤300 mA (potencia ≥10 kW).",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["potenciaInstaladaGeneracion", "sensibilidadDiferencial", "tipoDiferencial"]
+      },
+      "evidencia": {
+        "si_falta": "La sensibilidad del diferencial no corresponde al rango exigido según la potencia instalada del generador."
+      },
+      "correccion": "Ajustar la sensibilidad del diferencial a ≤30 mA (<10 kW) o ≤300 mA (≥10 kW), tipo A o B.",
+      "motores": ["giae-inspector", "engineering", "tableros"]
+    },
+    {
+      "id": "CHL-RIC09-RI-001",
+      "documento": "RIC 9",
+      "numeral": "6.5.2.3 / 6.5.2.5",
+      "categoria": "proteccion_ri",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Protección RI centralizada o complementaria según potencia",
+      "verifica": "Que instalaciones de generación >100 kW cuenten con protección RI centralizada, y las ≤100 kW cuenten al menos con protección RI complementaria.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["potenciaInstaladaGeneracion", "tipoProteccionRI"]
+      },
+      "evidencia": {
+        "si_falta": "La instalación no cuenta con el tipo de protección RI (centralizada/complementaria) exigido según su potencia."
+      },
+      "correccion": "Instalar protección RI centralizada (>100 kW) o complementaria (≤100 kW) según el punto 6.5.2 del RIC 9.",
+      "motores": ["giae-inspector", "engineering", "tableros"]
+    },
+    {
+      "id": "CHL-RIC09-ANTIISLA-001",
+      "documento": "RIC 9",
+      "numeral": "6.5.6.1",
+      "categoria": "proteccion_ri",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Tiempo máximo de desconexión anti-isla",
+      "verifica": "Que la protección anti-isla desconecte el sistema de generación en un tiempo máximo de 2 segundos ante una situación de isla eléctrica.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "tiempoDesconexionAntiIsla"
+      },
+      "evidencia": {
+        "si_falta": "El tiempo de desconexión anti-isla declarado supera los 2 segundos o no se especifica."
+      },
+      "correccion": "Configurar la protección anti-isla (tipo ROCOF, Vector Shift u equivalente) para desconectar en máximo 2 segundos.",
+      "motores": ["giae-inspector", "engineering"]
+    },
+    {
+      "id": "CHL-RIC09-ACOPLE-001",
+      "documento": "RIC 9",
+      "numeral": "6.5.7.5",
+      "categoria": "interruptor_acoplamiento",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Tiempo máximo de desconexión del interruptor de acoplamiento",
+      "verifica": "Que el interruptor de acoplamiento desconecte en un tiempo máximo de 200 ms desde ocurrida una falla, según indicación del fabricante.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campo": "tiempoDesconexionInterruptorAcoplamiento"
+      },
+      "evidencia": {
+        "si_falta": "El tiempo de desconexión del interruptor de acoplamiento supera 200 ms o no está documentado por el fabricante."
+      },
+      "correccion": "Verificar que el interruptor de acoplamiento desconecte en ≤200 ms según especificación del fabricante.",
+      "motores": ["giae-inspector", "engineering", "documentacion"]
+    },
+    {
+      "id": "CHL-RIC09-INVERSA-001",
+      "documento": "RIC 9",
+      "numeral": "6.6.7",
+      "categoria": "proteccion_potencia_inversa",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Tiempo de operación del relé de potencia inversa según potencia",
+      "verifica": "Que el relé de potencia inversa (Nema 32) opere en 10 s (≤300 kW), 5 s (>300 y ≤1500 kW) o 2 s (>1500 kW), con ajuste de pickup del 2% de la potencia nominal.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["potenciaInstaladaGeneracion", "tiempoOperacionRele32", "ajustePickup"]
+      },
+      "evidencia": {
+        "si_falta": "El tiempo de operación o ajuste de pickup del relé 32 no corresponde al tramo de potencia de la tabla del punto 6.6.7."
+      },
+      "correccion": "Ajustar el relé de potencia inversa al tiempo de operación y pickup (2%) correspondiente al tramo de potencia instalada.",
+      "motores": ["giae-inspector", "engineering"]
+    },
+    {
+      "id": "CHL-RIC09-INYCERO-001",
+      "documento": "RIC 9",
+      "numeral": "6.7.3",
+      "categoria": "control_inyeccion_cero",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Tiempo máximo de actuación del control de inyección cero",
+      "verifica": "Que el sistema de control de inyección cero actúe en máximo 5 segundos (2 segundos si la potencia instalada supera 1500 kW), con ajustes ≤2% de la potencia nominal.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["tiempoActuacionInyeccionCero", "potenciaInstaladaGeneracion"]
+      },
+      "evidencia": {
+        "si_falta": "El tiempo de actuación del control de inyección cero excede el máximo permitido según la potencia instalada."
+      },
+      "correccion": "Configurar el sistema de control de inyección cero para actuar en ≤5 s (o ≤2 s si potencia >1500 kW).",
+      "motores": ["giae-inspector", "engineering"]
+    },
+    {
+      "id": "CHL-RIC09-MEDIDOR-001",
+      "documento": "RIC 9",
+      "numeral": "8.1",
+      "categoria": "medidores",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Medidor bidireccional obligatorio",
+      "verifica": "Que la instalación con autogeneración en paralelo cuente con unidad de medida bidireccional conforme al SMMC, capaz de generar alertas ante inyecciones no autorizadas.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "medidorBidireccional"
+      },
+      "evidencia": {
+        "si_falta": "No se declara medidor bidireccional conforme al SMMC para la instalación con autogeneración."
+      },
+      "correccion": "Instalar medidor bidireccional conforme al título 4-1 del anexo técnico SMMC, implementado por la distribuidora.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC09-MONITOR-001",
+      "documento": "RIC 9",
+      "numeral": "8.2",
+      "categoria": "medidores",
+      "tipo": "condicional",
+      "criticidad": "media",
+      "titulo": "Equipo de monitoreo de generación >30 kW",
+      "verifica": "Si la potencia instalada de autogeneración supera 30 kW, que exista equipo de monitoreo de generación montado y rotulado en el tablero de distribución del equipamiento.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "potenciaInstaladaGeneracion > 30",
+        "campo": "equipoMonitoreoGeneracion"
+      },
+      "evidencia": {
+        "si_falta": "La potencia instalada supera 30 kW pero no se declara equipo de monitoreo de generación rotulado."
+      },
+      "correccion": "Instalar y rotular el equipo de monitoreo de generación en el tablero de distribución del sistema de autogeneración.",
+      "motores": ["giae-inspector", "documentacion", "tableros"]
+    },
+    {
+      "id": "CHL-RIC09-PLACA-001",
+      "documento": "RIC 9",
+      "numeral": "11.2 / 11.3",
+      "categoria": "rotulacion",
+      "tipo": "contenido_tecnico",
+      "criticidad": "media",
+      "titulo": "Placa de advertencia en caja de empalme",
+      "verifica": "Que la caja de empalme tenga placa visible de advertencia (mínimo 70x40 mm, letra ≥5 mm) indicando que la propiedad cuenta con sistema de autogeneración.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["placaAdvertenciaAutogeneracion", "dimensionesPlaca"]
+      },
+      "evidencia": {
+        "si_falta": "No se declara placa de advertencia en la caja de empalme, o no cumple las dimensiones mínimas."
+      },
+      "correccion": "Instalar placa de advertencia (≥70x40 mm, letra ≥5 mm) visible en la caja de empalme indicando el sistema de autogeneración.",
+      "motores": ["giae-inspector", "documentacion", "empalme"]
+    },
+    {
+      "id": "CHL-RIC09-RESP-001",
+      "documento": "RIC 9",
+      "numeral": "9.6",
+      "categoria": "operacion",
+      "tipo": "condicional",
+      "criticidad": "media",
+      "titulo": "Responsable técnico para autogeneración >300 kW",
+      "verifica": "Si la potencia instalada de autogeneración supera 300 kW, que el propietario designe un responsable técnico con conocimiento en conexión, operación y mantenimiento.",
+      "validacion": {
+        "tipo": "condicional",
+        "condicion": "potenciaInstaladaGeneracion > 300",
+        "campo": "responsableTecnicoDesignado"
+      },
+      "evidencia": {
+        "si_falta": "La potencia instalada supera 300 kW pero no se declara responsable técnico designado."
+      },
+      "correccion": "Designar un responsable técnico con conocimiento en conexión, operación y mantenimiento de la instalación de autogeneración.",
+      "motores": ["giae-inspector", "usuarios", "documentacion"]
+    }
+  ]
+}

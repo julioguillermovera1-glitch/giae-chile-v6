@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "0.9.0.017",
+  "documento": "RIC-17",
+  "titulo": "Operación y Mantenimiento",
+  "estado": "vigente",
+  "baseNormativa": "DS N°8 + RIC 17",
+  "fuente": "Pliego Técnico Normativo RIC N°17, Resolución Exenta N°33.877 de 30/12/2020, SEC",
+  "reglas": [
+    {
+      "id": "CHL-RIC17-NFPA70E-001",
+      "documento": "RIC 17",
+      "numeral": "5.2",
+      "categoria": "operacion_mantenimiento",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Cumplimiento de NFPA 70E en instalaciones especiales de alta potencia",
+      "verifica": "Que las instalaciones ubicadas en atmósferas explosivas, en minería, o de consumo de media/alta tensión con potencia instalada igual o mayor a 5 MW cumplan las exigencias de seguridad en operación y mantención de la norma NFPA 70E.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "cumplimientoNFPA70E"
+      },
+      "evidencia": {
+        "si_falta": "La instalación en atmósfera explosiva, minería o MT/AT ≥5 MW no acredita cumplimiento de la norma NFPA 70E en operación y mantención."
+      },
+      "correccion": "Implementar y documentar el cumplimiento de la norma NFPA 70E para la operación y mantención de la instalación.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC17-PROGRAMASEGURIDAD-001",
+      "documento": "RIC 17",
+      "numeral": "5.3",
+      "categoria": "operacion_mantenimiento",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Programa de seguridad eléctrica obligatorio para instalaciones de alta potencia",
+      "verifica": "Que las instalaciones con potencia instalada mayor a 300 kW, o alimentadas por empalme en media tensión, de carácter industrial, comercial, educacional, asistencial o de locales de reunión de personas, implementen un programa de seguridad eléctrica mediante profesionales competentes.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "programaSeguridadElectrica"
+      },
+      "evidencia": {
+        "si_falta": "La instalación con potencia >300 kW o empalme en media tensión no cuenta con un programa de seguridad eléctrica implementado por profesionales competentes."
+      },
+      "correccion": "Implementar un programa de seguridad eléctrica a cargo de profesionales competentes conforme al punto 5.3 del RIC 17.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC17-INSTALADOREMPRESA-001",
+      "documento": "RIC 17",
+      "numeral": "5.4",
+      "categoria": "operacion_mantenimiento",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Instalador autorizado en empresas de mantenimiento eléctrico",
+      "verifica": "Que las empresas de mantenimiento eléctrico cuenten con al menos un instalador eléctrico autorizado por la Superintendencia, de la clase y categoría correspondiente a la instalación que atienden.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "instaladorAutorizadoEmpresaMantenimiento"
+      },
+      "evidencia": {
+        "si_falta": "La empresa de mantenimiento eléctrico no acredita contar con un instalador autorizado de la clase/categoría correspondiente."
+      },
+      "correccion": "Contratar o designar al menos un instalador eléctrico autorizado de la clase y categoría correspondiente en la empresa de mantenimiento.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC17-PROGRAMAELEMENTOS-001",
+      "documento": "RIC 17",
+      "numeral": "6.1",
+      "categoria": "operacion_mantenimiento",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Elementos mínimos del programa de seguridad eléctrica",
+      "verifica": "Que el programa de seguridad eléctrica incluya al menos: mantenimiento de instalaciones, evaluación y tratamiento de riesgos, inspección/evaluación, planificación de procedimientos, capacitación, procedimientos de emergencia y auditorías de seguridad eléctrica.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "elementosProgramaSeguridadElectrica"
+      },
+      "evidencia": {
+        "si_falta": "El programa de seguridad eléctrica no incluye uno o más de los 7 elementos mínimos exigidos en el punto 6.1."
+      },
+      "correccion": "Completar el programa de seguridad eléctrica incorporando los 7 elementos mínimos exigidos en el punto 6.1 del RIC 17.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC17-CONDICIONSEGURA-001",
+      "documento": "RIC 17",
+      "numeral": "6.3.1 / 6.3.2",
+      "categoria": "operacion_mantenimiento",
+      "tipo": "obligatoria",
+      "criticidad": "alta",
+      "titulo": "Condición de trabajo eléctricamente segura antes de intervenir partes energizadas",
+      "verifica": "Que antes de trabajar en o cerca de partes energizadas, se aplique el procedimiento de bloqueo/etiquetado, se verifique la ausencia de tensión con detector aprobado y se instale puesta a tierra de protección temporal (las '5 reglas de oro').",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "condicionTrabajoElectricamenteSegura"
+      },
+      "evidencia": {
+        "si_falta": "El procedimiento de trabajo no acredita bloqueo/etiquetado, verificación de ausencia de tensión y puesta a tierra temporal antes de intervenir la instalación."
+      },
+      "correccion": "Aplicar las 5 reglas de oro (apertura de fuentes, bloqueo/etiquetado, verificación de tensión, puesta a tierra temporal, delimitación de zona) antes de intervenir partes energizadas.",
+      "motores": ["giae-inspector", "documentacion", "auditoria"]
+    },
+    {
+      "id": "CHL-RIC17-TIERRATEMPORALCAPACIDAD-001",
+      "documento": "RIC 17",
+      "numeral": "6.4.2",
+      "categoria": "operacion_mantenimiento",
+      "tipo": "contenido_tecnico",
+      "criticidad": "alta",
+      "titulo": "Capacidad de conducción de la puesta a tierra de protección temporal",
+      "verifica": "Que la puesta a tierra de protección temporal sea capaz de conducir la máxima corriente de falla que pueda fluir en el punto de puesta a tierra durante el tiempo de despeje de la falla.",
+      "validacion": {
+        "tipo": "contenido_tecnico",
+        "campos": ["capacidadTierraTemporal", "maximaCorrienteFallaPunto"]
+      },
+      "evidencia": {
+        "si_falta": "La puesta a tierra de protección temporal no acredita capacidad para conducir la máxima corriente de falla del punto durante el tiempo de despeje."
+      },
+      "correccion": "Utilizar dispositivos de puesta a tierra temporal dimensionados para la máxima corriente de falla del punto de instalación.",
+      "motores": ["giae-inspector", "tierra", "engineering"]
+    },
+    {
+      "id": "CHL-RIC17-TIERRATEMPORALNORMA-001",
+      "documento": "RIC 17",
+      "numeral": "6.4.3",
+      "categoria": "operacion_mantenimiento",
+      "tipo": "obligatoria",
+      "criticidad": "media",
+      "titulo": "Certificación de equipos de puesta a tierra temporal",
+      "verifica": "Que los equipos de puesta a tierra de protección temporal cumplan las exigencias de la norma ASTM F855-19a.",
+      "validacion": {
+        "tipo": "existencia_documento",
+        "campo": "certificacionEquipoTierraTemporal"
+      },
+      "evidencia": {
+        "si_falta": "El equipo de puesta a tierra temporal no acredita cumplimiento de la norma ASTM F855-19a."
+      },
+      "correccion": "Utilizar equipos de puesta a tierra temporal certificados conforme a la norma ASTM F855-19a.",
+      "motores": ["giae-inspector", "documentacion", "presupuesto"]
+    }
+  ]
+}
