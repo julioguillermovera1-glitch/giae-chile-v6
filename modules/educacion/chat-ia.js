@@ -105,12 +105,15 @@ async function buscarNormativaReal(query) {
 }
 
 function formatearReglasReales(reglas) {
-  let response = `**Esto sí está verificado en la normativa cargada:**\n\n`;
-  reglas.slice(0, 4).forEach(regla => {
-    response += `📖 **${regla.documento}, numeral ${regla.numeral} — ${regla.titulo}**\n`;
+  const top = reglas.slice(0, reglas.length === 1 ? 1 : 2);
+  let response = top.length === 1
+    ? `Sobre tu consulta, esto dice la normativa cargada:\n\n`
+    : `Sobre tu consulta, esto es lo más cercano que encontré en la normativa cargada:\n\n`;
+  top.forEach(regla => {
+    response += `**${regla.titulo}**\n`;
     response += `${regla.verifica}\n`;
-    if (regla.correccion) response += `*Cómo corregirlo:* ${regla.correccion}\n`;
-    response += `\n`;
+    if (regla.correccion) response += `¿Cómo se soluciona si no se cumple? ${regla.correccion}\n`;
+    response += `_(${regla.documento}, numeral ${regla.numeral})_\n\n`;
   });
   response += `Fuente: ${reglas[0]?.baseNormativa || "normativa cargada en el sistema"}.`;
   return { response, confidence: 0.97 };
@@ -298,7 +301,7 @@ async function buildIaResponse(userMessage, project) {
     for (const key in knowledgeBase[category]) {
       if (lower.includes(key.replace(/_/g, " ")) || lower.includes(key)) {
         return {
-          response: `**RIC ${key} (resumen general):** ${knowledgeBase[category][key]}\n\n⚠️ Esto es un resumen orientativo, no una cita verificada. La búsqueda en la normativa real cargada (RIC 1-19 y Decreto N°8) no encontró una coincidencia exacta para tu consulta — intenta con otros términos, o confirma siempre con la norma oficial o un profesional competente antes de dar algo por cumplido.`,
+          response: `**RIC ${key} (resumen general):** ${knowledgeBase[category][key]}\n\n💡 Ojo: esto es un resumen orientativo, no una cita verificada. Busqué en la normativa real cargada (RIC 1-19 y Decreto N°8) pero no encontré una coincidencia exacta para tu consulta — prueba con otros términos, o si prefieres, confirma con la norma oficial o un profesional competente antes de dar algo por cumplido.`,
           confidence: 0.6
         };
       }
@@ -355,7 +358,7 @@ export function render(host, state) {
               <li><strong>Hacer recomendaciones:</strong> Mejorar diseño y cumplimiento normativo</li>
               <li><strong>Educarte:</strong> Explicar conceptos técnicos generales</li>
             </ul>
-            <br>⚠️ Aviso honesto sobre cobertura real: Los <strong>19 pliegos RIC</strong> y el <strong>Decreto N°8</strong> están cargados (311 reglas verificables). Las normas internacionales (IEC, UNE, NFPA, etc.) que los RIC referencian como alternativa todavía no están cargadas como reglas verificables — para esas, siempre confirma con la norma oficial o un profesional competente.
+            <br>💡 Para que sepas con qué cuentas: tengo cargados los <strong>19 pliegos RIC</strong> y el <strong>Decreto N°8</strong> completos (311 reglas verificadas), así que en eso puedes confiar en mis respuestas. Si tu proyecto usa una norma internacional (IEC, UNE, NFPA, etc.) como alternativa, esa parte todavía no la tengo cargada — para esos casos, te sugiero apoyarte en la norma oficial o consultarlo con un colega o profesional competente, por tu propia tranquilidad.
             <br>${project ? `📊 Proyecto actual: <strong>${project.name || "Sin nombre"}</strong>` : "⚠️ Sin proyecto activo"}
             <br><br>¿Qué necesitas?
           </div>
