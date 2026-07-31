@@ -3,7 +3,8 @@
   --panel: #ffffff;
   --text: #102033;
   --muted: #66758a;
-  --line: #dbe5ef;
+  --line: #b9c8d9;
+  --field-border: #64748b;
   --accent: #1456a0;
   --accent-soft: #e6f0fb;
   --danger: #a32323;
@@ -115,11 +116,16 @@ button.secondary { background: var(--accent-soft); color: var(--accent); }
 label { display: grid; gap: .35rem; color: var(--muted); font-weight: 700; }
 input, select, textarea {
   width: 100%;
-  border: 1px solid var(--line);
+  border: 2px solid var(--field-border);
   border-radius: 12px;
   padding: .75rem;
   background: white;
   color: var(--text);
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 .result-box {
   border-left: 4px solid var(--accent);
