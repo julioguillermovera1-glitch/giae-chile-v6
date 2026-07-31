@@ -34,7 +34,7 @@ export const modules = [
 
   { id: "documentacion", label: "Centro de Documentacion SEC", group: "documentacion", path: "../modules/documentacion/documentacion.js", profiles: profesionales, permission: "docs.view" },
   { id: "lector-documental", label: "Lector documental", group: "documentacion", path: "../modules/lector-documental/lector-documental.js", profiles: profesionales, hiddenInMenu: true, permission: "docs.view" },
-  { id: "presupuesto", label: "Presupuesto", group: "documentacion", path: "../modules/presupuesto/presupuesto.js", profiles: profesionales, hiddenInMenu: true, permission: "budget.view" },
+  { id: "presupuesto", label: "Presupuesto", group: "documentacion", path: "../modules/presupuesto/presupuesto.js", profiles: profesionales, permission: "budget.view" },
 
   { id: "educacion", label: "Aula tecnica", group: "educacion", path: "../modules/educacion/educacion.js", profiles: ["aula", "estudiante", "pueblos"] },
   { id: "informes", label: "Generador de informes", group: "educacion", path: "../modules/informes/informes.js", profiles: ["aula", "estudiante", "pueblos"] },
