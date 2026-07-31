@@ -41,22 +41,75 @@ function quotePreview(project, commercial, state){
   const company = state.admin?.company || {};
   const primary = brand.primaryColor || "#102033";
   const accent = brand.accentColor || "#1456a0";
-  return `<div class="budget-preview commercial-preview" style="border:1px solid var(--line);border-radius:20px;background:#fff;overflow:hidden">
-    <div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;padding:1rem 1.2rem;border-bottom:4px solid ${accent}">
-      <div>
-        <strong style="font-size:1.25rem;color:${primary}">${esc(company.name || brand.name || project.company || "GIAE Chile")}</strong><br>
-        <span class="small">Cotización preliminar · ${esc(project.name || "Proyecto sin nombre")}</span>
-      </div>
-      <div class="quote-total" style="text-align:right">
-        <span class="small">Total</span><br><strong style="font-size:1.45rem;color:${primary}">${clp(commercial.totals.total)}</strong>
-      </div>
-    </div>
-    <div style="padding:1rem 1.2rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem">
+  const style = brand.templateStyle || "tecnico";
+  const companyName = esc(company.name || brand.name || project.company || "GIAE Chile");
+  const projectName = esc(project.name || "Proyecto sin nombre");
+  const totalValue = clp(commercial.totals.total);
+  const infoGrid = `<div style="padding:1rem 1.2rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem">
       <div><span class="small">Cliente</span><br><strong>${esc(project.client || "Sin cliente")}</strong></div>
       <div><span class="small">Fecha</span><br><strong>${esc(commercial.generatedAt)}</strong></div>
       <div><span class="small">Estado</span><br><strong>${esc(commercial.status)}</strong></div>
       <div><span class="small">Trazabilidad</span><br><strong>${esc(commercial.trace.join(" · "))}</strong></div>
+    </div>`;
+
+  // Cada "Estilo de plantilla" cambia de verdad la disposicion de este
+  // documento (no solo un valor guardado sin efecto). Los 4 estilos usan
+  // los mismos colores corporativos reales de la empresa (primary/accent).
+  if(style === "empresa"){
+    return `<div class="budget-preview commercial-preview template-empresa" style="border-radius:20px;background:#fff;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.08)">
+      <div style="padding:1.2rem 1.4rem;background:${primary};color:#fff;display:flex;justify-content:space-between;align-items:center;gap:1rem">
+        <div>
+          <strong style="font-size:1.4rem">${companyName}</strong><br>
+          <span style="opacity:.85">Cotización preliminar · ${projectName}</span>
+        </div>
+        <div style="text-align:right;background:${accent};padding:.6rem 1rem;border-radius:12px">
+          <span style="font-size:.8rem;opacity:.9">Total</span><br><strong style="font-size:1.6rem">${totalValue}</strong>
+        </div>
+      </div>
+      ${infoGrid}
+    </div>`;
+  }
+
+  if(style === "minimal"){
+    return `<div class="budget-preview commercial-preview template-minimal" style="border-left:3px solid ${accent};padding-left:1rem">
+      <div style="display:flex;justify-content:space-between;gap:1rem;align-items:baseline;padding:.4rem 0">
+        <span>${companyName} — ${projectName}</span>
+        <strong>${totalValue}</strong>
+      </div>
+      <div style="padding:.4rem 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.3rem;font-size:.9rem;color:#526173">
+        <span>Cliente: ${esc(project.client || "Sin cliente")}</span>
+        <span>Fecha: ${esc(commercial.generatedAt)}</span>
+        <span>Estado: ${esc(commercial.status)}</span>
+        <span>Trazabilidad: ${esc(commercial.trace.join(" · "))}</span>
+      </div>
+    </div>`;
+  }
+
+  if(style === "sobrio"){
+    return `<div class="budget-preview commercial-preview template-sobrio" style="border:1px solid var(--line);border-radius:10px;background:#fff">
+      <div style="padding:1rem 1.2rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:1rem">
+        <div>
+          <strong style="font-size:1.1rem;color:${primary}">${companyName}</strong><br>
+          <span class="small">Cotización preliminar · ${projectName}</span>
+        </div>
+        <div style="text-align:right"><span class="small">Total</span><br><strong style="font-size:1.2rem;color:${primary}">${totalValue}</strong></div>
+      </div>
+      ${infoGrid}
+    </div>`;
+  }
+
+  // "tecnico" (estilo por defecto)
+  return `<div class="budget-preview commercial-preview template-tecnico" style="border:1px solid var(--line);border-radius:20px;background:#fff;overflow:hidden">
+    <div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;padding:1rem 1.2rem;border-bottom:4px solid ${accent}">
+      <div>
+        <strong style="font-size:1.25rem;color:${primary}">${companyName}</strong><br>
+        <span class="small">Cotización preliminar · ${projectName}</span>
+      </div>
+      <div class="quote-total" style="text-align:right">
+        <span class="small">Total</span><br><strong style="font-size:1.45rem;color:${primary}">${totalValue}</strong>
+      </div>
     </div>
+    ${infoGrid}
   </div>`;
 }
 
