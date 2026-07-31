@@ -25,6 +25,26 @@ const knowledgeBase = {
   }
 };
 
+// Tabla real de empalmes de baja tension (RIC 1, Anexo 1.3). Transcrita del
+// pliego oficial - no inventar valores intermedios, usar siempre esta tabla.
+const EMPALME_MONOFASICO_A1_3 = [
+  { a: 6, kw: 1 }, { a: 10, kw: 2 }, { a: 16, kw: 3 }, { a: 20, kw: 4 }, { a: 25, kw: 5 },
+  { a: 30, kw: 6 }, { a: 32, kw: 6.5 }, { a: 35, kw: 7 }, { a: 40, kw: 8 }, { a: 50, kw: 10 }, { a: 63, kw: 13 }
+];
+const EMPALME_TRIFASICO_A1_3 = [
+  { a: 6, kw: 3.6 }, { a: 10, kw: 6 }, { a: 16, kw: 9.7 }, { a: 20, kw: 12 }, { a: 25, kw: 15 },
+  { a: 30, kw: 18 }, { a: 32, kw: 19 }, { a: 35, kw: 21 }, { a: 40, kw: 24 }, { a: 50, kw: 30 },
+  { a: 63, kw: 38 }, { a: 80, kw: 48 }, { a: 90, kw: 55 }, { a: 100, kw: 61 }, { a: 125, kw: 76 },
+  { a: 150, kw: 91 }, { a: 160, kw: 97 }, { a: 200, kw: 122 }, { a: 225, kw: 137 }, { a: 250, kw: 153 },
+  { a: 320, kw: 195 }, { a: 350, kw: 214 }, { a: 400, kw: 244 }, { a: 450, kw: 275 }, { a: 500, kw: 306 },
+  { a: 630, kw: 385 }, { a: 800, kw: 489 }, { a: 1000, kw: 612 }
+];
+
+function amperajeEmpalmeReal(kw, trifasico) {
+  const tabla = trifasico ? EMPALME_TRIFASICO_A1_3 : EMPALME_MONOFASICO_A1_3;
+  return tabla.find(fila => fila.kw >= kw) || tabla[tabla.length - 1];
+}
+
 // Análisis del proyecto actual - MÁS PROFUNDO
 function analyzeProjectContext(project) {
   if (!project) return { hasProject: false, summary: "Sin proyecto activo" };
@@ -173,38 +193,37 @@ async function buildIaResponse(userMessage, project) {
   }
   
   // RECOMENDACIONES PARA EMPALME - CON ANÁLISIS DEL PROYECTO
-  if ((lower.includes("empalme") || lower.includes("conexion") || lower.includes("disyuntor")) && projectAnalysis.hasProject) {
-    let response = `**Análisis de empalme (RIC 1) - Integrado con tu proyecto**\n\n`;
-    
-    response += `📊 **Demanda calculada:** ${projectAnalysis.demandaPower.toFixed(2)} kW\n`;
+  if ((lower.includes("empalme") || lower.includes("conexion") || lower.includes("disyuntor") || lower.includes("automatico") || lower.includes("automático")) && projectAnalysis.hasProject) {
+    const esTrifasico = lower.includes("trifasic") || projectAnalysis.supplyType.toLowerCase().includes("trifasic");
+    const kwMatch = lower.match(/(\d+(?:[.,]\d+)?)\s*kw/);
+    const kwMencionado = kwMatch ? parseFloat(kwMatch[1].replace(",", ".")) : null;
+    const kwParaTabla = kwMencionado !== null ? kwMencionado : projectAnalysis.demandaPower;
+    const filaEmpalme = amperajeEmpalmeReal(kwParaTabla, esTrifasico);
+
+    let response = `**Amperaje del automático de empalme (RIC 1, Anexo 1.3)**\n\n`;
+    response += kwMencionado !== null
+      ? `Para ${kwMencionado} kW contratados en un empalme ${esTrifasico ? "trifásico" : "monofásico"}, según la tabla oficial corresponde un interruptor automático de **${filaEmpalme.a} A**.\n\n`
+      : `Con la demanda calculada de tu proyecto (${projectAnalysis.demandaPower.toFixed(2)} kW, ${esTrifasico ? "trifásico" : "monofásico"}), corresponde un interruptor automático de **${filaEmpalme.a} A**.\n\n`;
+
+    response += `📊 **Demanda calculada del proyecto:** ${projectAnalysis.demandaPower.toFixed(2)} kW\n`;
     response += `🏢 **Distribuidora:** ${projectAnalysis.distributor}\n`;
     response += `⚡ **Sistema:** ${projectAnalysis.supplyType}\n`;
     response += `🔌 **Circuitos:** ${projectAnalysis.circuitCount}\n\n`;
-    
-    // Calcular protección general recomendada
-    const corrienteProyecto = (projectAnalysis.demandaPower * 1000) / 220; // Para monofásico
-    let proteccionRecomendada = 25;
-    if (corrienteProyecto < 16) proteccionRecomendada = 16;
-    else if (corrienteProyecto < 20) proteccionRecomendada = 20;
-    else if (corrienteProyecto < 25) proteccionRecomendada = 25;
-    else if (corrienteProyecto < 32) proteccionRecomendada = 32;
-    
-    response += `**Requisitos RIC 1 para tu proyecto:**\n`;
-    response += `• **Protección general:** ${proteccionRecomendada}A (30mA tipo AC/A) coordinada con circuitos\n`;
-    response += `• **Conductor:** Según demanda calculada (verificar sección)\n`;
-    response += `• **Esquema:** TN-C-S (neutro y tierra separados en empalme)\n`;
+
+    response += `**Otros requisitos del RIC 1 para el empalme:**\n`;
+    response += `• **Esquema:** TN-C-S (neutro y tierra separados en el empalme)\n`;
     response += `• **Medidor:** Debe estar accesible y protegido\n`;
     response += `• **Documentación:** Proyecto ejecutivo + certificado TE1\n\n`;
-    
+
     if (projectAnalysis.empalme && projectAnalysis.empalme.proteccion) {
-      response += `**Empalme actual:**\n`;
+      response += `**Empalme ya configurado en tu proyecto:**\n`;
       response += `• Protección: ${projectAnalysis.empalme.proteccion}\n`;
       response += `• Conductor: ${projectAnalysis.empalme.conductor || 'No especificado'}\n`;
-    } else {
+    } else if (kwMencionado === null) {
       response += `⚠️ Aún no se ha configurado el empalme en el proyecto.\n`;
     }
-    
-    return { response, confidence: 0.88 };
+
+    return { response, confidence: 0.95 };
   }
   
   // RECOMENDACIONES PARA TIERRA - CON ANÁLISIS DEL PROYECTO
