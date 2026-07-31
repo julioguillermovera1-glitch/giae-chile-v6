@@ -201,26 +201,31 @@ async function buildIaResponse(userMessage, project) {
     const filaEmpalme = amperajeEmpalmeReal(kwParaTabla, esTrifasico);
 
     let response = `**Amperaje del automático de empalme (RIC 1, Anexo 1.3)**\n\n`;
-    response += kwMencionado !== null
-      ? `Para ${kwMencionado} kW contratados en un empalme ${esTrifasico ? "trifásico" : "monofásico"}, según la tabla oficial corresponde un interruptor automático de **${filaEmpalme.a} A**.\n\n`
-      : `Con la demanda calculada de tu proyecto (${projectAnalysis.demandaPower.toFixed(2)} kW, ${esTrifasico ? "trifásico" : "monofásico"}), corresponde un interruptor automático de **${filaEmpalme.a} A**.\n\n`;
 
-    response += `📊 **Demanda calculada del proyecto:** ${projectAnalysis.demandaPower.toFixed(2)} kW\n`;
-    response += `🏢 **Distribuidora:** ${projectAnalysis.distributor}\n`;
-    response += `⚡ **Sistema:** ${projectAnalysis.supplyType}\n`;
-    response += `🔌 **Circuitos:** ${projectAnalysis.circuitCount}\n\n`;
+    if (kwMencionado !== null) {
+      // El usuario dio un numero concreto: se responde a ESO, sin mezclar
+      // datos del proyecto guardado (que pueden estar vacios/en 0 y no
+      // tienen relacion con la potencia que se esta preguntando).
+      response += `Para ${kwMencionado} kW contratados en un empalme ${esTrifasico ? "trifásico" : "monofásico"}, según la tabla oficial corresponde un interruptor automático de **${filaEmpalme.a} A**.\n\n`;
+    } else {
+      response += `Con la demanda calculada de tu proyecto (${projectAnalysis.demandaPower.toFixed(2)} kW, ${esTrifasico ? "trifásico" : "monofásico"}), corresponde un interruptor automático de **${filaEmpalme.a} A**.\n\n`;
+      response += `📊 **Demanda calculada del proyecto:** ${projectAnalysis.demandaPower.toFixed(2)} kW\n`;
+      response += `🏢 **Distribuidora:** ${projectAnalysis.distributor}\n`;
+      response += `⚡ **Sistema:** ${projectAnalysis.supplyType}\n`;
+      response += `🔌 **Circuitos:** ${projectAnalysis.circuitCount}\n\n`;
+    }
 
     response += `**Otros requisitos del RIC 1 para el empalme:**\n`;
     response += `• **Esquema:** TN-C-S (neutro y tierra separados en el empalme)\n`;
     response += `• **Medidor:** Debe estar accesible y protegido\n`;
-    response += `• **Documentación:** Proyecto ejecutivo + certificado TE1\n\n`;
+    response += `• **Documentación:** Proyecto ejecutivo + certificado TE1\n`;
 
     if (projectAnalysis.empalme && projectAnalysis.empalme.proteccion) {
-      response += `**Empalme ya configurado en tu proyecto:**\n`;
+      response += `\n**Empalme ya configurado en tu proyecto:**\n`;
       response += `• Protección: ${projectAnalysis.empalme.proteccion}\n`;
       response += `• Conductor: ${projectAnalysis.empalme.conductor || 'No especificado'}\n`;
     } else if (kwMencionado === null) {
-      response += `⚠️ Aún no se ha configurado el empalme en el proyecto.\n`;
+      response += `\n⚠️ Aún no se ha configurado el empalme en el proyecto.\n`;
     }
 
     return { response, confidence: 0.95 };
@@ -228,41 +233,38 @@ async function buildIaResponse(userMessage, project) {
   
   // RECOMENDACIONES PARA TIERRA - CON ANÁLISIS DEL PROYECTO
   if ((lower.includes("tierra") || lower.includes("electrodo") || lower.includes("resistencia")) && projectAnalysis.hasProject) {
-    let response = `**Análisis de puesta a tierra (RIC 5) - Integrado con tu proyecto**\n\n`;
-    
-    const isIndustrial = projectAnalysis.supplyType.includes("industrial") || projectAnalysis.demandaPower > 10;
-    const maxResistencia = isIndustrial ? 5 : 10;
-    
-    response += `**Sistema TN-C-S recomendado para Chile:**\n`;
-    response += `• **Máxima resistencia de tierra:** ${maxResistencia}Ω\n`;
-    response += `• **Electrodo:** Varilla cobrizada ≥ 2m profundidad mínimo\n`;
-    response += `• **Conductor PE:** 6mm² hasta 10mm² según demanda\n`;
-    response += `• **Medición:** Con telúrometro 4 puntos (Wenner o Fall)\n`;
-    response += `• **Frecuencia:** Cada 2 años o después de trabajos en terreno\n\n`;
-    
+    // Limite real segun RIC 6 (CHL-RIC06-SERV-001): la puesta a tierra de
+    // SERVICIO no debe superar 20 Ohm, con excepcion a 80 Ohm solo si la
+    // instalacion es <=10 kW y tiene corte omnipolar + diferenciales
+    // 300mA/30mA. No existe un limite fijo de 5/10 Ohm segun sea industrial
+    // o residencial - ese valor no esta en la normativa cargada.
+    const puedeUsarExcepcion80 = projectAnalysis.demandaPower <= 10;
+    const maxResistencia = 20;
+
+    let response = `**Puesta a tierra de servicio (RIC 6, numeral 6.1/6.2)**\n\n`;
+    response += `• **Límite normativo:** la resistencia de puesta a tierra de servicio no debe superar **20 Ω**`;
+    response += puedeUsarExcepcion80
+      ? `. Como tu proyecto es ≤10 kW, existe una excepción a 80 Ω si además tiene corte omnipolar y diferenciales de 300 mA/30 mA (ver condiciones completas en RIC 6, 6.2).\n`
+      : `.\n`;
+    response += `• La **puesta a tierra de protección** no tiene un Ω fijo: se calcula como RTP = VS/I0 (tensión de seguridad del RIC 5 dividida por la corriente de operación de la protección) — depende de tu diseño particular.\n\n`;
+
+    response += `💡 Buenas prácticas generales (orientativas, no cita textual del RIC): electrodo de cobre nuevo, medición con telurómetro de 4 puntos, revisión periódica del sistema.\n\n`;
+
     response += `**Datos de tu proyecto:**\n`;
     response += `• **Demanda:** ${projectAnalysis.demandaPower.toFixed(2)} kW\n`;
-    response += `• **Corriente:** ${(projectAnalysis.demandaPower * 1000 / 220).toFixed(2)}A (monofásico)\n`;
-    response += `• **Circuitos con diferencial:** ${projectAnalysis.circuitCount} (30mA según tipo)\n\n`;
-    
+    response += `• **Sistema:** ${projectAnalysis.supplyType}\n\n`;
+
     if (projectAnalysis.tierra && projectAnalysis.tierra.resistance) {
       response += `**Tierra actual medida:**\n`;
       response += `• **Resistencia:** ${projectAnalysis.tierra.resistance}Ω\n`;
-      const estado = projectAnalysis.tierra.resistance <= maxResistencia ? "✅ CUMPLE" : "❌ NO CUMPLE";
-      response += `• **Estado:** ${estado} con máximo de ${maxResistencia}Ω\n`;
-      
-      if (projectAnalysis.tierra.resistance > maxResistencia) {
-        response += `\n⚠️ **Acción requerida:**\n`;
-        response += `• Aumentar profundidad del electrodo\n`;
-        response += `• Agregar electrodos en paralelo\n`;
-        response += `• Mejorar terreno con bentonita\n`;
-      }
+      const estado = projectAnalysis.tierra.resistance <= maxResistencia ? "✅ CUMPLE con el límite de 20 Ω" : "❌ NO CUMPLE con el límite de 20 Ω";
+      response += `• **Estado:** ${estado}\n`;
     } else {
       response += `⚠️ Aún no se ha medido la puesta a tierra.\n`;
       response += `• Ve al módulo "Puesta a tierra" para calcular la solución recomendada\n`;
     }
-    
-    return { response, confidence: 0.9 };
+
+    return { response, confidence: 0.92 };
   }
   
   // DETECTAR Y REPORTAR ERRORES DEL PROYECTO
