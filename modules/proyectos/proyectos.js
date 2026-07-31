@@ -1,4 +1,5 @@
 import { state as globalState, listProjects, saveCurrentProjectToLibrary, openProject, duplicateProject, deleteProject, archiveProject, renameProject, exportProjectById, importProjectToLibrary, newProject, updateProject, addLoad, recalculateProject } from "../../core/store.js";
+import { REGIONES_CHILE, COMUNAS_POR_REGION } from "../../data/chile-regiones-comunas.js";
 
 function esc(value){
   return String(value || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -219,8 +220,18 @@ function projectForm(project){
       <label>Responsable tecnico <input id="flowInstaller" value="${esc(project.installer || project.responsible)}" placeholder="Nombre del instalador"></label>
       <label>Registro SEC <input id="flowSec" value="${esc(project.secRegistration || project.secNumber)}" placeholder="Registro SEC si corresponde"></label>
       <label>Direccion <input id="flowAddress" value="${esc(project.address)}" placeholder="Calle y numero"></label>
-      <label>Comuna <input id="flowCommune" value="${esc(project.commune)}" placeholder="Comuna"></label>
-      <label>Region <input id="flowRegion" value="${esc(project.region)}" placeholder="Region"></label>
+      <label>Region
+        <select id="flowRegion">
+          <option value="">Selecciona una región</option>
+          ${REGIONES_CHILE.map(r => `<option value="${esc(r)}" ${project.region === r ? "selected" : ""}>${esc(r)}</option>`).join("")}
+        </select>
+      </label>
+      <label>Comuna
+        <select id="flowCommune">
+          <option value="">${project.region ? "Selecciona una comuna" : "Primero selecciona una región"}</option>
+          ${(COMUNAS_POR_REGION[project.region] || []).map(c => `<option value="${esc(c)}" ${project.commune === c ? "selected" : ""}>${esc(c)}</option>`).join("")}
+        </select>
+      </label>
       <label>Sistema
         <select id="flowSupply">
           <option value="monofasico" ${project.supplyType !== "trifasico" ? "selected" : ""}>Monofasico 220 V</option>
@@ -350,6 +361,12 @@ export function render(host, state){
       status: host.querySelector("#flowStatus").value
     };
   }
+
+  host.querySelector("#flowRegion")?.addEventListener("change", (event) => {
+    const communeSelect = host.querySelector("#flowCommune");
+    const comunas = COMUNAS_POR_REGION[event.target.value] || [];
+    communeSelect.innerHTML = `<option value="">${event.target.value ? "Selecciona una comuna" : "Primero selecciona una región"}</option>${comunas.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}`;
+  });
 
   host.querySelector("#createProjectFromForm")?.addEventListener("click", () => {
     const patch = readProjectPatch();
