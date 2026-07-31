@@ -331,22 +331,40 @@ async function normativeSearch(request, env) {
   const q = (url.searchParams.get("q") || "").trim();
   const documento = (url.searchParams.get("documento") || "").trim();
   const categoria = (url.searchParams.get("categoria") || "").trim();
-  const conditions = [];
-  const binds = [];
-  if (documento) { conditions.push("documento LIKE ?"); binds.push(`%${documento}%`); }
-  if (categoria) { conditions.push("categoria LIKE ?"); binds.push(`%${categoria}%`); }
   const terms = q ? extractSearchTerms(q) : [];
+
+  // Puntaje de relevancia: cada termino que aparece en titulo/verifica pesa
+  // mas que uno en categoria/correccion. Sin esto, el orden final era solo
+  // alfabetico por documento (ORDER BY documento, numeral), asi que una
+  // coincidencia generica en un documento que ordena antes (ej. "DS8") tapaba
+  // una coincidencia especifica y mas relevante en otro (ej. "RIC 11").
+  let scoreExpr = "0";
+  const scoreBinds = [];
+  if (terms.length) {
+    scoreExpr = terms
+      .map(() => "(CASE WHEN titulo LIKE ? THEN 3 ELSE 0 END + CASE WHEN verifica LIKE ? THEN 2 ELSE 0 END + CASE WHEN categoria LIKE ? THEN 1 ELSE 0 END + CASE WHEN correccion LIKE ? THEN 1 ELSE 0 END)")
+      .join(" + ");
+    for (const term of terms) scoreBinds.push(`%${term}%`, `%${term}%`, `%${term}%`, `%${term}%`);
+  }
+
+  const conditions = [];
+  const whereBinds = [];
+  if (documento) { conditions.push("documento LIKE ?"); whereBinds.push(`%${documento}%`); }
+  if (categoria) { conditions.push("categoria LIKE ?"); whereBinds.push(`%${categoria}%`); }
   if (terms.length) {
     const termConditions = terms.map(() => "(titulo LIKE ? OR verifica LIKE ? OR categoria LIKE ? OR correccion LIKE ?)");
     conditions.push(`(${termConditions.join(" OR ")})`);
-    for (const term of terms) binds.push(`%${term}%`, `%${term}%`, `%${term}%`, `%${term}%`);
+    for (const term of terms) whereBinds.push(`%${term}%`, `%${term}%`, `%${term}%`, `%${term}%`);
   } else if (q) {
     // Query muy corta o solo con palabras comunes: usarla igual, tal cual.
     conditions.push("(titulo LIKE ? OR verifica LIKE ? OR categoria LIKE ? OR correccion LIKE ?)");
-    binds.push(`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`);
+    whereBinds.push(`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`);
   }
   const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
-  const stmt = env.GIAE_DB.prepare(`SELECT * FROM normative_rules ${where} ORDER BY documento, numeral LIMIT 30`);
+  const binds = [...scoreBinds, ...whereBinds];
+  const stmt = env.GIAE_DB.prepare(
+    `SELECT *, (${scoreExpr}) AS relevance FROM normative_rules ${where} ORDER BY relevance DESC, documento, numeral LIMIT 30`
+  );
   const rows = await (binds.length ? stmt.bind(...binds) : stmt).all();
   return json({ ok: true, reglas: (rows.results || []).map(mapNormativeRow) });
 }

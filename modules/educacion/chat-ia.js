@@ -89,11 +89,10 @@ function analyzeProjectContext(project) {
 }
 
 // Consulta la normativa REAL cargada en D1 (ver migrations/0003_giae_normativa.sql
-// y tools/gen-normativa-sql.mjs). Hoy solo el RIC 18 tiene reglas extraidas y
-// verificadas; el resto (RIC 1-17, RIC 19, DS8) todavia no. Esta funcion nunca
-// inventa una regla: si no hay coincidencia real, devuelve un arreglo vacio y
-// quien llama debe decirlo honestamente, no rellenar con texto generico
-// disfrazado de norma.
+// y tools/gen-normativa-sql.mjs). Los 19 pliegos RIC y el Decreto N°8 estan
+// cargados con reglas extraidas y verificadas. Esta funcion nunca inventa una
+// regla: si no hay coincidencia real, devuelve un arreglo vacio y quien llama
+// debe decirlo honestamente, no rellenar con texto generico disfrazado de norma.
 async function buscarNormativaReal(query) {
   try {
     const response = await fetch(`/api/giae/normativa/reglas?q=${encodeURIComponent(query)}`);
@@ -299,7 +298,7 @@ async function buildIaResponse(userMessage, project) {
     for (const key in knowledgeBase[category]) {
       if (lower.includes(key.replace(/_/g, " ")) || lower.includes(key)) {
         return {
-          response: `**RIC ${key} (resumen general, aún no extraído en detalle real):** ${knowledgeBase[category][key]}\n\n⚠️ Esto es un resumen orientativo, no una cita verificada del RIC ${key}. Hoy solo el **RIC 18** está cargado con reglas reales y verificadas. Para RIC ${key}, confirma siempre con la norma oficial o un profesional competente antes de dar algo por cumplido.`,
+          response: `**RIC ${key} (resumen general):** ${knowledgeBase[category][key]}\n\n⚠️ Esto es un resumen orientativo, no una cita verificada. La búsqueda en la normativa real cargada (RIC 1-19 y Decreto N°8) no encontró una coincidencia exacta para tu consulta — intenta con otros términos, o confirma siempre con la norma oficial o un profesional competente antes de dar algo por cumplido.`,
           confidence: 0.6
         };
       }
@@ -352,11 +351,11 @@ export function render(host, state) {
             <br><br>Puedo:
             <ul style="margin-top: 10px; margin-left: 20px;">
               <li><strong>Analizar tu proyecto:</strong> Revisar cargas, cuadro, empalme y tierra</li>
-              <li><strong>Citar normativa verificada:</strong> RIC 18 completo, RIC 19 y Decreto N°8 parciales, con numeral/artículo exacto</li>
+              <li><strong>Citar normativa verificada:</strong> RIC 1 al 19 y Decreto N°8 completos, con numeral/artículo exacto</li>
               <li><strong>Hacer recomendaciones:</strong> Mejorar diseño y cumplimiento normativo</li>
               <li><strong>Educarte:</strong> Explicar conceptos técnicos generales</li>
             </ul>
-            <br>⚠️ Aviso honesto sobre cobertura real: <strong>RIC 18</strong> está completo (14 reglas). <strong>RIC 19</strong> y el <strong>Decreto N°8</strong> están parciales (1 y 8 reglas respectivamente, de un total mayor). El resto de los RIC e IEC todavía no están cargados — para esos, siempre confirma con la norma oficial o un profesional competente.
+            <br>⚠️ Aviso honesto sobre cobertura real: Los <strong>19 pliegos RIC</strong> y el <strong>Decreto N°8</strong> están cargados (311 reglas verificables). Las normas internacionales (IEC, UNE, NFPA, etc.) que los RIC referencian como alternativa todavía no están cargadas como reglas verificables — para esas, siempre confirma con la norma oficial o un profesional competente.
             <br>${project ? `📊 Proyecto actual: <strong>${project.name || "Sin nombre"}</strong>` : "⚠️ Sin proyecto activo"}
             <br><br>¿Qué necesitas?
           </div>
