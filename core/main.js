@@ -448,9 +448,10 @@ function markSession(profile){
   const existing = state.admin.sessions.find(session => session.profile === profile && session.name === name && session.status === "Conectado");
   if(existing){
     existing.lastSeen = now;
+    existing.lastSeenAt = Date.now();
     state.admin.currentSessionId = existing.id;
   } else {
-    const session = { id: generateSessionId(), name, profile, status: "Conectado", lastSeen: now };
+    const session = { id: generateSessionId(), name, profile, status: "Conectado", lastSeen: now, lastSeenAt: Date.now() };
     state.admin.sessions.push(session);
     state.admin.currentSessionId = session.id;
   }

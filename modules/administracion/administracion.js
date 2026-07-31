@@ -50,31 +50,13 @@ function ensureAdminData(state){
       templateStyle: "tecnico"
     }
   };
-  state.admin.users = state.admin.users || [
-    { name: "Administrador general", email: "admin@giae.local", role: "Administrador", profile: "administrador", status: "Activo" },
-    { name: "Instalador demo", email: "instalador@giae.local", role: "Instalador", profile: "independiente", status: "Activo" },
-    { name: "Estudiante demo", email: "estudiante@giae.local", role: "Estudiante", profile: "estudiante", status: "Activo" }
-  ];
-  state.admin.sessions = state.admin.sessions || [
-    { name: "Administrador", profile: "administrador", status: state.profile === "administrador" ? "Conectado" : "Desconectado", lastSeen: new Date().toLocaleString("es-CL") }
-  ];
+  state.admin.sessions = state.admin.sessions || [];
   state.admin.templates = state.admin.templates || [
     { name: "Cotización estándar", type: "Presupuesto", status: "Activa", content: "Cotización técnica\nCliente: {{cliente}}\nProyecto: {{proyecto}}\nCarga total: {{carga}} kW\nPresupuesto: ${{presupuesto}}\n\nOBSERVACIONES:\nSe adjuntan planos técnicos, memoria de cálculo y listado de materiales." },
     { name: "Orden de trabajo", type: "Trabajo", status: "Activa", content: "ORDEN DE TRABAJO\n\nResponsable: {{instalador}}\nProyecto: {{proyecto}}\nActividad: {{actividad}}\nFecha de inicio: {{fecha}}\n\nDetalles:\n- Revisión técnica normativa\n- Instalación de circuitos\n- Pruebas de funcionamiento" },
     { name: "Informe técnico IA", type: "Informe", status: "Activa", content: "INFORME TÉCNICO ANÁLISIS IA\n\nProyecto: {{proyecto}}\nCliente: {{cliente}}\nFecha: {{fecha}}\n\nRESUMEN EJECUTIVO:\nAnálisis de proyecto eléctrico con motor IA local especializado en RIC y normativa chilena (DS8, IEC).\n\nOBSERVACIONES:\n{{observaciones}}\n\nRECOMENDACIONES:\n- Validar con normativa vigente\n- Realizar pruebas de campo\n- Documentar cambios realizados" },
     { name: "Informe de auditoría", type: "Informe", status: "Activa", content: "INFORME DE AUDITORÍA TÉCNICA\n\nProyecto: {{proyecto}}\nAuditor: {{auditor}}\nFecha: {{fecha}}\n\nCRITERIOS DE REVISIÓN:\n✓ Cumplimiento normativo (RIC, IEC, DS8)\n✓ Cálculo de cargas y protecciones\n✓ Dimensionamiento de conductores\n✓ Puesta a tierra y seguridad\n\nHALLAZGOS:\n{{hallazgos}}\n\nACCIONES CORRECTIVAS:\n{{acciones}}" }
   ];
-  // Add enterprise employee users if not present
-  if(!state.admin.enterpriseUsers){
-    state.admin.enterpriseUsers = [
-      { id: "emp-001", name: "Julio Guillermo", email: "julio.vera@empresa.cl", role: "Administrador empresa", accountType: "empresa", status: "Activo", freeAccess: true },
-      { id: "emp-002", name: "Carlos Panadero", email: "carlos.panadero@empresa.cl", role: "Panadero", accountType: "empresa", status: "Activo", freeAccess: true },
-      { id: "emp-003", name: "Roberto Instalador", email: "roberto.instalador@empresa.cl", role: "Instalador", accountType: "empresa", status: "Activo", freeAccess: true },
-      { id: "emp-004", name: "Pedro Instalador II", email: "pedro.inst@empresa.cl", role: "Instalador", accountType: "empresa", status: "Activo", freeAccess: true },
-      { id: "emp-005", name: "Técnico Supervisor", email: "supervisor@empresa.cl", role: "Supervisor", accountType: "empresa", status: "Activo", freeAccess: false },
-      { id: "emp-006", name: "Cotizador Principal", email: "cotizador@empresa.cl", role: "Cotizador", accountType: "empresa", status: "Activo", freeAccess: false }
-    ];
-  }
   const defaultEnabledModules = Object.fromEntries(Object.keys(moduleLabels).map(key => [key, true]));
   state.admin.enabledModules = { ...defaultEnabledModules, ...(state.admin.enabledModules || {}) };
   state.admin.enabledModules.administracion = true;
@@ -117,15 +99,14 @@ export function render(host, state){
           <p>Desde aquí puedes crear, editar, activar, desactivar y borrar usuarios, módulos, plantillas y datos de empresa.</p>
         </div>
         <div class="row-actions">
-          <button id="adminSaveBtn">Guardar cambios</button>
+          <button id="adminSaveBtn">Guardar datos de empresa</button>
           <button id="adminBackupBtn" class="secondary">Descargar respaldo</button>
-          <button id="adminResetDemoBtn" class="ghost danger-text">Limpiar datos demo</button>
         </div>
       </div>
 
       <section class="admin-kpis">
-        <div><strong>${state.admin.users.length}</strong><span>Usuarios creados</span></div>
-        <div><strong>${state.admin.sessions.filter(s => s.status === "Conectado").length}</strong><span>Usuarios conectados</span></div>
+        <div><strong>${ensureCompanyAccess().users.filter(u => u.accountType !== "super_admin").length}</strong><span>Cuentas reales creadas</span></div>
+        <div><strong>${recentSessionCount(state)}</strong><span>Sesiones activas (esta pestaña)</span></div>
         <div><strong>${Object.values(state.admin.enabledModules).filter(Boolean).length}</strong><span>Módulos activos</span></div>
         <div><strong>${state.admin.templates.length}</strong><span>Plantillas</span></div>
         <div><strong>${systemScore(state)}%</strong><span>Salud del sistema</span></div>
@@ -133,41 +114,15 @@ export function render(host, state){
       </section>
 
       <section class="admin-tabs" aria-label="Secciones de administración">
-        ${isCompanyAdmin ? `<button class="active" data-admin-tab="empresa">Empresa y logo</button>` : `<button class="active" data-admin-tab="usuarios">Usuarios</button><button data-admin-tab="sesiones">Conectados</button><button data-admin-tab="empresa">Empresa y logo</button><button data-admin-tab="modulos">Módulos</button><button data-admin-tab="plantillas">Plantillas</button><button data-admin-tab="sistema">Sistema</button><button data-admin-tab="estado">Estado del software</button><button data-admin-tab="inspector">Inspector</button><button data-admin-tab="originalidad">Originalidad</button><button data-admin-tab="roadmap">Roadmap</button><button data-admin-tab="cuentas">Cuentas corporativas</button>`}
+        ${isCompanyAdmin ? `<button class="active" data-admin-tab="empresa">Empresa y logo</button>` : `<button class="active" data-admin-tab="usuarios">Pueblos Originarios</button><button data-admin-tab="sesiones">Conectados</button><button data-admin-tab="empresa">Empresa y logo</button><button data-admin-tab="modulos">Módulos</button><button data-admin-tab="plantillas">Plantillas</button><button data-admin-tab="sistema">Sistema</button><button data-admin-tab="estado">Estado del software</button><button data-admin-tab="inspector">Inspector</button><button data-admin-tab="originalidad">Originalidad</button><button data-admin-tab="roadmap">Roadmap</button><button data-admin-tab="cuentas">Cuentas corporativas</button>`}
       </section>
 
       ${!isCompanyAdmin ? `
       <section id="admTabUsuarios" class="admin-tab-page active">
         <div class="admin-card">
-            <h4>Crear / editar usuarios</h4>
-            <div class="admin-inline admin-inline-5">
-              <input id="admUserName" placeholder="Nombre usuario">
-              <input id="admUserEmail" placeholder="correo@empresa.cl">
-              <input id="admUserPassword" placeholder="Contraseña (opcional)" type="password">
-              <select id="admUserRole">
-                <option>Administrador</option><option>Supervisor</option><option>Instalador</option><option>Cotizador</option><option>Estudiante</option><option>Solo lectura</option>
-              </select>
-              <select id="admUserProfile">
-                <option value="administrador">Administrador</option><option value="empresa">Empresa</option><option value="independiente">Independiente</option><option value="estudiante">Estudiante</option>
-              </select>
-              <label>Cuenta corporativa
-                <select id="admUserAccountType">
-                  <option value="">-- Ninguna --</option>
-                  <option value="empresa">Empresa</option>
-                  <option value="independiente">Instalador independiente</option>
-                  <option value="pueblos">Pueblos Originarios</option>
-                </select>
-              </label>
-              <label class="checkbox-label"><input id="admUserFreeAccess" type="checkbox"> Acceso gratuito (solo para Pueblos Originarios)</label>
-              <button id="admAddUser">Agregar usuario</button>
-            </div>
-            <div id="admUsersTable"></div>
-            <div class="spacer"></div>
-            <div class="admin-card">
-              <h4>Usuarios Pueblos Originarios</h4>
-              <p class="small">Lista de cuentas registradas como <strong>Pueblos Originarios</strong>. Desde aquí puedes conceder o revocar <em>acceso gratuito</em> para usar los módulos disponibles.</p>
-              <div id="admPueblosTable"></div>
-            </div>
+          <h4>Usuarios Pueblos Originarios</h4>
+          <p class="small">Lista de cuentas registradas como <strong>Pueblos Originarios</strong> (cuentas reales en D1). Desde aquí puedes conceder o revocar <em>acceso gratuito</em> para usar los módulos disponibles. Para crear empresas, instaladores independientes u otras cuentas Pueblos Originarios, usa la pestaña "Cuentas corporativas".</p>
+          <div id="admPueblosTable"></div>
         </div>
       </section>
       <section id="admTabCuentas" class="admin-tab-page">
@@ -364,7 +319,7 @@ export function render(host, state){
     </article>
   `;
 
-  paintUsers(state); paintPueblos(state); paintSessions(state); paintTemplates(state); paintModules(state); paintAudit(state); wireEvents(state);
+  paintPueblos(state); paintSessions(state); paintTemplates(state); paintModules(state); paintAudit(state); wireEvents(state);
 }
 
 function wireEvents(state){
@@ -372,28 +327,9 @@ function wireEvents(state){
   document.querySelectorAll("[data-admin-tab]").forEach(btn => btn.addEventListener("click", () => showTab(btn.dataset.adminTab)));
   document.querySelector("#adminSaveBtn").addEventListener("click", () => saveAdminForm(state, true));
   document.querySelector("#adminBackupBtn").addEventListener("click", () => downloadBackup(state));
-  document.querySelector("#adminResetDemoBtn").addEventListener("click", () => {
-    if(!confirm("¿Limpiar datos demo y reinicializar con datos por defecto? Se borrará todo el contenido local.")) return;
-    // Clear localStorage
-    const keys = [];
-    for(let i=0;i<localStorage.length;i++){
-      const key = localStorage.key(i);
-      if(key && key.toLowerCase().includes("giae")) keys.push(key);
-    }
-    keys.forEach(k => localStorage.removeItem(k));
-    // Reset admin data to defaults
-    state.admin = undefined;
-    ensureAdminData(state);
-    addLog(state, "Administrador reinició datos demo a valores por defecto.");
-    persist(); 
-    alert("Datos reiniciados. La página se recargará ahora."); 
-    location.reload();
-  });
   document.querySelector("#admLogo").addEventListener("change", event => loadLogo(event, state));
   document.querySelector("#admBudgetUpload")?.addEventListener("change", event => loadBudgetFile(event, state));
-  if(!isCompanyAdmin) {
-    document.querySelector("#admAddUser")?.addEventListener("click", () => addUser(state));
-  } else {
+  if(isCompanyAdmin) {
     document.querySelector("#admOpenCompanyUsers")?.addEventListener("click", () => openCompanyUsers());
   }
   // Corporate accounts tab handlers (super-admin / administrador)
@@ -456,44 +392,6 @@ function saveAdminForm(state, notify=false){
   if(notify) alert("Configuración administrativa guardada.");
 }
 
-async function addUser(state){
-  const name = document.querySelector("#admUserName").value.trim();
-  const email = document.querySelector("#admUserEmail").value.trim();
-  const password = document.querySelector("#admUserPassword")?.value || "";
-  const role = document.querySelector("#admUserRole").value;
-  const profile = document.querySelector("#admUserProfile").value;
-  const accountType = document.querySelector("#admUserAccountType")?.value || "";
-  const freeAccess = !!document.querySelector("#admUserFreeAccess")?.checked;
-  if(!name) return alert("Ingresa un nombre de usuario.");
-  state.admin.users.push({ name, email, role, profile, status: "Activo" });
-  addLog(state, `Usuario creado: ${name}.`);
-  // Si ademas se pidio una cuenta corporativa (con clave real en D1), se crea aparte.
-  if(accountType === "empresa" || accountType === "independiente" || accountType === "pueblos"){
-    if(!password){
-      addLog(state, `No se creo cuenta corporativa para ${email || name}: falta contraseña.`);
-    } else {
-      const result = await upsertCompanyUser({ name, email, role, accountType, freeAccess, password });
-      addLog(state, result.ok ? `Cuenta ${accountType} creada/actualizada para: ${email || name}.` : `Error creando cuenta corporativa: ${result.error}`);
-      if(result.ok) await refreshCuentasFromServer(state);
-    }
-  }
-  document.querySelector("#admUserName").value = ""; document.querySelector("#admUserEmail").value = "";
-  document.querySelector("#admUserPassword").value = "";
-  document.querySelector("#admUserAccountType").value = "";
-  document.querySelector("#admUserFreeAccess").checked = false;
-  persist(); paintUsers(state); paintAudit(state);
-}
-
-function paintUsers(state){
-  const rows = state.admin.users.map((user, index) => `
-    <tr><td>${index + 1}</td><td><input data-user-name="${index}" value="${escapeHtml(user.name)}"></td><td><input data-user-email="${index}" value="${escapeHtml(user.email || "")}"></td><td><select data-user-role="${index}">${["Administrador","Supervisor","Instalador","Cotizador","Estudiante","Solo lectura"].map(r=>`<option ${r===user.role?"selected":""}>${r}</option>`).join("")}</select></td><td><select data-user-profile="${index}">${["administrador","empresa","independiente","estudiante"].map(p=>`<option value="${p}" ${p===user.profile?"selected":""}>${p}</option>`).join("")}</select></td><td><span class="status ${user.status === "Activo" ? "on" : "off"}">${escapeHtml(user.status)}</span></td><td class="actions-cell"><button class="ghost" data-save-user="${index}">Guardar</button><button class="ghost" data-toggle-user="${index}">${user.status === "Activo" ? "Desactivar" : "Activar"}</button><button class="ghost danger-text" data-remove-user="${index}">Borrar</button></td></tr>
-  `).join("");
-  document.querySelector("#admUsersTable").innerHTML = `<div class="table-scroll"><table><thead><tr><th>N°</th><th>Nombre</th><th>Correo</th><th>Rol</th><th>Perfil</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${rows || `<tr><td colspan="7">Sin usuarios creados.</td></tr>`}</tbody></table></div>`;
-  document.querySelectorAll("[data-save-user]").forEach(btn => btn.addEventListener("click", () => saveUser(state, Number(btn.dataset.saveUser))));
-  document.querySelectorAll("[data-toggle-user]").forEach(btn => btn.addEventListener("click", () => toggleUser(state, Number(btn.dataset.toggleUser))));
-  document.querySelectorAll("[data-remove-user]").forEach(btn => btn.addEventListener("click", () => removeUser(state, Number(btn.dataset.removeUser))));
-}
-
 function paintPueblos(state){
   const access = ensureCompanyAccess();
   const pueblos = (access.users || []).filter(u => u.accountType === "pueblos");
@@ -527,17 +425,6 @@ function togglePueblosAccess(userId, state){
   paintPueblos(state);
   paintAudit(state);
 }
-
-function saveUser(state, index){
-  const user = state.admin.users[index]; if(!user) return;
-  user.name = document.querySelector(`[data-user-name="${index}"]`).value.trim();
-  user.email = document.querySelector(`[data-user-email="${index}"]`).value.trim();
-  user.role = document.querySelector(`[data-user-role="${index}"]`).value;
-  user.profile = document.querySelector(`[data-user-profile="${index}"]`).value;
-  addLog(state, `Usuario actualizado: ${user.name}.`); persist(); paintUsers(state); paintAudit(state);
-}
-function toggleUser(state, index){ const user=state.admin.users[index]; if(!user)return; user.status = user.status === "Activo" ? "Inactivo" : "Activo"; addLog(state, `${user.status === "Activo" ? "Activado" : "Desactivado"}: ${user.name}.`); persist(); paintUsers(state); paintAudit(state); }
-function removeUser(state, index){ const user=state.admin.users[index]; if(!user)return; if(!confirm(`¿Borrar usuario ${user.name}?`))return; state.admin.users.splice(index,1); addLog(state, `Usuario borrado: ${user.name}.`); persist(); paintUsers(state); paintAudit(state); }
 
 function paintSessions(state){
   const rows = state.admin.sessions.map((s,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(s.name)}</td><td>${escapeHtml(s.profile)}</td><td><span class="status ${s.status === "Conectado" ? "on" : "off"}">${escapeHtml(s.status)}</span></td><td>${escapeHtml(s.lastSeen)}</td><td><button class="ghost danger-text" data-kick-session="${i}">Cerrar registro</button></td></tr>`).join("");
@@ -741,6 +628,16 @@ function countLocalProjects(state){
   return Array.isArray(state.projectLibrary) ? state.projectLibrary.length : 0;
 }
 
+// Cuenta sesiones marcadas "Conectado" con actividad reciente (20 min). Una
+// sesion marcada "Conectado" que quedo huerfana (se cerro la pestana sin
+// pulsar "Cerrar sesion") ya no cuenta como activa despues de ese tiempo.
+const SESSION_FRESH_WINDOW_MS = 20 * 60 * 1000;
+function recentSessionCount(state){
+  const sessions = state.admin?.sessions || [];
+  const now = Date.now();
+  return sessions.filter(s => s.status === "Conectado" && (now - (s.lastSeenAt || 0)) < SESSION_FRESH_WINDOW_MS).length;
+}
+
 function systemScore(state){
   return buildDiagnostics(state).score;
 }
@@ -756,7 +653,7 @@ function buildDiagnostics(state){
   add("Política normativa estricta", state.normativePolicy?.noInventar === true, "No inventar datos: " + (state.normativePolicy?.noInventar ? "activo" : "inactivo"), "critico");
   add("Fuentes normativas permitidas", Array.isArray(state.normativePolicy?.allowedSources) && state.normativePolicy.allowedSources.includes("RIC") && state.normativePolicy.allowedSources.includes("IEC"), (state.normativePolicy?.allowedSources || []).join(" · ") || "Sin fuentes", "critico");
   add("Empresa / marca", Boolean(state.admin?.company?.name || state.companyBrand?.name), state.admin?.company?.name || state.companyBrand?.name || "Sin empresa configurada", "medio");
-  add("Usuarios administrativos", Array.isArray(state.admin?.users) && state.admin.users.length > 0, `${state.admin?.users?.length || 0} usuario(s)`, "medio");
+  add("Cuentas reales creadas", ensureCompanyAccess().users.filter(u => u.accountType !== "super_admin").length > 0, `${ensureCompanyAccess().users.filter(u => u.accountType !== "super_admin").length} cuenta(s)`, "medio");
   add("Plantillas", Array.isArray(state.admin?.templates) && state.admin.templates.length > 0, `${state.admin?.templates?.length || 0} plantilla(s)`, "bajo");
   add("Guardado local", storageAvailable(), storageAvailable() ? "localStorage disponible" : "localStorage no disponible", "critico");
   const okCount = checks.filter(c => c.ok).length;
@@ -840,7 +737,7 @@ function buildInspectorPayload(state, target){
       project: state.currentProject || {},
       storage: { available: storageAvailable(), giaeKeys: localKeys, projectLibraryCount: countLocalProjects(state) },
       modules: { labels: moduleLabels, enabled: state.admin?.enabledModules || {} },
-      admin: { users: state.admin?.users || [], templates: state.admin?.templates || [], auditLog: state.admin?.auditLog || [] }
+      admin: { users: ensureCompanyAccess().users || [], templates: state.admin?.templates || [], auditLog: state.admin?.auditLog || [] }
     }
   };
   return payloads[target] || payloads.project;
