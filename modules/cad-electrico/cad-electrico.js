@@ -1,6 +1,6 @@
 import { persist, addHistory } from "../../core/store.js";
 import { CloudflareCADService } from "../../core/cad/cloudflare-service.js";
-import { buildCadFromProject, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS } from "../../core/cad/cadEngine.js";
+import { buildCadFromProject, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS, getPerimeterSegments, perimeterSegmentLengthM, addPerimeterPoint, undoLastPerimeterPoint, closePerimeter, resetPerimeter, setPerimeterMeasurement, applyPerimeterMeasurements } from "../../core/cad/cadEngine.js";
 
 function esc(value = ""){
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -43,6 +43,7 @@ function renderLayerToggles(doc){
 function renderToolOptions(activeTool, docSymbols = []){
   const tools = [
     ["select", "Seleccionar"],
+    ["perimeter", "Perímetro (paredes)"],
     ["wire", "Cablear"],
     ["dimension", "Dimension"],
     ["panel", "Tablero"],
@@ -123,6 +124,23 @@ function renderWire(entity){
   const my = Math.round((from.y + to.y) / 2) - 7;
   return `<g data-entity-id="${esc(entity.id)}" class="cad-entity cad-wire"><line x1="${n(from.x)}" y1="${n(from.y)}" x2="${n(to.x)}" y2="${n(to.y)}" stroke="${color}" stroke-width="4" stroke-linecap="round"/><text x="${mx}" y="${my}" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">${esc(entity.label)}</text></g>`;
 }
+function renderPerimeter(perimeter){
+  const points = perimeter?.points || [];
+  if(!points.length) return "";
+  const segments = getPerimeterSegments(perimeter);
+  const path = points.map((p, i) => `${i === 0 ? "M" : "L"} ${n(p.x)} ${n(p.y)}`).join(" ") + (perimeter.closed && points.length > 2 ? " Z" : "");
+  const walls = `<path d="${path}" fill="none" stroke="#cbd5e1" stroke-width="8" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>`;
+  const vertices = points.map(p => `<circle cx="${n(p.x)}" cy="${n(p.y)}" r="4" fill="#94a3b8"/>`).join("");
+  const labels = segments.map(segment => {
+    const measurementM = perimeter.measurementsM?.[segment.index];
+    const lengthM = Number.isFinite(measurementM) && measurementM > 0 ? measurementM : perimeterSegmentLengthM(segment.from, segment.to);
+    const mx = Math.round((segment.from.x + segment.to.x) / 2);
+    const my = Math.round((segment.from.y + segment.to.y) / 2) - 10;
+    const applied = Number.isFinite(measurementM) && measurementM > 0;
+    return `<text x="${mx}" y="${my}" text-anchor="middle" font-size="11" font-weight="800" fill="${applied ? "#16a34a" : "#f59e0b"}">${lengthM.toFixed(2)} m</text>`;
+  }).join("");
+  return `<g class="cad-perimeter">${walls}${vertices}${labels}</g>`;
+}
 function renderLegend(doc){
   if(!doc.legend?.visible) return "";
   const x = n(doc.legend.x, 930), y = n(doc.legend.y, 560);
@@ -140,7 +158,7 @@ function renderCadSvg(doc, selectedId = ""){
   const symbols = doc.entities.filter(entity => entity.type !== "wire" && !hidden.has(entity.layer)).map(entity => renderSymbol(entity, doc.symbols)).join("");
   const selected = selectedId ? doc.entities.find(entity => entity.id === selectedId) : null;
   const selectBox = selected && selected.type !== "wire" ? `<g transform="translate(${n(selected.x)} ${n(selected.y)}) rotate(${n(selected.rotation, 0)})"><rect class="cad-selected-box" x="-44" y="-52" width="88" height="104" rx="4" stroke="#22c55e" stroke-width="2" fill="none"/></g>` : "";
-  return `<svg id="cadCanvas" class="cad-canvas" viewBox="0 0 ${width} ${height}" role="img" aria-label="Plano CAD electrico GIAE"><defs><pattern id="cadGrid" width="${grid}" height="${grid}" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="${grid}" y2="0" stroke="#3a3f48" stroke-width="0.5"/><line x1="0" y1="0" x2="0" y2="${grid}" stroke="#3a3f48" stroke-width="0.5"/><line x1="${grid}" y1="0" x2="${grid}" y2="${grid}" stroke="#404a54" stroke-width="1.5"/><line x1="0" y1="${grid}" x2="${grid}" y2="${grid}" stroke="#404a54" stroke-width="1.5"/></pattern><filter id="shadowFilter" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.3"/></filter></defs><rect width="${width}" height="${height}" fill="#1a1f27"/><rect width="${width}" height="${height}" fill="url(#cadGrid)" opacity="0.6"/><g class="cad-border"><rect x="24" y="24" width="${width-48}" height="${height-48}" fill="none" stroke="#404a54" stroke-width="2" stroke-dasharray="8 6"/></g><g filter="url(#shadowFilter)">${wires}${symbols}</g>${selectBox}${renderLegend(doc)}</svg>`;
+  return `<svg id="cadCanvas" class="cad-canvas" viewBox="0 0 ${width} ${height}" role="img" aria-label="Plano CAD electrico GIAE"><defs><pattern id="cadGrid" width="${grid}" height="${grid}" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="${grid}" y2="0" stroke="#3a3f48" stroke-width="0.5"/><line x1="0" y1="0" x2="0" y2="${grid}" stroke="#3a3f48" stroke-width="0.5"/><line x1="${grid}" y1="0" x2="${grid}" y2="${grid}" stroke="#404a54" stroke-width="1.5"/><line x1="0" y1="${grid}" x2="${grid}" y2="${grid}" stroke="#404a54" stroke-width="1.5"/></pattern><filter id="shadowFilter" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.3"/></filter></defs><rect width="${width}" height="${height}" fill="#1a1f27"/><rect width="${width}" height="${height}" fill="url(#cadGrid)" opacity="0.6"/><g class="cad-border"><rect x="24" y="24" width="${width-48}" height="${height-48}" fill="none" stroke="#404a54" stroke-width="2" stroke-dasharray="8 6"/></g>${renderPerimeter(doc.perimeter)}<g filter="url(#shadowFilter)">${wires}${symbols}</g>${selectBox}${renderLegend(doc)}</svg>`;
 }
 function renderValidation(validation){
   const issues = validation.issues || [];
@@ -160,6 +178,7 @@ export function render(host, state){
   const validation = validateCadDocument(doc);
   doc.validation = validation;
   const summary = summarizeCadDocument(doc);
+  const perimeterSegments = getPerimeterSegments(doc.perimeter);
   host.innerHTML = `
     <section class="module-window cad-module ${ui.fullscreen ? "cad-fullscreen" : ""}">
       <div class="module-head split-head">
@@ -191,6 +210,26 @@ export function render(host, state){
             <label>Texto / nombre<input id="cadLabelInput" value="${esc(ui.label || "")}" placeholder="Nombre del simbolo o nota"></label>
             <label>Circuito<input id="cadCircuitInput" value="${esc(ui.circuitId || "")}" placeholder="Ej: C01"></label>
             <div class="row-actions"><button id="cadGenerateProject">Generar desde proyecto</button><button id="cadValidate" class="secondary">Validar</button></div>
+          </article>
+
+          <article class="admin-card">
+            <h4>Perímetro de la casa</h4>
+            <p class="muted">Elige la herramienta "Perímetro (paredes)" y haz clic en el plano para marcar cada esquina de la casa en orden. Luego ingresa el largo real de cada pared y aplica para escalar el dibujo.</p>
+            <div class="row-actions">
+              <button id="cadUndoPerimeterPoint" class="secondary">Deshacer último punto</button>
+              <button id="cadClosePerimeter" class="secondary">Cerrar perímetro</button>
+              <button id="cadResetPerimeter" class="ghost">Reiniciar perímetro</button>
+            </div>
+            ${perimeterSegments.length ? `
+            <div class="cad-perimeter-measurements">
+              ${perimeterSegments.map(segment => {
+                const stored = doc.perimeter.measurementsM?.[segment.index];
+                const value = Number.isFinite(stored) && stored > 0 ? stored : perimeterSegmentLengthM(segment.from, segment.to);
+                return `<label>Pared ${segment.index + 1} - largo real (m)<input type="number" min="0" step="0.01" data-perimeter-measure="${segment.index}" value="${value.toFixed(2)}"></label>`;
+              }).join("")}
+            </div>
+            <div class="row-actions"><button id="cadApplyPerimeterMeasurements" class="primary-action">Aplicar medidas y escalar</button></div>
+            ` : `<p class="small">Aún no hay perímetro trazado. Usa la herramienta "Perímetro (paredes)" y haz clic sobre el plano.</p>`}
           </article>
 
           <article class="admin-card">
@@ -305,6 +344,29 @@ export function render(host, state){
     persist();
     render(host, state);
   });
+  host.querySelector("#cadUndoPerimeterPoint")?.addEventListener("click", () => {
+    doc = undoLastPerimeterPoint(doc);
+    saveAndRefresh("Punto de perímetro deshecho");
+  });
+  host.querySelector("#cadClosePerimeter")?.addEventListener("click", () => {
+    doc = closePerimeter(doc);
+    saveAndRefresh("Perímetro cerrado");
+  });
+  host.querySelector("#cadResetPerimeter")?.addEventListener("click", () => {
+    doc = resetPerimeter(doc);
+    saveAndRefresh("Perímetro reiniciado");
+  });
+  host.querySelectorAll("[data-perimeter-measure]").forEach(input => input.addEventListener("change", () => {
+    const segmentIndex = Number(input.dataset.perimeterMeasure);
+    const valueM = Number(input.value);
+    doc = setPerimeterMeasurement(doc, segmentIndex, valueM);
+    project.cad2d = doc;
+    persist();
+  }));
+  host.querySelector("#cadApplyPerimeterMeasurements")?.addEventListener("click", () => {
+    doc = applyPerimeterMeasurements(doc);
+    saveAndRefresh("Perímetro escalado según medidas reales");
+  });
   host.querySelector("#cadLayerSelect").addEventListener("change", event => { ui.layer = event.target.value; project.cadUi = ui; render(host, state); });
   host.querySelectorAll("[data-cad-layer]").forEach(input => input.addEventListener("change", () => {
     const layer = doc.layers.find(item => item.id === input.dataset.cadLayer);
@@ -329,6 +391,11 @@ export function render(host, state){
     ui.label = label;
     ui.circuitId = circuitId;
     if(ui.tool === "select") return;
+    if(ui.tool === "perimeter"){
+      doc = addPerimeterPoint(doc, { x, y });
+      saveAndRefresh("Punto de perímetro agregado");
+      return;
+    }
     if(ui.tool === "wire" || ui.tool === "dimension"){
       if(!ui.wireStart){ ui.wireStart = { x, y }; project.cadUi = ui; render(host, state); return; }
       const dx = x - ui.wireStart.x;

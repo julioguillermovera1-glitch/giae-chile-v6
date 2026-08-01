@@ -363,6 +363,7 @@ export function createCadDocument(project = {}, seed = {}){
     symbols: clone(seed.symbols || CAD_SYMBOLS),
     entities: arr(seed.entities),
     circuits: arr(seed.circuits),
+    perimeter: seed.perimeter || { points: [], measurementsM: [], closed: false },
     legend: seed.legend || { visible: true, x: 930, y: 560 },
     validation: seed.validation || null,
     history: arr(seed.history).concat([{ date: localStamp(), action: "Plano CAD creado", module: "CAD electrico" }]),
@@ -395,6 +396,94 @@ export function createCadEntity(type, options = {}){
   return { ...base, symbolId: symbol?.id || "note" };
 }
 
+// --- Perimetro de la casa (paredes) ---
+// Escala fija propia del perimetro: 1 metro real = 40 unidades de dibujo.
+// Se define aparte del campo "scale" (formato "1:50", usado para
+// impresion/acotado) para que trazar y reescalar el perimetro sea simple
+// y predecible, sin depender de esa conversion.
+export const PERIMETER_PX_PER_METER = 40;
+
+export function getPerimeterSegments(perimeter){
+  const points = arr(perimeter?.points);
+  const segments = [];
+  for(let i = 0; i < points.length - 1; i++) segments.push({ index: i, from: points[i], to: points[i + 1] });
+  if(perimeter?.closed && points.length > 2) segments.push({ index: points.length - 1, from: points[points.length - 1], to: points[0] });
+  return segments;
+}
+
+export function perimeterSegmentLengthM(from, to){
+  return Math.hypot(to.x - from.x, to.y - from.y) / PERIMETER_PX_PER_METER;
+}
+
+export function addPerimeterPoint(document, point){
+  const doc = normalizeCadDocument(document);
+  doc.perimeter.points.push({ x: n(point.x), y: n(point.y) });
+  doc.updatedAt = stamp();
+  return doc;
+}
+
+export function undoLastPerimeterPoint(document){
+  const doc = normalizeCadDocument(document);
+  doc.perimeter.points.pop();
+  doc.perimeter.closed = false;
+  doc.updatedAt = stamp();
+  return doc;
+}
+
+export function closePerimeter(document){
+  const doc = normalizeCadDocument(document);
+  if(doc.perimeter.points.length > 2) doc.perimeter.closed = true;
+  doc.updatedAt = stamp();
+  return doc;
+}
+
+export function resetPerimeter(document){
+  const doc = normalizeCadDocument(document);
+  doc.perimeter = { points: [], measurementsM: {}, closed: false };
+  doc.updatedAt = stamp();
+  return doc;
+}
+
+export function setPerimeterMeasurement(document, segmentIndex, valueM){
+  const doc = normalizeCadDocument(document);
+  doc.perimeter.measurementsM = doc.perimeter.measurementsM || {};
+  doc.perimeter.measurementsM[segmentIndex] = Number.isFinite(valueM) && valueM > 0 ? valueM : null;
+  doc.updatedAt = stamp();
+  return doc;
+}
+
+// Reescala el perimetro para que cada tramo mida exactamente lo que el
+// tecnico indico (en metros reales), manteniendo la direccion/angulo con
+// que se dibujo cada tramo. El primer punto queda fijo como ancla. Si el
+// perimetro esta cerrado, el ultimo tramo (el que cierra la figura) no
+// se fuerza a una medida exacta - se prioriza respetar las medidas de los
+// tramos anteriores tal como el tecnico las escribio, en vez de resolver
+// un sistema de cierre geometrico perfecto.
+export function applyPerimeterMeasurements(document){
+  const doc = normalizeCadDocument(document);
+  const perimeter = doc.perimeter;
+  const segments = getPerimeterSegments(perimeter);
+  if(!segments.length) return doc;
+  const measurements = perimeter.measurementsM || {};
+  const newPoints = [{ ...perimeter.points[0] }];
+  segments.forEach(segment => {
+    const measurementM = measurements[segment.index];
+    const dx = segment.to.x - segment.from.x;
+    const dy = segment.to.y - segment.from.y;
+    const currentLength = Math.hypot(dx, dy) || 1;
+    const targetLengthPx = (Number.isFinite(measurementM) && measurementM > 0) ? measurementM * PERIMETER_PX_PER_METER : currentLength;
+    const ux = dx / currentLength, uy = dy / currentLength;
+    const anchor = newPoints[newPoints.length - 1];
+    const closingSegment = perimeter.closed && segment.index === segments.length - 1;
+    if(!closingSegment){
+      newPoints.push({ x: anchor.x + ux * targetLengthPx, y: anchor.y + uy * targetLengthPx });
+    }
+  });
+  perimeter.points = newPoints;
+  doc.updatedAt = stamp();
+  return doc;
+}
+
 export function addCadEntity(document, entity){
   const doc = normalizeCadDocument(document);
   doc.entities.push(entity);
@@ -418,6 +507,7 @@ export function normalizeCadDocument(document = {}, project = {}){
   doc.entities = arr(doc.entities);
   doc.circuits = arr(doc.circuits);
   doc.canvas = { width: n(doc.canvas?.width, 1200), height: n(doc.canvas?.height, 760), grid: n(doc.canvas?.grid, 20) };
+  doc.perimeter = doc.perimeter && Array.isArray(doc.perimeter.points) ? doc.perimeter : { points: [], measurementsM: [], closed: false };
   doc.legend = doc.legend || { visible: true, x: 930, y: 560 };
   doc.policy = doc.policy || { original: true, copiedAutocad: false };
   return doc;
