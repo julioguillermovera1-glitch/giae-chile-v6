@@ -35,6 +35,95 @@ function openPrintableQuote(project, commercial, state, documentHtml){
   win.onload = () => { win.focus(); win.print(); };
 }
 
+const DEFAULT_QUOTE_TEMPLATE = `COTIZACIÓN
+
+{{empresa}}
+RUT {{rut_empresa}} · {{direccion_empresa}} · {{telefono_empresa}} · {{correo_empresa}}
+
+Cliente: {{cliente}}
+Proyecto: {{proyecto}}
+Dirección del trabajo: {{direccion_trabajo}}
+Fecha de emisión: {{fecha}}
+Válido hasta: {{validez}}
+
+MATERIALES
+{{materiales_tabla}}
+
+MANO DE OBRA
+{{mano_obra_tabla}}
+
+RESUMEN
+Materiales: {{materiales_subtotal}}
+Mano de obra: {{mano_obra_subtotal}}
+Otros gastos: {{otros_gastos}}
+Subtotal directo: {{subtotal_directo}}
+Margen: {{margen}}
+Descuento: {{descuento}}
+Neto: {{neto}}
+IVA: {{iva}}
+TOTAL: {{total}}`;
+
+// Variables reales disponibles para la plantilla propia de cada empresa o
+// instalador independiente. Todo viene del proyecto/motor comercial real,
+// nada inventado.
+function buildTemplateVars(project, commercial, state){
+  const brand = state.companyBrand || state.admin?.company?.brand || {};
+  const company = state.admin?.company || {};
+  const materialsText = (commercial.materials || []).length
+    ? commercial.materials.map(item => `- ${item.item} (${num(item.qty, item.unit === "m" ? 1 : 0)} ${item.unit}) x ${clp(item.unitPrice)} = ${clp(item.total)}`).join("\n")
+    : "Sin materiales generados.";
+  const laborText = (commercial.labor || []).length
+    ? commercial.labor.map(item => `- ${item.concept} (${num(item.qty, item.unit === "m" ? 1 : 0)} ${item.unit}) x ${clp(item.unitPrice)} = ${clp(item.total)}`).join("\n")
+    : "Sin partidas de mano de obra generadas.";
+  const workAddress = [project.address, project.commune, project.region].filter(Boolean).join(", ") || "Sin dirección registrada";
+  return {
+    empresa: company.name || brand.name || project.company || "GIAE Chile",
+    rut_empresa: company.rut || "Sin RUT registrado",
+    direccion_empresa: company.address || "Sin dirección registrada",
+    telefono_empresa: company.phone || "Sin teléfono registrado",
+    correo_empresa: company.email || "Sin correo registrado",
+    cliente: project.client || "Sin cliente",
+    proyecto: project.name || "Proyecto sin nombre",
+    direccion_trabajo: workAddress,
+    fecha: commercial.generatedAt || "",
+    validez: commercial.validUntil || "Sin plazo definido",
+    materiales_tabla: materialsText,
+    mano_obra_tabla: laborText,
+    materiales_subtotal: clp(commercial.totals.materialsSubtotal),
+    mano_obra_subtotal: clp(commercial.totals.laborSubtotal),
+    otros_gastos: clp(commercial.totals.otherExpenses || 0),
+    subtotal_directo: clp(commercial.totals.directCost),
+    margen: clp(commercial.totals.margin),
+    descuento: clp(commercial.totals.discount),
+    neto: clp(commercial.totals.net),
+    iva: clp(commercial.totals.iva),
+    total: clp(commercial.totals.total)
+  };
+}
+
+function renderQuoteTemplate(templateText, project, commercial, state){
+  const vars = buildTemplateVars(project, commercial, state);
+  let text = templateText;
+  for(const [key, value] of Object.entries(vars)){
+    text = text.replaceAll(`{{${key}}}`, value);
+  }
+  return text;
+}
+
+function customTemplateDocument(templateText, project, commercial, state){
+  const filled = renderQuoteTemplate(templateText, project, commercial, state);
+  return `<div class="budget-preview commercial-preview template-custom" style="border:1px solid var(--line);border-radius:16px;background:#fff;padding:1.4rem;white-space:pre-wrap;line-height:1.6">${esc(filled)}</div>`;
+}
+
+// Decide si usar la plantilla propia de la empresa/instalador (si definio
+// una) o los 4 estilos incorporados. Se usa tanto en pantalla como al
+// imprimir, para que ambos muestren siempre lo mismo.
+function buildQuoteDocument(project, commercial, state){
+  const customTemplate = (state.admin?.company?.quoteTemplate || "").trim();
+  if(customTemplate) return customTemplateDocument(customTemplate, project, commercial, state);
+  return quotePreview(project, commercial, state);
+}
+
 function materialRows(items){
   if(!items?.length) return `<tr><td colspan="6">Sin materiales generados. Ingresa cargas y genera tablero/empalme.</td></tr>`;
   return items.map(item => `<tr>
@@ -238,8 +327,19 @@ export function render(host, state) {
         <div class="status-strip"><span>${esc(project.name)}</span><span>${esc(commercial.version)}</span><span>${esc(commercial.status)}</span></div>
       </div>
 
-      ${quotePreview(project, commercial, state)}
+      ${buildQuoteDocument(project, commercial, state)}
       <div class="module-toolbar"><button id="printQuoteBtn" class="secondary">Imprimir / Descargar PDF</button></div>
+
+      <div class="dashboard-card">
+        <h4>Mi plantilla de presupuesto</h4>
+        <p class="muted">Si prefieres tu propio formato en vez de los 4 estilos incorporados (técnico/sobrio/empresa/minimal), escríbelo aquí usando estas variables — se reemplazan por los datos reales de este proyecto: <code>{{empresa}}</code> <code>{{rut_empresa}}</code> <code>{{direccion_empresa}}</code> <code>{{telefono_empresa}}</code> <code>{{correo_empresa}}</code> <code>{{cliente}}</code> <code>{{proyecto}}</code> <code>{{direccion_trabajo}}</code> <code>{{fecha}}</code> <code>{{validez}}</code> <code>{{materiales_tabla}}</code> <code>{{mano_obra_tabla}}</code> <code>{{materiales_subtotal}}</code> <code>{{mano_obra_subtotal}}</code> <code>{{otros_gastos}}</code> <code>{{subtotal_directo}}</code> <code>{{margen}}</code> <code>{{descuento}}</code> <code>{{neto}}</code> <code>{{iva}}</code> <code>{{total}}</code>.</p>
+        <textarea id="quoteTemplateText" rows="12" class="template-editor" placeholder="Deja vacío para usar el estilo de plantilla elegido en Empresa y logo.">${esc(state.admin?.company?.quoteTemplate || "")}</textarea>
+        <div class="module-toolbar">
+          <button id="saveQuoteTemplate" class="primary-action">Guardar mi plantilla</button>
+          <button id="loadDefaultQuoteTemplate" class="secondary">Ver plantilla de ejemplo</button>
+          <button id="clearQuoteTemplate" class="secondary">Quitar (volver a los 4 estilos)</button>
+        </div>
+      </div>
 
       <div class="kpi-grid engineering-kpis">
         <div class="kpi-card"><span>Materiales</span><strong>${clp(commercial.totals.materialsSubtotal)}</strong></div>
@@ -297,7 +397,29 @@ export function render(host, state) {
     </section>`;
 
   host.querySelector("#printQuoteBtn").addEventListener("click", () => {
-    openPrintableQuote(project, commercial, state, quotePreview(project, commercial, state));
+    openPrintableQuote(project, commercial, state, buildQuoteDocument(project, commercial, state));
+  });
+
+  host.querySelector("#saveQuoteTemplate").addEventListener("click", () => {
+    state.admin = state.admin || {};
+    state.admin.company = state.admin.company || {};
+    state.admin.company.quoteTemplate = host.querySelector("#quoteTemplateText").value;
+    addHistory("Plantilla propia de presupuesto guardada", "Motor Comercial", false);
+    persist();
+    render(host, globalState);
+  });
+
+  host.querySelector("#loadDefaultQuoteTemplate").addEventListener("click", () => {
+    host.querySelector("#quoteTemplateText").value = DEFAULT_QUOTE_TEMPLATE;
+  });
+
+  host.querySelector("#clearQuoteTemplate").addEventListener("click", () => {
+    state.admin = state.admin || {};
+    state.admin.company = state.admin.company || {};
+    state.admin.company.quoteTemplate = "";
+    addHistory("Plantilla propia de presupuesto quitada, vuelve a estilos incorporados", "Motor Comercial", false);
+    persist();
+    render(host, globalState);
   });
 
   host.querySelector("#saveCommercialSettings").addEventListener("click", () => {
