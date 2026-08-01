@@ -36,6 +36,68 @@ function laborRows(items){
   </tr>`).join("");
 }
 
+// Tabla de detalle (materiales + mano de obra + resumen con IVA) que se
+// agrega a los 4 estilos de plantilla. Antes solo mostraban el encabezado
+// con el total, sin desglose - un presupuesto real necesita el detalle.
+function quoteDetailBlock(commercial, accent){
+  const materialRowsHtml = commercial.materials?.length
+    ? commercial.materials.map(item => `<tr style="border-bottom:1px solid #eef1f5">
+        <td style="padding:.35rem .3rem;color:#66758a">${esc(item.source)}</td>
+        <td style="padding:.35rem .3rem">${esc(item.item)}</td>
+        <td style="padding:.35rem .3rem;text-align:right">${num(item.qty, item.unit === "m" ? 1 : 0)} ${esc(item.unit)}</td>
+        <td style="padding:.35rem .3rem;text-align:right">${clp(item.unitPrice)}</td>
+        <td style="padding:.35rem .3rem;text-align:right"><strong>${clp(item.total)}</strong></td>
+      </tr>`).join("")
+    : `<tr><td colspan="5" style="padding:.5rem .3rem;color:#66758a">Sin materiales generados. Ingresa cargas y genera tablero/empalme.</td></tr>`;
+
+  const laborRowsHtml = commercial.labor?.length
+    ? commercial.labor.map(item => `<tr style="border-bottom:1px solid #eef1f5">
+        <td style="padding:.35rem .3rem">${esc(item.concept)}</td>
+        <td style="padding:.35rem .3rem;text-align:right">${num(item.qty, item.unit === "m" ? 1 : 0)} ${esc(item.unit)}</td>
+        <td style="padding:.35rem .3rem;text-align:right">${clp(item.unitPrice)}</td>
+        <td style="padding:.35rem .3rem;text-align:right"><strong>${clp(item.total)}</strong></td>
+      </tr>`).join("")
+    : `<tr><td colspan="4" style="padding:.5rem .3rem;color:#66758a">Sin partidas de mano de obra generadas.</td></tr>`;
+
+  return `
+    <table style="width:100%;border-collapse:collapse;font-size:.85rem">
+      <caption style="text-align:left;font-weight:700;padding:0 0 .3rem;caption-side:top">Materiales</caption>
+      <thead><tr style="border-bottom:2px solid ${accent}">
+        <th style="text-align:left;padding:.4rem .3rem">Origen</th>
+        <th style="text-align:left;padding:.4rem .3rem">Material</th>
+        <th style="text-align:right;padding:.4rem .3rem">Cant.</th>
+        <th style="text-align:right;padding:.4rem .3rem">Precio unit.</th>
+        <th style="text-align:right;padding:.4rem .3rem">Total</th>
+      </tr></thead>
+      <tbody>${materialRowsHtml}</tbody>
+    </table>
+    <table style="width:100%;border-collapse:collapse;font-size:.85rem;margin-top:1rem">
+      <caption style="text-align:left;font-weight:700;padding:0 0 .3rem;caption-side:top">Mano de obra</caption>
+      <thead><tr style="border-bottom:2px solid ${accent}">
+        <th style="text-align:left;padding:.4rem .3rem">Partida</th>
+        <th style="text-align:right;padding:.4rem .3rem">Cant.</th>
+        <th style="text-align:right;padding:.4rem .3rem">Precio unit.</th>
+        <th style="text-align:right;padding:.4rem .3rem">Total</th>
+      </tr></thead>
+      <tbody>${laborRowsHtml}</tbody>
+    </table>
+    <table style="width:100%;border-collapse:collapse;font-size:.9rem;margin-top:1rem">
+      <caption style="text-align:left;font-weight:700;padding:0 0 .3rem;caption-side:top">Resumen</caption>
+      <tbody>
+        <tr><td style="padding:.3rem .3rem">Materiales</td><td style="padding:.3rem .3rem;text-align:right">${clp(commercial.totals.materialsSubtotal)}</td></tr>
+        <tr><td style="padding:.3rem .3rem">Mano de obra</td><td style="padding:.3rem .3rem;text-align:right">${clp(commercial.totals.laborSubtotal)}</td></tr>
+        ${commercial.totals.otherExpenses ? `<tr><td style="padding:.3rem .3rem">${esc(commercial.otherExpensesLabel || "Otros gastos")}</td><td style="padding:.3rem .3rem;text-align:right">${clp(commercial.totals.otherExpenses)}</td></tr>` : ""}
+        <tr style="border-top:1px solid #eef1f5"><td style="padding:.3rem .3rem">Subtotal directo</td><td style="padding:.3rem .3rem;text-align:right">${clp(commercial.totals.directCost)}</td></tr>
+        <tr><td style="padding:.3rem .3rem">Margen</td><td style="padding:.3rem .3rem;text-align:right">${clp(commercial.totals.margin)}</td></tr>
+        <tr><td style="padding:.3rem .3rem">Descuento</td><td style="padding:.3rem .3rem;text-align:right">${clp(commercial.totals.discount)}</td></tr>
+        <tr style="border-top:1px solid #eef1f5"><td style="padding:.3rem .3rem">Neto</td><td style="padding:.3rem .3rem;text-align:right">${clp(commercial.totals.net)}</td></tr>
+        <tr><td style="padding:.3rem .3rem">IVA</td><td style="padding:.3rem .3rem;text-align:right">${clp(commercial.totals.iva)}</td></tr>
+        <tr style="border-top:2px solid ${accent}"><td style="padding:.5rem .3rem;font-weight:700">Total</td><td style="padding:.5rem .3rem;text-align:right;font-weight:700">${clp(commercial.totals.total)}</td></tr>
+      </tbody>
+    </table>
+    ${commercial.validUntil ? `<p style="margin:.8rem .3rem 0;font-size:.85rem;color:#66758a">Presupuesto válido hasta el <strong style="color:inherit">${esc(commercial.validUntil)}</strong>.</p>` : ""}`;
+}
+
 function quotePreview(project, commercial, state){
   const brand = state.companyBrand || state.admin?.company?.brand || {};
   const company = state.admin?.company || {};
@@ -45,9 +107,23 @@ function quotePreview(project, commercial, state){
   const companyName = esc(company.name || brand.name || project.company || "GIAE Chile");
   const projectName = esc(project.name || "Proyecto sin nombre");
   const totalValue = clp(commercial.totals.total);
+  // Datos reales de quien emite el presupuesto (ya cargados en Panel de
+  // reparacion -> Empresa y logo), antes solo se mostraba el nombre.
+  const issuerParts = [
+    company.rut ? `RUT ${company.rut}` : "",
+    company.address || "",
+    company.phone || "",
+    company.email || ""
+  ].filter(Boolean).map(esc).join(" · ");
+  // Direccion donde se hara el trabajo (unico dato de ubicacion del cliente
+  // que existe en el proyecto - no hay un campo separado de "domicilio
+  // del cliente" en el formulario de proyecto).
+  const workAddress = [project.address, project.commune, project.region].filter(Boolean).map(esc).join(", ") || "Sin dirección registrada";
   const infoGrid = `<div style="padding:1rem 1.2rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem">
       <div><span class="small">Cliente</span><br><strong>${esc(project.client || "Sin cliente")}</strong></div>
-      <div><span class="small">Fecha</span><br><strong>${esc(commercial.generatedAt)}</strong></div>
+      <div><span class="small">Dirección del trabajo</span><br><strong>${workAddress}</strong></div>
+      <div><span class="small">Fecha de emisión</span><br><strong>${esc(commercial.generatedAt)}</strong></div>
+      <div><span class="small">Válido hasta</span><br><strong>${esc(commercial.validUntil || "Sin plazo definido")}</strong></div>
       <div><span class="small">Estado</span><br><strong>${esc(commercial.status)}</strong></div>
       <div><span class="small">Trazabilidad</span><br><strong>${esc(commercial.trace.join(" · "))}</strong></div>
     </div>`;
@@ -61,12 +137,14 @@ function quotePreview(project, commercial, state){
         <div>
           <strong style="font-size:1.4rem">${companyName}</strong><br>
           <span style="opacity:.85">Cotización preliminar · ${projectName}</span>
+          ${issuerParts ? `<br><span style="opacity:.75;font-size:.8rem">${issuerParts}</span>` : ""}
         </div>
         <div style="text-align:right;background:${accent};padding:.6rem 1rem;border-radius:12px">
           <span style="font-size:.8rem;opacity:.9">Total</span><br><strong style="font-size:1.6rem">${totalValue}</strong>
         </div>
       </div>
       ${infoGrid}
+      <div style="padding:0 1.4rem 1.4rem">${quoteDetailBlock(commercial, accent)}</div>
     </div>`;
   }
 
@@ -76,12 +154,16 @@ function quotePreview(project, commercial, state){
         <span>${companyName} — ${projectName}</span>
         <strong>${totalValue}</strong>
       </div>
+      ${issuerParts ? `<div style="font-size:.8rem;color:#8a97a6">${issuerParts}</div>` : ""}
       <div style="padding:.4rem 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.3rem;font-size:.9rem;color:#526173">
         <span>Cliente: ${esc(project.client || "Sin cliente")}</span>
-        <span>Fecha: ${esc(commercial.generatedAt)}</span>
+        <span>Dirección del trabajo: ${workAddress}</span>
+        <span>Fecha de emisión: ${esc(commercial.generatedAt)}</span>
+        <span>Válido hasta: ${esc(commercial.validUntil || "Sin plazo definido")}</span>
         <span>Estado: ${esc(commercial.status)}</span>
         <span>Trazabilidad: ${esc(commercial.trace.join(" · "))}</span>
       </div>
+      <div style="padding:.6rem 0 0">${quoteDetailBlock(commercial, accent)}</div>
     </div>`;
   }
 
@@ -91,10 +173,12 @@ function quotePreview(project, commercial, state){
         <div>
           <strong style="font-size:1.1rem;color:${primary}">${companyName}</strong><br>
           <span class="small">Cotización preliminar · ${projectName}</span>
+          ${issuerParts ? `<br><span class="small">${issuerParts}</span>` : ""}
         </div>
         <div style="text-align:right"><span class="small">Total</span><br><strong style="font-size:1.2rem;color:${primary}">${totalValue}</strong></div>
       </div>
       ${infoGrid}
+      <div style="padding:0 1.2rem 1.2rem">${quoteDetailBlock(commercial, accent)}</div>
     </div>`;
   }
 
@@ -104,12 +188,14 @@ function quotePreview(project, commercial, state){
       <div>
         <strong style="font-size:1.25rem;color:${primary}">${companyName}</strong><br>
         <span class="small">Cotización preliminar · ${projectName}</span>
+        ${issuerParts ? `<br><span class="small">${issuerParts}</span>` : ""}
       </div>
       <div class="quote-total" style="text-align:right">
         <span class="small">Total</span><br><strong style="font-size:1.45rem;color:${primary}">${totalValue}</strong>
       </div>
     </div>
     ${infoGrid}
+    <div style="padding:0 1.2rem 1.2rem">${quoteDetailBlock(commercial, accent)}</div>
   </div>`;
 }
 
@@ -146,6 +232,9 @@ export function render(host, state) {
           <label>Descuento % <input id="discountPercent" type="number" min="0" step="0.1" value="${esc(settings.discountPercent ?? 0)}"></label>
           <label>IVA % <input id="ivaPercent" type="number" min="0" step="0.1" value="${esc(settings.ivaPercent ?? 19)}"></label>
           <label>Mano obra circuito $ <input id="circuitBase" type="number" min="0" value="${esc(project.commercialSettings?.laborRates?.circuitBase ?? 18000)}"></label>
+          <label>Otros gastos $ <input id="otherExpensesAmount" type="number" min="0" value="${esc(settings.otherExpensesAmount ?? 0)}"></label>
+          <label>Descripción de otros gastos <input id="otherExpensesLabel" value="${esc(settings.otherExpensesLabel ?? "Gastos varios (transporte, permisos, certificación)")}"></label>
+          <label>Validez del presupuesto (días) <input id="validityDays" type="number" min="0" value="${esc(settings.validityDays ?? 15)}"></label>
         </div>
         <div class="module-toolbar">
           <button id="saveCommercialSettings" class="primary-action">Guardar parámetros</button>
@@ -170,12 +259,16 @@ export function render(host, state) {
       <div class="dashboard-card">
         <h4>Resumen</h4>
         <div class="data-table-wrap"><table><tbody>
+          <tr><th>Materiales</th><td>${clp(commercial.totals.materialsSubtotal)}</td></tr>
+          <tr><th>Mano de obra</th><td>${clp(commercial.totals.laborSubtotal)}</td></tr>
+          ${commercial.totals.otherExpenses ? `<tr><th>${esc(commercial.otherExpensesLabel || "Otros gastos")}</th><td>${clp(commercial.totals.otherExpenses)}</td></tr>` : ""}
           <tr><th>Subtotal directo</th><td>${clp(commercial.totals.directCost)}</td></tr>
           <tr><th>Margen</th><td>${clp(commercial.totals.margin)}</td></tr>
           <tr><th>Descuento</th><td>${clp(commercial.totals.discount)}</td></tr>
           <tr><th>Neto</th><td>${clp(commercial.totals.net)}</td></tr>
           <tr><th>IVA</th><td>${clp(commercial.totals.iva)}</td></tr>
           <tr><th>Total</th><td><strong>${clp(commercial.totals.total)}</strong></td></tr>
+          ${commercial.validUntil ? `<tr><th>Válido hasta</th><td>${esc(commercial.validUntil)}</td></tr>` : ""}
         </tbody></table></div>
       </div>
     </section>`;
@@ -185,6 +278,9 @@ export function render(host, state) {
     project.commercialSettings.marginPercent = Number(host.querySelector("#marginPercent").value || 0);
     project.commercialSettings.discountPercent = Number(host.querySelector("#discountPercent").value || 0);
     project.commercialSettings.ivaPercent = Number(host.querySelector("#ivaPercent").value || 19);
+    project.commercialSettings.otherExpensesAmount = Number(host.querySelector("#otherExpensesAmount").value || 0);
+    project.commercialSettings.otherExpensesLabel = host.querySelector("#otherExpensesLabel").value.trim() || "Otros gastos";
+    project.commercialSettings.validityDays = Number(host.querySelector("#validityDays").value || 0);
     project.commercialSettings.laborRates = project.commercialSettings.laborRates || {};
     project.commercialSettings.laborRates.circuitBase = Number(host.querySelector("#circuitBase").value || 0);
     addHistory("Parámetros comerciales actualizados", "Motor Comercial", false);

@@ -2,6 +2,9 @@ const DEFAULT_SETTINGS = {
   ivaPercent: 19,
   marginPercent: 18,
   discountPercent: 0,
+  validityDays: 15,
+  otherExpensesLabel: "Gastos varios (transporte, permisos, certificación)",
+  otherExpensesAmount: 0,
   laborRates: {
     circuitBase: 18000,
     tableroBase: 85000,
@@ -125,7 +128,8 @@ export function calculateCommercialProject(project, options = {}){
   const labor = calculateLabor(project, settings);
   const materialsSubtotal = materials.reduce((sum, item)=> sum + item.total, 0);
   const laborSubtotal = labor.reduce((sum, item)=> sum + item.total, 0);
-  const directCost = materialsSubtotal + laborSubtotal;
+  const otherExpenses = money(settings.otherExpensesAmount || 0);
+  const directCost = materialsSubtotal + laborSubtotal + otherExpenses;
   const margin = money(directCost * (Number(settings.marginPercent || 0) / 100));
   const discount = money((directCost + margin) * (Number(settings.discountPercent || 0) / 100));
   const net = Math.max(0, directCost + margin - discount);
@@ -135,14 +139,20 @@ export function calculateCommercialProject(project, options = {}){
   const observations = [];
   if(!materials.length) observations.push('No hay materiales técnicos generados por los motores.');
   if(project.gpe?.pending?.length) observations.push('Existen partidas técnicas pendientes en el GPE.');
+  const generatedAtMs = Date.now();
+  const validityDays = Number(settings.validityDays || 0);
+  const validUntil = validityDays > 0 ? new Date(generatedAtMs + validityDays * 24 * 60 * 60 * 1000).toLocaleDateString('es-CL') : null;
   return {
     version:'9.0.1',
     status,
-    generatedAt:new Date().toLocaleString('es-CL'),
-    settings:{ ivaPercent:settings.ivaPercent, marginPercent:settings.marginPercent, discountPercent:settings.discountPercent },
+    generatedAt:new Date(generatedAtMs).toLocaleString('es-CL'),
+    validityDays,
+    validUntil,
+    settings:{ ivaPercent:settings.ivaPercent, marginPercent:settings.marginPercent, discountPercent:settings.discountPercent, validityDays:settings.validityDays, otherExpensesLabel:settings.otherExpensesLabel, otherExpensesAmount:settings.otherExpensesAmount },
     materials,
     labor,
-    totals:{ materialsSubtotal, laborSubtotal, directCost, margin, discount, net, iva, total },
+    otherExpensesLabel: settings.otherExpensesLabel,
+    totals:{ materialsSubtotal, laborSubtotal, otherExpenses, directCost, margin, discount, net, iva, total },
     observations,
     trace:['Proyecto Activo','BUCE','Motor de Ingeniería','Motor de Tableros','Motor de Empalmes','Motor Documental']
   };
