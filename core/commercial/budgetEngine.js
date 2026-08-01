@@ -28,7 +28,35 @@ const DEFAULT_SETTINGS = {
     camara_tierra: 18000,
     empalme: 35000,
     varios: 12000
+  },
+  // Precios por defecto de las partidas que vienen del Plano CAD (simbolos
+  // de instalacion dibujados). Igual que el resto de defaultPrices, son un
+  // punto de partida editable por cada empresa/instalador, no un precio fijo.
+  cadFixturePrices: {
+    light: 6500,
+    switch: 5500,
+    outlet: 4500,
+    "outlet-double": 6500,
+    "outlet-triple": 8500,
+    motor: 45000,
+    junction: 3500,
+    ground: 14500
   }
+};
+
+// Simbolos del Plano CAD que representan una instalacion fisica real y por
+// lo tanto se convierten en materiales. "panel" y "breaker" quedan afuera a
+// proposito: esos ya los calcula el motor de Tableros (panelEngine) con las
+// cargas reales del proyecto, y contarlos tambien aqui los duplicaria.
+const CAD_FIXTURE_LABELS = {
+  light: "Punto de luz",
+  switch: "Interruptor de alumbrado",
+  outlet: "Enchufe simple",
+  "outlet-double": "Enchufe doble",
+  "outlet-triple": "Enchufe triple",
+  motor: "Punto de fuerza",
+  junction: "Caja de derivación",
+  ground: "Electrodo de puesta a tierra"
 };
 
 function money(value){ return Math.round(Number(value || 0)); }
@@ -91,6 +119,39 @@ function collectMaterials(project, settings){
   return groupMaterials(list);
 }
 
+// Convierte cada simbolo de instalacion dibujado en el Plano CAD
+// (project.cad2d) en una partida real de materiales, contando cuantos hay
+// de cada tipo. Se agrega SIEMPRE (aparte de collectMaterials), ya que
+// enchufes/luces/interruptores dibujados en el plano no estan representados
+// en ningun otro lado del presupuesto hoy.
+function collectCadMaterials(project, settings){
+  const entities = Array.isArray(project.cad2d?.entities) ? project.cad2d.entities : [];
+  const prices = { ...DEFAULT_SETTINGS.cadFixturePrices, ...(settings.cadFixturePrices || {}) };
+  const counts = new Map();
+  entities.forEach(entity => {
+    const symbolId = entity.symbolId;
+    if(!(symbolId in CAD_FIXTURE_LABELS)) return;
+    const current = counts.get(symbolId) || { qty: 0, circuits: new Set() };
+    current.qty += 1;
+    if(entity.circuitId) current.circuits.add(entity.circuitId);
+    counts.set(symbolId, current);
+  });
+  return Array.from(counts.entries()).map(([symbolId, data]) => {
+    const unitPrice = money(prices[symbolId] ?? 0);
+    return {
+      id: `cad-${symbolId}`,
+      source: 'Plano CAD',
+      family: 'Instalación',
+      item: CAD_FIXTURE_LABELS[symbolId],
+      qty: data.qty,
+      unit: 'un',
+      unitPrice,
+      total: money(unitPrice * data.qty),
+      circuits: Array.from(data.circuits)
+    };
+  });
+}
+
 function groupMaterials(items){
   const map = new Map();
   items.forEach(item => {
@@ -124,7 +185,8 @@ function calculateLabor(project, settings){
 
 export function calculateCommercialProject(project, options = {}){
   const settings = { ...DEFAULT_SETTINGS, ...(options || {}), ...(project.commercialSettings || {}) };
-  const materials = collectMaterials(project, settings);
+  const cadMaterials = collectCadMaterials(project, settings);
+  const materials = [...collectMaterials(project, settings), ...cadMaterials];
   const labor = calculateLabor(project, settings);
   const materialsSubtotal = materials.reduce((sum, item)=> sum + item.total, 0);
   const laborSubtotal = labor.reduce((sum, item)=> sum + item.total, 0);
@@ -138,6 +200,7 @@ export function calculateCommercialProject(project, options = {}){
   const status = materials.length || labor.length ? 'Presupuesto preliminar generado' : 'Sin datos técnicos suficientes';
   const observations = [];
   if(!materials.length) observations.push('No hay materiales técnicos generados por los motores.');
+  if(!cadMaterials.length) observations.push('El Plano CAD no tiene símbolos de instalación dibujados (enchufes, luces, interruptores, etc.) - no se generaron materiales desde el plano.');
   if(project.gpe?.pending?.length) observations.push('Existen partidas técnicas pendientes en el GPE.');
   const generatedAtMs = Date.now();
   const validityDays = Number(settings.validityDays || 0);
@@ -154,7 +217,7 @@ export function calculateCommercialProject(project, options = {}){
     otherExpensesLabel: settings.otherExpensesLabel,
     totals:{ materialsSubtotal, laborSubtotal, otherExpenses, directCost, margin, discount, net, iva, total },
     observations,
-    trace:['Proyecto Activo','BUCE','Motor de Ingeniería','Motor de Tableros','Motor de Empalmes','Motor Documental']
+    trace:['Proyecto Activo','BUCE','Motor de Ingeniería','Motor de Tableros','Motor de Empalmes','Motor Documental', ...(cadMaterials.length ? ['Plano CAD'] : [])]
   };
 }
 
