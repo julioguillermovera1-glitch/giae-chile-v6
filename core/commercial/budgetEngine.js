@@ -34,29 +34,56 @@ const DEFAULT_SETTINGS = {
   // punto de partida editable por cada empresa/instalador, no un precio fijo.
   cadFixturePrices: {
     light: 6500,
+    "emergency-light": 32000,
     switch: 5500,
+    "three-way-switch": 7500,
+    dimmer: 15000,
+    "motion-sensor": 18000,
+    doorbell: 9500,
     outlet: 4500,
     "outlet-double": 6500,
     "outlet-triple": 8500,
+    "outlet-exterior": 9500,
+    "outlet-special": 12000,
+    "outlet-tripolar": 22000,
     motor: 45000,
+    "exhaust-fan": 28000,
+    "water-heater": 65000,
     junction: 3500,
-    ground: 14500
+    ground: 14500,
+    "smoke-detector": 15000,
+    "data-point": 8500,
+    "tv-point": 8500
   }
 };
 
 // Simbolos del Plano CAD que representan una instalacion fisica real y por
-// lo tanto se convierten en materiales. "panel" y "breaker" quedan afuera a
-// proposito: esos ya los calcula el motor de Tableros (panelEngine) con las
-// cargas reales del proyecto, y contarlos tambien aqui los duplicaria.
+// lo tanto se convierten en materiales. "panel", "sub-panel", "meter",
+// "breaker" y "differential" quedan afuera a proposito: esos ya los calcula
+// el motor de Tableros (panelEngine) con las cargas y circuitos reales del
+// proyecto, y contarlos tambien aqui los duplicaria.
 const CAD_FIXTURE_LABELS = {
   light: "Punto de luz",
+  "emergency-light": "Luminaria de emergencia",
   switch: "Interruptor de alumbrado",
+  "three-way-switch": "Interruptor de conmutación",
+  dimmer: "Regulador de intensidad (dimmer)",
+  "motion-sensor": "Sensor de movimiento",
+  doorbell: "Timbre",
   outlet: "Enchufe simple",
   "outlet-double": "Enchufe doble",
   "outlet-triple": "Enchufe triple",
+  "outlet-exterior": "Enchufe exterior IP44",
+  "outlet-special": "Enchufe especial (fuerza)",
+  "outlet-tripolar": "Enchufe trifásico",
   motor: "Punto de fuerza",
+  "exhaust-fan": "Extractor/ventilador",
+  "water-heater": "Calefón/termo eléctrico",
   junction: "Caja de derivación",
-  ground: "Electrodo de puesta a tierra"
+  ground: "Electrodo de puesta a tierra",
+  "smoke-detector": "Detector de humo",
+  "data-point": "Punto de red (datos)",
+  "tv-point": "Punto de TV"
 };
 
 function money(value){ return Math.round(Number(value || 0)); }
