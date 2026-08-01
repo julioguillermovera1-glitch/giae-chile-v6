@@ -600,6 +600,11 @@ body{background:var(--bg);}
 .cad-stage{width:100%;overflow:auto;border:1px solid #1e293b;border-radius:12px;background:#0a0e17;padding:.7rem}.cad-canvas{width:100%;min-width:980px;display:block;background:#1a1f27;border-radius:8px}.cad-entity{cursor:pointer}.cad-symbol text,.cad-wire text,.cad-legend text{font-family:Arial,sans-serif;letter-spacing:0}.cad-selected-box{fill:none;stroke:#22c55e;stroke-width:2;stroke-dasharray:6 4;pointer-events:none}.cad-wire line{filter:drop-shadow(0 1px 2px rgba(0,0,0,0.4))}
 @media(max-width:1100px){.cad-workspace{grid-template-columns:1fr}.cad-module .cad-kpis{grid-template-columns:1fr 1fr}.cad-tools{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:650px){.cad-module .cad-kpis,.cad-tools{grid-template-columns:1fr}.cad-topbar{display:grid}.cad-canvas{min-width:760px}}
+.cad-module.cad-fullscreen{position:fixed;inset:0;z-index:9999;background:#fff;padding:1.1rem 1.4rem;overflow:auto;border-radius:0}
+.cad-module.cad-fullscreen .cad-workspace{grid-template-columns:280px minmax(0,1fr)}
+.cad-module.cad-fullscreen .cad-stage{height:calc(100vh - 260px);display:flex;align-items:flex-start}
+.cad-module.cad-fullscreen .cad-canvas{height:100%;width:auto;min-width:0}
+@media(max-width:1100px){.cad-module.cad-fullscreen{padding:.7rem}.cad-module.cad-fullscreen .cad-stage{height:60vh}}
 /* Fase 5.6 - flujo guiado */
 .guided-flow-module .flow-kpis strong{font-size:1.35rem;line-height:1.1}
 .flow-next-action p{font-size:1.05rem;color:#26384b;margin:.35rem 0 1rem}
