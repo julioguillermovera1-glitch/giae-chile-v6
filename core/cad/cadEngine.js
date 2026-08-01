@@ -418,6 +418,26 @@ export function perimeterSegmentLengthM(from, to){
   return Math.hypot(to.x - from.x, to.y - from.y) / PERIMETER_PX_PER_METER;
 }
 
+export function nearestWallPoint(perimeter, point){
+  const segments = getPerimeterSegments(perimeter);
+  if(!segments.length) return null;
+  let best = null;
+  segments.forEach(segment => {
+    const { from, to } = segment;
+    const dx = to.x - from.x, dy = to.y - from.y;
+    const lengthSq = dx * dx + dy * dy || 1;
+    let t = ((point.x - from.x) * dx + (point.y - from.y) * dy) / lengthSq;
+    t = Math.max(0, Math.min(1, t));
+    const px = from.x + t * dx, py = from.y + t * dy;
+    const distance = Math.hypot(point.x - px, point.y - py);
+    if(!best || distance < best.distance){
+      const angleDeg = Math.atan2(dy, dx) * 180 / Math.PI;
+      best = { x: Math.round(px), y: Math.round(py), rotation: Math.round(((angleDeg % 360) + 360) % 360), distance, segmentIndex: segment.index };
+    }
+  });
+  return best;
+}
+
 export function addPerimeterPoint(document, point){
   const doc = normalizeCadDocument(document);
   doc.perimeter.points.push({ x: n(point.x), y: n(point.y) });

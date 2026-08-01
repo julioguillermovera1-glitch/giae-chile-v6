@@ -1,6 +1,6 @@
 import { persist, addHistory } from "../../core/store.js";
 import { CloudflareCADService } from "../../core/cad/cloudflare-service.js";
-import { buildCadFromProject, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS, getPerimeterSegments, perimeterSegmentLengthM, addPerimeterPoint, undoLastPerimeterPoint, closePerimeter, resetPerimeter, setPerimeterMeasurement, applyPerimeterMeasurements } from "../../core/cad/cadEngine.js";
+import { buildCadFromProject, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS, getPerimeterSegments, perimeterSegmentLengthM, addPerimeterPoint, undoLastPerimeterPoint, closePerimeter, resetPerimeter, setPerimeterMeasurement, applyPerimeterMeasurements, nearestWallPoint } from "../../core/cad/cadEngine.js";
 
 function esc(value = ""){
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -476,6 +476,16 @@ export function render(host, state){
       doc = addCadEntity(doc, createCadEntity("wire", { layer: ui.tool === "dimension" ? "revision" : "canalizacion", from: ui.wireStart, to: { x, y }, label: dimensionLabel, circuitId, source: "manual" }));
       ui.wireStart = null;
       saveAndRefresh(ui.tool === "dimension" ? "Dimension agregada en CAD" : "Canalizacion agregada en CAD");
+      return;
+    }
+    if(ui.tool === "door" || ui.tool === "window"){
+      const snap = nearestWallPoint(doc.perimeter, { x, y });
+      const placeX = snap ? snap.x : x;
+      const placeY = snap ? snap.y : y;
+      const rotation = snap ? snap.rotation : 0;
+      const symbolLbl = label || symbolLabel(ui.tool, doc.symbols);
+      doc = addCadEntity(doc, createCadEntity(ui.tool, { x: placeX, y: placeY, rotation, layer: "arquitectura", label: symbolLbl, circuitId, source: "manual" }));
+      saveAndRefresh(snap ? `${symbolLbl} agregada y ajustada al muro` : `${symbolLbl} agregada (traza el perimetro para que se ajuste sola al muro)`);
       return;
     }
     const symbol = doc.symbols.find(item => item.id === ui.tool) || CAD_SYMBOLS.find(item => item.id === ui.tool);
