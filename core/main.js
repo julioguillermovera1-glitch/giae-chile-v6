@@ -291,7 +291,18 @@ async function openModule(moduleId) {
   if (!selected) return;
 
   if (openWindows.has(moduleId)) {
+    // Reabrir un modulo ya abierto solo traia la ventana al frente sin
+    // volver a dibujar su contenido, asi que cualquier cambio hecho en
+    // otro lado (marca/estilo de plantilla, datos del proyecto, etc.)
+    // no se reflejaba hasta cerrar y volver a abrir la ventana. Ahora se
+    // vuelve a renderizar con el estado actual cada vez que se navega a el.
     activateWindow(moduleId);
+    const record = openWindows.get(moduleId);
+    const body = record.element.querySelector(".internal-window-body");
+    const module = await import(selected.path);
+    body.innerHTML = "";
+    module.render(body, state);
+    updateStatusLine();
     return;
   }
 
