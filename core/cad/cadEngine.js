@@ -526,7 +526,7 @@ export function removeCadEntity(document, entityId){
 export function normalizeCadDocument(document = {}, project = {}){
   const doc = document?.schema === CAD_SCHEMA ? clone(document) : createCadDocument(project, document);
   doc.layers = arr(doc.layers).length ? doc.layers : clone(CAD_LAYERS);
-  const customSymbols = arr(doc.symbols).filter(symbol => !CAD_SYMBOLS.some(builtin => builtin.id === symbol.id));
+  const customSymbols = arr(doc.symbols).filter(symbol => symbol.kind === "custom" && !CAD_SYMBOLS.some(builtin => builtin.id === symbol.id));
   doc.symbols = clone(CAD_SYMBOLS).concat(clone(customSymbols));
   doc.entities = arr(doc.entities);
   doc.circuits = arr(doc.circuits);

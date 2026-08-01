@@ -199,7 +199,6 @@ function renderEntities(doc, selectedId){
 }
 
 const QET_CATEGORY_LABELS = {
-  "20_home_appliances": "Electrodomésticos",
   "30_architectural": "Instalación (interruptores, enchufes, luces, sensores)",
   "40_meters": "Medidores"
 };
@@ -214,7 +213,7 @@ function renderQetLibrary(doc, ui, activeTool){
   const categories = [...new Set(all.map(symbol => symbol.category))];
   return `<article class="admin-card">
     <h4>Biblioteca QElectroTech</h4>
-    <p class="muted">${all.length} símbolos reales de instalación eléctrica (interruptores, enchufes, luces, electrodomésticos, medidores), importados de la colección abierta QElectroTech (qelectrotech.org, licencia CC-BY 3.0).</p>
+    <p class="muted">${all.length} símbolos reales de instalación eléctrica (interruptores, enchufes, luces, sensores, medidores), importados de la colección abierta QElectroTech (qelectrotech.org, licencia CC-BY 3.0).</p>
     <label>Buscar símbolo<input id="cadQetSearch" type="text" placeholder="Ej: interruptor, enchufe, horno..." value="${esc(ui.qetSearch || "")}"></label>
     <label>Categoría<select id="cadQetCategory">
       <option value="">Todas las categorías</option>
