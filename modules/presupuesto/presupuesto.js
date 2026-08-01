@@ -13,6 +13,28 @@ function downloadJson(filename, payload){
   a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url);
 }
 
+// Abre SOLO el documento de la cotizacion (sin el titulo del panel, KPIs
+// ni tablas internas duplicadas) en una pestana aparte, lista para
+// imprimir o guardar como PDF con el propio navegador. Disponible para
+// cualquier perfil que use este modulo (empresa e instalador independiente).
+function openPrintableQuote(project, commercial, state, documentHtml){
+  const win = window.open("", "_blank");
+  if(!win){
+    alert("El navegador bloqueó la ventana de impresión. Habilita las ventanas emergentes para este sitio e inténtalo de nuevo.");
+    return;
+  }
+  win.document.write(`<!doctype html><html><head><meta charset="utf-8">
+    <title>Presupuesto - ${esc(project.name || "GIAE Chile")}</title>
+    <link rel="stylesheet" href="${location.origin}/css/platform.css">
+    <style>
+      @page { size: A4; margin: 14mm; }
+      body{ background:#fff; margin:0; padding:16px; }
+    </style>
+  </head><body>${documentHtml}</body></html>`);
+  win.document.close();
+  win.onload = () => { win.focus(); win.print(); };
+}
+
 function materialRows(items){
   if(!items?.length) return `<tr><td colspan="6">Sin materiales generados. Ingresa cargas y genera tablero/empalme.</td></tr>`;
   return items.map(item => `<tr>
@@ -93,9 +115,9 @@ function quoteDetailBlock(commercial, accent){
         <tr style="border-top:1px solid #eef1f5"><td style="padding:.3rem .3rem">Neto</td><td style="padding:.3rem .3rem;text-align:right">${clp(commercial.totals.net)}</td></tr>
         <tr><td style="padding:.3rem .3rem">IVA</td><td style="padding:.3rem .3rem;text-align:right">${clp(commercial.totals.iva)}</td></tr>
         <tr style="border-top:2px solid ${accent}"><td style="padding:.5rem .3rem;font-weight:700">Total</td><td style="padding:.5rem .3rem;text-align:right;font-weight:700">${clp(commercial.totals.total)}</td></tr>
+        ${commercial.validUntil ? `<tr><td style="padding:.5rem .3rem;color:#66758a" colspan="2">Presupuesto válido hasta el <strong style="color:inherit">${esc(commercial.validUntil)}</strong>.</td></tr>` : ""}
       </tbody>
-    </table>
-    ${commercial.validUntil ? `<p style="margin:.8rem .3rem 0;font-size:.85rem;color:#66758a">Presupuesto válido hasta el <strong style="color:inherit">${esc(commercial.validUntil)}</strong>.</p>` : ""}`;
+    </table>`;
 }
 
 function quotePreview(project, commercial, state){
@@ -217,6 +239,7 @@ export function render(host, state) {
       </div>
 
       ${quotePreview(project, commercial, state)}
+      <div class="module-toolbar"><button id="printQuoteBtn" class="secondary">Imprimir / Descargar PDF</button></div>
 
       <div class="kpi-grid engineering-kpis">
         <div class="kpi-card"><span>Materiales</span><strong>${clp(commercial.totals.materialsSubtotal)}</strong></div>
@@ -272,6 +295,10 @@ export function render(host, state) {
         </tbody></table></div>
       </div>
     </section>`;
+
+  host.querySelector("#printQuoteBtn").addEventListener("click", () => {
+    openPrintableQuote(project, commercial, state, quotePreview(project, commercial, state));
+  });
 
   host.querySelector("#saveCommercialSettings").addEventListener("click", () => {
     project.commercialSettings = project.commercialSettings || {};
