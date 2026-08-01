@@ -1,3 +1,5 @@
+import { QET_SYMBOLS } from "../../data/qet-symbols.js";
+
 export const CAD_SCHEMA = "giae.cad.document.v1";
 
 export const CAD_LAYERS = [
@@ -43,7 +45,8 @@ export const CAD_SYMBOLS = [
   { id: "window", label: "Ventana", layer: "arquitectura", kind: "building", ports: [] },
   { id: "door", label: "Puerta", layer: "arquitectura", kind: "building", ports: [] },
   { id: "note", label: "Nota", layer: "notas", kind: "annotation", ports: [] },
-  { id: "dimension", label: "Dimension", layer: "revision", kind: "annotation", ports: [] }
+  { id: "dimension", label: "Dimension", layer: "revision", kind: "annotation", ports: [] },
+  ...QET_SYMBOLS.map(symbol => ({ id: symbol.id, label: symbol.label, layer: symbol.layer, kind: "load", ports: [], source: "qelectrotech", category: symbol.category, primitives: symbol.primitives }))
 ];
 
 function stamp(){ return new Date().toISOString(); }
@@ -503,7 +506,8 @@ export function removeCadEntity(document, entityId){
 export function normalizeCadDocument(document = {}, project = {}){
   const doc = document?.schema === CAD_SCHEMA ? clone(document) : createCadDocument(project, document);
   doc.layers = arr(doc.layers).length ? doc.layers : clone(CAD_LAYERS);
-  doc.symbols = arr(doc.symbols).length ? doc.symbols : clone(CAD_SYMBOLS);
+  const customSymbols = arr(doc.symbols).filter(symbol => !CAD_SYMBOLS.some(builtin => builtin.id === symbol.id));
+  doc.symbols = clone(CAD_SYMBOLS).concat(clone(customSymbols));
   doc.entities = arr(doc.entities);
   doc.circuits = arr(doc.circuits);
   doc.canvas = { width: n(doc.canvas?.width, 1200), height: n(doc.canvas?.height, 760), grid: n(doc.canvas?.grid, 20) };

@@ -608,6 +608,8 @@ body{background:var(--bg);}
 .cad-perimeter-measurements{display:flex;flex-direction:column;gap:.4rem;margin-top:.6rem;max-height:220px;overflow-y:auto}
 .cad-perimeter-measurements label{display:flex;justify-content:space-between;align-items:center;gap:.5rem;font-size:.8rem}
 .cad-perimeter-measurements input{width:80px}
+.cad-qet-results{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem;max-height:260px;overflow-y:auto}
+.cad-qet-results .cad-tool{font-size:.72rem;padding:.35rem .55rem;white-space:nowrap}
 /* Fase 5.6 - flujo guiado */
 .guided-flow-module .flow-kpis strong{font-size:1.35rem;line-height:1.1}
 .flow-next-action p{font-size:1.05rem;color:#26384b;margin:.35rem 0 1rem}

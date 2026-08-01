@@ -77,8 +77,30 @@ function renderToolOptions(activeTool, docSymbols = []){
     ["note", "Nota"]
   ];
   const defaultIds = new Set(tools.map(([id]) => id));
-  const customTools = Array.isArray(docSymbols) ? docSymbols.filter(symbol => !defaultIds.has(symbol.id)).map(symbol => [symbol.id, symbol.label || symbol.id]) : [];
+  const customTools = Array.isArray(docSymbols) ? docSymbols.filter(symbol => !defaultIds.has(symbol.id) && !String(symbol.id).startsWith("qet-")).map(symbol => [symbol.id, symbol.label || symbol.id]) : [];
   return tools.concat(customTools).map(([id, label]) => `<button type="button" class="cad-tool ${activeTool === id ? "active" : ""}" data-cad-tool="${id}">${label}</button>`).join("");
+}
+function renderQetPrimitives(primitives, color){
+  return primitives.map(p => {
+    if(p.tag === "line") return `<line x1="${p.x1}" y1="${p.y1}" x2="${p.x2}" y2="${p.y2}" stroke="${color}" stroke-width="1.6" fill="none"/>`;
+    if(p.tag === "rect") return `<rect x="${p.x}" y="${p.y}" width="${p.width}" height="${p.height}" fill="none" stroke="${color}" stroke-width="1.6"/>`;
+    if(p.tag === "ellipse") return `<ellipse cx="${p.cx}" cy="${p.cy}" rx="${p.rx}" ry="${p.ry}" fill="none" stroke="${color}" stroke-width="1.6"/>`;
+    if(p.tag === "polygon"){
+      const pts = (p.points || []).map(([px, py]) => `${px} ${py}`).join(" L ");
+      if(!pts) return "";
+      return `<path d="M ${pts}${p.closed ? " Z" : ""}" fill="none" stroke="${color}" stroke-width="1.6"/>`;
+    }
+    if(p.tag === "arc"){
+      const startRad = (p.start || 0) * Math.PI / 180;
+      const endRad = ((p.start || 0) + (p.angle || 0)) * Math.PI / 180;
+      const x1 = p.cx + p.rx * Math.cos(startRad), y1 = p.cy + p.ry * Math.sin(startRad);
+      const x2 = p.cx + p.rx * Math.cos(endRad), y2 = p.cy + p.ry * Math.sin(endRad);
+      const largeArc = Math.abs(p.angle || 0) > 180 ? 1 : 0;
+      return `<path d="M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${p.rx} ${p.ry} 0 ${largeArc} 1 ${x2.toFixed(2)} ${y2.toFixed(2)}" fill="none" stroke="${color}" stroke-width="1.6"/>`;
+    }
+    if(p.tag === "text") return `<text x="${p.x}" y="${p.y}" font-size="6" fill="${color}">${esc(p.text || "")}</text>`;
+    return "";
+  }).join("");
 }
 function renderSymbol(entity, symbols = CAD_SYMBOLS){
   const color = layerColor(entity.layer);
@@ -86,6 +108,12 @@ function renderSymbol(entity, symbols = CAD_SYMBOLS){
   const rotation = n(entity.rotation, 0);
   const label = esc(entity.label || symbolLabel(entity.symbolId, symbols));
   const base = `data-entity-id="${esc(entity.id)}" class="cad-entity cad-symbol" data-draggable="true"`;
+  if(String(entity.symbolId || "").startsWith("qet-")){
+    const qetSymbol = symbols.find(item => item.id === entity.symbolId);
+    if(qetSymbol && Array.isArray(qetSymbol.primitives)){
+      return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation})">${renderQetPrimitives(qetSymbol.primitives, color)}<text y="34" text-anchor="middle" font-size="10" font-weight="700" fill="${color}">${label}</text></g>`;
+    }
+  }
   if(entity.symbolId === "panel") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation})"><rect x="-34" y="-42" width="68" height="84" rx="4" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-22" y1="-20" x2="22" y2="-20" stroke="${color}" stroke-width="1.5"/><line x1="-22" y1="0" x2="22" y2="0" stroke="${color}" stroke-width="1.5"/><line x1="-22" y1="20" x2="22" y2="20" stroke="${color}" stroke-width="1.5"/><text y="58" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
   if(entity.symbolId === "sub-panel") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation})"><rect x="-28" y="-34" width="56" height="68" rx="4" fill="none" stroke="${color}" stroke-width="2.5" stroke-dasharray="6 3"/><line x1="-16" y1="-14" x2="16" y2="-14" stroke="${color}" stroke-width="1.5"/><line x1="-16" y1="8" x2="16" y2="8" stroke="${color}" stroke-width="1.5"/><text y="48" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
   if(entity.symbolId === "meter") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation})"><circle r="22" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="0" y1="6" x2="10" y2="-10" stroke="${color}" stroke-width="2" stroke-linecap="round"/><circle r="2.5" fill="${color}"/><text y="42" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
@@ -170,10 +198,38 @@ function renderEntities(doc, selectedId){
   return doc.entities.slice(0, 80).map(entity => `<button type="button" class="cad-entity-row ${entity.id === selectedId ? "active" : ""}" data-select-entity="${esc(entity.id)}"><span style="--layer:${esc(layerColor(entity.layer))}"></span><b>${esc(entity.label)}</b><small>${esc(entity.type)} - ${esc(entity.layer)}</small></button>`).join("");
 }
 
+const QET_CATEGORY_LABELS = {
+  "20_home_appliances": "Electrodomésticos",
+  "30_architectural": "Instalación (interruptores, enchufes, luces, sensores)",
+  "40_meters": "Medidores"
+};
+function renderQetLibrary(doc, ui, activeTool){
+  const all = (doc.symbols || []).filter(symbol => symbol.source === "qelectrotech");
+  const query = String(ui.qetSearch || "").trim().toLowerCase();
+  const category = ui.qetCategory || "";
+  let results = all;
+  if(category) results = results.filter(symbol => symbol.category === category);
+  if(query) results = results.filter(symbol => symbol.label.toLowerCase().includes(query));
+  const limited = results.slice(0, query || category ? 120 : 30);
+  const categories = [...new Set(all.map(symbol => symbol.category))];
+  return `<article class="admin-card">
+    <h4>Biblioteca QElectroTech</h4>
+    <p class="muted">${all.length} símbolos reales de instalación eléctrica (interruptores, enchufes, luces, electrodomésticos, medidores), importados de la colección abierta QElectroTech (qelectrotech.org, licencia CC-BY 3.0).</p>
+    <label>Buscar símbolo<input id="cadQetSearch" type="text" placeholder="Ej: interruptor, enchufe, horno..." value="${esc(ui.qetSearch || "")}"></label>
+    <label>Categoría<select id="cadQetCategory">
+      <option value="">Todas las categorías</option>
+      ${categories.map(cat => `<option value="${esc(cat)}" ${category === cat ? "selected" : ""}>${esc(QET_CATEGORY_LABELS[cat] || cat)}</option>`).join("")}
+    </select></label>
+    <div class="cad-qet-results">
+      ${limited.length ? limited.map(symbol => `<button type="button" class="cad-tool ${activeTool === symbol.id ? "active" : ""}" data-cad-tool="${esc(symbol.id)}" title="${esc(symbol.label)}">${esc(symbol.label)}</button>`).join("") : `<p class="small">Sin resultados para esa búsqueda.</p>`}
+    </div>
+    ${!query && !category && results.length > limited.length ? `<p class="small">Mostrando ${limited.length} de ${results.length}. Usa el buscador para ver más.</p>` : ""}
+  </article>`;
+}
 export function render(host, state){
   const project = state.currentProject;
   let doc = ensureCad(project);
-  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null };
+  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, qetSearch: "", qetCategory: "" };
   project.cadUi = ui;
   const validation = validateCadDocument(doc);
   doc.validation = validation;
@@ -211,6 +267,8 @@ export function render(host, state){
             <label>Circuito<input id="cadCircuitInput" value="${esc(ui.circuitId || "")}" placeholder="Ej: C01"></label>
             <div class="row-actions"><button id="cadGenerateProject">Generar desde proyecto</button><button id="cadValidate" class="secondary">Validar</button></div>
           </article>
+
+          ${renderQetLibrary(doc, ui, ui.tool)}
 
           <article class="admin-card">
             <h4>Perímetro de la casa</h4>
@@ -342,6 +400,18 @@ export function render(host, state){
     project.cad2d = doc;
     addHistory(`Simbolos CAD cargados desde ${file.name}`, "CAD electrico", false);
     persist();
+    render(host, state);
+  });
+  host.querySelector("#cadQetSearch")?.addEventListener("input", event => {
+    ui.qetSearch = event.target.value;
+    project.cadUi = ui;
+    render(host, state);
+    const refocused = host.querySelector("#cadQetSearch");
+    if(refocused){ refocused.focus(); refocused.setSelectionRange(refocused.value.length, refocused.value.length); }
+  });
+  host.querySelector("#cadQetCategory")?.addEventListener("change", event => {
+    ui.qetCategory = event.target.value;
+    project.cadUi = ui;
     render(host, state);
   });
   host.querySelector("#cadUndoPerimeterPoint")?.addEventListener("click", () => {
