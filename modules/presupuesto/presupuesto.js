@@ -1,5 +1,6 @@
 import { recalculateProject, persist, addHistory, state as globalState } from "../../core/store.js";
 import { calculateCommercialProject, exportCommercialReport } from "../../core/commercial/budgetEngine.js";
+import { fillDocxTemplate, arrayBufferToBase64, base64ToArrayBuffer } from "../../core/commercial/docxTemplate.js";
 
 function esc(value=""){
   return String(value ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
@@ -341,6 +342,19 @@ export function render(host, state) {
         </div>
       </div>
 
+      <div class="dashboard-card">
+        <h4>Mi plantilla Word (.docx)</h4>
+        <p class="muted">Sube tu propio Word con las mismas variables de arriba escritas donde corresponda (ej. <code>{{cliente}}</code>, <code>{{total}}</code>). GIAE las reemplaza por los datos reales y descarga el Word ya lleno, manteniendo tu diseño, logo y formato originales. Los datos tabulares (<code>{{materiales_tabla}}</code>, <code>{{mano_obra_tabla}}</code>) se insertan como texto simple, uno por línea — no generan filas nuevas dentro de una tabla de Word.</p>
+        <div class="module-toolbar">
+          <label class="import-label">Subir Word (.docx)<input id="wordTemplateUpload" type="file" accept=".docx" hidden></label>
+          <span id="wordTemplateStatus" class="small">${state.admin?.company?.quoteWordTemplateName ? `Plantilla cargada: ${esc(state.admin.company.quoteWordTemplateName)}` : "Sin plantilla Word cargada."}</span>
+        </div>
+        <div class="module-toolbar">
+          <button id="generateWordQuote" class="primary-action" ${state.admin?.company?.quoteWordTemplateBase64 ? "" : "disabled"}>Descargar presupuesto (Word)</button>
+          <button id="clearWordTemplate" class="secondary" ${state.admin?.company?.quoteWordTemplateBase64 ? "" : "disabled"}>Quitar plantilla Word</button>
+        </div>
+      </div>
+
       <div class="kpi-grid engineering-kpis">
         <div class="kpi-card"><span>Materiales</span><strong>${clp(commercial.totals.materialsSubtotal)}</strong></div>
         <div class="kpi-card"><span>Mano de obra</span><strong>${clp(commercial.totals.laborSubtotal)}</strong></div>
@@ -420,6 +434,61 @@ export function render(host, state) {
     addHistory("Plantilla propia de presupuesto quitada, vuelve a estilos incorporados", "Motor Comercial", false);
     persist();
     render(host, globalState);
+  });
+
+  host.querySelector("#wordTemplateUpload").addEventListener("change", async (event) => {
+    const file = event.target.files?.[0];
+    if(!file) return;
+    if(!file.name.toLowerCase().endsWith(".docx")){
+      alert("Sube un archivo .docx (Word). Otros formatos (.doc antiguo, .pdf) no son compatibles.");
+      return;
+    }
+    try{
+      const buffer = await file.arrayBuffer();
+      state.admin = state.admin || {};
+      state.admin.company = state.admin.company || {};
+      state.admin.company.quoteWordTemplateBase64 = arrayBufferToBase64(buffer);
+      state.admin.company.quoteWordTemplateName = file.name;
+      addHistory(`Plantilla Word cargada: ${file.name}`, "Motor Comercial", false);
+      persist();
+      render(host, globalState);
+    }catch(error){
+      alert("No se pudo leer el archivo Word: " + (error?.message || error));
+    }
+  });
+
+  host.querySelector("#clearWordTemplate")?.addEventListener("click", () => {
+    state.admin = state.admin || {};
+    state.admin.company = state.admin.company || {};
+    delete state.admin.company.quoteWordTemplateBase64;
+    delete state.admin.company.quoteWordTemplateName;
+    addHistory("Plantilla Word quitada", "Motor Comercial", false);
+    persist();
+    render(host, globalState);
+  });
+
+  host.querySelector("#generateWordQuote")?.addEventListener("click", async () => {
+    const base64 = state.admin?.company?.quoteWordTemplateBase64;
+    if(!base64) return;
+    const btn = host.querySelector("#generateWordQuote");
+    const originalLabel = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Generando...";
+    try{
+      const vars = buildTemplateVars(project, commercial, state);
+      const buffer = base64ToArrayBuffer(base64);
+      const blob = await fillDocxTemplate(buffer, vars);
+      const safeName = (project.name || "presupuesto-giae").toLowerCase().normalize("NFD").replace(new RegExp("[\\u0300-\\u036f]", "g"), "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "presupuesto-giae";
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = `${safeName}-presupuesto.docx`; a.click();
+      URL.revokeObjectURL(url);
+    }catch(error){
+      alert("No se pudo generar el Word: " + (error?.message || error));
+    }finally{
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+    }
   });
 
   host.querySelector("#saveCommercialSettings").addEventListener("click", () => {
