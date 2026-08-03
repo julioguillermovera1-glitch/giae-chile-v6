@@ -467,6 +467,24 @@ export function resetPerimeter(document){
   return doc;
 }
 
+export function removePerimeterSegment(document, segmentIndex){
+  const doc = normalizeCadDocument(document);
+  const perimeter = doc.perimeter;
+  const segments = getPerimeterSegments(perimeter);
+  const segment = segments[segmentIndex];
+  if(!segment) return doc;
+  const isClosingSegment = perimeter.closed && segmentIndex === segments.length - 1;
+  if(isClosingSegment){
+    perimeter.closed = false;
+  } else {
+    perimeter.points.splice(segmentIndex, 1);
+    if(perimeter.points.length <= 2) perimeter.closed = false;
+  }
+  perimeter.measurementsM = {};
+  doc.updatedAt = stamp();
+  return doc;
+}
+
 export function setPerimeterMeasurement(document, segmentIndex, valueM){
   const doc = normalizeCadDocument(document);
   doc.perimeter.measurementsM = doc.perimeter.measurementsM || {};

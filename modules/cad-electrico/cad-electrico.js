@@ -1,6 +1,6 @@
 import { persist, addHistory } from "../../core/store.js";
 import { CloudflareCADService } from "../../core/cad/cloudflare-service.js";
-import { buildCadFromProject, createCadDocument, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS, getPerimeterSegments, perimeterSegmentLengthM, addPerimeterPoint, undoLastPerimeterPoint, closePerimeter, resetPerimeter, setPerimeterMeasurement, applyPerimeterMeasurements, nearestWallPoint, PERIMETER_PX_PER_METER } from "../../core/cad/cadEngine.js";
+import { buildCadFromProject, createCadDocument, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS, getPerimeterSegments, perimeterSegmentLengthM, addPerimeterPoint, undoLastPerimeterPoint, closePerimeter, resetPerimeter, removePerimeterSegment, setPerimeterMeasurement, applyPerimeterMeasurements, nearestWallPoint, PERIMETER_PX_PER_METER } from "../../core/cad/cadEngine.js";
 
 // Referencias a los listeners de arrastre pegados a document, para poder
 // quitarlos antes de volver a agregarlos en cada render() y no acumularlos.
@@ -236,12 +236,6 @@ function renderPerimeter(perimeter){
   }).join("");
   return `<g class="cad-perimeter">${walls}${vertices}${labels}</g>`;
 }
-function renderLegend(doc){
-  if(!doc.legend?.visible) return "";
-  const x = n(doc.legend.x, 930), y = n(doc.legend.y, 560);
-  const rows = CAD_LAYERS.map((layer, index) => `<g transform="translate(${x + 14} ${y + 42 + index * 20})"><rect width="12" height="12" fill="${esc(layer.color)}"/><text x="20" y="10" font-size="11" font-weight="700" fill="#e2e8f0">${esc(layer.label)}</text></g>`).join("");
-  return `<g class="cad-legend"><rect x="${x}" y="${y}" width="230" height="238" rx="5" fill="#0f172a" stroke="#404a54" stroke-width="2"/><text x="${x + 14}" y="${y + 24}" font-size="13" font-weight="900" fill="#94a3b8">Leyenda GIAE CAD</text>${rows}</g>`;
-}
 function renderCadSvg(doc, selectedId = "", ui = {}){
   const hidden = new Set(doc.layers.filter(layer => layer.hidden).map(layer => layer.id));
   const grid = n(doc.canvas.grid, 20);
@@ -254,7 +248,7 @@ function renderCadSvg(doc, selectedId = "", ui = {}){
   const symbols = doc.entities.filter(entity => entity.type !== "wire" && !hidden.has(entity.layer)).map(entity => renderSymbol(entity, doc.symbols)).join("");
   const selected = selectedId ? doc.entities.find(entity => entity.id === selectedId) : null;
   const selectBox = selected && selected.type !== "wire" ? `<g transform="translate(${n(selected.x)} ${n(selected.y)}) rotate(${n(selected.rotation, 0)})"><rect class="cad-selected-box" x="-44" y="-52" width="88" height="104" rx="4" stroke="#22c55e" stroke-width="2" fill="none"/></g>` : "";
-  return `<svg id="cadCanvas" class="cad-canvas" viewBox="${panX} ${panY} ${viewW} ${viewH}" role="img" aria-label="Plano CAD electrico GIAE"><defs><pattern id="cadGrid" width="${grid}" height="${grid}" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="${grid}" y2="0" stroke="#3a3f48" stroke-width="0.5"/><line x1="0" y1="0" x2="0" y2="${grid}" stroke="#3a3f48" stroke-width="0.5"/><line x1="${grid}" y1="0" x2="${grid}" y2="${grid}" stroke="#404a54" stroke-width="1.5"/><line x1="0" y1="${grid}" x2="${grid}" y2="${grid}" stroke="#404a54" stroke-width="1.5"/></pattern><filter id="shadowFilter" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.3"/></filter></defs><rect width="${width}" height="${height}" fill="#1a1f27"/><rect width="${width}" height="${height}" fill="url(#cadGrid)" opacity="0.6"/><g class="cad-border"><rect x="24" y="24" width="${width-48}" height="${height-48}" fill="none" stroke="#404a54" stroke-width="2" stroke-dasharray="8 6"/></g>${renderPerimeter(doc.perimeter)}<g filter="url(#shadowFilter)">${wires}${symbols}</g>${selectBox}${renderLegend(doc)}</svg>`;
+  return `<svg id="cadCanvas" class="cad-canvas" viewBox="${panX} ${panY} ${viewW} ${viewH}" role="img" aria-label="Plano CAD electrico GIAE"><defs><pattern id="cadGrid" width="${grid}" height="${grid}" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="${grid}" y2="0" stroke="#3a3f48" stroke-width="0.5"/><line x1="0" y1="0" x2="0" y2="${grid}" stroke="#3a3f48" stroke-width="0.5"/><line x1="${grid}" y1="0" x2="${grid}" y2="${grid}" stroke="#404a54" stroke-width="1.5"/><line x1="0" y1="${grid}" x2="${grid}" y2="${grid}" stroke="#404a54" stroke-width="1.5"/></pattern><filter id="shadowFilter" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.3"/></filter></defs><rect width="${width}" height="${height}" fill="#1a1f27"/><rect width="${width}" height="${height}" fill="url(#cadGrid)" opacity="0.6"/><g class="cad-border"><rect x="24" y="24" width="${width-48}" height="${height-48}" fill="none" stroke="#404a54" stroke-width="2" stroke-dasharray="8 6"/></g>${renderPerimeter(doc.perimeter)}<g filter="url(#shadowFilter)">${wires}${symbols}</g>${selectBox}</svg>`;
 }
 function renderValidation(validation){
   const issues = validation.issues || [];
@@ -549,9 +543,8 @@ export function render(host, state){
       }
       const wallHit = nearestWallPoint(doc.perimeter, point);
       if(wallHit && wallHit.distance <= 16){
-        if(!confirm("Borrar todo el perímetro de la casa?")) return;
-        doc = resetPerimeter(doc);
-        saveAndRefresh("Perímetro borrado con la goma");
+        doc = removePerimeterSegment(doc, wallHit.segmentIndex);
+        saveAndRefresh("Pared del perímetro borrada con la goma");
       }
       return;
     }
@@ -609,8 +602,9 @@ export function render(host, state){
   let dragEntityId = null;
   let dragGroup = null;
   let dragMoved = false;
+  const CAD_NO_DRAG_TOOLS = new Set(["eraser", "wire", "dimension", "perimeter", "pencil"]);
   host.querySelector("#cadCanvas").addEventListener("mousedown", event => {
-    if(ui.tool !== "select") return;
+    if(CAD_NO_DRAG_TOOLS.has(ui.tool)) return;
     const entityGroup = event.target.closest('[data-draggable="true"]');
     if(!entityGroup) return;
     dragEntityId = entityGroup.dataset.entityId;
