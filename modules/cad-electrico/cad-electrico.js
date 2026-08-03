@@ -256,11 +256,80 @@ function renderQetLibrary(doc, ui, activeTool){
     </div>
   </article>`;
 }
+function renderCadStartScreen(project, doc){
+  const projectName = esc(project.name || "Proyecto sin nombre");
+  return `<section class="module-window cad-module cad-start-screen">
+    <div class="cad-start-shell">
+      <aside class="cad-start-side">
+        <p class="eyebrow">Fase 5 - CAD electrico GIAE 2.0</p>
+        <h3>CAD Eléctrico</h3>
+        <button id="cadStartNew" class="primary-action">+ Nuevo plano</button>
+        <nav class="cad-start-nav">
+          <button type="button" data-cad-start-nav="novedades" class="cad-start-nav-link active">Novedades</button>
+          <button type="button" data-cad-start-nav="ayuda" class="cad-start-nav-link">Ayuda rápida</button>
+        </nav>
+      </aside>
+      <main class="cad-start-main">
+        <h2>Bienvenido a tu plano eléctrico</h2>
+        <p class="muted">Proyecto activo: <b>${projectName}</b></p>
+        <div class="cad-start-empty">
+          <div class="cad-start-icon">🗄️</div>
+          <p><b>Aún no hay dibujos en este proyecto.</b></p>
+          <p class="small">Empieza trazando el perímetro de la casa a escala real, o genera el plano automáticamente desde las cargas ya cargadas en el proyecto. Ambas opciones están dentro del editor.</p>
+        </div>
+        <div id="cadStartNovedades" class="cad-start-panel">
+          <h4>Novedades de esta versión</h4>
+          <ul>
+            <li>Biblioteca de 87 símbolos reales de instalación (QElectroTech, EN 60617)</li>
+            <li>Perímetro de la casa a escala real, con medidas por pared</li>
+            <li>Puertas y ventanas que se ajustan solas al muro más cercano</li>
+            <li>Lápiz para dibujar líneas libres y Goma para borrar</li>
+            <li>Zoom, paneo y coordenadas en vivo</li>
+          </ul>
+        </div>
+        <div id="cadStartAyuda" class="cad-start-panel" hidden>
+          <h4>Ayuda rápida</h4>
+          <p class="small">Usa "Perímetro (paredes)" para trazar los muros y luego "Aplicar medidas y escalar" con las medidas reales. Coloca símbolos desde "Herramientas" o busca en la "Biblioteca QElectroTech". La leyenda del plano (cuadro de simbología) se genera sola.</p>
+        </div>
+      </main>
+      <aside class="cad-start-cloud">
+        <h4>☁️ Cloudflare (D1 + R2)</h4>
+        <div id="cadStartCFStatus" class="cad-cf-status"><span id="cadStartCFStatusText">Verificando...</span></div>
+        <p class="small muted">Guarda tu plano en la nube desde el editor para acceder desde cualquier equipo.</p>
+      </aside>
+    </div>
+  </section>`;
+}
 export function render(host, state){
   const project = state.currentProject;
   let doc = ensureCad(project);
   const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, qetSearch: "", qetOpenCategories: [], toolOpenCategories: [], zoom: 1, panX: 0, panY: 0 };
   project.cadUi = ui;
+  const isEmptyPlan = doc.entities.length === 0 && !(doc.perimeter?.points?.length);
+  if(ui.cadStartDismissed === undefined) ui.cadStartDismissed = !isEmptyPlan;
+  if(!ui.cadStartDismissed){
+    host.innerHTML = renderCadStartScreen(project, doc);
+    host.querySelector("#cadStartNew").addEventListener("click", () => {
+      ui.cadStartDismissed = true;
+      project.cadUi = ui;
+      render(host, state);
+    });
+    host.querySelectorAll("[data-cad-start-nav]").forEach(button => button.addEventListener("click", () => {
+      const target = button.dataset.cadStartNav;
+      host.querySelectorAll("[data-cad-start-nav]").forEach(b => b.classList.toggle("active", b === button));
+      host.querySelector("#cadStartNovedades").hidden = target !== "novedades";
+      host.querySelector("#cadStartAyuda").hidden = target !== "ayuda";
+    }));
+    const cfServiceStart = new CloudflareCADService("/api/giae");
+    cfServiceStart.checkHealth().then(health => {
+      const label = host.querySelector("#cadStartCFStatusText");
+      if(label){
+        label.textContent = cfServiceStart.getStatusIcon(health);
+        label.style.color = health.available ? "#22c55e" : "#ef4444";
+      }
+    });
+    return;
+  }
   const validation = validateCadDocument(doc);
   doc.validation = validation;
   const summary = summarizeCadDocument(doc);
@@ -362,7 +431,7 @@ export function render(host, state){
         <main class="cad-main">
           <div class="cad-topbar">
             <div><b>${esc(doc.name)}</b><span>${esc(doc.scale)} - ${esc(doc.units)} - ${esc(project.name || "Proyecto sin nombre")}</span></div>
-            <div class="row-actions"><button id="cadToggleFullscreen" class="primary-action">${ui.fullscreen ? "✕ Salir de pantalla completa" : "⛶ Pantalla completa"}</button><button id="cadExportJson" class="secondary">Exportar .giaecad</button><button id="cadExportDwt" class="secondary">Exportar .DWT</button><button id="cadExportSvg" class="secondary">Exportar SVG</button><button id="cadClear" class="ghost danger-text">Reiniciar plano</button></div>
+            <div class="row-actions"><button id="cadBackToStart" class="ghost">🏠 Inicio</button><button id="cadToggleFullscreen" class="primary-action">${ui.fullscreen ? "✕ Salir de pantalla completa" : "⛶ Pantalla completa"}</button><button id="cadExportJson" class="secondary">Exportar .giaecad</button><button id="cadExportDwt" class="secondary">Exportar .DWT</button><button id="cadExportSvg" class="secondary">Exportar SVG</button><button id="cadClear" class="ghost danger-text">Reiniciar plano</button></div>
           </div>
           <div class="cad-stage">${renderCadSvg(doc, ui.selectedId, ui)}</div>
           <div class="cad-statusbar">
@@ -662,6 +731,11 @@ export function render(host, state){
   }, { passive: false });
   host.querySelector("#cadToggleFullscreen").addEventListener("click", () => {
     ui.fullscreen = !ui.fullscreen;
+    project.cadUi = ui;
+    render(host, state);
+  });
+  host.querySelector("#cadBackToStart").addEventListener("click", () => {
+    ui.cadStartDismissed = false;
     project.cadUi = ui;
     render(host, state);
   });
