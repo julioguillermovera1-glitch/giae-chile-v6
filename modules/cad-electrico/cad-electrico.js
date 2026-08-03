@@ -205,30 +205,36 @@ const QET_CATEGORY_LABELS = {
 function renderQetLibrary(doc, ui, activeTool){
   const all = (doc.symbols || []).filter(symbol => symbol.source === "qelectrotech");
   const query = String(ui.qetSearch || "").trim().toLowerCase();
-  const category = ui.qetCategory || "";
-  let results = all;
-  if(category) results = results.filter(symbol => symbol.category === category);
-  if(query) results = results.filter(symbol => symbol.label.toLowerCase().includes(query));
-  const limited = results.slice(0, query || category ? 120 : 30);
+  const openCategories = new Set(ui.qetOpenCategories || []);
   const categories = [...new Set(all.map(symbol => symbol.category))];
+  const sections = categories.map(cat => {
+    const symbolsInCat = all.filter(symbol => symbol.category === cat);
+    const matches = query ? symbolsInCat.filter(symbol => symbol.label.toLowerCase().includes(query)) : symbolsInCat;
+    const isOpen = query ? matches.length > 0 : openCategories.has(cat);
+    return { cat, label: QET_CATEGORY_LABELS[cat] || cat, symbolsInCat, matches, isOpen };
+  });
   return `<article class="admin-card">
     <h4>Biblioteca QElectroTech</h4>
     <p class="muted">${all.length} símbolos reales de instalación eléctrica (interruptores, enchufes, luces, sensores, medidores), importados de la colección abierta QElectroTech (qelectrotech.org, licencia CC-BY 3.0).</p>
     <label>Buscar símbolo<input id="cadQetSearch" type="text" placeholder="Ej: interruptor, enchufe, horno..." value="${esc(ui.qetSearch || "")}"></label>
-    <label>Categoría<select id="cadQetCategory">
-      <option value="">Todas las categorías</option>
-      ${categories.map(cat => `<option value="${esc(cat)}" ${category === cat ? "selected" : ""}>${esc(QET_CATEGORY_LABELS[cat] || cat)}</option>`).join("")}
-    </select></label>
-    <div class="cad-qet-results">
-      ${limited.length ? limited.map(symbol => `<button type="button" class="cad-tool ${activeTool === symbol.id ? "active" : ""}" data-cad-tool="${esc(symbol.id)}" title="${esc(symbol.label)}">${esc(symbol.label)}</button>`).join("") : `<p class="small">Sin resultados para esa búsqueda.</p>`}
+    <div class="cad-qet-accordion">
+      ${sections.map(section => `<div class="cad-qet-category">
+        <button type="button" class="cad-qet-category-header" data-qet-category-toggle="${esc(section.cat)}">
+          <span class="cad-qet-caret ${section.isOpen ? "open" : ""}">▸</span>
+          <span>${esc(section.label)}</span>
+          <small>${query ? section.matches.length + "/" : ""}${section.symbolsInCat.length}</small>
+        </button>
+        <div class="cad-qet-category-body" ${section.isOpen ? "" : "hidden"}>
+          ${section.matches.length ? section.matches.map(symbol => `<button type="button" class="cad-tool ${activeTool === symbol.id ? "active" : ""}" data-cad-tool="${esc(symbol.id)}" title="${esc(symbol.label)}">${esc(symbol.label)}</button>`).join("") : `<p class="small">Sin resultados para esa búsqueda.</p>`}
+        </div>
+      </div>`).join("")}
     </div>
-    ${!query && !category && results.length > limited.length ? `<p class="small">Mostrando ${limited.length} de ${results.length}. Usa el buscador para ver más.</p>` : ""}
   </article>`;
 }
 export function render(host, state){
   const project = state.currentProject;
   let doc = ensureCad(project);
-  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, qetSearch: "", qetCategory: "" };
+  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, qetSearch: "", qetOpenCategories: [] };
   project.cadUi = ui;
   const validation = validateCadDocument(doc);
   doc.validation = validation;
@@ -408,11 +414,14 @@ export function render(host, state){
     const refocused = host.querySelector("#cadQetSearch");
     if(refocused){ refocused.focus(); refocused.setSelectionRange(refocused.value.length, refocused.value.length); }
   });
-  host.querySelector("#cadQetCategory")?.addEventListener("change", event => {
-    ui.qetCategory = event.target.value;
+  host.querySelectorAll("[data-qet-category-toggle]").forEach(button => button.addEventListener("click", () => {
+    const cat = button.dataset.qetCategoryToggle;
+    const open = new Set(ui.qetOpenCategories || []);
+    if(open.has(cat)) open.delete(cat); else open.add(cat);
+    ui.qetOpenCategories = [...open];
     project.cadUi = ui;
     render(host, state);
-  });
+  }));
   host.querySelector("#cadUndoPerimeterPoint")?.addEventListener("click", () => {
     doc = undoLastPerimeterPoint(doc);
     saveAndRefresh("Punto de perímetro deshecho");
