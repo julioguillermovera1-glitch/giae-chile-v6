@@ -1,6 +1,6 @@
 import { persist, addHistory } from "../../core/store.js";
 import { CloudflareCADService } from "../../core/cad/cloudflare-service.js";
-import { buildCadFromProject, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS, getPerimeterSegments, perimeterSegmentLengthM, addPerimeterPoint, undoLastPerimeterPoint, closePerimeter, resetPerimeter, setPerimeterMeasurement, applyPerimeterMeasurements, nearestWallPoint } from "../../core/cad/cadEngine.js";
+import { buildCadFromProject, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS, getPerimeterSegments, perimeterSegmentLengthM, addPerimeterPoint, undoLastPerimeterPoint, closePerimeter, resetPerimeter, setPerimeterMeasurement, applyPerimeterMeasurements, nearestWallPoint, PERIMETER_PX_PER_METER } from "../../core/cad/cadEngine.js";
 
 function esc(value = ""){
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -36,6 +36,15 @@ function svgPoint(event, svg){
   };
 }
 function snap(value, grid){ return Math.round(value / grid) * grid; }
+function nearestSymbolCenter(doc, point, thresholdPx = 28){
+  let best = null;
+  doc.entities.forEach(entity => {
+    if(entity.type === "wire") return;
+    const dist = Math.hypot(n(entity.x) - point.x, n(entity.y) - point.y);
+    if(dist <= thresholdPx && (!best || dist < best.distance)) best = { x: n(entity.x), y: n(entity.y), distance: dist };
+  });
+  return best;
+}
 function renderLayerToggles(doc){
   const used = new Set(doc.entities.map(entity => entity.layer));
   return CAD_LAYERS.map(layer => `<label class="cad-layer-toggle"><input type="checkbox" data-cad-layer="${esc(layer.id)}" ${layer.hidden ? "" : "checked"}><span style="--layer:${esc(layer.color)}"></span>${esc(layer.label)}<small>${used.has(layer.id) ? "en uso" : "vacia"}</small></label>`).join("");
@@ -166,18 +175,19 @@ function renderLegend(doc){
   const rows = CAD_LAYERS.map((layer, index) => `<g transform="translate(${x + 14} ${y + 42 + index * 20})"><rect width="12" height="12" fill="${esc(layer.color)}"/><text x="20" y="10" font-size="11" font-weight="700" fill="#e2e8f0">${esc(layer.label)}</text></g>`).join("");
   return `<g class="cad-legend"><rect x="${x}" y="${y}" width="230" height="238" rx="5" fill="#0f172a" stroke="#404a54" stroke-width="2"/><text x="${x + 14}" y="${y + 24}" font-size="13" font-weight="900" fill="#94a3b8">Leyenda GIAE CAD</text>${rows}</g>`;
 }
-function renderCadSvg(doc, selectedId = ""){
+function renderCadSvg(doc, selectedId = "", ui = {}){
   const hidden = new Set(doc.layers.filter(layer => layer.hidden).map(layer => layer.id));
   const grid = n(doc.canvas.grid, 20);
   const width = n(doc.canvas.width, 1200), height = n(doc.canvas.height, 760);
-  const gridLines = [];
-  for(let x = 0; x <= width; x += grid) gridLines.push(`<line x1="${x}" y1="0" x2="${x}" y2="${height}"/>`);
-  for(let y = 0; y <= height; y += grid) gridLines.push(`<line x1="0" y1="${y}" x2="${width}" y2="${y}"/>`);
+  const zoom = Math.max(0.25, Math.min(4, n(ui.zoom, 1)));
+  const viewW = width / zoom, viewH = height / zoom;
+  const panX = Math.max(0, Math.min(width - viewW, n(ui.panX, 0)));
+  const panY = Math.max(0, Math.min(height - viewH, n(ui.panY, 0)));
   const wires = doc.entities.filter(entity => entity.type === "wire" && !hidden.has(entity.layer)).map(renderWire).join("");
   const symbols = doc.entities.filter(entity => entity.type !== "wire" && !hidden.has(entity.layer)).map(entity => renderSymbol(entity, doc.symbols)).join("");
   const selected = selectedId ? doc.entities.find(entity => entity.id === selectedId) : null;
   const selectBox = selected && selected.type !== "wire" ? `<g transform="translate(${n(selected.x)} ${n(selected.y)}) rotate(${n(selected.rotation, 0)})"><rect class="cad-selected-box" x="-44" y="-52" width="88" height="104" rx="4" stroke="#22c55e" stroke-width="2" fill="none"/></g>` : "";
-  return `<svg id="cadCanvas" class="cad-canvas" viewBox="0 0 ${width} ${height}" role="img" aria-label="Plano CAD electrico GIAE"><defs><pattern id="cadGrid" width="${grid}" height="${grid}" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="${grid}" y2="0" stroke="#3a3f48" stroke-width="0.5"/><line x1="0" y1="0" x2="0" y2="${grid}" stroke="#3a3f48" stroke-width="0.5"/><line x1="${grid}" y1="0" x2="${grid}" y2="${grid}" stroke="#404a54" stroke-width="1.5"/><line x1="0" y1="${grid}" x2="${grid}" y2="${grid}" stroke="#404a54" stroke-width="1.5"/></pattern><filter id="shadowFilter" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.3"/></filter></defs><rect width="${width}" height="${height}" fill="#1a1f27"/><rect width="${width}" height="${height}" fill="url(#cadGrid)" opacity="0.6"/><g class="cad-border"><rect x="24" y="24" width="${width-48}" height="${height-48}" fill="none" stroke="#404a54" stroke-width="2" stroke-dasharray="8 6"/></g>${renderPerimeter(doc.perimeter)}<g filter="url(#shadowFilter)">${wires}${symbols}</g>${selectBox}${renderLegend(doc)}</svg>`;
+  return `<svg id="cadCanvas" class="cad-canvas" viewBox="${panX} ${panY} ${viewW} ${viewH}" role="img" aria-label="Plano CAD electrico GIAE"><defs><pattern id="cadGrid" width="${grid}" height="${grid}" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="${grid}" y2="0" stroke="#3a3f48" stroke-width="0.5"/><line x1="0" y1="0" x2="0" y2="${grid}" stroke="#3a3f48" stroke-width="0.5"/><line x1="${grid}" y1="0" x2="${grid}" y2="${grid}" stroke="#404a54" stroke-width="1.5"/><line x1="0" y1="${grid}" x2="${grid}" y2="${grid}" stroke="#404a54" stroke-width="1.5"/></pattern><filter id="shadowFilter" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.3"/></filter></defs><rect width="${width}" height="${height}" fill="#1a1f27"/><rect width="${width}" height="${height}" fill="url(#cadGrid)" opacity="0.6"/><g class="cad-border"><rect x="24" y="24" width="${width-48}" height="${height-48}" fill="none" stroke="#404a54" stroke-width="2" stroke-dasharray="8 6"/></g>${renderPerimeter(doc.perimeter)}<g filter="url(#shadowFilter)">${wires}${symbols}</g>${selectBox}${renderLegend(doc)}</svg>`;
 }
 function renderValidation(validation){
   const issues = validation.issues || [];
@@ -190,11 +200,21 @@ function renderEntities(doc, selectedId){
 }
 
 function renderRotationControl(doc, ui){
-  const selectedEntityForRotation = ui.selectedId ? doc.entities.find(e => e.id === ui.selectedId) : null;
-  if(!selectedEntityForRotation || selectedEntityForRotation.type === "wire") return "";
-  const currentRotation = n(selectedEntityForRotation.rotation, 0);
+  const entity = ui.selectedId ? doc.entities.find(e => e.id === ui.selectedId) : null;
+  if(!entity) return "";
+  if(entity.type === "wire"){
+    return `<article class="admin-card cad-rotation-card">
+      <h4>Propiedades del elemento</h4>
+      <label>Nombre / etiqueta<input id="cadPropLabel" value="${esc(entity.label || "")}"></label>
+      <label>Circuito<input id="cadPropCircuit" value="${esc(entity.circuitId || "")}" placeholder="Ej: C01"></label>
+    </article>`;
+  }
+  const currentRotation = n(entity.rotation, 0);
   return `<article class="admin-card cad-rotation-card">
-    <h4>Girar símbolo seleccionado</h4>
+    <h4>Propiedades del elemento</h4>
+    <label>Nombre / etiqueta<input id="cadPropLabel" value="${esc(entity.label || "")}"></label>
+    <label>Circuito<input id="cadPropCircuit" value="${esc(entity.circuitId || "")}" placeholder="Ej: C01"></label>
+    <label>Capa<select id="cadPropLayer">${CAD_LAYERS.map(layer => `<option value="${esc(layer.id)}" ${entity.layer === layer.id ? "selected" : ""}>${esc(layer.label)}</option>`).join("")}</select></label>
     <label>Rotación (0-359°)<input id="cadRotationInput" type="number" min="0" max="359" step="1" value="${currentRotation}"></label>
     <div class="row-actions">
       <button id="cadRotateLeft90" class="secondary">↺ -90°</button>
@@ -238,7 +258,7 @@ function renderQetLibrary(doc, ui, activeTool){
 export function render(host, state){
   const project = state.currentProject;
   let doc = ensureCad(project);
-  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, qetSearch: "", qetOpenCategories: [], toolOpenCategories: [] };
+  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, qetSearch: "", qetOpenCategories: [], toolOpenCategories: [], zoom: 1, panX: 0, panY: 0 };
   project.cadUi = ui;
   const validation = validateCadDocument(doc);
   doc.validation = validation;
@@ -343,7 +363,20 @@ export function render(host, state){
             <div><b>${esc(doc.name)}</b><span>${esc(doc.scale)} - ${esc(doc.units)} - ${esc(project.name || "Proyecto sin nombre")}</span></div>
             <div class="row-actions"><button id="cadToggleFullscreen" class="primary-action">${ui.fullscreen ? "✕ Salir de pantalla completa" : "⛶ Pantalla completa"}</button><button id="cadExportJson" class="secondary">Exportar .giaecad</button><button id="cadExportDwt" class="secondary">Exportar .DWT</button><button id="cadExportSvg" class="secondary">Exportar SVG</button><button id="cadClear" class="ghost danger-text">Reiniciar plano</button></div>
           </div>
-          <div class="cad-stage">${renderCadSvg(doc, ui.selectedId)}</div>
+          <div class="cad-stage">${renderCadSvg(doc, ui.selectedId, ui)}</div>
+          <div class="cad-statusbar">
+            <span id="cadCoordsReadout">X: 0.00 m · Y: 0.00 m</span>
+            <div class="row-actions">
+              <button type="button" id="cadPanLeft" class="secondary" title="Mover izquierda">◀</button>
+              <button type="button" id="cadPanUp" class="secondary" title="Mover arriba">▲</button>
+              <button type="button" id="cadPanDown" class="secondary" title="Mover abajo">▼</button>
+              <button type="button" id="cadPanRight" class="secondary" title="Mover derecha">▶</button>
+              <button type="button" id="cadZoomOut" class="secondary">− Alejar</button>
+              <span id="cadZoomLabel">${Math.round(Math.max(0.25, Math.min(4, n(ui.zoom, 1))) * 100)}%</span>
+              <button type="button" id="cadZoomIn" class="secondary">+ Acercar</button>
+              <button type="button" id="cadZoomReset" class="ghost">Restablecer</button>
+            </div>
+          </div>
           <div class="policy-box"><b>Uso:</b> selecciona una herramienta y haz clic en el plano. En modo Cablear, dos clics crean una canalizacion. El plano es fuente de datos preliminar y requiere revision profesional.</div>
           <article class="admin-card"><h4>Validacion CAD</h4>${renderValidation(validation)}</article>
         </main>
@@ -471,18 +504,20 @@ export function render(host, state){
     }
     const point = svgPoint(event, host.querySelector("#cadCanvas"));
     const grid = doc.canvas.grid || 20;
-    const x = snap(point.x, grid), y = snap(point.y, grid);
+    const rawX = snap(point.x, grid), rawY = snap(point.y, grid);
     const label = host.querySelector("#cadLabelInput").value.trim();
     const circuitId = host.querySelector("#cadCircuitInput").value.trim();
     ui.label = label;
     ui.circuitId = circuitId;
     if(ui.tool === "select") return;
     if(ui.tool === "perimeter"){
-      doc = addPerimeterPoint(doc, { x, y });
+      doc = addPerimeterPoint(doc, { x: rawX, y: rawY });
       saveAndRefresh("Punto de perímetro agregado");
       return;
     }
     if(ui.tool === "wire" || ui.tool === "dimension"){
+      const magnet = nearestSymbolCenter(doc, point);
+      const x = magnet ? magnet.x : rawX, y = magnet ? magnet.y : rawY;
       if(!ui.wireStart){ ui.wireStart = { x, y }; project.cadUi = ui; render(host, state); return; }
       const dx = x - ui.wireStart.x;
       const dy = y - ui.wireStart.y;
@@ -495,18 +530,18 @@ export function render(host, state){
       return;
     }
     if(ui.tool === "door" || ui.tool === "window"){
-      const snap = nearestWallPoint(doc.perimeter, { x, y });
-      const placeX = snap ? snap.x : x;
-      const placeY = snap ? snap.y : y;
-      const rotation = snap ? snap.rotation : 0;
+      const wallSnap = nearestWallPoint(doc.perimeter, { x: rawX, y: rawY });
+      const placeX = wallSnap ? wallSnap.x : rawX;
+      const placeY = wallSnap ? wallSnap.y : rawY;
+      const rotation = wallSnap ? wallSnap.rotation : 0;
       const symbolLbl = label || symbolLabel(ui.tool, doc.symbols);
       doc = addCadEntity(doc, createCadEntity(ui.tool, { x: placeX, y: placeY, rotation, layer: "arquitectura", label: symbolLbl, circuitId, source: "manual" }));
-      saveAndRefresh(snap ? `${symbolLbl} agregada y ajustada al muro` : `${symbolLbl} agregada (traza el perimetro para que se ajuste sola al muro)`);
+      saveAndRefresh(wallSnap ? `${symbolLbl} agregada y ajustada al muro` : `${symbolLbl} agregada (traza el perimetro para que se ajuste sola al muro)`);
       return;
     }
     const symbol = doc.symbols.find(item => item.id === ui.tool) || CAD_SYMBOLS.find(item => item.id === ui.tool);
     const layer = ui.layer || symbol?.layer || "notas";
-    doc = addCadEntity(doc, createCadEntity(ui.tool, { x, y, layer, label: label || symbolLabel(ui.tool, doc.symbols), circuitId, source: "manual" }));
+    doc = addCadEntity(doc, createCadEntity(ui.tool, { x: rawX, y: rawY, layer, label: label || symbolLabel(ui.tool, doc.symbols), circuitId, source: "manual" }));
     saveAndRefresh("Entidad CAD agregada: " + symbolLabel(ui.tool, doc.symbols));
   });
 
@@ -521,10 +556,14 @@ export function render(host, state){
   });
 
   host.querySelector("#cadCanvas").addEventListener("mousemove", event => {
+    const point = svgPoint(event, host.querySelector("#cadCanvas"));
+    const readout = host.querySelector("#cadCoordsReadout");
+    if(readout){
+      readout.textContent = `X: ${(point.x / PERIMETER_PX_PER_METER).toFixed(2)} m · Y: ${(point.y / PERIMETER_PX_PER_METER).toFixed(2)} m`;
+    }
     if(!selectedEntity) return;
     const entity = doc.entities.find(e => e.id === selectedEntity);
     if(!entity) { selectedEntity = null; return; }
-    const point = svgPoint(event, host.querySelector("#cadCanvas"));
     const grid = doc.canvas.grid || 20;
     entity.x = snap(point.x, grid);
     entity.y = snap(point.y, grid);
@@ -560,6 +599,24 @@ export function render(host, state){
   host.querySelector("#cadRotationInput")?.addEventListener("change", event => rotateSelected(Number(event.target.value) || 0, true));
   host.querySelector("#cadRotateLeft90")?.addEventListener("click", () => rotateSelected(-90, false));
   host.querySelector("#cadRotateRight90")?.addEventListener("click", () => rotateSelected(90, false));
+  host.querySelector("#cadPropLabel")?.addEventListener("change", event => {
+    const entity = doc.entities.find(item => item.id === ui.selectedId);
+    if(!entity) return;
+    entity.label = event.target.value.trim();
+    saveAndRefresh("Etiqueta actualizada en CAD");
+  });
+  host.querySelector("#cadPropCircuit")?.addEventListener("change", event => {
+    const entity = doc.entities.find(item => item.id === ui.selectedId);
+    if(!entity) return;
+    entity.circuitId = event.target.value.trim();
+    saveAndRefresh("Circuito actualizado en CAD");
+  });
+  host.querySelector("#cadPropLayer")?.addEventListener("change", event => {
+    const entity = doc.entities.find(item => item.id === ui.selectedId);
+    if(!entity) return;
+    entity.layer = event.target.value;
+    saveAndRefresh("Capa actualizada en CAD");
+  });
   host.querySelector("#cadGenerateProject").addEventListener("click", () => {
     if(!confirm("Regenerar el plano desde el Proyecto Activo? Esto reemplaza el plano CAD actual.")) return;
     project.cad2d = buildCadFromProject(project);
@@ -569,6 +626,37 @@ export function render(host, state){
     render(host, state);
   });
   host.querySelector("#cadValidate").addEventListener("click", () => saveAndRefresh("Plano CAD validado"));
+  function applyZoom(nextZoom){
+    const width = n(doc.canvas.width, 1200), height = n(doc.canvas.height, 760);
+    const oldZoom = Math.max(0.25, Math.min(4, n(ui.zoom, 1)));
+    const clamped = Math.max(0.25, Math.min(4, nextZoom));
+    const oldW = width / oldZoom, oldH = height / oldZoom;
+    const centerX = n(ui.panX, 0) + oldW / 2, centerY = n(ui.panY, 0) + oldH / 2;
+    const newW = width / clamped, newH = height / clamped;
+    ui.zoom = clamped;
+    ui.panX = centerX - newW / 2;
+    ui.panY = centerY - newH / 2;
+    project.cadUi = ui;
+    render(host, state);
+  }
+  host.querySelector("#cadZoomIn").addEventListener("click", () => applyZoom(n(ui.zoom, 1) * 1.25));
+  host.querySelector("#cadZoomOut").addEventListener("click", () => applyZoom(n(ui.zoom, 1) / 1.25));
+  host.querySelector("#cadZoomReset").addEventListener("click", () => { ui.zoom = 1; ui.panX = 0; ui.panY = 0; project.cadUi = ui; render(host, state); });
+  function pan(dx, dy){
+    const zoom = Math.max(0.25, Math.min(4, n(ui.zoom, 1)));
+    ui.panX = n(ui.panX, 0) + dx / zoom;
+    ui.panY = n(ui.panY, 0) + dy / zoom;
+    project.cadUi = ui;
+    render(host, state);
+  }
+  host.querySelector("#cadPanLeft").addEventListener("click", () => pan(-80, 0));
+  host.querySelector("#cadPanRight").addEventListener("click", () => pan(80, 0));
+  host.querySelector("#cadPanUp").addEventListener("click", () => pan(0, -80));
+  host.querySelector("#cadPanDown").addEventListener("click", () => pan(0, 80));
+  host.querySelector("#cadCanvas").addEventListener("wheel", event => {
+    event.preventDefault();
+    applyZoom(n(ui.zoom, 1) * (event.deltaY < 0 ? 1.15 : 1 / 1.15));
+  }, { passive: false });
   host.querySelector("#cadToggleFullscreen").addEventListener("click", () => {
     ui.fullscreen = !ui.fullscreen;
     project.cadUi = ui;
