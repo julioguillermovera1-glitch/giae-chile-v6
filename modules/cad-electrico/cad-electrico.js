@@ -60,32 +60,46 @@ const CAD_MODE_TOOLS = [
 function renderModeRow(activeTool){
   return CAD_MODE_TOOLS.map(([id, label]) => `<button type="button" class="cad-tool ${activeTool === id ? "active" : ""}" data-cad-tool="${id}">${label}</button>`).join("");
 }
-const CAD_RIBBON_PANELS = [
-  ["herramientas", "🔧 Símbolos"],
-  ["qet", "🧩 Biblioteca QET"],
+const CAD_RIBBON_UTILITY_PANELS = [
+  ["etiqueta", "🏷️ Etiqueta"],
   ["perimetro", "📐 Medidas perímetro"],
   ["config", "⚙️ Configuración"],
   ["importexport", "📤 Importar / Exportar"],
   ["nube", "☁️ Nube"],
   ["capas", "🗂️ Capas"]
 ];
-function renderRibbon(ui){
+function cadSymbolCategories(doc){
+  const all = (doc.symbols || []).filter(symbol => symbol.id !== "dimension");
+  return CAD_LAYERS.map(layer => ({ layer, symbols: all.filter(symbol => symbol.layer === layer.id) })).filter(group => group.symbols.length);
+}
+function renderRibbon(ui, doc){
   const modeButtons = renderModeRow(ui.tool);
-  const panelButtons = CAD_RIBBON_PANELS.map(([id, label]) => `<button type="button" class="cad-ribbon-toggle ${ui.ribbonPanel === id ? "active" : ""}" data-ribbon-toggle="${id}">${label} ${ui.ribbonPanel === id ? "▴" : "▾"}</button>`).join("");
+  const categories = cadSymbolCategories(doc);
+  const categoryButtons = categories.map(group => `<button type="button" class="cad-ribbon-toggle ${ui.ribbonPanel === "cat-" + group.layer.id ? "active" : ""}" style="--layer-color:${esc(group.layer.color)}" data-ribbon-toggle="cat-${esc(group.layer.id)}">${esc(group.layer.label)} (${group.symbols.length}) ${ui.ribbonPanel === "cat-" + group.layer.id ? "▴" : "▾"}</button>`).join("");
+  const utilityButtons = CAD_RIBBON_UTILITY_PANELS.map(([id, label]) => `<button type="button" class="cad-ribbon-toggle ${ui.ribbonPanel === id ? "active" : ""}" data-ribbon-toggle="${id}">${label} ${ui.ribbonPanel === id ? "▴" : "▾"}</button>`).join("");
   return `<div class="cad-ribbon">
     <div class="cad-ribbon-group">${modeButtons}</div>
-    <div class="cad-ribbon-group">${panelButtons}</div>
+    <div class="cad-ribbon-group">${categoryButtons}</div>
+    <div class="cad-ribbon-group">${utilityButtons}</div>
   </div>`;
 }
 function renderRibbonPanelContent(panelId, doc, ui, perimeterSegments){
-  if(panelId === "herramientas"){
-    return `<div class="cad-tools">${renderToolOptions(ui.tool, doc.symbols, ui)}</div>
-      <label>Capa activa<select id="cadLayerSelect">${CAD_LAYERS.map(layer => `<option value="${layer.id}" ${ui.layer === layer.id ? "selected" : ""}>${esc(layer.label)}</option>`).join("")}</select></label>
-      <label>Texto / nombre<input id="cadLabelInput" value="${esc(ui.label || "")}" placeholder="Nombre del simbolo o nota"></label>
-      <label>Circuito<input id="cadCircuitInput" value="${esc(ui.circuitId || "")}" placeholder="Ej: C01"></label>
-      <div class="row-actions"><button id="cadGenerateProject">Generar desde proyecto</button><button id="cadValidate" class="secondary">Validar</button></div>`;
+  if(panelId.startsWith("cat-")){
+    const layerId = panelId.slice(4);
+    const layer = CAD_LAYERS.find(item => item.id === layerId);
+    const symbols = (doc.symbols || []).filter(symbol => symbol.layer === layerId && symbol.id !== "dimension");
+    const query = String(ui.catSearch || "").trim().toLowerCase();
+    const filtered = query ? symbols.filter(symbol => symbol.label.toLowerCase().includes(query)) : symbols;
+    return `<label>Buscar en ${esc(layer?.label || layerId)}<input id="cadCatSearch" type="text" placeholder="Ej: interruptor, enchufe..." value="${esc(ui.catSearch || "")}"></label>
+      <div class="cad-qet-results">
+        ${filtered.length ? filtered.map(symbol => `<button type="button" class="cad-tool ${ui.tool === symbol.id ? "active" : ""}" style="--layer-color:${esc(layer?.color || "")}" data-cad-tool="${esc(symbol.id)}" title="${esc(symbol.label)}">${esc(symbol.label)}</button>`).join("") : `<p class="small">Sin resultados para esa búsqueda.</p>`}
+      </div>`;
   }
-  if(panelId === "qet") return renderQetLibrary(doc, ui, ui.tool);
+  if(panelId === "etiqueta"){
+    return `<label>Texto / nombre<input id="cadLabelInput" value="${esc(ui.label || "")}" placeholder="Nombre del simbolo o nota"></label>
+      <label>Circuito<input id="cadCircuitInput" value="${esc(ui.circuitId || "")}" placeholder="Ej: C01"></label>
+      <p class="small muted">Se aplica al próximo símbolo, cable o dimensión que agregues.</p>`;
+  }
   if(panelId === "perimetro"){
     return `<p class="muted">Elige la herramienta "Perímetro" y haz clic en el plano para marcar cada esquina de la casa en orden. Luego ingresa el largo real de cada pared y aplica para escalar el dibujo.</p>
       <div class="row-actions">
@@ -125,28 +139,6 @@ function renderRibbonPanelContent(panelId, doc, ui, perimeterSegments){
   }
   if(panelId === "capas") return `<div class="cad-layer-list">${renderLayerToggles(doc)}</div>`;
   return "";
-}
-function renderToolOptions(activeTool, docSymbols = [], ui = {}){
-  const nativeSymbols = (Array.isArray(docSymbols) ? docSymbols : []).filter(symbol => !String(symbol.id).startsWith("qet-") && symbol.id !== "dimension");
-  const knownLayerIds = new Set(CAD_LAYERS.map(layer => layer.id));
-  const openCategories = new Set(ui.toolOpenCategories || []);
-  const groups = CAD_LAYERS.map(layer => ({ layer, symbols: nativeSymbols.filter(symbol => symbol.layer === layer.id) })).filter(group => group.symbols.length);
-  const orphanSymbols = nativeSymbols.filter(symbol => !knownLayerIds.has(symbol.layer));
-  if(orphanSymbols.length) groups.push({ layer: { id: "personalizados", label: "Personalizados", color: "#7c3aed" }, symbols: orphanSymbols });
-
-  const sections = groups.map(group => `<div class="cad-tool-category">
-    <button type="button" class="cad-tool-category-header" data-tool-category-toggle="${esc(group.layer.id)}">
-      <span class="cad-qet-caret ${openCategories.has(group.layer.id) ? "open" : ""}">▸</span>
-      <span class="cad-layer-dot" style="--layer-color:${esc(group.layer.color)}"></span>
-      <span>${esc(group.layer.label)}</span>
-      <small>${group.symbols.length}</small>
-    </button>
-    <div class="cad-tool-category-body" ${openCategories.has(group.layer.id) ? "" : "hidden"}>
-      ${group.symbols.map(symbol => `<button type="button" class="cad-tool ${activeTool === symbol.id ? "active" : ""}" style="--layer-color:${esc(group.layer.color)}" data-cad-tool="${esc(symbol.id)}">${esc(symbol.label)}</button>`).join("")}
-    </div>
-  </div>`).join("");
-
-  return `<div class="cad-tool-accordion">${sections}</div>`;
 }
 function renderQetPrimitives(primitives, color){
   return primitives.map(p => {
@@ -290,39 +282,6 @@ function renderRotationControl(doc, ui){
     </div>
   </article>`;
 }
-const QET_CATEGORY_LABELS = {
-  "30_architectural": "Instalación (interruptores, enchufes, luces, sensores)",
-  "40_meters": "Medidores"
-};
-function renderQetLibrary(doc, ui, activeTool){
-  const all = (doc.symbols || []).filter(symbol => symbol.source === "qelectrotech");
-  const query = String(ui.qetSearch || "").trim().toLowerCase();
-  const openCategories = new Set(ui.qetOpenCategories || []);
-  const categories = [...new Set(all.map(symbol => symbol.category))];
-  const sections = categories.map(cat => {
-    const symbolsInCat = all.filter(symbol => symbol.category === cat);
-    const matches = query ? symbolsInCat.filter(symbol => symbol.label.toLowerCase().includes(query)) : symbolsInCat;
-    const isOpen = query ? matches.length > 0 : openCategories.has(cat);
-    return { cat, label: QET_CATEGORY_LABELS[cat] || cat, symbolsInCat, matches, isOpen };
-  });
-  return `<article class="admin-card">
-    <h4>Biblioteca QElectroTech</h4>
-    <p class="muted">${all.length} símbolos reales de instalación eléctrica (interruptores, enchufes, luces, sensores, medidores), importados de la colección abierta QElectroTech (qelectrotech.org, licencia CC-BY 3.0).</p>
-    <label>Buscar símbolo<input id="cadQetSearch" type="text" placeholder="Ej: interruptor, enchufe, horno..." value="${esc(ui.qetSearch || "")}"></label>
-    <div class="cad-qet-accordion">
-      ${sections.map(section => `<div class="cad-qet-category">
-        <button type="button" class="cad-qet-category-header" data-qet-category-toggle="${esc(section.cat)}">
-          <span class="cad-qet-caret ${section.isOpen ? "open" : ""}">▸</span>
-          <span>${esc(section.label)}</span>
-          <small>${query ? section.matches.length + "/" : ""}${section.symbolsInCat.length}</small>
-        </button>
-        <div class="cad-qet-category-body" ${section.isOpen ? "" : "hidden"}>
-          ${section.matches.length ? section.matches.map(symbol => `<button type="button" class="cad-tool ${activeTool === symbol.id ? "active" : ""}" data-cad-tool="${esc(symbol.id)}" title="${esc(symbol.label)}">${esc(symbol.label)}</button>`).join("") : `<p class="small">Sin resultados para esa búsqueda.</p>`}
-        </div>
-      </div>`).join("")}
-    </div>
-  </article>`;
-}
 function renderCadStartScreen(project, doc){
   const projectName = esc(project.name || "Proyecto sin nombre");
   return `<section class="module-window cad-module cad-start-screen">
@@ -370,7 +329,7 @@ function renderCadStartScreen(project, doc){
 export function render(host, state){
   const project = state.currentProject;
   let doc = ensureCad(project);
-  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, qetSearch: "", qetOpenCategories: [], toolOpenCategories: [], zoom: 1, panX: 0, panY: 0, ribbonPanel: "" };
+  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, catSearch: "", zoom: 1, panX: 0, panY: 0, ribbonPanel: "" };
   project.cadUi = ui;
   const isEmptyPlan = doc.entities.length === 0 && !(doc.perimeter?.points?.length);
   if(ui.cadStartDismissed === undefined) ui.cadStartDismissed = !isEmptyPlan;
@@ -423,14 +382,14 @@ export function render(host, state){
         <div><strong>${validation.summary.issues}</strong><span>Observaciones</span></div>
       </section>
 
-      ${renderRibbon(ui)}
+      ${renderRibbon(ui, doc)}
       ${ui.ribbonPanel ? `<div class="cad-ribbon-panel" id="cadRibbonPanel">${renderRibbonPanelContent(ui.ribbonPanel, doc, ui, perimeterSegments)}</div>` : ""}
 
       <section class="cad-workspace-v2">
         <main class="cad-main cad-main-wide">
           <div class="cad-topbar">
             <div><b>${esc(doc.name)}</b><span>${esc(doc.scale)} - ${esc(doc.units)} - ${esc(project.name || "Proyecto sin nombre")}</span></div>
-            <div class="row-actions"><button id="cadBackToStart" class="ghost">🏠 Inicio</button><button id="cadToggleFullscreen" class="primary-action">${ui.fullscreen ? "✕ Salir de pantalla completa" : "⛶ Pantalla completa"}</button><button id="cadExportJson" class="secondary">Exportar .giaecad</button><button id="cadExportDwt" class="secondary">Exportar .DWT</button><button id="cadExportSvg" class="secondary">Exportar SVG</button><button id="cadClear" class="ghost danger-text">Reiniciar plano</button></div>
+            <div class="row-actions"><button id="cadBackToStart" class="ghost">🏠 Inicio</button><button id="cadGenerateProject" class="secondary">Generar desde proyecto</button><button id="cadValidate" class="secondary">Validar</button><button id="cadToggleFullscreen" class="primary-action">${ui.fullscreen ? "✕ Salir de pantalla completa" : "⛶ Pantalla completa"}</button><button id="cadExportJson" class="secondary">Exportar .giaecad</button><button id="cadExportDwt" class="secondary">Exportar .DWT</button><button id="cadExportSvg" class="secondary">Exportar SVG</button><button id="cadClear" class="ghost danger-text">Reiniciar plano</button></div>
           </div>
           <div class="cad-stage">${renderCadSvg(doc, ui.selectedId, ui)}</div>
           <div class="cad-statusbar">
@@ -510,32 +469,18 @@ export function render(host, state){
     persist();
     render(host, state);
   });
-  host.querySelector("#cadQetSearch")?.addEventListener("input", event => {
-    ui.qetSearch = event.target.value;
+  host.querySelector("#cadCatSearch")?.addEventListener("input", event => {
+    ui.catSearch = event.target.value;
     project.cadUi = ui;
     render(host, state);
-    const refocused = host.querySelector("#cadQetSearch");
+    const refocused = host.querySelector("#cadCatSearch");
     if(refocused){ refocused.focus(); refocused.setSelectionRange(refocused.value.length, refocused.value.length); }
   });
-  host.querySelectorAll("[data-tool-category-toggle]").forEach(button => button.addEventListener("click", () => {
-    const cat = button.dataset.toolCategoryToggle;
-    const open = new Set(ui.toolOpenCategories || []);
-    if(open.has(cat)) open.delete(cat); else open.add(cat);
-    ui.toolOpenCategories = [...open];
-    project.cadUi = ui;
-    render(host, state);
-  }));
   host.querySelectorAll("[data-ribbon-toggle]").forEach(button => button.addEventListener("click", () => {
     const panelId = button.dataset.ribbonToggle;
-    ui.ribbonPanel = ui.ribbonPanel === panelId ? "" : panelId;
-    project.cadUi = ui;
-    render(host, state);
-  }));
-  host.querySelectorAll("[data-qet-category-toggle]").forEach(button => button.addEventListener("click", () => {
-    const cat = button.dataset.qetCategoryToggle;
-    const open = new Set(ui.qetOpenCategories || []);
-    if(open.has(cat)) open.delete(cat); else open.add(cat);
-    ui.qetOpenCategories = [...open];
+    const opening = ui.ribbonPanel !== panelId;
+    ui.ribbonPanel = opening ? panelId : "";
+    if(opening && panelId.startsWith("cat-")) ui.catSearch = "";
     project.cadUi = ui;
     render(host, state);
   }));
@@ -562,7 +507,6 @@ export function render(host, state){
     doc = applyPerimeterMeasurements(doc);
     saveAndRefresh("Perímetro escalado según medidas reales");
   });
-  host.querySelector("#cadLayerSelect")?.addEventListener("change", event => { ui.layer = event.target.value; project.cadUi = ui; render(host, state); });
   host.querySelectorAll("[data-cad-layer]").forEach(input => input.addEventListener("change", () => {
     const layer = doc.layers.find(item => item.id === input.dataset.cadLayer);
     if(layer) layer.hidden = !input.checked;
@@ -626,7 +570,7 @@ export function render(host, state){
       return;
     }
     const symbol = doc.symbols.find(item => item.id === ui.tool) || CAD_SYMBOLS.find(item => item.id === ui.tool);
-    const layer = ui.layer || symbol?.layer || "notas";
+    const layer = symbol?.layer || "notas";
     doc = addCadEntity(doc, createCadEntity(ui.tool, { x: rawX, y: rawY, layer, label: label || symbolLabel(ui.tool, doc.symbols), circuitId, source: "manual" }));
     saveAndRefresh("Entidad CAD agregada: " + symbolLabel(ui.tool, doc.symbols));
   });

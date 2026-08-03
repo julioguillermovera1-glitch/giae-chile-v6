@@ -590,9 +590,9 @@ body{background:var(--bg);}
 .cad-module .cad-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
 .cad-ribbon{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.6rem;background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:.6rem .8rem;margin-bottom:.8rem}
 .cad-ribbon-group{display:flex;flex-wrap:wrap;gap:.4rem}
-.cad-ribbon-toggle{background:#0f172a!important;color:#e2e8f0!important;border:1px solid #1e293b!important;border-radius:8px;padding:.5rem .75rem;font-weight:600;font-size:.85rem;white-space:nowrap}
-.cad-ribbon-toggle:hover{background:#1a1f2e!important;border-color:#404a54!important}
-.cad-ribbon-toggle.active{background:#3b82f6!important;color:#fff!important;border-color:#3b82f6!important}
+.cad-ribbon-toggle{background:#0f172a!important;color:#e2e8f0!important;border:1px solid #1e293b!important;border-left:4px solid var(--layer-color,#1e293b)!important;border-radius:8px;padding:.5rem .75rem;font-weight:600;font-size:.85rem;white-space:nowrap}
+.cad-ribbon-toggle:hover{background:#1a1f2e!important;border-color:#404a54!important;border-left-color:var(--layer-color,#404a54)!important}
+.cad-ribbon-toggle.active{background:#3b82f6!important;color:#fff!important;border-color:#3b82f6!important;border-left-color:var(--layer-color,#3b82f6)!important}
 .cad-ribbon-panel{background:#fff;border:1px solid #d9e4ef;border-radius:14px;padding:1rem 1.2rem;margin-bottom:.8rem}
 .cad-workspace-v2{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:1rem;align-items:start}
 .cad-right,.cad-main{display:grid;gap:1rem;min-width:0}
