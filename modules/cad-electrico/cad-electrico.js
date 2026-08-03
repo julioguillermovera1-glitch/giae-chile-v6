@@ -2,6 +2,11 @@ import { persist, addHistory } from "../../core/store.js";
 import { CloudflareCADService } from "../../core/cad/cloudflare-service.js";
 import { buildCadFromProject, createCadDocument, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS, getPerimeterSegments, perimeterSegmentLengthM, addPerimeterPoint, undoLastPerimeterPoint, closePerimeter, resetPerimeter, setPerimeterMeasurement, applyPerimeterMeasurements, nearestWallPoint, PERIMETER_PX_PER_METER } from "../../core/cad/cadEngine.js";
 
+// Referencias a los listeners de arrastre pegados a document, para poder
+// quitarlos antes de volver a agregarlos en cada render() y no acumularlos.
+let cadDragMoveHandler = null;
+let cadDragUpHandler = null;
+
 function esc(value = ""){
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }
@@ -594,7 +599,13 @@ export function render(host, state){
     saveAndRefresh("Entidad CAD agregada: " + symbolLabel(ui.tool, doc.symbols));
   });
 
-  // Drag & drop: mantener presionado sobre un simbolo y arrastrar
+  // Drag & drop: mantener presionado sobre un simbolo y arrastrar.
+  // mousemove/mouseup se pegan a document (no solo al canvas) porque un
+  // arrastre real de mouse humano facilmente sale de los limites exactos
+  // del SVG a media pasada - si solo escuchamos en el canvas, el arrastre
+  // se "pega" apenas el cursor cruza el borde.
+  if(cadDragMoveHandler) document.removeEventListener("mousemove", cadDragMoveHandler);
+  if(cadDragUpHandler) document.removeEventListener("mouseup", cadDragUpHandler);
   let dragEntityId = null;
   let dragGroup = null;
   let dragMoved = false;
@@ -608,8 +619,9 @@ export function render(host, state){
     event.preventDefault();
   });
 
-  host.querySelector("#cadCanvas").addEventListener("mousemove", event => {
+  cadDragMoveHandler = event => {
     const canvas = host.querySelector("#cadCanvas");
+    if(!canvas) return;
     const point = svgPoint(event, canvas);
     const readout = host.querySelector("#cadCoordsReadout");
     if(readout){
@@ -623,9 +635,10 @@ export function render(host, state){
     entity.x = snap(point.x, grid);
     entity.y = snap(point.y, grid);
     dragGroup.setAttribute("transform", `translate(${entity.x} ${entity.y}) rotate(${n(entity.rotation, 0)})`);
-  });
+  };
+  document.addEventListener("mousemove", cadDragMoveHandler);
 
-  host.querySelector("#cadCanvas").addEventListener("mouseup", () => {
+  cadDragUpHandler = () => {
     if(dragEntityId && dragMoved){
       project.cad2d = doc;
       addHistory("Símbolo movido en CAD", "CAD electrico", false);
@@ -635,7 +648,8 @@ export function render(host, state){
     dragEntityId = null;
     dragGroup = null;
     dragMoved = false;
-  });
+  };
+  document.addEventListener("mouseup", cadDragUpHandler);
   host.querySelectorAll("[data-select-entity]").forEach(button => button.addEventListener("click", () => { ui.selectedId = button.dataset.selectEntity; project.cadUi = ui; render(host, state); }));
   host.querySelector("#cadDeleteSelected").addEventListener("click", () => {
     if(!ui.selectedId) return alert("Selecciona una entidad primero.");
