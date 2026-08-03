@@ -1,6 +1,6 @@
 import { persist, addHistory } from "../../core/store.js";
 import { CloudflareCADService } from "../../core/cad/cloudflare-service.js";
-import { buildCadFromProject, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS, getPerimeterSegments, perimeterSegmentLengthM, addPerimeterPoint, undoLastPerimeterPoint, closePerimeter, resetPerimeter, setPerimeterMeasurement, applyPerimeterMeasurements, nearestWallPoint, PERIMETER_PX_PER_METER } from "../../core/cad/cadEngine.js";
+import { buildCadFromProject, createCadDocument, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS, getPerimeterSegments, perimeterSegmentLengthM, addPerimeterPoint, undoLastPerimeterPoint, closePerimeter, resetPerimeter, setPerimeterMeasurement, applyPerimeterMeasurements, nearestWallPoint, PERIMETER_PX_PER_METER } from "../../core/cad/cadEngine.js";
 
 function esc(value = ""){
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -62,7 +62,6 @@ function renderModeRow(activeTool){
 }
 const CAD_RIBBON_UTILITY_PANELS = [
   ["etiqueta", "🏷️ Etiqueta"],
-  ["perimetro", "📐 Medidas perímetro"],
   ["config", "⚙️ Configuración"],
   ["importexport", "📤 Importar / Exportar"],
   ["nube", "☁️ Nube"],
@@ -83,6 +82,27 @@ function renderRibbon(ui, doc){
     <div class="cad-ribbon-group">${utilityButtons}</div>
   </div>`;
 }
+function renderPerimeterCard(doc, perimeterSegments){
+  return `<article class="admin-card">
+    <h4>📐 Perímetro de la casa</h4>
+    <p class="muted">Elige la herramienta "Perímetro" y haz clic en el plano para marcar cada esquina de la casa en orden. Luego ingresa el largo real de cada pared y aplica para escalar el dibujo.</p>
+    <div class="row-actions">
+      <button id="cadUndoPerimeterPoint" class="secondary">Deshacer último punto</button>
+      <button id="cadClosePerimeter" class="secondary">Cerrar perímetro</button>
+      <button id="cadResetPerimeter" class="ghost">Reiniciar perímetro</button>
+    </div>
+    ${perimeterSegments.length ? `
+    <div class="cad-perimeter-measurements">
+      ${perimeterSegments.map(segment => {
+        const stored = doc.perimeter.measurementsM?.[segment.index];
+        const value = Number.isFinite(stored) && stored > 0 ? stored : perimeterSegmentLengthM(segment.from, segment.to);
+        return `<label>Pared ${segment.index + 1} - largo real (m)<input type="number" min="0" step="0.01" data-perimeter-measure="${segment.index}" value="${value.toFixed(2)}"></label>`;
+      }).join("")}
+    </div>
+    <div class="row-actions"><button id="cadApplyPerimeterMeasurements" class="primary-action">Aplicar medidas y escalar</button></div>
+    ` : `<p class="small">Aún no hay perímetro trazado. Usa la herramienta "Perímetro" y haz clic sobre el plano.</p>`}
+  </article>`;
+}
 function renderRibbonPanelContent(panelId, doc, ui, perimeterSegments){
   if(panelId.startsWith("cat-")){
     const layerId = panelId.slice(4);
@@ -99,24 +119,6 @@ function renderRibbonPanelContent(panelId, doc, ui, perimeterSegments){
     return `<label>Texto / nombre<input id="cadLabelInput" value="${esc(ui.label || "")}" placeholder="Nombre del simbolo o nota"></label>
       <label>Circuito<input id="cadCircuitInput" value="${esc(ui.circuitId || "")}" placeholder="Ej: C01"></label>
       <p class="small muted">Se aplica al próximo símbolo, cable o dimensión que agregues.</p>`;
-  }
-  if(panelId === "perimetro"){
-    return `<p class="muted">Elige la herramienta "Perímetro" y haz clic en el plano para marcar cada esquina de la casa en orden. Luego ingresa el largo real de cada pared y aplica para escalar el dibujo.</p>
-      <div class="row-actions">
-        <button id="cadUndoPerimeterPoint" class="secondary">Deshacer último punto</button>
-        <button id="cadClosePerimeter" class="secondary">Cerrar perímetro</button>
-        <button id="cadResetPerimeter" class="ghost">Reiniciar perímetro</button>
-      </div>
-      ${perimeterSegments.length ? `
-      <div class="cad-perimeter-measurements">
-        ${perimeterSegments.map(segment => {
-          const stored = doc.perimeter.measurementsM?.[segment.index];
-          const value = Number.isFinite(stored) && stored > 0 ? stored : perimeterSegmentLengthM(segment.from, segment.to);
-          return `<label>Pared ${segment.index + 1} - largo real (m)<input type="number" min="0" step="0.01" data-perimeter-measure="${segment.index}" value="${value.toFixed(2)}"></label>`;
-        }).join("")}
-      </div>
-      <div class="row-actions"><button id="cadApplyPerimeterMeasurements" class="primary-action">Aplicar medidas y escalar</button></div>
-      ` : `<p class="small">Aún no hay perímetro trazado. Usa la herramienta "Perímetro" y haz clic sobre el plano.</p>`}`;
   }
   if(panelId === "config"){
     return `<label>Escala<input id="cadScaleInput" value="${esc(doc.scale)}" placeholder="1:50"></label>
@@ -412,6 +414,7 @@ export function render(host, state){
 
         <aside class="cad-right">
           ${renderRotationControl(doc, ui)}
+          ${renderPerimeterCard(doc, perimeterSegments)}
           <article class="admin-card">
             <h4>Entidades</h4>
             <div class="cad-entity-list">${renderEntities(doc, ui.selectedId)}</div>
@@ -583,39 +586,47 @@ export function render(host, state){
     saveAndRefresh("Entidad CAD agregada: " + symbolLabel(ui.tool, doc.symbols));
   });
 
-  // Drag & drop con doble click
-  let selectedEntity = null;
-  host.querySelector("#cadCanvas").addEventListener("dblclick", event => {
-    const entityGroup = event.target.closest("[data-entity-id]");
-    if(entityGroup && ui.tool === "select"){
-      selectedEntity = entityGroup.dataset.entityId;
-      entityGroup.style.opacity = "0.6";
-    }
+  // Drag & drop: mantener presionado sobre un simbolo y arrastrar
+  let dragEntityId = null;
+  let dragGroup = null;
+  let dragMoved = false;
+  host.querySelector("#cadCanvas").addEventListener("mousedown", event => {
+    if(ui.tool !== "select") return;
+    const entityGroup = event.target.closest('[data-draggable="true"]');
+    if(!entityGroup) return;
+    dragEntityId = entityGroup.dataset.entityId;
+    dragGroup = entityGroup;
+    dragMoved = false;
+    event.preventDefault();
   });
 
   host.querySelector("#cadCanvas").addEventListener("mousemove", event => {
-    const point = svgPoint(event, host.querySelector("#cadCanvas"));
+    const canvas = host.querySelector("#cadCanvas");
+    const point = svgPoint(event, canvas);
     const readout = host.querySelector("#cadCoordsReadout");
     if(readout){
       readout.textContent = `X: ${(point.x / PERIMETER_PX_PER_METER).toFixed(2)} m · Y: ${(point.y / PERIMETER_PX_PER_METER).toFixed(2)} m`;
     }
-    if(!selectedEntity) return;
-    const entity = doc.entities.find(e => e.id === selectedEntity);
-    if(!entity) { selectedEntity = null; return; }
+    if(!dragEntityId || !dragGroup) return;
+    const entity = doc.entities.find(e => e.id === dragEntityId);
+    if(!entity){ dragEntityId = null; dragGroup = null; return; }
+    dragMoved = true;
     const grid = doc.canvas.grid || 20;
     entity.x = snap(point.x, grid);
     entity.y = snap(point.y, grid);
-    render(host, state);
+    dragGroup.setAttribute("transform", `translate(${entity.x} ${entity.y}) rotate(${n(entity.rotation, 0)})`);
   });
 
   host.querySelector("#cadCanvas").addEventListener("mouseup", () => {
-    if(selectedEntity){
+    if(dragEntityId && dragMoved){
       project.cad2d = doc;
       addHistory("Símbolo movido en CAD", "CAD electrico", false);
       persist();
-      selectedEntity = null;
       render(host, state);
     }
+    dragEntityId = null;
+    dragGroup = null;
+    dragMoved = false;
   });
   host.querySelectorAll("[data-select-entity]").forEach(button => button.addEventListener("click", () => { ui.selectedId = button.dataset.selectEntity; project.cadUi = ui; render(host, state); }));
   host.querySelector("#cadDeleteSelected").addEventListener("click", () => {
@@ -709,10 +720,10 @@ export function render(host, state){
   host.querySelector("#cadExportDwt").addEventListener("click", () => downloadText(safeFileName(doc.name) + ".dwt", createCadExportDwt(project, doc), "application/dxf;charset=utf-8"));
   host.querySelector("#cadExportSvg").addEventListener("click", () => downloadText(safeFileName(doc.name) + ".svg", host.querySelector("#cadCanvas").outerHTML, "image/svg+xml;charset=utf-8"));
   host.querySelector("#cadClear").addEventListener("click", () => {
-    if(!confirm("Reiniciar el plano CAD actual?")) return;
-    project.cad2d = buildCadFromProject({ ...project, loads: [] });
+    if(!confirm("Reiniciar el plano CAD actual? Esto borra todo lo dibujado y deja el plano en blanco.")) return;
+    project.cad2d = createCadDocument(project);
     project.cadUi = { tool: "select", layer: "enchufes", selectedId: "", wireStart: null };
-    addHistory("Plano CAD reiniciado", "CAD electrico", false);
+    addHistory("Plano CAD reiniciado (en blanco)", "CAD electrico", false);
     persist();
     render(host, state);
   });
