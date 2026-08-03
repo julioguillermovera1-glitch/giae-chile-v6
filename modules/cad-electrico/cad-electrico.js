@@ -45,7 +45,8 @@ function renderToolOptions(activeTool, docSymbols = [], ui = {}){
     ["select", "Seleccionar"],
     ["perimeter", "Perímetro (paredes)"],
     ["wire", "Cablear"],
-    ["dimension", "Dimensión"]
+    ["dimension", "Dimensión"],
+    ["eraser", "Goma (borrar)"]
   ];
   const modeRow = modeTools.map(([id, label]) => `<button type="button" class="cad-tool ${activeTool === id ? "active" : ""}" data-cad-tool="${id}">${label}</button>`).join("");
 
@@ -131,7 +132,7 @@ function renderSymbol(entity, symbols = CAD_SYMBOLS){
   if(entity.symbolId === "data-point") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation})"><rect x="-16" y="-16" width="32" height="32" rx="4" fill="none" stroke="${color}" stroke-width="2.5"/><text y="6" text-anchor="middle" font-size="12" font-weight="800" fill="${color}">D</text><text y="38" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
   if(entity.symbolId === "tv-point") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation})"><rect x="-16" y="-16" width="32" height="32" rx="4" fill="none" stroke="${color}" stroke-width="2.5"/><text y="6" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">TV</text><text y="38" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
   if(entity.symbolId === "window") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation})"><rect x="-40" y="-8" width="80" height="16" rx="2" fill="none" stroke="${color}" stroke-width="2"/><line x1="-20" y1="-8" x2="-20" y2="8" stroke="${color}" stroke-width="1.5"/><line x1="0" y1="-8" x2="0" y2="8" stroke="${color}" stroke-width="1.5"/><line x1="20" y1="-8" x2="20" y2="8" stroke="${color}" stroke-width="1.5"/><text y="28" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "door") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation})"><rect x="-20" y="-30" width="40" height="60" rx="2" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="12" cy="0" r="3" fill="${color}"/><path d="M -20 0 Q 12 0 12 0" fill="none" stroke="${color}" stroke-width="1.5" stroke-dasharray="3 3"/><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "door") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation})"><line x1="0" y1="0" x2="0" y2="-32" stroke="${color}" stroke-width="2.5"/><path d="M 0 -32 A 32 32 0 0 1 32 0" fill="none" stroke="${color}" stroke-width="1.5"/><line x1="0" y1="0" x2="32" y2="0" stroke="${color}" stroke-width="1" stroke-dasharray="2 2" opacity="0.5"/><text y="46" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
   return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation})"><rect x="-70" y="-22" width="140" height="44" rx="4" fill="none" stroke="${color}" stroke-width="2"/><text y="5" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
 }
 function renderWire(entity){
@@ -188,6 +189,19 @@ function renderEntities(doc, selectedId){
   return doc.entities.slice(0, 80).map(entity => `<button type="button" class="cad-entity-row ${entity.id === selectedId ? "active" : ""}" data-select-entity="${esc(entity.id)}"><span style="--layer:${esc(layerColor(entity.layer))}"></span><b>${esc(entity.label)}</b><small>${esc(entity.type)} - ${esc(entity.layer)}</small></button>`).join("");
 }
 
+function renderRotationControl(doc, ui){
+  const selectedEntityForRotation = ui.selectedId ? doc.entities.find(e => e.id === ui.selectedId) : null;
+  if(!selectedEntityForRotation || selectedEntityForRotation.type === "wire") return "";
+  const currentRotation = n(selectedEntityForRotation.rotation, 0);
+  return `<article class="admin-card cad-rotation-card">
+    <h4>Girar símbolo seleccionado</h4>
+    <label>Rotación (0-359°)<input id="cadRotationInput" type="number" min="0" max="359" step="1" value="${currentRotation}"></label>
+    <div class="row-actions">
+      <button id="cadRotateLeft90" class="secondary">↺ -90°</button>
+      <button id="cadRotateRight90" class="secondary">↻ +90°</button>
+    </div>
+  </article>`;
+}
 const QET_CATEGORY_LABELS = {
   "30_architectural": "Instalación (interruptores, enchufes, luces, sensores)",
   "40_meters": "Medidores"
@@ -263,6 +277,8 @@ export function render(host, state){
             <div class="row-actions"><button id="cadGenerateProject">Generar desde proyecto</button><button id="cadValidate" class="secondary">Validar</button></div>
           </article>
 
+          ${renderRotationControl(doc, ui)}
+
           ${renderQetLibrary(doc, ui, ui.tool)}
 
           <article class="admin-card">
@@ -319,20 +335,6 @@ export function render(host, state){
             <h4>Entidades</h4>
             <div class="cad-entity-list">${renderEntities(doc, ui.selectedId)}</div>
             <div class="row-actions"><button id="cadDeleteSelected" class="ghost danger-text">Eliminar seleccionado</button><small class="hint" style="margin-left:12px">Atajo: Ctrl+Suprimir</small></div>
-            ${(() => {
-              const selectedEntityForRotation = ui.selectedId ? doc.entities.find(e => e.id === ui.selectedId) : null;
-              if(!selectedEntityForRotation || selectedEntityForRotation.type === "wire") return "";
-              const currentRotation = n(selectedEntityForRotation.rotation, 0);
-              return `<div class="cad-rotation-control" style="margin-top:10px">
-                <label>Rotación del símbolo seleccionado (0-359°)
-                  <input id="cadRotationInput" type="number" min="0" max="359" step="1" value="${currentRotation}">
-                </label>
-                <div class="row-actions">
-                  <button id="cadRotateLeft90" class="secondary">↺ -90°</button>
-                  <button id="cadRotateRight90" class="secondary">↻ +90°</button>
-                </div>
-              </div>`;
-            })()}
           </article>
         </aside>
 
@@ -457,6 +459,14 @@ export function render(host, state){
       ui.selectedId = entityGroup.dataset.entityId;
       project.cadUi = ui;
       render(host, state);
+      return;
+    }
+    if(ui.tool === "eraser"){
+      if(entityGroup){
+        doc = removeCadEntity(doc, entityGroup.dataset.entityId);
+        if(ui.selectedId === entityGroup.dataset.entityId) ui.selectedId = "";
+        saveAndRefresh("Entidad borrada con la goma");
+      }
       return;
     }
     const point = svgPoint(event, host.querySelector("#cadCanvas"));
