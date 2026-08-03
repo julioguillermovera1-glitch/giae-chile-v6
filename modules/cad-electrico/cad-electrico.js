@@ -49,17 +49,84 @@ function renderLayerToggles(doc){
   const used = new Set(doc.entities.map(entity => entity.layer));
   return CAD_LAYERS.map(layer => `<label class="cad-layer-toggle"><input type="checkbox" data-cad-layer="${esc(layer.id)}" ${layer.hidden ? "" : "checked"}><span style="--layer:${esc(layer.color)}"></span>${esc(layer.label)}<small>${used.has(layer.id) ? "en uso" : "vacia"}</small></label>`).join("");
 }
+const CAD_MODE_TOOLS = [
+  ["select", "Seleccionar"],
+  ["pencil", "Lápiz"],
+  ["perimeter", "Perímetro"],
+  ["wire", "Cablear"],
+  ["dimension", "Dimensión"],
+  ["eraser", "Goma"]
+];
+function renderModeRow(activeTool){
+  return CAD_MODE_TOOLS.map(([id, label]) => `<button type="button" class="cad-tool ${activeTool === id ? "active" : ""}" data-cad-tool="${id}">${label}</button>`).join("");
+}
+const CAD_RIBBON_PANELS = [
+  ["herramientas", "🔧 Símbolos"],
+  ["qet", "🧩 Biblioteca QET"],
+  ["perimetro", "📐 Medidas perímetro"],
+  ["config", "⚙️ Configuración"],
+  ["importexport", "📤 Importar / Exportar"],
+  ["nube", "☁️ Nube"],
+  ["capas", "🗂️ Capas"]
+];
+function renderRibbon(ui){
+  const modeButtons = renderModeRow(ui.tool);
+  const panelButtons = CAD_RIBBON_PANELS.map(([id, label]) => `<button type="button" class="cad-ribbon-toggle ${ui.ribbonPanel === id ? "active" : ""}" data-ribbon-toggle="${id}">${label} ${ui.ribbonPanel === id ? "▴" : "▾"}</button>`).join("");
+  return `<div class="cad-ribbon">
+    <div class="cad-ribbon-group">${modeButtons}</div>
+    <div class="cad-ribbon-group">${panelButtons}</div>
+  </div>`;
+}
+function renderRibbonPanelContent(panelId, doc, ui, perimeterSegments){
+  if(panelId === "herramientas"){
+    return `<div class="cad-tools">${renderToolOptions(ui.tool, doc.symbols, ui)}</div>
+      <label>Capa activa<select id="cadLayerSelect">${CAD_LAYERS.map(layer => `<option value="${layer.id}" ${ui.layer === layer.id ? "selected" : ""}>${esc(layer.label)}</option>`).join("")}</select></label>
+      <label>Texto / nombre<input id="cadLabelInput" value="${esc(ui.label || "")}" placeholder="Nombre del simbolo o nota"></label>
+      <label>Circuito<input id="cadCircuitInput" value="${esc(ui.circuitId || "")}" placeholder="Ej: C01"></label>
+      <div class="row-actions"><button id="cadGenerateProject">Generar desde proyecto</button><button id="cadValidate" class="secondary">Validar</button></div>`;
+  }
+  if(panelId === "qet") return renderQetLibrary(doc, ui, ui.tool);
+  if(panelId === "perimetro"){
+    return `<p class="muted">Elige la herramienta "Perímetro" y haz clic en el plano para marcar cada esquina de la casa en orden. Luego ingresa el largo real de cada pared y aplica para escalar el dibujo.</p>
+      <div class="row-actions">
+        <button id="cadUndoPerimeterPoint" class="secondary">Deshacer último punto</button>
+        <button id="cadClosePerimeter" class="secondary">Cerrar perímetro</button>
+        <button id="cadResetPerimeter" class="ghost">Reiniciar perímetro</button>
+      </div>
+      ${perimeterSegments.length ? `
+      <div class="cad-perimeter-measurements">
+        ${perimeterSegments.map(segment => {
+          const stored = doc.perimeter.measurementsM?.[segment.index];
+          const value = Number.isFinite(stored) && stored > 0 ? stored : perimeterSegmentLengthM(segment.from, segment.to);
+          return `<label>Pared ${segment.index + 1} - largo real (m)<input type="number" min="0" step="0.01" data-perimeter-measure="${segment.index}" value="${value.toFixed(2)}"></label>`;
+        }).join("")}
+      </div>
+      <div class="row-actions"><button id="cadApplyPerimeterMeasurements" class="primary-action">Aplicar medidas y escalar</button></div>
+      ` : `<p class="small">Aún no hay perímetro trazado. Usa la herramienta "Perímetro" y haz clic sobre el plano.</p>`}`;
+  }
+  if(panelId === "config"){
+    return `<label>Escala<input id="cadScaleInput" value="${esc(doc.scale)}" placeholder="1:50"></label>
+      <label>Unidades<select id="cadUnitsSelect"><option value="mm" ${doc.units === "mm" ? "selected" : ""}>mm</option><option value="cm" ${doc.units === "cm" ? "selected" : ""}>cm</option><option value="m" ${doc.units === "m" ? "selected" : ""}>m</option></select></label>`;
+  }
+  if(panelId === "importexport"){
+    return `<div class="row-actions"><button id="cadExportJsonSide" class="secondary">Exportar .giaecad</button><button id="cadExportDxf" class="secondary">Exportar DXF</button><button id="cadExportDwtSide" class="secondary">Exportar .DWT</button></div>
+      <div class="row-actions"><button id="cadImportDxf" class="secondary">Importar DXF</button><button id="cadImportSymbols" class="secondary">Cargar símbolos</button></div>
+      <input id="cadImportDxfFile" type="file" accept=".dxf,text/plain" hidden>
+      <input id="cadImportSymbolsFile" type="file" accept=".json,application/json" hidden>`;
+  }
+  if(panelId === "nube"){
+    return `<div id="cadCFStatus" style="padding: 8px; border-radius: 4px; background: #1e293b; color: #94a3b8; font-size: 12px; margin-bottom: 8px;">
+        <span id="cadCFStatusText">Verificando...</span>
+      </div>
+      <div class="row-actions">
+        <button id="cadSaveCF" class="secondary">💾 Guardar en Cloud</button>
+        <button id="cadLoadCF" class="secondary">📥 Cargar de Cloud</button>
+      </div>`;
+  }
+  if(panelId === "capas") return `<div class="cad-layer-list">${renderLayerToggles(doc)}</div>`;
+  return "";
+}
 function renderToolOptions(activeTool, docSymbols = [], ui = {}){
-  const modeTools = [
-    ["select", "Seleccionar"],
-    ["pencil", "Lápiz (dibujar)"],
-    ["perimeter", "Perímetro (paredes)"],
-    ["wire", "Cablear"],
-    ["dimension", "Dimensión"],
-    ["eraser", "Goma (borrar)"]
-  ];
-  const modeRow = modeTools.map(([id, label]) => `<button type="button" class="cad-tool ${activeTool === id ? "active" : ""}" data-cad-tool="${id}">${label}</button>`).join("");
-
   const nativeSymbols = (Array.isArray(docSymbols) ? docSymbols : []).filter(symbol => !String(symbol.id).startsWith("qet-") && symbol.id !== "dimension");
   const knownLayerIds = new Set(CAD_LAYERS.map(layer => layer.id));
   const openCategories = new Set(ui.toolOpenCategories || []);
@@ -79,7 +146,7 @@ function renderToolOptions(activeTool, docSymbols = [], ui = {}){
     </div>
   </div>`).join("");
 
-  return `<div class="cad-mode-row">${modeRow}</div><div class="cad-tool-accordion">${sections}</div>`;
+  return `<div class="cad-tool-accordion">${sections}</div>`;
 }
 function renderQetPrimitives(primitives, color){
   return primitives.map(p => {
@@ -303,7 +370,7 @@ function renderCadStartScreen(project, doc){
 export function render(host, state){
   const project = state.currentProject;
   let doc = ensureCad(project);
-  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, qetSearch: "", qetOpenCategories: [], toolOpenCategories: [], zoom: 1, panX: 0, panY: 0 };
+  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, qetSearch: "", qetOpenCategories: [], toolOpenCategories: [], zoom: 1, panX: 0, panY: 0, ribbonPanel: "" };
   project.cadUi = ui;
   const isEmptyPlan = doc.entities.length === 0 && !(doc.perimeter?.points?.length);
   if(ui.cadStartDismissed === undefined) ui.cadStartDismissed = !isEmptyPlan;
@@ -356,79 +423,11 @@ export function render(host, state){
         <div><strong>${validation.summary.issues}</strong><span>Observaciones</span></div>
       </section>
 
-      <section class="cad-workspace">
-        <aside class="cad-sidebar">
-          <article class="admin-card">
-            <h4>Herramientas</h4>
-            <div class="cad-tools">${renderToolOptions(ui.tool, doc.symbols, ui)}</div>
-            <label>Capa activa<select id="cadLayerSelect">${CAD_LAYERS.map(layer => `<option value="${layer.id}" ${ui.layer === layer.id ? "selected" : ""}>${esc(layer.label)}</option>`).join("")}</select></label>
-            <label>Texto / nombre<input id="cadLabelInput" value="${esc(ui.label || "")}" placeholder="Nombre del simbolo o nota"></label>
-            <label>Circuito<input id="cadCircuitInput" value="${esc(ui.circuitId || "")}" placeholder="Ej: C01"></label>
-            <div class="row-actions"><button id="cadGenerateProject">Generar desde proyecto</button><button id="cadValidate" class="secondary">Validar</button></div>
-          </article>
+      ${renderRibbon(ui)}
+      ${ui.ribbonPanel ? `<div class="cad-ribbon-panel" id="cadRibbonPanel">${renderRibbonPanelContent(ui.ribbonPanel, doc, ui, perimeterSegments)}</div>` : ""}
 
-          ${renderRotationControl(doc, ui)}
-
-          ${renderQetLibrary(doc, ui, ui.tool)}
-
-          <article class="admin-card">
-            <h4>Perímetro de la casa</h4>
-            <p class="muted">Elige la herramienta "Perímetro (paredes)" y haz clic en el plano para marcar cada esquina de la casa en orden. Luego ingresa el largo real de cada pared y aplica para escalar el dibujo.</p>
-            <div class="row-actions">
-              <button id="cadUndoPerimeterPoint" class="secondary">Deshacer último punto</button>
-              <button id="cadClosePerimeter" class="secondary">Cerrar perímetro</button>
-              <button id="cadResetPerimeter" class="ghost">Reiniciar perímetro</button>
-            </div>
-            ${perimeterSegments.length ? `
-            <div class="cad-perimeter-measurements">
-              ${perimeterSegments.map(segment => {
-                const stored = doc.perimeter.measurementsM?.[segment.index];
-                const value = Number.isFinite(stored) && stored > 0 ? stored : perimeterSegmentLengthM(segment.from, segment.to);
-                return `<label>Pared ${segment.index + 1} - largo real (m)<input type="number" min="0" step="0.01" data-perimeter-measure="${segment.index}" value="${value.toFixed(2)}"></label>`;
-              }).join("")}
-            </div>
-            <div class="row-actions"><button id="cadApplyPerimeterMeasurements" class="primary-action">Aplicar medidas y escalar</button></div>
-            ` : `<p class="small">Aún no hay perímetro trazado. Usa la herramienta "Perímetro (paredes)" y haz clic sobre el plano.</p>`}
-          </article>
-
-          <article class="admin-card">
-            <h4>Configuracion</h4>
-            <label>Escala<input id="cadScaleInput" value="${esc(doc.scale)}" placeholder="1:50"></label>
-            <label>Unidades<select id="cadUnitsSelect"><option value="mm" ${doc.units === "mm" ? "selected" : ""}>mm</option><option value="cm" ${doc.units === "cm" ? "selected" : ""}>cm</option><option value="m" ${doc.units === "m" ? "selected" : ""}>m</option></select></label>
-          </article>
-
-          <article class="admin-card">
-            <h4>Importar / Exportar</h4>
-            <div class="row-actions"><button id="cadExportJsonSide" class="secondary">Exportar .giaecad</button><button id="cadExportDxf" class="secondary">Exportar DXF</button><button id="cadExportDwtSide" class="secondary">Exportar .DWT</button></div>
-            <div class="row-actions"><button id="cadImportDxf" class="secondary">Importar DXF</button><button id="cadImportSymbols" class="secondary">Cargar símbolos</button></div>
-            <input id="cadImportDxfFile" type="file" accept=".dxf,text/plain" hidden>
-            <input id="cadImportSymbolsFile" type="file" accept=".json,application/json" hidden>
-          </article>
-
-          <article class="admin-card">
-            <h4>☁️ Cloudflare (D1 + R2)</h4>
-            <div id="cadCFStatus" style="padding: 8px; border-radius: 4px; background: #1e293b; color: #94a3b8; font-size: 12px; margin-bottom: 8px;">
-              <span id="cadCFStatusText">Verificando...</span>
-            </div>
-            <div class="row-actions">
-              <button id="cadSaveCF" class="secondary">💾 Guardar en Cloud</button>
-              <button id="cadLoadCF" class="secondary">📥 Cargar de Cloud</button>
-            </div>
-          </article>
-
-          <article class="admin-card">
-            <h4>Capas</h4>
-            <div class="cad-layer-list">${renderLayerToggles(doc)}</div>
-          </article>
-
-          <article class="admin-card">
-            <h4>Entidades</h4>
-            <div class="cad-entity-list">${renderEntities(doc, ui.selectedId)}</div>
-            <div class="row-actions"><button id="cadDeleteSelected" class="ghost danger-text">Eliminar seleccionado</button><small class="hint" style="margin-left:12px">Atajo: Ctrl+Suprimir</small></div>
-          </article>
-        </aside>
-
-        <main class="cad-main">
+      <section class="cad-workspace-v2">
+        <main class="cad-main cad-main-wide">
           <div class="cad-topbar">
             <div><b>${esc(doc.name)}</b><span>${esc(doc.scale)} - ${esc(doc.units)} - ${esc(project.name || "Proyecto sin nombre")}</span></div>
             <div class="row-actions"><button id="cadBackToStart" class="ghost">🏠 Inicio</button><button id="cadToggleFullscreen" class="primary-action">${ui.fullscreen ? "✕ Salir de pantalla completa" : "⛶ Pantalla completa"}</button><button id="cadExportJson" class="secondary">Exportar .giaecad</button><button id="cadExportDwt" class="secondary">Exportar .DWT</button><button id="cadExportSvg" class="secondary">Exportar SVG</button><button id="cadClear" class="ghost danger-text">Reiniciar plano</button></div>
@@ -448,8 +447,17 @@ export function render(host, state){
             </div>
           </div>
           <div class="policy-box"><b>Uso:</b> selecciona una herramienta y haz clic en el plano. En modo Cablear, dos clics crean una canalizacion. El plano es fuente de datos preliminar y requiere revision profesional.</div>
-          <article class="admin-card"><h4>Validacion CAD</h4>${renderValidation(validation)}</article>
         </main>
+
+        <aside class="cad-right">
+          ${renderRotationControl(doc, ui)}
+          <article class="admin-card">
+            <h4>Entidades</h4>
+            <div class="cad-entity-list">${renderEntities(doc, ui.selectedId)}</div>
+            <div class="row-actions"><button id="cadDeleteSelected" class="ghost danger-text">Eliminar seleccionado</button><small class="hint" style="margin-left:12px">Atajo: Ctrl+Suprimir</small></div>
+          </article>
+          <article class="admin-card"><h4>Validacion CAD</h4>${renderValidation(validation)}</article>
+        </aside>
       </section>
     </section>`;
 
@@ -462,24 +470,24 @@ export function render(host, state){
   }
 
   host.querySelectorAll("[data-cad-tool]").forEach(button => button.addEventListener("click", () => { ui.tool = button.dataset.cadTool; ui.wireStart = null; project.cadUi = ui; render(host, state); }));
-  host.querySelector("#cadScaleInput").addEventListener("change", event => {
+  host.querySelector("#cadScaleInput")?.addEventListener("change", event => {
     doc.scale = event.target.value.trim() || "1:50";
     project.cad2d = doc;
     persist();
     render(host, state);
   });
-  host.querySelector("#cadUnitsSelect").addEventListener("change", event => {
+  host.querySelector("#cadUnitsSelect")?.addEventListener("change", event => {
     doc.units = event.target.value;
     project.cad2d = doc;
     persist();
     render(host, state);
   });
-  host.querySelector("#cadExportDxf").addEventListener("click", () => downloadText(safeFileName(doc.name) + ".dxf", createCadExportDxf(project, doc), "application/dxf;charset=utf-8"));
+  host.querySelector("#cadExportDxf")?.addEventListener("click", () => downloadText(safeFileName(doc.name) + ".dxf", createCadExportDxf(project, doc), "application/dxf;charset=utf-8"));
   host.querySelector("#cadExportJsonSide")?.addEventListener("click", () => downloadText(safeFileName(doc.name) + ".giaecad", JSON.stringify(createCadExportPackage(project, doc), null, 2)));
-  host.querySelector("#cadExportDwtSide").addEventListener("click", () => downloadText(safeFileName(doc.name) + ".dwt", createCadExportDwt(project, doc), "application/dxf;charset=utf-8"));
-  host.querySelector("#cadImportDxf").addEventListener("click", () => host.querySelector("#cadImportDxfFile").click());
-  host.querySelector("#cadImportSymbols").addEventListener("click", () => host.querySelector("#cadImportSymbolsFile").click());
-  host.querySelector("#cadImportDxfFile").addEventListener("change", async event => {
+  host.querySelector("#cadExportDwtSide")?.addEventListener("click", () => downloadText(safeFileName(doc.name) + ".dwt", createCadExportDwt(project, doc), "application/dxf;charset=utf-8"));
+  host.querySelector("#cadImportDxf")?.addEventListener("click", () => host.querySelector("#cadImportDxfFile")?.click());
+  host.querySelector("#cadImportSymbols")?.addEventListener("click", () => host.querySelector("#cadImportSymbolsFile")?.click());
+  host.querySelector("#cadImportDxfFile")?.addEventListener("change", async event => {
     const file = event.target.files?.[0];
     if(!file) return;
     const text = await file.text();
@@ -491,7 +499,7 @@ export function render(host, state){
     persist();
     render(host, state);
   });
-  host.querySelector("#cadImportSymbolsFile").addEventListener("change", async event => {
+  host.querySelector("#cadImportSymbolsFile")?.addEventListener("change", async event => {
     const file = event.target.files?.[0];
     if(!file) return;
     const text = await file.text();
@@ -514,6 +522,12 @@ export function render(host, state){
     const open = new Set(ui.toolOpenCategories || []);
     if(open.has(cat)) open.delete(cat); else open.add(cat);
     ui.toolOpenCategories = [...open];
+    project.cadUi = ui;
+    render(host, state);
+  }));
+  host.querySelectorAll("[data-ribbon-toggle]").forEach(button => button.addEventListener("click", () => {
+    const panelId = button.dataset.ribbonToggle;
+    ui.ribbonPanel = ui.ribbonPanel === panelId ? "" : panelId;
     project.cadUi = ui;
     render(host, state);
   }));
@@ -548,7 +562,7 @@ export function render(host, state){
     doc = applyPerimeterMeasurements(doc);
     saveAndRefresh("Perímetro escalado según medidas reales");
   });
-  host.querySelector("#cadLayerSelect").addEventListener("change", event => { ui.layer = event.target.value; project.cadUi = ui; render(host, state); });
+  host.querySelector("#cadLayerSelect")?.addEventListener("change", event => { ui.layer = event.target.value; project.cadUi = ui; render(host, state); });
   host.querySelectorAll("[data-cad-layer]").forEach(input => input.addEventListener("change", () => {
     const layer = doc.layers.find(item => item.id === input.dataset.cadLayer);
     if(layer) layer.hidden = !input.checked;
@@ -575,8 +589,8 @@ export function render(host, state){
     const point = svgPoint(event, host.querySelector("#cadCanvas"));
     const grid = doc.canvas.grid || 20;
     const rawX = snap(point.x, grid), rawY = snap(point.y, grid);
-    const label = host.querySelector("#cadLabelInput").value.trim();
-    const circuitId = host.querySelector("#cadCircuitInput").value.trim();
+    const label = (host.querySelector("#cadLabelInput")?.value || ui.label || "").trim();
+    const circuitId = (host.querySelector("#cadCircuitInput")?.value || ui.circuitId || "").trim();
     ui.label = label;
     ui.circuitId = circuitId;
     if(ui.tool === "select") return;
@@ -689,7 +703,7 @@ export function render(host, state){
     entity.layer = event.target.value;
     saveAndRefresh("Capa actualizada en CAD");
   });
-  host.querySelector("#cadGenerateProject").addEventListener("click", () => {
+  host.querySelector("#cadGenerateProject")?.addEventListener("click", () => {
     if(!confirm("Regenerar el plano desde el Proyecto Activo? Esto reemplaza el plano CAD actual.")) return;
     project.cad2d = buildCadFromProject(project);
     project.cadUi = { tool: "select", layer: "enchufes", selectedId: "", wireStart: null };
@@ -697,7 +711,7 @@ export function render(host, state){
     persist();
     render(host, state);
   });
-  host.querySelector("#cadValidate").addEventListener("click", () => saveAndRefresh("Plano CAD validado"));
+  host.querySelector("#cadValidate")?.addEventListener("click", () => saveAndRefresh("Plano CAD validado"));
   function applyZoom(nextZoom){
     const width = n(doc.canvas.width, 1200), height = n(doc.canvas.height, 760);
     const oldZoom = Math.max(0.25, Math.min(4, n(ui.zoom, 1)));

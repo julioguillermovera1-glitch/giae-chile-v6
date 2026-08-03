@@ -588,8 +588,15 @@ body{background:var(--bg);}
 @media(max-width:650px){.cloud-module .cloud-kpis{grid-template-columns:1fr}.cloud-queue-item{grid-template-columns:1fr}}
 /* Fase 5 - CAD electrico GIAE 2.0 */
 .cad-module .cad-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
-.cad-workspace{display:grid;grid-template-columns:320px minmax(0,1fr);gap:1rem;align-items:start}
-.cad-sidebar,.cad-main{display:grid;gap:1rem;min-width:0}
+.cad-ribbon{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.6rem;background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:.6rem .8rem;margin-bottom:.8rem}
+.cad-ribbon-group{display:flex;flex-wrap:wrap;gap:.4rem}
+.cad-ribbon-toggle{background:#0f172a!important;color:#e2e8f0!important;border:1px solid #1e293b!important;border-radius:8px;padding:.5rem .75rem;font-weight:600;font-size:.85rem;white-space:nowrap}
+.cad-ribbon-toggle:hover{background:#1a1f2e!important;border-color:#404a54!important}
+.cad-ribbon-toggle.active{background:#3b82f6!important;color:#fff!important;border-color:#3b82f6!important}
+.cad-ribbon-panel{background:#fff;border:1px solid #d9e4ef;border-radius:14px;padding:1rem 1.2rem;margin-bottom:.8rem}
+.cad-workspace-v2{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:1rem;align-items:start}
+.cad-right,.cad-main{display:grid;gap:1rem;min-width:0}
+.cad-main-wide{min-width:0}
 .cad-tools{display:flex;flex-direction:column;gap:.6rem;margin-bottom:.8rem}
 .cad-mode-row{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
 .cad-tool{background:#0f172a!important;color:#e2e8f0!important;border:1px solid #1e293b!important;border-left:4px solid var(--layer-color,transparent)!important;border-radius:8px;padding:.58rem .65rem;text-align:center;transition:all 0.2s ease;font-weight:600}
@@ -610,10 +617,10 @@ body{background:var(--bg);}
 .cad-statusbar button{padding:.35rem .55rem;font-size:.75rem}
 .cad-statusbar #cadZoomLabel{color:#e2e8f0;font-weight:700;padding:0 .3rem}
 .cad-stage{width:100%;overflow:auto;border:1px solid #1e293b;border-radius:12px;background:#0a0e17;padding:.7rem}.cad-canvas{width:100%;min-width:980px;display:block;background:#1a1f27;border-radius:8px}.cad-entity{cursor:pointer}.cad-symbol text,.cad-wire text,.cad-legend text{font-family:Arial,sans-serif;letter-spacing:0}.cad-selected-box{fill:none;stroke:#22c55e;stroke-width:2;stroke-dasharray:6 4;pointer-events:none}.cad-wire line{filter:drop-shadow(0 1px 2px rgba(0,0,0,0.4))}
-@media(max-width:1100px){.cad-workspace{grid-template-columns:1fr}.cad-module .cad-kpis{grid-template-columns:1fr 1fr}.cad-mode-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1100px){.cad-workspace-v2{grid-template-columns:1fr}.cad-module .cad-kpis{grid-template-columns:1fr 1fr}.cad-mode-row{grid-template-columns:repeat(3,1fr)}.cad-ribbon{flex-direction:column}}
 @media(max-width:650px){.cad-module .cad-kpis{grid-template-columns:1fr}.cad-mode-row{grid-template-columns:1fr}.cad-topbar{display:grid}.cad-canvas{min-width:760px}}
 .cad-module.cad-fullscreen{position:fixed;inset:0;z-index:9999;background:#fff;padding:1.1rem 1.4rem;overflow:auto;border-radius:0}
-.cad-module.cad-fullscreen .cad-workspace{grid-template-columns:280px minmax(0,1fr)}
+.cad-module.cad-fullscreen .cad-workspace-v2{grid-template-columns:minmax(0,1fr) 280px}
 .cad-module.cad-fullscreen .cad-stage{height:calc(100vh - 260px);display:flex;align-items:flex-start}
 .cad-module.cad-fullscreen .cad-canvas{height:100%;width:auto;min-width:0}
 @media(max-width:1100px){.cad-module.cad-fullscreen{padding:.7rem}.cad-module.cad-fullscreen .cad-stage{height:60vh}}
