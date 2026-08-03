@@ -52,6 +52,7 @@ function renderLayerToggles(doc){
 function renderToolOptions(activeTool, docSymbols = [], ui = {}){
   const modeTools = [
     ["select", "Seleccionar"],
+    ["pencil", "Lápiz (dibujar)"],
     ["perimeter", "Perímetro (paredes)"],
     ["wire", "Cablear"],
     ["dimension", "Dimensión"],
@@ -515,7 +516,7 @@ export function render(host, state){
       saveAndRefresh("Punto de perímetro agregado");
       return;
     }
-    if(ui.tool === "wire" || ui.tool === "dimension"){
+    if(ui.tool === "wire" || ui.tool === "dimension" || ui.tool === "pencil"){
       const magnet = nearestSymbolCenter(doc, point);
       const x = magnet ? magnet.x : rawX, y = magnet ? magnet.y : rawY;
       if(!ui.wireStart){ ui.wireStart = { x, y }; project.cadUi = ui; render(host, state); return; }
@@ -523,10 +524,12 @@ export function render(host, state){
       const dy = y - ui.wireStart.y;
       const length = Math.hypot(dx, dy);
       const actualLength = length * parseScale(doc.scale);
-      const dimensionLabel = ui.tool === "dimension" ? formatDistance(actualLength, doc.units) : (circuitId || "Canalizacion");
-      doc = addCadEntity(doc, createCadEntity("wire", { layer: ui.tool === "dimension" ? "revision" : "canalizacion", from: ui.wireStart, to: { x, y }, label: dimensionLabel, circuitId, source: "manual" }));
+      const layer = ui.tool === "dimension" ? "revision" : ui.tool === "pencil" ? "arquitectura" : "canalizacion";
+      const wireLabel = ui.tool === "dimension" ? formatDistance(actualLength, doc.units) : ui.tool === "pencil" ? (label || "Muro") : (circuitId || "Canalizacion");
+      doc = addCadEntity(doc, createCadEntity("wire", { layer, from: ui.wireStart, to: { x, y }, label: wireLabel, circuitId, source: "manual" }));
       ui.wireStart = null;
-      saveAndRefresh(ui.tool === "dimension" ? "Dimension agregada en CAD" : "Canalizacion agregada en CAD");
+      const doneMessage = ui.tool === "dimension" ? "Dimension agregada en CAD" : ui.tool === "pencil" ? "Linea dibujada con el lapiz" : "Canalizacion agregada en CAD";
+      saveAndRefresh(doneMessage);
       return;
     }
     if(ui.tool === "door" || ui.tool === "window"){
