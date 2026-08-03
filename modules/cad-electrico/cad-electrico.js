@@ -384,6 +384,11 @@ export function render(host, state){
         <div><strong>${validation.summary.issues}</strong><span>Observaciones</span></div>
       </section>
 
+      <div class="cad-topbar">
+        <div><b>${esc(doc.name)}</b><span>${esc(doc.scale)} - ${esc(doc.units)} - ${esc(project.name || "Proyecto sin nombre")}</span></div>
+        <div class="row-actions"><button id="cadBackToStart" class="ghost">🏠 Inicio</button><button id="cadGenerateProject" class="secondary">Generar desde proyecto</button><button id="cadValidate" class="secondary">Validar</button><button id="cadToggleFullscreen" class="primary-action">${ui.fullscreen ? "✕ Salir de pantalla completa" : "⛶ Pantalla completa"}</button><button id="cadExportJson" class="secondary">Exportar .giaecad</button><button id="cadExportDwt" class="secondary">Exportar .DWT</button><button id="cadExportSvg" class="secondary">Exportar SVG</button><button id="cadClear" class="ghost danger-text">Reiniciar plano</button></div>
+      </div>
+
       <div class="cad-ribbon-wrap">
         ${renderRibbon(ui, doc)}
         ${ui.ribbonPanel ? `<div class="cad-ribbon-panel" id="cadRibbonPanel">${renderRibbonPanelContent(ui.ribbonPanel, doc, ui, perimeterSegments)}</div>` : ""}
@@ -391,10 +396,6 @@ export function render(host, state){
 
       <section class="cad-workspace-v2">
         <main class="cad-main cad-main-wide">
-          <div class="cad-topbar">
-            <div><b>${esc(doc.name)}</b><span>${esc(doc.scale)} - ${esc(doc.units)} - ${esc(project.name || "Proyecto sin nombre")}</span></div>
-            <div class="row-actions"><button id="cadBackToStart" class="ghost">🏠 Inicio</button><button id="cadGenerateProject" class="secondary">Generar desde proyecto</button><button id="cadValidate" class="secondary">Validar</button><button id="cadToggleFullscreen" class="primary-action">${ui.fullscreen ? "✕ Salir de pantalla completa" : "⛶ Pantalla completa"}</button><button id="cadExportJson" class="secondary">Exportar .giaecad</button><button id="cadExportDwt" class="secondary">Exportar .DWT</button><button id="cadExportSvg" class="secondary">Exportar SVG</button><button id="cadClear" class="ghost danger-text">Reiniciar plano</button></div>
-          </div>
           <div class="cad-stage">${renderCadSvg(doc, ui.selectedId, ui)}</div>
           <div class="cad-statusbar">
             <span id="cadCoordsReadout">X: 0.00 m · Y: 0.00 m</span>
@@ -533,15 +534,22 @@ export function render(host, state){
       render(host, state);
       return;
     }
+    const point = svgPoint(event, host.querySelector("#cadCanvas"));
     if(ui.tool === "eraser"){
       if(entityGroup){
         doc = removeCadEntity(doc, entityGroup.dataset.entityId);
         if(ui.selectedId === entityGroup.dataset.entityId) ui.selectedId = "";
         saveAndRefresh("Entidad borrada con la goma");
+        return;
+      }
+      const wallHit = nearestWallPoint(doc.perimeter, point);
+      if(wallHit && wallHit.distance <= 16){
+        if(!confirm("Borrar todo el perímetro de la casa?")) return;
+        doc = resetPerimeter(doc);
+        saveAndRefresh("Perímetro borrado con la goma");
       }
       return;
     }
-    const point = svgPoint(event, host.querySelector("#cadCanvas"));
     const grid = doc.canvas.grid || 20;
     const rawX = snap(point.x, grid), rawY = snap(point.y, grid);
     const label = (host.querySelector("#cadLabelInput")?.value || ui.label || "").trim();
