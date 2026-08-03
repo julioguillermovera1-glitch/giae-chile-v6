@@ -40,45 +40,35 @@ function renderLayerToggles(doc){
   const used = new Set(doc.entities.map(entity => entity.layer));
   return CAD_LAYERS.map(layer => `<label class="cad-layer-toggle"><input type="checkbox" data-cad-layer="${esc(layer.id)}" ${layer.hidden ? "" : "checked"}><span style="--layer:${esc(layer.color)}"></span>${esc(layer.label)}<small>${used.has(layer.id) ? "en uso" : "vacia"}</small></label>`).join("");
 }
-function renderToolOptions(activeTool, docSymbols = []){
-  const tools = [
+function renderToolOptions(activeTool, docSymbols = [], ui = {}){
+  const modeTools = [
     ["select", "Seleccionar"],
     ["perimeter", "Perímetro (paredes)"],
     ["wire", "Cablear"],
-    ["dimension", "Dimension"],
-    ["panel", "Tablero"],
-    ["sub-panel", "Sub-tablero"],
-    ["meter", "Medidor"],
-    ["breaker", "Proteccion"],
-    ["differential", "Diferencial"],
-    ["light", "Luz"],
-    ["emergency-light", "Luz emergencia"],
-    ["switch", "Interruptor"],
-    ["three-way-switch", "Conmutacion"],
-    ["dimmer", "Regulador"],
-    ["motion-sensor", "Sensor mov."],
-    ["doorbell", "Timbre"],
-    ["outlet", "Enchufe"],
-    ["outlet-double", "Enchufe x2"],
-    ["outlet-triple", "Enchufe x3"],
-    ["outlet-exterior", "Enchufe ext. IP44"],
-    ["outlet-special", "Enchufe especial"],
-    ["outlet-tripolar", "Enchufe trifasico"],
-    ["motor", "Fuerza"],
-    ["exhaust-fan", "Extractor"],
-    ["water-heater", "Calefon/termo"],
-    ["junction", "Derivacion"],
-    ["ground", "Tierra"],
-    ["smoke-detector", "Detector humo"],
-    ["data-point", "Punto datos"],
-    ["tv-point", "Punto TV"],
-    ["window", "Ventana"],
-    ["door", "Puerta"],
-    ["note", "Nota"]
+    ["dimension", "Dimensión"]
   ];
-  const defaultIds = new Set(tools.map(([id]) => id));
-  const customTools = Array.isArray(docSymbols) ? docSymbols.filter(symbol => !defaultIds.has(symbol.id) && !String(symbol.id).startsWith("qet-")).map(symbol => [symbol.id, symbol.label || symbol.id]) : [];
-  return tools.concat(customTools).map(([id, label]) => `<button type="button" class="cad-tool ${activeTool === id ? "active" : ""}" data-cad-tool="${id}">${label}</button>`).join("");
+  const modeRow = modeTools.map(([id, label]) => `<button type="button" class="cad-tool ${activeTool === id ? "active" : ""}" data-cad-tool="${id}">${label}</button>`).join("");
+
+  const nativeSymbols = (Array.isArray(docSymbols) ? docSymbols : []).filter(symbol => !String(symbol.id).startsWith("qet-") && symbol.id !== "dimension");
+  const knownLayerIds = new Set(CAD_LAYERS.map(layer => layer.id));
+  const openCategories = new Set(ui.toolOpenCategories || []);
+  const groups = CAD_LAYERS.map(layer => ({ layer, symbols: nativeSymbols.filter(symbol => symbol.layer === layer.id) })).filter(group => group.symbols.length);
+  const orphanSymbols = nativeSymbols.filter(symbol => !knownLayerIds.has(symbol.layer));
+  if(orphanSymbols.length) groups.push({ layer: { id: "personalizados", label: "Personalizados", color: "#7c3aed" }, symbols: orphanSymbols });
+
+  const sections = groups.map(group => `<div class="cad-tool-category">
+    <button type="button" class="cad-tool-category-header" data-tool-category-toggle="${esc(group.layer.id)}">
+      <span class="cad-qet-caret ${openCategories.has(group.layer.id) ? "open" : ""}">▸</span>
+      <span class="cad-layer-dot" style="--layer-color:${esc(group.layer.color)}"></span>
+      <span>${esc(group.layer.label)}</span>
+      <small>${group.symbols.length}</small>
+    </button>
+    <div class="cad-tool-category-body" ${openCategories.has(group.layer.id) ? "" : "hidden"}>
+      ${group.symbols.map(symbol => `<button type="button" class="cad-tool ${activeTool === symbol.id ? "active" : ""}" style="--layer-color:${esc(group.layer.color)}" data-cad-tool="${esc(symbol.id)}">${esc(symbol.label)}</button>`).join("")}
+    </div>
+  </div>`).join("");
+
+  return `<div class="cad-mode-row">${modeRow}</div><div class="cad-tool-accordion">${sections}</div>`;
 }
 function renderQetPrimitives(primitives, color){
   return primitives.map(p => {
@@ -234,7 +224,7 @@ function renderQetLibrary(doc, ui, activeTool){
 export function render(host, state){
   const project = state.currentProject;
   let doc = ensureCad(project);
-  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, qetSearch: "", qetOpenCategories: [] };
+  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, qetSearch: "", qetOpenCategories: [], toolOpenCategories: [] };
   project.cadUi = ui;
   const validation = validateCadDocument(doc);
   doc.validation = validation;
@@ -266,7 +256,7 @@ export function render(host, state){
         <aside class="cad-sidebar">
           <article class="admin-card">
             <h4>Herramientas</h4>
-            <div class="cad-tools">${renderToolOptions(ui.tool)}</div>
+            <div class="cad-tools">${renderToolOptions(ui.tool, doc.symbols, ui)}</div>
             <label>Capa activa<select id="cadLayerSelect">${CAD_LAYERS.map(layer => `<option value="${layer.id}" ${ui.layer === layer.id ? "selected" : ""}>${esc(layer.label)}</option>`).join("")}</select></label>
             <label>Texto / nombre<input id="cadLabelInput" value="${esc(ui.label || "")}" placeholder="Nombre del simbolo o nota"></label>
             <label>Circuito<input id="cadCircuitInput" value="${esc(ui.circuitId || "")}" placeholder="Ej: C01"></label>
@@ -414,6 +404,14 @@ export function render(host, state){
     const refocused = host.querySelector("#cadQetSearch");
     if(refocused){ refocused.focus(); refocused.setSelectionRange(refocused.value.length, refocused.value.length); }
   });
+  host.querySelectorAll("[data-tool-category-toggle]").forEach(button => button.addEventListener("click", () => {
+    const cat = button.dataset.toolCategoryToggle;
+    const open = new Set(ui.toolOpenCategories || []);
+    if(open.has(cat)) open.delete(cat); else open.add(cat);
+    ui.toolOpenCategories = [...open];
+    project.cadUi = ui;
+    render(host, state);
+  }));
   host.querySelectorAll("[data-qet-category-toggle]").forEach(button => button.addEventListener("click", () => {
     const cat = button.dataset.qetCategoryToggle;
     const open = new Set(ui.qetOpenCategories || []);
