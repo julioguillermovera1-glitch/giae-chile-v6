@@ -389,6 +389,7 @@ export function createCadEntity(type, options = {}){
     x: n(options.x, 120),
     y: n(options.y, 120),
     rotation: n(options.rotation, 0),
+    scale: n(options.scale, 1),
     circuitId: options.circuitId || "",
     source: options.source || "manual",
     data: clone(options.data || {})
