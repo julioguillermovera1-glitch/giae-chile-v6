@@ -382,8 +382,10 @@ export function render(host, state){
         <div><strong>${validation.summary.issues}</strong><span>Observaciones</span></div>
       </section>
 
-      ${renderRibbon(ui, doc)}
-      ${ui.ribbonPanel ? `<div class="cad-ribbon-panel" id="cadRibbonPanel">${renderRibbonPanelContent(ui.ribbonPanel, doc, ui, perimeterSegments)}</div>` : ""}
+      <div class="cad-ribbon-wrap">
+        ${renderRibbon(ui, doc)}
+        ${ui.ribbonPanel ? `<div class="cad-ribbon-panel" id="cadRibbonPanel">${renderRibbonPanelContent(ui.ribbonPanel, doc, ui, perimeterSegments)}</div>` : ""}
+      </div>
 
       <section class="cad-workspace-v2">
         <main class="cad-main cad-main-wide">
@@ -428,7 +430,13 @@ export function render(host, state){
     render(host, state);
   }
 
-  host.querySelectorAll("[data-cad-tool]").forEach(button => button.addEventListener("click", () => { ui.tool = button.dataset.cadTool; ui.wireStart = null; project.cadUi = ui; render(host, state); }));
+  host.querySelectorAll("[data-cad-tool]").forEach(button => button.addEventListener("click", () => {
+    ui.tool = button.dataset.cadTool;
+    ui.wireStart = null;
+    if(button.closest(".cad-ribbon-panel")) ui.ribbonPanel = "";
+    project.cadUi = ui;
+    render(host, state);
+  }));
   host.querySelector("#cadScaleInput")?.addEventListener("change", event => {
     doc.scale = event.target.value.trim() || "1:50";
     project.cad2d = doc;
@@ -544,7 +552,7 @@ export function render(host, state){
       return;
     }
     if(ui.tool === "wire" || ui.tool === "dimension" || ui.tool === "pencil"){
-      const magnet = nearestSymbolCenter(doc, point);
+      const magnet = ui.tool === "pencil" ? null : nearestSymbolCenter(doc, point);
       const x = magnet ? magnet.x : rawX, y = magnet ? magnet.y : rawY;
       if(!ui.wireStart){ ui.wireStart = { x, y }; project.cadUi = ui; render(host, state); return; }
       const dx = x - ui.wireStart.x;
