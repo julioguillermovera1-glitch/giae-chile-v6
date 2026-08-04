@@ -50,6 +50,12 @@ function nearestSymbolCenter(doc, point, thresholdPx = 28){
   });
   return best;
 }
+function lineIntersection(P1, P2, P3, P4){
+  const denom = (P1.x - P2.x) * (P3.y - P4.y) - (P1.y - P2.y) * (P3.x - P4.x);
+  if(Math.abs(denom) < 1e-9) return null;
+  const t = ((P1.x - P3.x) * (P3.y - P4.y) - (P1.y - P3.y) * (P3.x - P4.x)) / denom;
+  return { x: P1.x + t * (P2.x - P1.x), y: P1.y + t * (P2.y - P1.y) };
+}
 function renderLayerToggles(doc){
   const used = new Set(doc.entities.map(entity => entity.layer));
   return CAD_LAYERS.map(layer => `<label class="cad-layer-toggle"><input type="checkbox" data-cad-layer="${esc(layer.id)}" ${layer.hidden ? "" : "checked"}><span style="--layer:${esc(layer.color)}"></span>${esc(layer.label)}<small>${used.has(layer.id) ? "en uso" : "vacia"}</small></label>`).join("");
@@ -67,6 +73,8 @@ const CAD_MODE_TOOLS = [
   ["angle", "Ángulo"],
   ["copy", "Copiar"],
   ["mirror", "Simetría"],
+  ["trim", "Recortar"],
+  ["extend", "Alargar"],
   ["eraser", "Goma"]
 ];
 function renderModeRow(activeTool){
@@ -393,7 +401,7 @@ function renderCadStartScreen(project, doc){
 export function render(host, state){
   const project = state.currentProject;
   let doc = ensureCad(project);
-  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, catSearch: "", zoom: 1, panX: 0, panY: 0, ribbonPanel: "", copySourceId: "", anglePoints: [] };
+  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, catSearch: "", zoom: 1, panX: 0, panY: 0, ribbonPanel: "", copySourceId: "", anglePoints: [], trimSourceId: "", trimClickPoint: null };
   project.cadUi = ui;
   const isEmptyPlan = doc.entities.length === 0 && !(doc.perimeter?.points?.length);
   if(ui.cadStartDismissed === undefined) ui.cadStartDismissed = !isEmptyPlan;
@@ -501,6 +509,8 @@ export function render(host, state){
     ui.wireStart = null;
     ui.copySourceId = "";
     ui.anglePoints = [];
+    ui.trimSourceId = "";
+    ui.trimClickPoint = null;
     if(button.closest(".cad-ribbon-panel")) ui.ribbonPanel = "";
     project.cadUi = ui;
     render(host, state);
@@ -657,6 +667,38 @@ export function render(host, state){
       saveAndRefresh("Ángulo medido en CAD");
       return;
     }
+    if(ui.tool === "trim" || ui.tool === "extend"){
+      const isAdjustableLine = e => e && e.type === "wire" && (!e.shape || e.shape === "line");
+      if(!ui.trimSourceId){
+        const candidate = entityGroup ? doc.entities.find(e => e.id === entityGroup.dataset.entityId) : null;
+        if(isAdjustableLine(candidate)){
+          ui.trimSourceId = candidate.id;
+          ui.trimClickPoint = point;
+          project.cadUi = ui;
+          render(host, state);
+        }
+        return;
+      }
+      const sourceLine = doc.entities.find(e => e.id === ui.trimSourceId);
+      const clickPoint = ui.trimClickPoint;
+      ui.trimSourceId = "";
+      ui.trimClickPoint = null;
+      const targetLine = entityGroup ? doc.entities.find(e => e.id === entityGroup.dataset.entityId) : null;
+      if(sourceLine && isAdjustableLine(targetLine) && targetLine.id !== sourceLine.id && clickPoint){
+        const intersection = lineIntersection(sourceLine.from, sourceLine.to, targetLine.from, targetLine.to);
+        if(intersection){
+          const distFromEnd = Math.hypot(sourceLine.from.x - clickPoint.x, sourceLine.from.y - clickPoint.y);
+          const distToEnd = Math.hypot(sourceLine.to.x - clickPoint.x, sourceLine.to.y - clickPoint.y);
+          const point2 = { x: Math.round(intersection.x), y: Math.round(intersection.y) };
+          if(distFromEnd <= distToEnd) sourceLine.from = point2; else sourceLine.to = point2;
+          saveAndRefresh(ui.tool === "trim" ? "Línea recortada en CAD" : "Línea alargada en CAD");
+          return;
+        }
+      }
+      project.cadUi = ui;
+      render(host, state);
+      return;
+    }
     const label = (host.querySelector("#cadLabelInput")?.value || ui.label || "").trim();
     const circuitId = (host.querySelector("#cadCircuitInput")?.value || ui.circuitId || "").trim();
     ui.label = label;
@@ -713,7 +755,7 @@ export function render(host, state){
   let dragEntityId = null;
   let dragGroup = null;
   let dragMoved = false;
-  const CAD_NO_DRAG_TOOLS = new Set(["eraser", "wire", "dimension", "perimeter", "pencil", "copy", "mirror", "circle", "rectangle", "ellipse", "arc", "angle"]);
+  const CAD_NO_DRAG_TOOLS = new Set(["eraser", "wire", "dimension", "perimeter", "pencil", "copy", "mirror", "circle", "rectangle", "ellipse", "arc", "angle", "trim", "extend"]);
   host.querySelector("#cadCanvas").addEventListener("mousedown", event => {
     if(CAD_NO_DRAG_TOOLS.has(ui.tool)) return;
     const entityGroup = event.target.closest('[data-draggable="true"]');
