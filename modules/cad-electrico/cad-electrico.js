@@ -59,6 +59,8 @@ const CAD_MODE_TOOLS = [
   ["pencil", "Lápiz"],
   ["circle", "Círculo"],
   ["rectangle", "Rectángulo"],
+  ["ellipse", "Elipse"],
+  ["arc", "Arco"],
   ["perimeter", "Perímetro"],
   ["wire", "Cablear"],
   ["dimension", "Dimensión"],
@@ -233,6 +235,15 @@ function renderWire(entity){
     const x = Math.min(from.x, to.x), y = Math.min(from.y, to.y);
     const w = Math.abs(to.x - from.x), h = Math.abs(to.y - from.y);
     return `<g ${base}><rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="none" stroke="${color}" stroke-width="2.5"/><text x="${n(x + w / 2)}" y="${n(y) - 6}" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">${esc(entity.label)}</text></g>`;
+  }
+  if(entity.shape === "ellipse"){
+    const rx = Math.max(4, Math.round(Math.abs(to.x - from.x)));
+    const ry = Math.max(4, Math.round(Math.abs(to.y - from.y)));
+    return `<g ${base}><ellipse cx="${n(from.x)}" cy="${n(from.y)}" rx="${rx}" ry="${ry}" fill="none" stroke="${color}" stroke-width="2.5"/><text x="${n(from.x)}" y="${n(from.y) - ry - 6}" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">${esc(entity.label)}</text></g>`;
+  }
+  if(entity.shape === "arc"){
+    const radius = Math.max(4, Math.round(Math.hypot(to.x - from.x, to.y - from.y) / 2));
+    return `<g ${base}><path d="M ${n(from.x)} ${n(from.y)} A ${radius} ${radius} 0 0 1 ${n(to.x)} ${n(to.y)}" fill="none" stroke="${color}" stroke-width="2.5"/><text x="${mx}" y="${my}" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">${esc(entity.label)}</text></g>`;
   }
   return `<g ${base}><line x1="${n(from.x)}" y1="${n(from.y)}" x2="${n(to.x)}" y2="${n(to.y)}" stroke="${color}" stroke-width="4" stroke-linecap="round"/><text x="${mx}" y="${my}" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">${esc(entity.label)}</text></g>`;
 }
@@ -624,21 +635,23 @@ export function render(host, state){
       saveAndRefresh("Punto de perímetro agregado");
       return;
     }
-    if(ui.tool === "wire" || ui.tool === "dimension" || ui.tool === "pencil" || ui.tool === "circle" || ui.tool === "rectangle"){
-      const magnet = (ui.tool === "pencil" || ui.tool === "circle" || ui.tool === "rectangle") ? null : nearestSymbolCenter(doc, point);
+    const CAD_SHAPE_TOOLS = { pencil: "line", circle: "circle", rectangle: "rect", ellipse: "ellipse", arc: "arc" };
+    const CAD_SHAPE_LABELS = { pencil: "Muro", circle: "Círculo", rectangle: "Rectángulo", ellipse: "Elipse", arc: "Arco" };
+    if(ui.tool === "wire" || ui.tool === "dimension" || Object.prototype.hasOwnProperty.call(CAD_SHAPE_TOOLS, ui.tool)){
+      const isFreeform = Object.prototype.hasOwnProperty.call(CAD_SHAPE_TOOLS, ui.tool);
+      const magnet = isFreeform ? null : nearestSymbolCenter(doc, point);
       const x = magnet ? magnet.x : rawX, y = magnet ? magnet.y : rawY;
       if(!ui.wireStart){ ui.wireStart = { x, y }; project.cadUi = ui; render(host, state); return; }
       const dx = x - ui.wireStart.x;
       const dy = y - ui.wireStart.y;
       const length = Math.hypot(dx, dy);
       const actualLength = length * parseScale(doc.scale);
-      const shape = ui.tool === "circle" ? "circle" : ui.tool === "rectangle" ? "rect" : "line";
-      const layer = ui.tool === "dimension" ? "revision" : (ui.tool === "pencil" || ui.tool === "circle" || ui.tool === "rectangle") ? "arquitectura" : "canalizacion";
-      const defaultLabel = ui.tool === "circle" ? "Círculo" : ui.tool === "rectangle" ? "Rectángulo" : "Muro";
-      const wireLabel = ui.tool === "dimension" ? formatDistance(actualLength, doc.units) : (ui.tool === "pencil" || ui.tool === "circle" || ui.tool === "rectangle") ? (label || defaultLabel) : (circuitId || "Canalizacion");
+      const shape = isFreeform ? CAD_SHAPE_TOOLS[ui.tool] : "line";
+      const layer = ui.tool === "dimension" ? "revision" : isFreeform ? "arquitectura" : "canalizacion";
+      const wireLabel = ui.tool === "dimension" ? formatDistance(actualLength, doc.units) : isFreeform ? (label || CAD_SHAPE_LABELS[ui.tool]) : (circuitId || "Canalizacion");
       doc = addCadEntity(doc, createCadEntity("wire", { layer, shape, from: ui.wireStart, to: { x, y }, label: wireLabel, circuitId, source: "manual" }));
       ui.wireStart = null;
-      const doneMessage = ui.tool === "dimension" ? "Dimension agregada en CAD" : ui.tool === "circle" ? "Círculo dibujado en CAD" : ui.tool === "rectangle" ? "Rectángulo dibujado en CAD" : ui.tool === "pencil" ? "Linea dibujada con el lapiz" : "Canalizacion agregada en CAD";
+      const doneMessage = ui.tool === "dimension" ? "Dimension agregada en CAD" : ui.tool === "wire" ? "Canalizacion agregada en CAD" : ui.tool === "pencil" ? "Linea dibujada con el lapiz" : `${CAD_SHAPE_LABELS[ui.tool]} dibujado en CAD`;
       saveAndRefresh(doneMessage);
       return;
     }
@@ -668,7 +681,7 @@ export function render(host, state){
   let dragEntityId = null;
   let dragGroup = null;
   let dragMoved = false;
-  const CAD_NO_DRAG_TOOLS = new Set(["eraser", "wire", "dimension", "perimeter", "pencil", "copy", "mirror", "circle", "rectangle"]);
+  const CAD_NO_DRAG_TOOLS = new Set(["eraser", "wire", "dimension", "perimeter", "pencil", "copy", "mirror", "circle", "rectangle", "ellipse", "arc"]);
   host.querySelector("#cadCanvas").addEventListener("mousedown", event => {
     if(CAD_NO_DRAG_TOOLS.has(ui.tool)) return;
     const entityGroup = event.target.closest('[data-draggable="true"]');
