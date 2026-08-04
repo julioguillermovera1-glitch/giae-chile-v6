@@ -64,6 +64,7 @@ const CAD_MODE_TOOLS = [
   ["perimeter", "Perímetro"],
   ["wire", "Cablear"],
   ["dimension", "Dimensión"],
+  ["angle", "Ángulo"],
   ["copy", "Copiar"],
   ["mirror", "Simetría"],
   ["eraser", "Goma"]
@@ -246,6 +247,21 @@ function renderWire(entity){
     const radius = Math.max(4, Math.round(Math.hypot(to.x - from.x, to.y - from.y) / 2));
     return `<g ${base}><path d="M ${n(from.x)} ${n(from.y)} A ${radius} ${radius} 0 0 1 ${n(to.x)} ${n(to.y)}" fill="none" stroke="${color}" stroke-width="2.5"/><text x="${mx}" y="${my}" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">${esc(entity.label)}</text></g>`;
   }
+  if(entity.shape === "angle" && entity.via){
+    const vertex = from, p1 = to, p2 = entity.via;
+    const a1 = Math.atan2(p1.y - vertex.y, p1.x - vertex.x);
+    const a2 = Math.atan2(p2.y - vertex.y, p2.x - vertex.x);
+    let diffDeg = Math.abs(a1 - a2) * 180 / Math.PI;
+    if(diffDeg > 180) diffDeg = 360 - diffDeg;
+    const arcRadius = 28;
+    const midAngle = (a1 + a2) / 2;
+    const labelX = n(vertex.x) + Math.cos(midAngle) * (arcRadius + 16);
+    const labelY = n(vertex.y) + Math.sin(midAngle) * (arcRadius + 16);
+    const arcStart = { x: n(vertex.x) + Math.cos(a1) * arcRadius, y: n(vertex.y) + Math.sin(a1) * arcRadius };
+    const arcEnd = { x: n(vertex.x) + Math.cos(a2) * arcRadius, y: n(vertex.y) + Math.sin(a2) * arcRadius };
+    const largeArc = diffDeg > 180 ? 1 : 0;
+    return `<g ${base}><line x1="${n(vertex.x)}" y1="${n(vertex.y)}" x2="${n(p1.x)}" y2="${n(p1.y)}" stroke="${color}" stroke-width="2"/><line x1="${n(vertex.x)}" y1="${n(vertex.y)}" x2="${n(p2.x)}" y2="${n(p2.y)}" stroke="${color}" stroke-width="2"/><path d="M ${arcStart.x.toFixed(1)} ${arcStart.y.toFixed(1)} A ${arcRadius} ${arcRadius} 0 ${largeArc} 1 ${arcEnd.x.toFixed(1)} ${arcEnd.y.toFixed(1)}" fill="none" stroke="${color}" stroke-width="1.5"/><text x="${labelX.toFixed(1)}" y="${labelY.toFixed(1)}" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">${diffDeg.toFixed(1)}°</text></g>`;
+  }
   return `<g ${base}><line x1="${n(from.x)}" y1="${n(from.y)}" x2="${n(to.x)}" y2="${n(to.y)}" stroke="${color}" stroke-width="4" stroke-linecap="round"/><text x="${mx}" y="${my}" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">${esc(entity.label)}</text></g>`;
 }
 function renderPerimeter(perimeter){
@@ -377,7 +393,7 @@ function renderCadStartScreen(project, doc){
 export function render(host, state){
   const project = state.currentProject;
   let doc = ensureCad(project);
-  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, catSearch: "", zoom: 1, panX: 0, panY: 0, ribbonPanel: "", copySourceId: "" };
+  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, catSearch: "", zoom: 1, panX: 0, panY: 0, ribbonPanel: "", copySourceId: "", anglePoints: [] };
   project.cadUi = ui;
   const isEmptyPlan = doc.entities.length === 0 && !(doc.perimeter?.points?.length);
   if(ui.cadStartDismissed === undefined) ui.cadStartDismissed = !isEmptyPlan;
@@ -484,6 +500,7 @@ export function render(host, state){
     ui.tool = button.dataset.cadTool;
     ui.wireStart = null;
     ui.copySourceId = "";
+    ui.anglePoints = [];
     if(button.closest(".cad-ribbon-panel")) ui.ribbonPanel = "";
     project.cadUi = ui;
     render(host, state);
@@ -626,6 +643,20 @@ export function render(host, state){
       }
       return;
     }
+    if(ui.tool === "angle"){
+      const points = ui.anglePoints || [];
+      if(points.length < 2){
+        ui.anglePoints = [...points, { x: rawX, y: rawY }];
+        project.cadUi = ui;
+        render(host, state);
+        return;
+      }
+      const [vertex, p1] = points;
+      doc = addCadEntity(doc, createCadEntity("wire", { layer: "revision", shape: "angle", from: vertex, to: p1, via: { x: rawX, y: rawY }, label: "Ángulo", source: "manual" }));
+      ui.anglePoints = [];
+      saveAndRefresh("Ángulo medido en CAD");
+      return;
+    }
     const label = (host.querySelector("#cadLabelInput")?.value || ui.label || "").trim();
     const circuitId = (host.querySelector("#cadCircuitInput")?.value || ui.circuitId || "").trim();
     ui.label = label;
@@ -682,7 +713,7 @@ export function render(host, state){
   let dragEntityId = null;
   let dragGroup = null;
   let dragMoved = false;
-  const CAD_NO_DRAG_TOOLS = new Set(["eraser", "wire", "dimension", "perimeter", "pencil", "copy", "mirror", "circle", "rectangle", "ellipse", "arc"]);
+  const CAD_NO_DRAG_TOOLS = new Set(["eraser", "wire", "dimension", "perimeter", "pencil", "copy", "mirror", "circle", "rectangle", "ellipse", "arc", "angle"]);
   host.querySelector("#cadCanvas").addEventListener("mousedown", event => {
     if(CAD_NO_DRAG_TOOLS.has(ui.tool)) return;
     const entityGroup = event.target.closest('[data-draggable="true"]');

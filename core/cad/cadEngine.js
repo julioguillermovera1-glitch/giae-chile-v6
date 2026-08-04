@@ -397,7 +397,7 @@ export function createCadEntity(type, options = {}){
     data: clone(options.data || {})
   };
   if(type === "wire"){
-    return { ...base, shape: options.shape || "line", from: options.from || { x: base.x, y: base.y }, to: options.to || { x: base.x + 120, y: base.y }, route: arr(options.route), label: safeText(options.label, "Canalizacion") };
+    return { ...base, shape: options.shape || "line", from: options.from || { x: base.x, y: base.y }, to: options.to || { x: base.x + 120, y: base.y }, via: options.via || null, route: arr(options.route), label: safeText(options.label, "Canalizacion") };
   }
   return { ...base, symbolId: symbol?.id || "note" };
 }
