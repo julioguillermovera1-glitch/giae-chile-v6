@@ -730,7 +730,9 @@ export function render(host, state){
       return;
     }
     if(ui.tool === "door" || ui.tool === "window"){
-      const wallSnap = nearestWallPoint(doc.perimeter, { x: rawX, y: rawY });
+      const WALL_SNAP_THRESHOLD_PX = 60;
+      const wallHit = nearestWallPoint(doc.perimeter, { x: rawX, y: rawY });
+      const wallSnap = wallHit && wallHit.distance <= WALL_SNAP_THRESHOLD_PX ? wallHit : null;
       const placeX = wallSnap ? wallSnap.x : rawX;
       const placeY = wallSnap ? wallSnap.y : rawY;
       const rotation = wallSnap ? wallSnap.rotation : 0;
