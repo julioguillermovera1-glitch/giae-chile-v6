@@ -61,6 +61,7 @@ const CAD_MODE_TOOLS = [
   ["wire", "Cablear"],
   ["dimension", "Dimensión"],
   ["copy", "Copiar"],
+  ["mirror", "Simetría"],
   ["eraser", "Goma"]
 ];
 function renderModeRow(activeTool){
@@ -591,6 +592,16 @@ export function render(host, state){
       }
       return;
     }
+    if(ui.tool === "mirror"){
+      if(entityGroup){
+        const target = doc.entities.find(e => e.id === entityGroup.dataset.entityId);
+        if(target && target.type !== "wire"){
+          target.flipX = !target.flipX;
+          saveAndRefresh("Símbolo espejado en CAD");
+        }
+      }
+      return;
+    }
     const label = (host.querySelector("#cadLabelInput")?.value || ui.label || "").trim();
     const circuitId = (host.querySelector("#cadCircuitInput")?.value || ui.circuitId || "").trim();
     ui.label = label;
@@ -643,7 +654,7 @@ export function render(host, state){
   let dragEntityId = null;
   let dragGroup = null;
   let dragMoved = false;
-  const CAD_NO_DRAG_TOOLS = new Set(["eraser", "wire", "dimension", "perimeter", "pencil", "copy"]);
+  const CAD_NO_DRAG_TOOLS = new Set(["eraser", "wire", "dimension", "perimeter", "pencil", "copy", "mirror"]);
   host.querySelector("#cadCanvas").addEventListener("mousedown", event => {
     if(CAD_NO_DRAG_TOOLS.has(ui.tool)) return;
     const entityGroup = event.target.closest('[data-draggable="true"]');
