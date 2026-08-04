@@ -36,8 +36,8 @@ function svgPoint(event, svg){
   const rect = svg.getBoundingClientRect();
   const view = svg.viewBox.baseVal;
   return {
-    x: Math.round((event.clientX - rect.left) * view.width / rect.width),
-    y: Math.round((event.clientY - rect.top) * view.height / rect.height)
+    x: Math.round(view.x + (event.clientX - rect.left) * view.width / rect.width),
+    y: Math.round(view.y + (event.clientY - rect.top) * view.height / rect.height)
   };
 }
 function snap(value, grid){ return Math.round(value / grid) * grid; }
