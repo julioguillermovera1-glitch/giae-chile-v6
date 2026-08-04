@@ -1,6 +1,6 @@
 import { persist, addHistory } from "../../core/store.js";
 import { CloudflareCADService } from "../../core/cad/cloudflare-service.js";
-import { buildCadFromProject, createCadDocument, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS, getPerimeterSegments, perimeterSegmentLengthM, addPerimeterPoint, undoLastPerimeterPoint, closePerimeter, resetPerimeter, removePerimeterSegment, setPerimeterMeasurement, applyPerimeterMeasurements, nearestWallPoint, PERIMETER_PX_PER_METER } from "../../core/cad/cadEngine.js";
+import { buildCadFromProject, createCadDocument, normalizeCadDocument, createCadEntity, addCadEntity, removeCadEntity, validateCadDocument, summarizeCadDocument, createCadExportPackage, createCadExportDxf, createCadExportDwt, parseCadDxf, importCadSymbols, CAD_LAYERS, CAD_SYMBOLS, getPerimeterSegments, perimeterSegmentLengthM, perimeterAreaM2, addPerimeterPoint, undoLastPerimeterPoint, closePerimeter, resetPerimeter, removePerimeterSegment, setPerimeterMeasurement, applyPerimeterMeasurements, nearestWallPoint, PERIMETER_PX_PER_METER } from "../../core/cad/cadEngine.js";
 
 // Referencias a los listeners de arrastre pegados a document, para poder
 // quitarlos antes de volver a agregarlos en cada render() y no acumularlos.
@@ -111,6 +111,7 @@ function renderPerimeterCard(doc, perimeterSegments){
       }).join("")}
     </div>
     <div class="row-actions"><button id="cadApplyPerimeterMeasurements" class="primary-action">Aplicar medidas y escalar</button></div>
+    ${doc.perimeter.closed ? `<p class="small"><b>Área total: ${perimeterAreaM2(doc.perimeter).toFixed(2)} m²</b></p>` : `<p class="small muted">Cierra el perímetro para ver el área total.</p>`}
     ` : `<p class="small">Aún no hay perímetro trazado. Usa la herramienta "Perímetro" y haz clic sobre el plano.</p>`}
   </article>`;
 }

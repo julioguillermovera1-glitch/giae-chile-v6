@@ -421,6 +421,18 @@ export function perimeterSegmentLengthM(from, to){
   return Math.hypot(to.x - from.x, to.y - from.y) / PERIMETER_PX_PER_METER;
 }
 
+export function perimeterAreaM2(perimeter){
+  const points = arr(perimeter?.points);
+  if(!perimeter?.closed || points.length < 3) return 0;
+  let sum = 0;
+  for(let i = 0; i < points.length; i++){
+    const a = points[i], b = points[(i + 1) % points.length];
+    sum += a.x * b.y - b.x * a.y;
+  }
+  const pxArea = Math.abs(sum) / 2;
+  return pxArea / (PERIMETER_PX_PER_METER * PERIMETER_PX_PER_METER);
+}
+
 export function nearestWallPoint(perimeter, point){
   const segments = getPerimeterSegments(perimeter);
   if(!segments.length) return null;
