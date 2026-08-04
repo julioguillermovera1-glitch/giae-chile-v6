@@ -268,7 +268,12 @@ function renderEntities(doc, selectedId){
 
 function renderRotationControl(doc, ui){
   const entity = ui.selectedId ? doc.entities.find(e => e.id === ui.selectedId) : null;
-  if(!entity) return "";
+  if(!entity){
+    return `<article class="admin-card cad-rotation-card">
+      <h4>Propiedades del elemento</h4>
+      <p class="small muted">Usa la herramienta "Seleccionar" y haz clic en un símbolo del plano para ver aquí su nombre, circuito, capa, rotación, tamaño y espejar (simetría).</p>
+    </article>`;
+  }
   if(entity.type === "wire"){
     return `<article class="admin-card cad-rotation-card">
       <h4>Propiedades del elemento</h4>
