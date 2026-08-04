@@ -60,6 +60,7 @@ const CAD_MODE_TOOLS = [
   ["perimeter", "Perímetro"],
   ["wire", "Cablear"],
   ["dimension", "Dimensión"],
+  ["copy", "Copiar"],
   ["eraser", "Goma"]
 ];
 function renderModeRow(activeTool){
@@ -173,44 +174,46 @@ function renderSymbol(entity, symbols = CAD_SYMBOLS){
   const color = layerColor(entity.layer);
   const x = n(entity.x), y = n(entity.y);
   const rotation = n(entity.rotation, 0);
-  const scale = Math.max(0.25, Math.min(4, n(entity.scale, 1)));
+  const baseScale = Math.max(0.25, Math.min(4, n(entity.scale, 1)));
+  const scaleX = baseScale * (entity.flipX ? -1 : 1);
+  const scaleY = baseScale * (entity.flipY ? -1 : 1);
   const label = esc(entity.label || symbolLabel(entity.symbolId, symbols));
   const base = `data-entity-id="${esc(entity.id)}" class="cad-entity cad-symbol" data-draggable="true"`;
   if(String(entity.symbolId || "").startsWith("qet-")){
     const qetSymbol = symbols.find(item => item.id === entity.symbolId);
     if(qetSymbol && Array.isArray(qetSymbol.primitives)){
-      return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})">${renderQetPrimitives(qetSymbol.primitives, color)}<text y="34" text-anchor="middle" font-size="10" font-weight="700" fill="${color}">${label}</text></g>`;
+      return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})">${renderQetPrimitives(qetSymbol.primitives, color)}<text y="34" text-anchor="middle" font-size="10" font-weight="700" fill="${color}">${label}</text></g>`;
     }
   }
-  if(entity.symbolId === "panel") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><rect x="-34" y="-42" width="68" height="84" rx="4" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-22" y1="-20" x2="22" y2="-20" stroke="${color}" stroke-width="1.5"/><line x1="-22" y1="0" x2="22" y2="0" stroke="${color}" stroke-width="1.5"/><line x1="-22" y1="20" x2="22" y2="20" stroke="${color}" stroke-width="1.5"/><text y="58" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "sub-panel") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><rect x="-28" y="-34" width="56" height="68" rx="4" fill="none" stroke="${color}" stroke-width="2.5" stroke-dasharray="6 3"/><line x1="-16" y1="-14" x2="16" y2="-14" stroke="${color}" stroke-width="1.5"/><line x1="-16" y1="8" x2="16" y2="8" stroke="${color}" stroke-width="1.5"/><text y="48" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "meter") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><circle r="22" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="0" y1="6" x2="10" y2="-10" stroke="${color}" stroke-width="2" stroke-linecap="round"/><circle r="2.5" fill="${color}"/><text y="42" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "breaker") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><rect x="-22" y="-32" width="44" height="64" rx="3" fill="none" stroke="${color}" stroke-width="2"/><path d="M -10 8 C -2 -18 8 -18 14 -30" fill="none" stroke="${color}" stroke-width="2"/><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "differential") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><rect x="-22" y="-32" width="44" height="64" rx="3" fill="none" stroke="${color}" stroke-width="2"/><path d="M -10 8 C -2 -18 8 -18 14 -30" fill="none" stroke="${color}" stroke-width="2"/><circle cx="0" cy="20" r="5" fill="none" stroke="${color}" stroke-width="1.5"/><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "light") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><circle r="25" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-17" y1="-17" x2="17" y2="17" stroke="${color}" stroke-width="1.5"/><line x1="17" y1="-17" x2="-17" y2="17" stroke="${color}" stroke-width="1.5"/><text y="46" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "emergency-light") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><circle r="25" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-17" y1="-17" x2="17" y2="17" stroke="${color}" stroke-width="1.5"/><line x1="17" y1="-17" x2="-17" y2="17" stroke="${color}" stroke-width="1.5"/><text y="6" text-anchor="middle" font-size="13" font-weight="900" fill="${color}">E</text><text y="46" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "switch") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><circle r="18" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-7" y1="6" x2="16" y2="-15" stroke="${color}" stroke-width="2"/><text y="40" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "three-way-switch") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><circle r="18" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-7" y1="6" x2="16" y2="-15" stroke="${color}" stroke-width="2"/><text x="8" y="-2" font-size="11" font-weight="800" fill="${color}">3</text><text y="40" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "dimmer") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><circle r="18" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-7" y1="6" x2="16" y2="-15" stroke="${color}" stroke-width="2"/><circle cx="0" cy="0" r="6" fill="none" stroke="${color}" stroke-width="1.5"/><text y="40" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "motion-sensor") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><circle r="18" fill="none" stroke="${color}" stroke-width="2.5"/><path d="M -12 -12 A 22 22 0 0 1 12 -12" fill="none" stroke="${color}" stroke-width="1.5"/><path d="M -16 -16 A 28 28 0 0 1 16 -16" fill="none" stroke="${color}" stroke-width="1.5"/><text y="40" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "doorbell") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><path d="M -14 6 A 14 14 0 0 1 14 6 L 16 12 L -16 12 Z" fill="none" stroke="${color}" stroke-width="2"/><circle cx="0" cy="16" r="2.5" fill="${color}"/><text y="38" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "outlet") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><path d="M -24 0 A 24 24 0 0 1 24 0" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-24" y1="0" x2="24" y2="0" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="-24" x2="0" y2="-34" stroke="${color}" stroke-width="2" stroke-linecap="round"/><text y="45" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "outlet-double") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><path d="M -26 0 A 26 26 0 0 1 26 0" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-26" y1="0" x2="26" y2="0" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-9" y1="-24" x2="-9" y2="-34" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="9" y1="-24" x2="9" y2="-34" stroke="${color}" stroke-width="2" stroke-linecap="round"/><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "outlet-triple") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><path d="M -28 0 A 28 28 0 0 1 28 0" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-28" y1="0" x2="28" y2="0" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-12" y1="-24" x2="-12" y2="-35" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="0" y1="-28" x2="0" y2="-38" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="-24" x2="12" y2="-35" stroke="${color}" stroke-width="2" stroke-linecap="round"/><text y="52" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "outlet-exterior") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><path d="M -24 0 A 24 24 0 0 1 24 0" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-24" y1="0" x2="24" y2="0" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><path d="M -28 -6 L 28 -6 L 22 -18 L -22 -18 Z" fill="none" stroke="${color}" stroke-width="1.5"/><text y="45" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "outlet-special") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><path d="M -26 0 A 26 26 0 0 1 26 0" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round"/><line x1="-26" y1="0" x2="26" y2="0" stroke="${color}" stroke-width="3" stroke-linecap="round"/><line x1="0" y1="-26" x2="0" y2="-36" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><text y="16" text-anchor="middle" font-size="10" font-weight="800" fill="${color}">E</text><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "outlet-tripolar") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><path d="M -28 0 A 28 28 0 0 1 28 0" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-28" y1="0" x2="28" y2="0" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><text y="14" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">3~</text><text y="52" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "motor") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><circle r="27" fill="none" stroke="${color}" stroke-width="2.5"/><text y="7" text-anchor="middle" font-size="20" font-weight="800" fill="${color}">M</text><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "exhaust-fan") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><circle r="22" fill="none" stroke="${color}" stroke-width="2.5"/><path d="M 0 0 L 0 -18 A 9 9 0 0 1 9 -3 Z" fill="${color}" opacity="0.85"/><path d="M 0 0 L 15 9 A 9 9 0 0 1 -1 15 Z" fill="${color}" opacity="0.85"/><path d="M 0 0 L -15 9 A 9 9 0 0 1 1 -15 Z" fill="${color}" opacity="0.85"/><text y="42" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "water-heater") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><rect x="-18" y="-30" width="36" height="60" rx="8" fill="none" stroke="${color}" stroke-width="2.5"/><path d="M 0 -14 C -6 -6 -6 2 0 6 C 6 2 6 -6 0 -14 Z" fill="none" stroke="${color}" stroke-width="1.5"/><text y="46" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "junction") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><rect x="-20" y="-20" width="40" height="40" rx="4" fill="none" stroke="${color}" stroke-width="2.5"/><circle r="4" fill="${color}"/><text y="42" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "ground") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><line x1="0" y1="-28" x2="0" y2="0" stroke="${color}" stroke-width="2.5"/><line x1="-24" y1="0" x2="24" y2="0" stroke="${color}" stroke-width="2"/><line x1="-16" y1="10" x2="16" y2="10" stroke="${color}" stroke-width="1.5"/><line x1="-8" y1="20" x2="8" y2="20" stroke="${color}" stroke-width="1"/><text y="46" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "smoke-detector") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><circle r="20" fill="none" stroke="${color}" stroke-width="2.5"/><circle r="7" fill="none" stroke="${color}" stroke-width="1.5"/><circle r="2" fill="${color}"/><text y="40" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "data-point") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><rect x="-16" y="-16" width="32" height="32" rx="4" fill="none" stroke="${color}" stroke-width="2.5"/><text y="6" text-anchor="middle" font-size="12" font-weight="800" fill="${color}">D</text><text y="38" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "tv-point") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><rect x="-16" y="-16" width="32" height="32" rx="4" fill="none" stroke="${color}" stroke-width="2.5"/><text y="6" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">TV</text><text y="38" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "window") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><rect x="-40" y="-8" width="80" height="16" rx="2" fill="none" stroke="${color}" stroke-width="2"/><line x1="-20" y1="-8" x2="-20" y2="8" stroke="${color}" stroke-width="1.5"/><line x1="0" y1="-8" x2="0" y2="8" stroke="${color}" stroke-width="1.5"/><line x1="20" y1="-8" x2="20" y2="8" stroke="${color}" stroke-width="1.5"/><text y="28" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  if(entity.symbolId === "door") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><line x1="0" y1="0" x2="0" y2="-32" stroke="${color}" stroke-width="2.5"/><path d="M 0 -32 A 32 32 0 0 1 32 0" fill="none" stroke="${color}" stroke-width="1.5"/><line x1="0" y1="0" x2="32" y2="0" stroke="${color}" stroke-width="1" stroke-dasharray="2 2" opacity="0.5"/><text y="46" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
-  return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})"><rect x="-70" y="-22" width="140" height="44" rx="4" fill="none" stroke="${color}" stroke-width="2"/><text y="5" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "panel") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><rect x="-34" y="-42" width="68" height="84" rx="4" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-22" y1="-20" x2="22" y2="-20" stroke="${color}" stroke-width="1.5"/><line x1="-22" y1="0" x2="22" y2="0" stroke="${color}" stroke-width="1.5"/><line x1="-22" y1="20" x2="22" y2="20" stroke="${color}" stroke-width="1.5"/><text y="58" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "sub-panel") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><rect x="-28" y="-34" width="56" height="68" rx="4" fill="none" stroke="${color}" stroke-width="2.5" stroke-dasharray="6 3"/><line x1="-16" y1="-14" x2="16" y2="-14" stroke="${color}" stroke-width="1.5"/><line x1="-16" y1="8" x2="16" y2="8" stroke="${color}" stroke-width="1.5"/><text y="48" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "meter") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><circle r="22" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="0" y1="6" x2="10" y2="-10" stroke="${color}" stroke-width="2" stroke-linecap="round"/><circle r="2.5" fill="${color}"/><text y="42" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "breaker") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><rect x="-22" y="-32" width="44" height="64" rx="3" fill="none" stroke="${color}" stroke-width="2"/><path d="M -10 8 C -2 -18 8 -18 14 -30" fill="none" stroke="${color}" stroke-width="2"/><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "differential") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><rect x="-22" y="-32" width="44" height="64" rx="3" fill="none" stroke="${color}" stroke-width="2"/><path d="M -10 8 C -2 -18 8 -18 14 -30" fill="none" stroke="${color}" stroke-width="2"/><circle cx="0" cy="20" r="5" fill="none" stroke="${color}" stroke-width="1.5"/><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "light") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><circle r="25" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-17" y1="-17" x2="17" y2="17" stroke="${color}" stroke-width="1.5"/><line x1="17" y1="-17" x2="-17" y2="17" stroke="${color}" stroke-width="1.5"/><text y="46" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "emergency-light") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><circle r="25" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-17" y1="-17" x2="17" y2="17" stroke="${color}" stroke-width="1.5"/><line x1="17" y1="-17" x2="-17" y2="17" stroke="${color}" stroke-width="1.5"/><text y="6" text-anchor="middle" font-size="13" font-weight="900" fill="${color}">E</text><text y="46" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "switch") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><circle r="18" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-7" y1="6" x2="16" y2="-15" stroke="${color}" stroke-width="2"/><text y="40" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "three-way-switch") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><circle r="18" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-7" y1="6" x2="16" y2="-15" stroke="${color}" stroke-width="2"/><text x="8" y="-2" font-size="11" font-weight="800" fill="${color}">3</text><text y="40" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "dimmer") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><circle r="18" fill="none" stroke="${color}" stroke-width="2.5"/><line x1="-7" y1="6" x2="16" y2="-15" stroke="${color}" stroke-width="2"/><circle cx="0" cy="0" r="6" fill="none" stroke="${color}" stroke-width="1.5"/><text y="40" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "motion-sensor") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><circle r="18" fill="none" stroke="${color}" stroke-width="2.5"/><path d="M -12 -12 A 22 22 0 0 1 12 -12" fill="none" stroke="${color}" stroke-width="1.5"/><path d="M -16 -16 A 28 28 0 0 1 16 -16" fill="none" stroke="${color}" stroke-width="1.5"/><text y="40" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "doorbell") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><path d="M -14 6 A 14 14 0 0 1 14 6 L 16 12 L -16 12 Z" fill="none" stroke="${color}" stroke-width="2"/><circle cx="0" cy="16" r="2.5" fill="${color}"/><text y="38" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "outlet") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><path d="M -24 0 A 24 24 0 0 1 24 0" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-24" y1="0" x2="24" y2="0" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="-24" x2="0" y2="-34" stroke="${color}" stroke-width="2" stroke-linecap="round"/><text y="45" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "outlet-double") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><path d="M -26 0 A 26 26 0 0 1 26 0" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-26" y1="0" x2="26" y2="0" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-9" y1="-24" x2="-9" y2="-34" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="9" y1="-24" x2="9" y2="-34" stroke="${color}" stroke-width="2" stroke-linecap="round"/><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "outlet-triple") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><path d="M -28 0 A 28 28 0 0 1 28 0" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-28" y1="0" x2="28" y2="0" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-12" y1="-24" x2="-12" y2="-35" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="0" y1="-28" x2="0" y2="-38" stroke="${color}" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="-24" x2="12" y2="-35" stroke="${color}" stroke-width="2" stroke-linecap="round"/><text y="52" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "outlet-exterior") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><path d="M -24 0 A 24 24 0 0 1 24 0" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-24" y1="0" x2="24" y2="0" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><path d="M -28 -6 L 28 -6 L 22 -18 L -22 -18 Z" fill="none" stroke="${color}" stroke-width="1.5"/><text y="45" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "outlet-special") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><path d="M -26 0 A 26 26 0 0 1 26 0" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round"/><line x1="-26" y1="0" x2="26" y2="0" stroke="${color}" stroke-width="3" stroke-linecap="round"/><line x1="0" y1="-26" x2="0" y2="-36" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><text y="16" text-anchor="middle" font-size="10" font-weight="800" fill="${color}">E</text><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "outlet-tripolar") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><path d="M -28 0 A 28 28 0 0 1 28 0" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="-28" y1="0" x2="28" y2="0" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><text y="14" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">3~</text><text y="52" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "motor") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><circle r="27" fill="none" stroke="${color}" stroke-width="2.5"/><text y="7" text-anchor="middle" font-size="20" font-weight="800" fill="${color}">M</text><text y="50" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "exhaust-fan") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><circle r="22" fill="none" stroke="${color}" stroke-width="2.5"/><path d="M 0 0 L 0 -18 A 9 9 0 0 1 9 -3 Z" fill="${color}" opacity="0.85"/><path d="M 0 0 L 15 9 A 9 9 0 0 1 -1 15 Z" fill="${color}" opacity="0.85"/><path d="M 0 0 L -15 9 A 9 9 0 0 1 1 -15 Z" fill="${color}" opacity="0.85"/><text y="42" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "water-heater") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><rect x="-18" y="-30" width="36" height="60" rx="8" fill="none" stroke="${color}" stroke-width="2.5"/><path d="M 0 -14 C -6 -6 -6 2 0 6 C 6 2 6 -6 0 -14 Z" fill="none" stroke="${color}" stroke-width="1.5"/><text y="46" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "junction") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><rect x="-20" y="-20" width="40" height="40" rx="4" fill="none" stroke="${color}" stroke-width="2.5"/><circle r="4" fill="${color}"/><text y="42" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "ground") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><line x1="0" y1="-28" x2="0" y2="0" stroke="${color}" stroke-width="2.5"/><line x1="-24" y1="0" x2="24" y2="0" stroke="${color}" stroke-width="2"/><line x1="-16" y1="10" x2="16" y2="10" stroke="${color}" stroke-width="1.5"/><line x1="-8" y1="20" x2="8" y2="20" stroke="${color}" stroke-width="1"/><text y="46" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "smoke-detector") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><circle r="20" fill="none" stroke="${color}" stroke-width="2.5"/><circle r="7" fill="none" stroke="${color}" stroke-width="1.5"/><circle r="2" fill="${color}"/><text y="40" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "data-point") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><rect x="-16" y="-16" width="32" height="32" rx="4" fill="none" stroke="${color}" stroke-width="2.5"/><text y="6" text-anchor="middle" font-size="12" font-weight="800" fill="${color}">D</text><text y="38" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "tv-point") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><rect x="-16" y="-16" width="32" height="32" rx="4" fill="none" stroke="${color}" stroke-width="2.5"/><text y="6" text-anchor="middle" font-size="11" font-weight="800" fill="${color}">TV</text><text y="38" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "window") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><rect x="-40" y="-8" width="80" height="16" rx="2" fill="none" stroke="${color}" stroke-width="2"/><line x1="-20" y1="-8" x2="-20" y2="8" stroke="${color}" stroke-width="1.5"/><line x1="0" y1="-8" x2="0" y2="8" stroke="${color}" stroke-width="1.5"/><line x1="20" y1="-8" x2="20" y2="8" stroke="${color}" stroke-width="1.5"/><text y="28" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  if(entity.symbolId === "door") return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><line x1="0" y1="0" x2="0" y2="-32" stroke="${color}" stroke-width="2.5"/><path d="M 0 -32 A 32 32 0 0 1 32 0" fill="none" stroke="${color}" stroke-width="1.5"/><line x1="0" y1="0" x2="32" y2="0" stroke="${color}" stroke-width="1" stroke-dasharray="2 2" opacity="0.5"/><text y="46" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
+  return `<g ${base} transform="translate(${x} ${y}) rotate(${rotation}) scale(${scaleX}, ${scaleY})"><rect x="-70" y="-22" width="140" height="44" rx="4" fill="none" stroke="${color}" stroke-width="2"/><text y="5" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text></g>`;
 }
 function renderWire(entity){
   const color = layerColor(entity.layer);
@@ -291,6 +294,10 @@ function renderRotationControl(doc, ui){
       <button id="cadScaleReset" class="ghost">100%</button>
       <button id="cadScaleUp" class="secondary">+ Agrandar</button>
     </div>
+    <div class="row-actions">
+      <button id="cadFlipX" class="secondary ${entity.flipX ? "active" : ""}">↔ Espejar horizontal</button>
+      <button id="cadFlipY" class="secondary ${entity.flipY ? "active" : ""}">↕ Espejar vertical</button>
+    </div>
   </article>`;
 }
 function renderCadStartScreen(project, doc){
@@ -340,7 +347,7 @@ function renderCadStartScreen(project, doc){
 export function render(host, state){
   const project = state.currentProject;
   let doc = ensureCad(project);
-  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, catSearch: "", zoom: 1, panX: 0, panY: 0, ribbonPanel: "" };
+  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, catSearch: "", zoom: 1, panX: 0, panY: 0, ribbonPanel: "", copySourceId: "" };
   project.cadUi = ui;
   const isEmptyPlan = doc.entities.length === 0 && !(doc.perimeter?.points?.length);
   if(ui.cadStartDismissed === undefined) ui.cadStartDismissed = !isEmptyPlan;
@@ -446,6 +453,7 @@ export function render(host, state){
   host.querySelectorAll("[data-cad-tool]").forEach(button => button.addEventListener("click", () => {
     ui.tool = button.dataset.cadTool;
     ui.wireStart = null;
+    ui.copySourceId = "";
     if(button.closest(".cad-ribbon-panel")) ui.ribbonPanel = "";
     project.cadUi = ui;
     render(host, state);
@@ -544,6 +552,8 @@ export function render(host, state){
       return;
     }
     const point = svgPoint(event, host.querySelector("#cadCanvas"));
+    const grid = doc.canvas.grid || 20;
+    const rawX = snap(point.x, grid), rawY = snap(point.y, grid);
     if(ui.tool === "eraser"){
       if(entityGroup){
         doc = removeCadEntity(doc, entityGroup.dataset.entityId);
@@ -558,8 +568,24 @@ export function render(host, state){
       }
       return;
     }
-    const grid = doc.canvas.grid || 20;
-    const rawX = snap(point.x, grid), rawY = snap(point.y, grid);
+    if(ui.tool === "copy"){
+      if(entityGroup){
+        ui.copySourceId = entityGroup.dataset.entityId;
+        project.cadUi = ui;
+        render(host, state);
+        return;
+      }
+      const source = ui.copySourceId ? doc.entities.find(e => e.id === ui.copySourceId) : null;
+      if(source && source.type !== "wire"){
+        doc = addCadEntity(doc, createCadEntity(source.symbolId, {
+          x: rawX, y: rawY, layer: source.layer, label: source.label,
+          circuitId: source.circuitId, rotation: source.rotation, scale: source.scale,
+          flipX: source.flipX, flipY: source.flipY, source: "manual"
+        }));
+        saveAndRefresh("Símbolo copiado en CAD");
+      }
+      return;
+    }
     const label = (host.querySelector("#cadLabelInput")?.value || ui.label || "").trim();
     const circuitId = (host.querySelector("#cadCircuitInput")?.value || ui.circuitId || "").trim();
     ui.label = label;
@@ -612,7 +638,7 @@ export function render(host, state){
   let dragEntityId = null;
   let dragGroup = null;
   let dragMoved = false;
-  const CAD_NO_DRAG_TOOLS = new Set(["eraser", "wire", "dimension", "perimeter", "pencil"]);
+  const CAD_NO_DRAG_TOOLS = new Set(["eraser", "wire", "dimension", "perimeter", "pencil", "copy"]);
   host.querySelector("#cadCanvas").addEventListener("mousedown", event => {
     if(CAD_NO_DRAG_TOOLS.has(ui.tool)) return;
     const entityGroup = event.target.closest('[data-draggable="true"]');
@@ -691,6 +717,18 @@ export function render(host, state){
     scaleSelected(Math.round(Math.max(0.25, Math.min(4, n(entity?.scale, 1))) * 100) + 15);
   });
   host.querySelector("#cadScaleReset")?.addEventListener("click", () => scaleSelected(100));
+  host.querySelector("#cadFlipX")?.addEventListener("click", () => {
+    const entity = doc.entities.find(item => item.id === ui.selectedId);
+    if(!entity || entity.type === "wire") return;
+    entity.flipX = !entity.flipX;
+    saveAndRefresh("Símbolo espejado en CAD");
+  });
+  host.querySelector("#cadFlipY")?.addEventListener("click", () => {
+    const entity = doc.entities.find(item => item.id === ui.selectedId);
+    if(!entity || entity.type === "wire") return;
+    entity.flipY = !entity.flipY;
+    saveAndRefresh("Símbolo espejado en CAD");
+  });
   host.querySelector("#cadPropLabel")?.addEventListener("change", event => {
     const entity = doc.entities.find(item => item.id === ui.selectedId);
     if(!entity) return;

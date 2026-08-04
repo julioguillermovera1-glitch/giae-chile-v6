@@ -632,6 +632,7 @@ body{background:var(--bg);}
 .cad-perimeter-measurements input{width:80px}
 .cad-qet-results{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem;max-height:260px;overflow-y:auto}
 .cad-qet-results .cad-tool{font-size:.72rem;padding:.35rem .55rem;white-space:nowrap}
+.cad-rotation-card button.active{background:#3b82f6!important;color:#fff!important;border-color:#3b82f6!important}
 .cad-qet-accordion{margin-top:.6rem;display:flex;flex-direction:column;gap:.4rem}
 .cad-qet-category{border:1px solid #d9e4ef;border-radius:8px;overflow:hidden}
 .cad-qet-category-header{width:100%;display:flex;align-items:center;gap:.5rem;padding:.5rem .65rem;background:#eef5fd;border:none;cursor:pointer;font-size:.82rem;font-weight:700;color:#11243d;text-align:left}
