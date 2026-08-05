@@ -50,11 +50,19 @@ function nearestSymbolCenter(doc, point, thresholdPx = 28){
   });
   return best;
 }
-function lineIntersection(P1, P2, P3, P4){
-  const denom = (P1.x - P2.x) * (P3.y - P4.y) - (P1.y - P2.y) * (P3.x - P4.x);
+// Interseccion de dos rectas dadas por dos puntos cada una. Devuelve, ademas
+// del punto, el parametro t (a lo largo de P1->P2) y u (a lo largo de P3->P4)
+// para que quien llama decida si la interseccion cae dentro del segmento real
+// (t,u en [0,1]) o solo en la prolongacion infinita de la recta (Alargar).
+function segmentIntersectionParams(P1, P2, P3, P4){
+  const d1x = P2.x - P1.x, d1y = P2.y - P1.y;
+  const d2x = P4.x - P3.x, d2y = P4.y - P3.y;
+  const denom = d1x * d2y - d1y * d2x;
   if(Math.abs(denom) < 1e-9) return null;
-  const t = ((P1.x - P3.x) * (P3.y - P4.y) - (P1.y - P3.y) * (P3.x - P4.x)) / denom;
-  return { x: P1.x + t * (P2.x - P1.x), y: P1.y + t * (P2.y - P1.y) };
+  const dx = P3.x - P1.x, dy = P3.y - P1.y;
+  const t = (dx * d2y - dy * d2x) / denom;
+  const u = (dx * d1y - dy * d1x) / denom;
+  return { x: P1.x + t * d1x, y: P1.y + t * d1y, t, u };
 }
 function renderLayerToggles(doc){
   const used = new Set(doc.entities.map(entity => entity.layer));
@@ -401,7 +409,7 @@ function renderCadStartScreen(project, doc){
 export function render(host, state){
   const project = state.currentProject;
   let doc = ensureCad(project);
-  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, catSearch: "", zoom: 1, panX: 0, panY: 0, ribbonPanel: "", copySourceId: "", anglePoints: [], trimSourceId: "", trimClickPoint: null };
+  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, catSearch: "", zoom: 1, panX: 0, panY: 0, ribbonPanel: "", copySourceId: "", anglePoints: [] };
   project.cadUi = ui;
   const isEmptyPlan = doc.entities.length === 0 && !(doc.perimeter?.points?.length);
   if(ui.cadStartDismissed === undefined) ui.cadStartDismissed = !isEmptyPlan;
@@ -509,8 +517,6 @@ export function render(host, state){
     ui.wireStart = null;
     ui.copySourceId = "";
     ui.anglePoints = [];
-    ui.trimSourceId = "";
-    ui.trimClickPoint = null;
     if(button.closest(".cad-ribbon-panel")) ui.ribbonPanel = "";
     project.cadUi = ui;
     render(host, state);
@@ -667,36 +673,74 @@ export function render(host, state){
       saveAndRefresh("Ángulo medido en CAD");
       return;
     }
-    if(ui.tool === "trim" || ui.tool === "extend"){
+    // Recortar y Alargar funcionan como en AutoCAD moderno: un solo clic sobre
+    // una línea, usando automáticamente el resto de las líneas del plano como
+    // "bordes de corte" - no hace falta seleccionar el borde antes.
+    if(ui.tool === "trim"){
       const isAdjustableLine = e => e && e.type === "wire" && (!e.shape || e.shape === "line");
-      if(!ui.trimSourceId){
-        const candidate = entityGroup ? doc.entities.find(e => e.id === entityGroup.dataset.entityId) : null;
-        if(isAdjustableLine(candidate)){
-          ui.trimSourceId = candidate.id;
-          ui.trimClickPoint = point;
-          project.cadUi = ui;
-          render(host, state);
-        }
+      const target = entityGroup ? doc.entities.find(e => e.id === entityGroup.dataset.entityId) : null;
+      if(!isAdjustableLine(target)) return;
+      const dx = target.to.x - target.from.x, dy = target.to.y - target.from.y;
+      const lenSq = dx * dx + dy * dy || 1;
+      const breakpoints = [0, 1];
+      doc.entities.filter(e => isAdjustableLine(e) && e.id !== target.id).forEach(other => {
+        const hit = segmentIntersectionParams(target.from, target.to, other.from, other.to);
+        if(hit && hit.t > 1e-6 && hit.t < 1 - 1e-6 && hit.u >= -1e-6 && hit.u <= 1 + 1e-6) breakpoints.push(hit.t);
+      });
+      if(breakpoints.length <= 2){
+        saveAndRefresh("Esa línea no cruza ninguna otra, no hay nada que recortar ahí");
         return;
       }
-      const sourceLine = doc.entities.find(e => e.id === ui.trimSourceId);
-      const clickPoint = ui.trimClickPoint;
-      ui.trimSourceId = "";
-      ui.trimClickPoint = null;
-      const targetLine = entityGroup ? doc.entities.find(e => e.id === entityGroup.dataset.entityId) : null;
-      if(sourceLine && isAdjustableLine(targetLine) && targetLine.id !== sourceLine.id && clickPoint){
-        const intersection = lineIntersection(sourceLine.from, sourceLine.to, targetLine.from, targetLine.to);
-        if(intersection){
-          const distFromEnd = Math.hypot(sourceLine.from.x - clickPoint.x, sourceLine.from.y - clickPoint.y);
-          const distToEnd = Math.hypot(sourceLine.to.x - clickPoint.x, sourceLine.to.y - clickPoint.y);
-          const point2 = { x: Math.round(intersection.x), y: Math.round(intersection.y) };
-          if(distFromEnd <= distToEnd) sourceLine.from = point2; else sourceLine.to = point2;
-          saveAndRefresh(ui.tool === "trim" ? "Línea recortada en CAD" : "Línea alargada en CAD");
-          return;
-        }
+      breakpoints.sort((a, b) => a - b);
+      const tClick = ((point.x - target.from.x) * dx + (point.y - target.from.y) * dy) / lenSq;
+      let segIndex = breakpoints.length - 2;
+      for(let i = 0; i < breakpoints.length - 1; i++){
+        if(tClick >= breakpoints[i] && tClick <= breakpoints[i + 1]){ segIndex = i; break; }
       }
-      project.cadUi = ui;
-      render(host, state);
+      const pointAtT = t => ({ x: Math.round(target.from.x + t * dx), y: Math.round(target.from.y + t * dy) });
+      if(segIndex === 0){
+        target.from = pointAtT(breakpoints[1]);
+        saveAndRefresh("Segmento recortado en CAD");
+        return;
+      }
+      if(segIndex === breakpoints.length - 2){
+        target.to = pointAtT(breakpoints[segIndex]);
+        saveAndRefresh("Segmento recortado en CAD");
+        return;
+      }
+      const restoStart = target.from, restoEnd = pointAtT(breakpoints[segIndex]);
+      const restoStart2 = pointAtT(breakpoints[segIndex + 1]), restoEnd2 = target.to;
+      const shared = { layer: target.layer, shape: "line", label: target.label, circuitId: target.circuitId, source: "manual" };
+      doc = removeCadEntity(doc, target.id);
+      doc = addCadEntity(doc, createCadEntity("wire", { ...shared, from: restoStart, to: restoEnd }));
+      doc = addCadEntity(doc, createCadEntity("wire", { ...shared, from: restoStart2, to: restoEnd2 }));
+      saveAndRefresh("Segmento recortado en CAD (línea partida en dos)");
+      return;
+    }
+    if(ui.tool === "extend"){
+      const isAdjustableLine = e => e && e.type === "wire" && (!e.shape || e.shape === "line");
+      const target = entityGroup ? doc.entities.find(e => e.id === entityGroup.dataset.entityId) : null;
+      if(!isAdjustableLine(target)) return;
+      const distFrom = Math.hypot(target.from.x - point.x, target.from.y - point.y);
+      const distTo = Math.hypot(target.to.x - point.x, target.to.y - point.y);
+      const extendingFrom = distFrom <= distTo;
+      const anchor = extendingFrom ? target.to : target.from;
+      const freeEnd = extendingFrom ? target.from : target.to;
+      const dirX = freeEnd.x - anchor.x, dirY = freeEnd.y - anchor.y;
+      if(Math.hypot(dirX, dirY) < 1e-6) return;
+      const rayP2 = { x: freeEnd.x + dirX, y: freeEnd.y + dirY };
+      let best = null;
+      doc.entities.filter(e => isAdjustableLine(e) && e.id !== target.id).forEach(other => {
+        const hit = segmentIntersectionParams(freeEnd, rayP2, other.from, other.to);
+        if(hit && hit.t > 1e-6 && hit.u >= -1e-6 && hit.u <= 1 + 1e-6 && (!best || hit.t < best.t)) best = hit;
+      });
+      if(!best){
+        saveAndRefresh("No hay ninguna línea en esa dirección para alargar hasta ella");
+        return;
+      }
+      const newPoint = { x: Math.round(best.x), y: Math.round(best.y) };
+      if(extendingFrom) target.from = newPoint; else target.to = newPoint;
+      saveAndRefresh("Línea alargada en CAD");
       return;
     }
     const label = (host.querySelector("#cadLabelInput")?.value || ui.label || "").trim();
