@@ -7,6 +7,16 @@ import { buildCadFromProject, createCadDocument, normalizeCadDocument, createCad
 let cadDragMoveHandler = null;
 let cadDragUpHandler = null;
 
+// Deshacer (Ctrl+Z) del dibujo: guardamos una foto del documento al empezar
+// cada render() (antes de que el usuario haga nada) y, si esa pasada termina
+// en un cambio real (saveAndRefresh), esa foto se apila. Se reinicia solo si
+// cambia el proyecto activo, para no mezclar el historial de un plano con
+// el de otro.
+let cadUndoStack = [];
+let cadUndoSnapshot = null;
+let cadUndoProjectId = null;
+const CAD_UNDO_MAX = 50;
+
 function esc(value = ""){
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }
@@ -409,6 +419,11 @@ function renderCadStartScreen(project, doc){
 export function render(host, state){
   const project = state.currentProject;
   let doc = ensureCad(project);
+  if(cadUndoProjectId !== doc.projectId){
+    cadUndoStack = [];
+    cadUndoProjectId = doc.projectId;
+  }
+  cadUndoSnapshot = JSON.parse(JSON.stringify(doc));
   const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, catSearch: "", zoom: 1, panX: 0, panY: 0, ribbonPanel: "", copySourceId: "", anglePoints: [] };
   project.cadUi = ui;
   const isEmptyPlan = doc.entities.length === 0 && !(doc.perimeter?.points?.length);
@@ -497,7 +512,7 @@ export function render(host, state){
           <article class="admin-card">
             <h4>Entidades</h4>
             <div class="cad-entity-list">${renderEntities(doc, ui.selectedId)}</div>
-            <div class="row-actions"><button id="cadDeleteSelected" class="ghost danger-text">Eliminar seleccionado</button><small class="hint" style="margin-left:12px">Atajo: Ctrl+Suprimir</small></div>
+            <div class="row-actions"><button id="cadDeleteSelected" class="ghost danger-text">Eliminar seleccionado</button><small class="hint" style="margin-left:12px">Atajos: Ctrl+Suprimir borra, Ctrl+Z deshace, Esc cancela</small></div>
           </article>
           <article class="admin-card"><h4>Validacion CAD</h4>${renderValidation(validation)}</article>
         </aside>
@@ -505,6 +520,10 @@ export function render(host, state){
     </section>`;
 
   function saveAndRefresh(action = "Plano CAD actualizado"){
+    if(cadUndoSnapshot){
+      cadUndoStack.push(cadUndoSnapshot);
+      if(cadUndoStack.length > CAD_UNDO_MAX) cadUndoStack.shift();
+    }
     doc.validation = validateCadDocument(doc);
     project.cad2d = doc;
     addHistory(action, "CAD electrico", false);
@@ -567,6 +586,19 @@ export function render(host, state){
     render(host, state);
     const refocused = host.querySelector("#cadCatSearch");
     if(refocused){ refocused.focus(); refocused.setSelectionRange(refocused.value.length, refocused.value.length); }
+  });
+  // Guardar la etiqueta/circuito en ui apenas se escriben, no solo al hacer
+  // clic en el plano: el panel "Etiqueta" se cierra solo al abrir cualquier
+  // categoria de simbolos (solo puede haber un panel del ribbon abierto a la
+  // vez), asi que si solo leiamos el <input> al momento del clic, el texto
+  // escrito se perdia en cuanto el usuario elegia el simbolo a colocar.
+  host.querySelector("#cadLabelInput")?.addEventListener("input", event => {
+    ui.label = event.target.value;
+    project.cadUi = ui;
+  });
+  host.querySelector("#cadCircuitInput")?.addEventListener("input", event => {
+    ui.circuitId = event.target.value;
+    project.cadUi = ui;
   });
   host.querySelectorAll("[data-ribbon-toggle]").forEach(button => button.addEventListener("click", () => {
     const panelId = button.dataset.ribbonToggle;
@@ -1059,6 +1091,21 @@ export function render(host, state){
       ui.ribbonPanel = "";
       ui.tool = "select";
       project.cadUi = ui;
+      render(host, state);
+      return;
+    }
+    // Ctrl+Z / Cmd+Z: deshace el ultimo cambio del dibujo (simbolos, lineas,
+    // recortes, borrados, arrastres) - no hay redo, es una pila simple.
+    if((ev.key === 'z' || ev.key === 'Z') && (ev.ctrlKey || ev.metaKey) && !ev.shiftKey){
+      ev.preventDefault();
+      if(!cadUndoStack.length) return;
+      const previous = cadUndoStack.pop();
+      doc = normalizeCadDocument(previous, project);
+      doc.validation = validateCadDocument(doc);
+      ui.selectedId = "";
+      project.cad2d = doc;
+      addHistory('Deshacer (Ctrl+Z) en CAD', 'CAD electrico', false);
+      persist();
       render(host, state);
       return;
     }

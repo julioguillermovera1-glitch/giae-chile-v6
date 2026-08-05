@@ -616,7 +616,7 @@ export function validateCadDocument(document = {}){
   loads.filter(entity => !entity.circuitId).forEach(entity => issues.push({ level: "medio", area: "circuito", message: "Carga sin circuito: " + entity.label, action: "Asignar circuito a la carga." }));
   circuits.filter(circuit => !loads.some(entity => entity.circuitId === circuit.id)).forEach(circuit => issues.push({ level: "medio", area: "circuito", message: "Circuito sin simbolo asociado: " + circuit.name, action: "Dibujar al menos una carga del circuito." }));
   if(!wires.length) issues.push({ level: "medio", area: "canalizacion", message: "No hay canalizaciones o conductores dibujados.", action: "Conectar tablero y cargas." });
-  if(!notes.length && !doc.legend?.visible) issues.push({ level: "bajo", area: "leyenda", message: "Falta leyenda o nota tecnica del plano.", action: "Agregar leyenda o nota." });
+  if(!notes.length) issues.push({ level: "bajo", area: "leyenda", message: "Falta una nota tecnica del plano.", action: "Agregar una nota en la capa Notas." });
   if(!activeLayers.has("tablero")) issues.push({ level: "alto", area: "capas", message: "La capa tablero no tiene entidades.", action: "Dibujar tablero principal." });
   const critical = issues.filter(issue => issue.level === "alto").length;
   const medium = issues.filter(issue => issue.level === "medio").length;
