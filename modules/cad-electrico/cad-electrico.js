@@ -51,13 +51,32 @@ function svgPoint(event, svg){
   };
 }
 function snap(value, grid){ return Math.round(value / grid) * grid; }
-function nearestSymbolCenter(doc, point, thresholdPx = 28){
+// Imán de precisión (equivalente a OSNAP de AutoCAD): al dibujar algo nuevo,
+// si el clic cae cerca de un punto real ya existente (centro de un símbolo,
+// extremo de una pared/cable, esquina de un rectángulo, vértice del
+// perímetro) se pega exactamente ahí, para que dos elementos queden
+// realmente unidos y no con un hueco invisible de un par de píxeles.
+function nearestSnapPoint(doc, point, thresholdPx = 26){
   let best = null;
+  const consider = (x, y) => {
+    const dist = Math.hypot(x - point.x, y - point.y);
+    if(dist <= thresholdPx && (!best || dist < best.distance)) best = { x: Math.round(x), y: Math.round(y), distance: dist };
+  };
   doc.entities.forEach(entity => {
-    if(entity.type === "wire") return;
-    const dist = Math.hypot(n(entity.x) - point.x, n(entity.y) - point.y);
-    if(dist <= thresholdPx && (!best || dist < best.distance)) best = { x: n(entity.x), y: n(entity.y), distance: dist };
+    if(entity.type === "wire"){
+      const { from, to } = entity;
+      if(!from || !to) return;
+      if(entity.shape === "rect"){
+        consider(from.x, from.y); consider(to.x, to.y);
+        consider(from.x, to.y); consider(to.x, from.y);
+      } else if(!entity.shape || entity.shape === "line"){
+        consider(from.x, from.y); consider(to.x, to.y);
+      }
+      return;
+    }
+    consider(n(entity.x), n(entity.y));
   });
+  (doc.perimeter?.points || []).forEach(p => consider(p.x, p.y));
   return best;
 }
 // Interseccion de dos rectas dadas por dos puntos cada una. Devuelve, ademas
@@ -781,7 +800,8 @@ export function render(host, state){
     ui.circuitId = circuitId;
     if(ui.tool === "select") return;
     if(ui.tool === "perimeter"){
-      doc = addPerimeterPoint(doc, { x: rawX, y: rawY });
+      const snapPerimeter = nearestSnapPoint(doc, point);
+      doc = addPerimeterPoint(doc, snapPerimeter ? { x: snapPerimeter.x, y: snapPerimeter.y } : { x: rawX, y: rawY });
       saveAndRefresh("Punto de perímetro agregado");
       return;
     }
@@ -789,7 +809,7 @@ export function render(host, state){
     const CAD_SHAPE_LABELS = { pencil: "Muro", circle: "Círculo", rectangle: "Rectángulo", ellipse: "Elipse", arc: "Arco" };
     if(ui.tool === "wire" || ui.tool === "dimension" || Object.prototype.hasOwnProperty.call(CAD_SHAPE_TOOLS, ui.tool)){
       const isFreeform = Object.prototype.hasOwnProperty.call(CAD_SHAPE_TOOLS, ui.tool);
-      const magnet = isFreeform ? null : nearestSymbolCenter(doc, point);
+      const magnet = nearestSnapPoint(doc, point);
       const x = magnet ? magnet.x : rawX, y = magnet ? magnet.y : rawY;
       if(!ui.wireStart){ ui.wireStart = { x, y }; project.cadUi = ui; render(host, state); return; }
       const dx = x - ui.wireStart.x;
