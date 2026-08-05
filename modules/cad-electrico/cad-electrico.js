@@ -110,6 +110,7 @@ const CAD_MODE_TOOLS = [
   ["angle", "Ángulo"],
   ["copy", "Copiar"],
   ["mirror", "Simetría"],
+  ["array", "Matriz"],
   ["trim", "Recortar"],
   ["extend", "Alargar"],
   ["eraser", "Goma"]
@@ -391,6 +392,33 @@ function renderRotationControl(doc, ui){
     </div>
   </article>`;
 }
+function renderArrayCard(doc, ui){
+  if(ui.tool !== "array") return "";
+  const source = ui.arraySourceId ? doc.entities.find(e => e.id === ui.arraySourceId) : null;
+  if(!source){
+    return `<article class="admin-card">
+      <h4>Matriz (repetir símbolo)</h4>
+      <p class="small muted">Hacé clic en el símbolo que querés repetir en fila o columna.</p>
+    </article>`;
+  }
+  const count = Math.max(2, Math.min(50, n(ui.arrayCount, 3)));
+  const spacingM = Math.max(0.1, n(ui.arraySpacingM, 1));
+  const dir = ui.arrayDir === "v" ? "v" : "h";
+  return `<article class="admin-card">
+    <h4>Matriz (repetir símbolo)</h4>
+    <p class="small">Repitiendo: ${esc(source.label || symbolLabel(source.symbolId, doc.symbols))}</p>
+    <label>Cantidad total<input id="cadArrayCount" type="number" min="2" max="50" step="1" value="${count}"></label>
+    <label>Distancia entre copias (m)<input id="cadArraySpacing" type="number" min="0.1" step="0.1" value="${spacingM}"></label>
+    <div class="row-actions">
+      <button type="button" id="cadArrayDirH" class="secondary ${dir === "h" ? "active" : ""}">→ Fila (horizontal)</button>
+      <button type="button" id="cadArrayDirV" class="secondary ${dir === "v" ? "active" : ""}">↓ Columna (vertical)</button>
+    </div>
+    <div class="row-actions">
+      <button type="button" id="cadArrayApply">Aplicar matriz</button>
+      <button type="button" id="cadArrayCancel" class="ghost">Cancelar</button>
+    </div>
+  </article>`;
+}
 function renderCadStartScreen(project, doc){
   const projectName = esc(project.name || "Proyecto sin nombre");
   return `<section class="module-window cad-module cad-start-screen">
@@ -443,7 +471,7 @@ export function render(host, state){
     cadUndoProjectId = doc.projectId;
   }
   cadUndoSnapshot = JSON.parse(JSON.stringify(doc));
-  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, catSearch: "", zoom: 1, panX: 0, panY: 0, ribbonPanel: "", copySourceId: "", anglePoints: [] };
+  const ui = project.cadUi || { tool: "select", layer: "enchufes", selectedId: "", wireStart: null, catSearch: "", zoom: 1, panX: 0, panY: 0, ribbonPanel: "", copySourceId: "", anglePoints: [], arraySourceId: "", arrayCount: 3, arraySpacingM: 1, arrayDir: "h" };
   project.cadUi = ui;
   const isEmptyPlan = doc.entities.length === 0 && !(doc.perimeter?.points?.length);
   if(ui.cadStartDismissed === undefined) ui.cadStartDismissed = !isEmptyPlan;
@@ -527,6 +555,7 @@ export function render(host, state){
 
         <aside class="cad-right">
           ${renderRotationControl(doc, ui)}
+          ${renderArrayCard(doc, ui)}
           ${renderPerimeterCard(doc, perimeterSegments)}
           <article class="admin-card">
             <h4>Entidades</h4>
@@ -555,6 +584,7 @@ export function render(host, state){
     ui.wireStart = null;
     ui.copySourceId = "";
     ui.anglePoints = [];
+    ui.arraySourceId = "";
     if(button.closest(".cad-ribbon-panel")) ui.ribbonPanel = "";
     project.cadUi = ui;
     render(host, state);
@@ -710,6 +740,17 @@ export function render(host, state){
       }
       return;
     }
+    if(ui.tool === "array"){
+      if(entityGroup){
+        const target = doc.entities.find(e => e.id === entityGroup.dataset.entityId);
+        if(target && target.type !== "wire"){
+          ui.arraySourceId = target.id;
+          project.cadUi = ui;
+          render(host, state);
+        }
+      }
+      return;
+    }
     if(ui.tool === "angle"){
       const points = ui.anglePoints || [];
       if(points.length < 2){
@@ -853,7 +894,7 @@ export function render(host, state){
   let dragEntityId = null;
   let dragGroup = null;
   let dragMoved = false;
-  const CAD_NO_DRAG_TOOLS = new Set(["eraser", "wire", "dimension", "perimeter", "pencil", "copy", "mirror", "circle", "rectangle", "ellipse", "arc", "angle", "trim", "extend"]);
+  const CAD_NO_DRAG_TOOLS = new Set(["eraser", "wire", "dimension", "perimeter", "pencil", "copy", "mirror", "array", "circle", "rectangle", "ellipse", "arc", "angle", "trim", "extend"]);
   host.querySelector("#cadCanvas").addEventListener("mousedown", event => {
     if(CAD_NO_DRAG_TOOLS.has(ui.tool)) return;
     const entityGroup = event.target.closest('[data-draggable="true"]');
@@ -943,6 +984,47 @@ export function render(host, state){
     if(!entity || entity.type === "wire") return;
     entity.flipY = !entity.flipY;
     saveAndRefresh("Símbolo espejado en CAD");
+  });
+  host.querySelector("#cadArrayCount")?.addEventListener("input", event => {
+    ui.arrayCount = Math.max(2, Math.min(50, Number(event.target.value) || 3));
+    project.cadUi = ui;
+  });
+  host.querySelector("#cadArraySpacing")?.addEventListener("input", event => {
+    ui.arraySpacingM = Math.max(0.1, Number(event.target.value) || 1);
+    project.cadUi = ui;
+  });
+  host.querySelector("#cadArrayDirH")?.addEventListener("click", () => {
+    ui.arrayDir = "h";
+    project.cadUi = ui;
+    render(host, state);
+  });
+  host.querySelector("#cadArrayDirV")?.addEventListener("click", () => {
+    ui.arrayDir = "v";
+    project.cadUi = ui;
+    render(host, state);
+  });
+  host.querySelector("#cadArrayCancel")?.addEventListener("click", () => {
+    ui.arraySourceId = "";
+    project.cadUi = ui;
+    render(host, state);
+  });
+  host.querySelector("#cadArrayApply")?.addEventListener("click", () => {
+    const source = doc.entities.find(item => item.id === ui.arraySourceId);
+    if(!source) return;
+    const count = Math.max(2, Math.min(50, n(ui.arrayCount, 3)));
+    const spacingPx = Math.max(0.1, n(ui.arraySpacingM, 1)) * PERIMETER_PX_PER_METER;
+    const dx = ui.arrayDir === "v" ? 0 : spacingPx;
+    const dy = ui.arrayDir === "v" ? spacingPx : 0;
+    for(let i = 1; i < count; i++){
+      doc = addCadEntity(doc, createCadEntity(source.symbolId, {
+        x: Math.round(source.x + dx * i), y: Math.round(source.y + dy * i),
+        layer: source.layer, label: source.label, circuitId: source.circuitId,
+        rotation: source.rotation, scale: source.scale, flipX: source.flipX, flipY: source.flipY,
+        source: "manual"
+      }));
+    }
+    ui.arraySourceId = "";
+    saveAndRefresh(`Matriz de ${count} copias creada en CAD`);
   });
   host.querySelector("#cadPropLabel")?.addEventListener("change", event => {
     const entity = doc.entities.find(item => item.id === ui.selectedId);
@@ -1108,6 +1190,7 @@ export function render(host, state){
       ui.wireStart = null;
       ui.copySourceId = "";
       ui.anglePoints = [];
+      ui.arraySourceId = "";
       ui.ribbonPanel = "";
       ui.tool = "select";
       project.cadUi = ui;
