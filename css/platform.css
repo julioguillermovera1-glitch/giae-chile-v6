@@ -619,7 +619,7 @@ body{background:var(--bg);}
 .cad-statusbar .row-actions{gap:.3rem}
 .cad-statusbar button{padding:.35rem .55rem;font-size:.75rem}
 .cad-statusbar #cadZoomLabel{color:#e2e8f0;font-weight:700;padding:0 .3rem}
-.cad-stage{width:100%;overflow:auto;border:1px solid #1e293b;border-radius:12px;background:#0a0e17;padding:.7rem}.cad-canvas{width:100%;min-width:980px;display:block;background:#1a1f27;border-radius:8px}.cad-entity{cursor:pointer}.cad-symbol text,.cad-wire text,.cad-legend text{font-family:Arial,sans-serif;letter-spacing:0}.cad-selected-box{fill:none;stroke:#22c55e;stroke-width:2;stroke-dasharray:6 4;pointer-events:none}.cad-wire line{filter:drop-shadow(0 1px 2px rgba(0,0,0,0.4))}
+.cad-stage{width:100%;overflow:auto;border:1px solid #1e293b;border-radius:12px;background:#0a0e17;padding:.7rem}.cad-canvas{width:100%;min-width:980px;display:block;background:#1a1f27;border-radius:8px;cursor:crosshair}.cad-entity{cursor:crosshair}.cad-symbol text,.cad-wire text,.cad-legend text{font-family:Arial,sans-serif;letter-spacing:0}.cad-selected-box{fill:none;stroke:#22c55e;stroke-width:2;stroke-dasharray:6 4;pointer-events:none}.cad-wire line{filter:drop-shadow(0 1px 2px rgba(0,0,0,0.4))}
 @media(max-width:1100px){.cad-workspace-v2{grid-template-columns:1fr}.cad-module .cad-kpis{grid-template-columns:1fr 1fr}.cad-mode-row{grid-template-columns:repeat(3,1fr)}.cad-ribbon{flex-direction:column}}
 @media(max-width:650px){.cad-module .cad-kpis{grid-template-columns:1fr}.cad-mode-row{grid-template-columns:1fr}.cad-topbar{display:grid}.cad-canvas{min-width:760px}}
 .cad-module.cad-fullscreen{position:fixed;inset:0;z-index:9999;background:#fff;padding:1.1rem 1.4rem;overflow:auto;border-radius:0}

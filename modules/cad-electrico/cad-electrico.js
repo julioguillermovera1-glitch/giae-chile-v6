@@ -1043,13 +1043,27 @@ export function render(host, state){
     if(window.__giae_cad_keydown_handler) window.removeEventListener('keydown', window.__giae_cad_keydown_handler);
   }catch(e){}
   window.__giae_cad_keydown_handler = function(ev){
-    // Require Ctrl/Cmd + Delete (or Backspace) to avoid accidental removals
-    if(!( (ev.key === 'Delete' || ev.key === 'Backspace') && (ev.ctrlKey || ev.metaKey) )) return;
-    // Avoid deleting while typing in inputs or textareas
+    // Avoid acting while typing in inputs or textareas
     const active = document.activeElement;
     if(active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
     // Only act if CAD module is visible
     if(!document.querySelector('.cad-module')) return;
+    // Escape: cancela la seleccion y cualquier operacion a medio hacer (clics
+    // pendientes de una figura, copia, angulo), y vuelve a la herramienta
+    // "Seleccionar" - igual que Esc en AutoCAD.
+    if(ev.key === 'Escape'){
+      ui.selectedId = "";
+      ui.wireStart = null;
+      ui.copySourceId = "";
+      ui.anglePoints = [];
+      ui.ribbonPanel = "";
+      ui.tool = "select";
+      project.cadUi = ui;
+      render(host, state);
+      return;
+    }
+    // Require Ctrl/Cmd + Delete (or Backspace) to avoid accidental removals
+    if(!( (ev.key === 'Delete' || ev.key === 'Backspace') && (ev.ctrlKey || ev.metaKey) )) return;
     if(!ui.selectedId) return;
     // Perform delete
     doc = removeCadEntity(doc, ui.selectedId);
